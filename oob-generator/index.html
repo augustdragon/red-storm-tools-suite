@@ -294,6 +294,50 @@
       color: #a4c4f2;
     }
 
+    .table-view-content {
+      background-color: #4a5a4a;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 10px 0;
+    }
+
+    .table-description {
+      font-size: 16px;
+      font-weight: bold;
+      color: #e4e4e4;
+      margin-bottom: 15px;
+      text-align: center;
+      padding: 10px;
+      background-color: #5a6a5a;
+      border-radius: 6px;
+    }
+
+    .nation-section {
+      margin-bottom: 15px;
+      padding: 12px;
+      background-color: #3a4a3a;
+      border-radius: 6px;
+      border-left: 4px solid #5d6d47;
+    }
+
+    .nation-header {
+      font-weight: bold;
+      color: #f4f4f4;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    .aircraft-list {
+      margin-left: 15px;
+    }
+
+    .aircraft-item {
+      color: #d4d4d4;
+      margin-bottom: 4px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 10px;
@@ -370,7 +414,17 @@
         
         <div class="action-buttons">
           <button class="action-button roll-button" onclick="makeRolls()">Make Rolls</button>
+          <button class="action-button" style="background-color: #6d5d47;" onclick="viewTable()">View Table</button>
           <button class="action-button cancel-button" onclick="cancelSelection()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Table View Section -->
+      <div class="section" id="tableViewSection" style="display: none;">
+        <div class="section-title" id="tableViewTitle"></div>
+        <div id="tableViewContent"></div>
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="action-button cancel-button" onclick="hideTableView()">Close Table View</button>
         </div>
       </div>
 
@@ -395,9 +449,37 @@
     let results = [];
     let resultCounter = 1;
 
-    // Placeholder OOB tables - will be populated with actual data
+    // OOB Tables with actual game data
     const oobTables = {
-      'A': { name: 'NATO Table A', faction: 'NATO', results: {} },
+      'A': { 
+        name: 'NATO Table A - QRA Flight', 
+        faction: 'NATO',
+        description: '1 x {2} [QRA], CAP',
+        flightSize: 2,
+        nations: {
+          '1-4': {
+            name: 'UK',
+            aircraft: {
+              '1-6': 'FGR2',
+              '7-10': 'Harrier GR3'
+            }
+          },
+          '5-6': {
+            name: 'BE/NE',
+            aircraft: {
+              '1-5': 'F-16A(BE)',
+              '6-9': 'F-16A(NE)',
+              '10': 'NF-5A'
+            }
+          },
+          '7-10': {
+            name: 'FRG',
+            aircraft: {
+              '1-10': 'F-4F'
+            }
+          }
+        }
+      },
       'B': { name: 'NATO Table B', faction: 'NATO', results: {} },
       'C': { name: 'NATO Table C', faction: 'NATO', results: {} },
       'D': { name: 'NATO Table D', faction: 'NATO', results: {} },
@@ -440,17 +522,16 @@
       const table = oobTables[selectedTable];
       
       for (let i = 0; i < rollCount; i++) {
-        // For now, we'll use placeholder results until actual table data is provided
-        const dieRoll = Math.floor(Math.random() * 100) + 1;
-        const result = getTableResult(selectedTable, dieRoll);
+        const result = getTableResult(selectedTable);
         
         const resultEntry = {
           id: resultCounter++,
           table: selectedTable,
           faction: selectedFaction,
           tableName: table.name,
-          roll: dieRoll,
-          result: result,
+          nationRoll: result.nationRoll,
+          aircraftRoll: result.aircraftRoll,
+          result: result.text,
           timestamp: new Date()
         };
         
@@ -461,12 +542,68 @@
       cancelSelection();
     }
 
-    function getTableResult(tableId, roll) {
-      // Placeholder function - will be replaced with actual table lookup
+    function getTableResult(tableId) {
       const table = oobTables[tableId];
       
-      // For now, return a placeholder result
-      return `Placeholder result for roll ${roll} on Table ${tableId}`;
+      if (tableId === 'A') {
+        // Table A: NATO QRA Flight - two-roll system
+        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        
+        // Determine nation based on roll
+        let selectedNation, nationName;
+        if (nationRoll >= 1 && nationRoll <= 4) {
+          selectedNation = table.nations['1-4'];
+          nationName = 'UK';
+        } else if (nationRoll >= 5 && nationRoll <= 6) {
+          selectedNation = table.nations['5-6'];
+          nationName = 'BE/NE';
+        } else if (nationRoll >= 7 && nationRoll <= 10) {
+          selectedNation = table.nations['7-10'];
+          nationName = 'FRG';
+        }
+        
+        // Roll for aircraft within that nation
+        const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+        let aircraftType = null;
+        
+        // Find matching aircraft based on roll ranges
+        for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+          const [min, max] = parseRange(range);
+          if (aircraftRoll >= min && aircraftRoll <= max) {
+            aircraftType = aircraft;
+            // Add nation suffix if not already included
+            if (!aircraftType.includes('(') && nationName !== 'FRG') {
+              aircraftType += `(${nationName})`;
+            }
+            break;
+          }
+        }
+        
+        const resultText = `1 x {${table.flightSize}} ${aircraftType}`;
+        
+        return {
+          nationRoll: nationRoll,
+          aircraftRoll: aircraftRoll,
+          text: resultText
+        };
+      }
+      
+      // Placeholder for other tables
+      return {
+        nationRoll: null,
+        aircraftRoll: null,
+        text: `Placeholder result for Table ${tableId}`
+      };
+    }
+    
+    function parseRange(range) {
+      if (range.includes('-')) {
+        const [min, max] = range.split('-').map(num => parseInt(num));
+        return [min, max];
+      } else {
+        const num = parseInt(range);
+        return [num, num];
+      }
     }
 
     function updateResultsDisplay() {
@@ -477,20 +614,29 @@
         return;
       }
       
-      const resultsHTML = results.map(result => `
-        <div class="result-item">
-          <div class="result-info">
-            <div class="result-table">${result.tableName}</div>
-            <div class="result-text">
-              ${result.result}
-              <span class="result-roll">(rolled ${result.roll})</span>
+      const resultsHTML = results.map(result => {
+        let rollText = '';
+        if (result.nationRoll && result.aircraftRoll) {
+          rollText = `(nation: ${result.nationRoll}, aircraft: ${result.aircraftRoll})`;
+        } else if (result.roll) {
+          rollText = `(rolled ${result.roll})`;
+        }
+        
+        return `
+          <div class="result-item">
+            <div class="result-info">
+              <div class="result-table">${result.tableName}</div>
+              <div class="result-text">
+                ${result.result}
+                <span class="result-roll">${rollText}</span>
+              </div>
             </div>
+            <button class="action-button remove-result" onclick="removeResult(${result.id})">
+              Remove
+            </button>
           </div>
-          <button class="action-button remove-result" onclick="removeResult(${result.id})">
-            Remove
-          </button>
-        </div>
-      `).join('');
+        `;
+      }).join('');
       
       container.innerHTML = resultsHTML;
     }
@@ -507,6 +653,50 @@
         results = [];
         updateResultsDisplay();
       }
+    }
+
+    function viewTable() {
+      if (!selectedTable) return;
+      
+      const table = oobTables[selectedTable];
+      const titleElement = document.getElementById('tableViewTitle');
+      const contentElement = document.getElementById('tableViewContent');
+      
+      titleElement.textContent = table.name;
+      
+      if (selectedTable === 'A') {
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        // Show nation roll ranges and aircraft
+        for (const [nationRange, nationData] of Object.entries(table.nations)) {
+          tableHTML += `<div class="nation-section">`;
+          tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+          tableHTML += `<div class="aircraft-list">`;
+          
+          for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+            const displayType = aircraftType.includes('(') ? aircraftType : `${aircraftType}(${nationData.name})`;
+            if (nationData.name === 'FRG') {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            } else {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${displayType}</div>`;
+            }
+          }
+          
+          tableHTML += `</div></div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else {
+        contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${selectedTable}</div>`;
+      }
+      
+      document.getElementById('tableViewSection').style.display = 'block';
+    }
+
+    function hideTableView() {
+      document.getElementById('tableViewSection').style.display = 'none';
     }
 
     // Initialize the app
