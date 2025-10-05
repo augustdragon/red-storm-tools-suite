@@ -418,10 +418,8 @@
           const [min, max] = parseRange(range);
           if (aircraftRoll >= min && aircraftRoll <= max) {
             aircraftType = aircraft;
-            // Add nation suffix if not already included
-            if (!aircraftType.includes('(') && nationName !== 'FRG' && !aircraftType.startsWith('CF-')) {
-              aircraftType += `(${nationName})`;
-            }
+            // Remove nationality suffixes from results for cleaner display
+            aircraftType = aircraftType.replace(/\([A-Z/]+\)$/, '');
             break;
           }
         }
@@ -595,11 +593,10 @@
           tableHTML += `<div class="aircraft-list">`;
           
           for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+            // Remove nationality suffixes for cleaner display since aircraft are grouped by nation
             let displayType = aircraftType;
-            // Don't add nationality suffix for US, FRG, or CF- prefixed aircraft
-            if (!aircraftType.includes('(') && nationData.name !== 'US' && nationData.name !== 'FRG' && !aircraftType.startsWith('CF-')) {
-              displayType = `${aircraftType}(${nationData.name})`;
-            }
+            // Remove patterns like (UK), (BE), (NE), (BE/NE), (US), (FRG), etc.
+            displayType = displayType.replace(/\([A-Z/]+\)$/, '');
             tableHTML += `<div class="aircraft-item">${aircraftRange}: ${displayType}</div>`;
           }
           
