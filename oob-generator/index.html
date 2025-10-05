@@ -596,7 +596,8 @@
           
           for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
             let displayType = aircraftType;
-            if (!aircraftType.includes('(') && nationData.name !== 'FRG' && !aircraftType.startsWith('CF-')) {
+            // Don't add nationality suffix for US, FRG, or CF- prefixed aircraft
+            if (!aircraftType.includes('(') && nationData.name !== 'US' && nationData.name !== 'FRG' && !aircraftType.startsWith('CF-')) {
               displayType = `${aircraftType}(${nationData.name})`;
             }
             tableHTML += `<div class="aircraft-item">${aircraftRange}: ${displayType}</div>`;
