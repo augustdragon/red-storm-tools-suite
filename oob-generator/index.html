@@ -418,8 +418,9 @@
           const [min, max] = parseRange(range);
           if (aircraftRoll >= min && aircraftRoll <= max) {
             aircraftType = aircraft;
-            // Remove nationality suffixes from results for cleaner display
-            aircraftType = aircraftType.replace(/\([A-Z/]+\)$/, '');
+            // Remove nationality suffixes except for BE/NE distinctions which are meaningful
+            aircraftType = aircraftType.replace(/\((UK|FRG|US)\)$/, '');
+            // Don't remove (BE) or (NE) as these distinguish Belgian vs Netherlands aircraft
             break;
           }
         }
@@ -595,8 +596,9 @@
           for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
             // Remove nationality suffixes for cleaner display since aircraft are grouped by nation
             let displayType = aircraftType;
-            // Remove patterns like (UK), (BE), (NE), (BE/NE), (US), (FRG), etc.
-            displayType = displayType.replace(/\([A-Z/]+\)$/, '');
+            // Remove nationality suffixes except for BE/NE distinctions which are meaningful
+            displayType = displayType.replace(/\((UK|FRG|US)\)$/, '');
+            // Don't remove (BE) or (NE) as these distinguish Belgian vs Netherlands F-16As
             tableHTML += `<div class="aircraft-item">${aircraftRange}: ${displayType}</div>`;
           }
           
