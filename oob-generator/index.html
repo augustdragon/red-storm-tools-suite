@@ -108,12 +108,14 @@
         </div>
       </div>
 
-      <!-- Table View Section -->
-      <div class="section" id="tableViewSection" style="display: none;">
-        <div class="section-title" id="tableViewTitle"></div>
-        <div id="tableViewContent"></div>
-        <div style="text-align: center; margin-top: 20px;">
-          <button class="action-button cancel-button" onclick="hideTableView()">Close Table View</button>
+      <!-- Table View Overlay -->
+      <div class="table-view-overlay" id="tableViewOverlay" style="display: none;">
+        <div class="table-view-modal">
+          <div class="section-title" id="tableViewTitle"></div>
+          <div id="tableViewContent"></div>
+          <div style="text-align: center; margin-top: 20px;">
+            <button class="action-button cancel-button" onclick="hideTableView()">Close Table View</button>
+          </div>
         </div>
       </div>
     </div>
@@ -611,7 +613,7 @@
         contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${tableId}</div>`;
       }
       
-      document.getElementById('tableViewSection').style.display = 'block';
+      document.getElementById('tableViewOverlay').style.display = 'flex';
     }
 
     function viewTable() {
@@ -629,12 +631,12 @@
         
         titleElement.textContent = table.name;
         contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${selectedTable}</div>`;
-        document.getElementById('tableViewSection').style.display = 'block';
+        document.getElementById('tableViewOverlay').style.display = 'flex';
       }
     }
 
     function hideTableView() {
-      document.getElementById('tableViewSection').style.display = 'none';
+      document.getElementById('tableViewOverlay').style.display = 'none';
     }
 
     // Initialize the app
