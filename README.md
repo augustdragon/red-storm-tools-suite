@@ -21,8 +21,8 @@ A mobile app for simulating chit pulls in the Red Storm board game by GMT Games.
 ### Option 2: Local Development
 ```bash
 # Clone the repository
-git clone [repository-url]
-cd RedStorm
+git clone https://github.com/augustdragon/red-storm-chit-pull.git
+cd red-storm-chit-pull
 
 # Install dependencies
 npm install
