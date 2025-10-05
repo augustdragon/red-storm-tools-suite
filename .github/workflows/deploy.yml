@@ -139,9 +139,9 @@ jobs:
                 <div style="margin: 20px 0; padding: 20px; background-color: #4a5a4a; border-radius: 8px; border: 2px solid #6a7a6a;">
                   <h3 style="margin-top: 0; color: #f4f4f4;">🤖 Android Version (Ready Now!)</h3>
                   <p style="color: #e4e4e4;">Download and install directly on your Android device:</p>
-                  <a href="https://expo.dev/accounts/augustdragon/projects/red-storm-chit-pull/builds/1ce64098-7a43-4c70-bbaf-e9d464caf358" 
+                  <a href="https://expo.dev/accounts/augustdragon/projects/red-storm-chit-pull/builds/fdc17415-0b15-4645-8727-12f92cd0fb7d" 
                      target="_blank" class="expo-link" style="background-color: #5d7d47;">
-                    📥 Download Android APK
+                    📥 Download Android APK (v1.1 - Fixed Scrolling)
                   </a>
                   <p style="font-size: 12px; color: #c4c4c4; margin-bottom: 0;">
                     • No Expo Go required<br>
