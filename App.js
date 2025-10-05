@@ -163,7 +163,12 @@ export default function App() {
               {drawHistory.length === 0 ? (
                 <Text style={styles.emptyHistory}>No draws yet</Text>
               ) : (
-                <ScrollView style={styles.historyList} showsVerticalScrollIndicator={true}>
+                <ScrollView 
+                  style={styles.historyList} 
+                  showsVerticalScrollIndicator={true}
+                  nestedScrollEnabled={true}
+                  keyboardShouldPersistTaps="handled"
+                >
                   {drawHistory.map((entry, index) => (
                     <View key={entry.id} style={styles.historyItem}>
                       <Text style={styles.historyNumber}>#{drawHistory.length - index}</Text>
@@ -409,6 +414,7 @@ const styles = StyleSheet.create({
   },
   historyList: {
     maxHeight: 200,
+    flex: 1,
   },
   historyItem: {
     flexDirection: 'row',
