@@ -33,8 +33,12 @@ jobs:
       - name: Create web build manually
         run: |
           mkdir -p dist
+          mkdir -p dist/app
           
-          # Create a simple HTML file
+          # Copy the web app to the app subdirectory
+          cp web/index.html dist/app/index.html
+          
+          # Create a landing page
           cat > dist/index.html << 'EOF'
           <!DOCTYPE html>
           <html lang="en">
@@ -134,14 +138,27 @@ jobs:
             
             <div class="container">
               <div class="coming-soon">
-                <h2>📱 Red Storm App Ready!</h2>
+                <h2>🎯 Red Storm App - Now Available!</h2>
                 
                 <div style="margin: 20px 0; padding: 20px; background-color: #4a5a4a; border-radius: 8px; border: 2px solid #6a7a6a;">
-                  <h3 style="margin-top: 0; color: #f4f4f4;">🤖 Android Version (Ready Now!)</h3>
+                  <h3 style="margin-top: 0; color: #f4f4f4;">🌐 Web Version (Try It Now!)</h3>
+                  <p style="color: #e4e4e4;">Use the app directly in your browser - no installation required:</p>
+                  <a href="./app/" class="expo-link" style="background-color: #1976d2;">
+                    🎯 Launch Red Storm Web App
+                  </a>
+                  <p style="font-size: 12px; color: #c4c4c4; margin-bottom: 0;">
+                    • Works on any modern browser<br>
+                    • Mobile and desktop friendly<br>
+                    • Same features as mobile app
+                  </p>
+                </div>
+                
+                <div style="margin: 20px 0; padding: 20px; background-color: #4a5a4a; border-radius: 8px; border: 2px solid #6a7a6a;">
+                  <h3 style="margin-top: 0; color: #f4f4f4;">🤖 Android Version</h3>
                   <p style="color: #e4e4e4;">Download and install directly on your Android device:</p>
                   <a href="https://expo.dev/accounts/augustdragon/projects/red-storm-chit-pull/builds/fdc17415-0b15-4645-8727-12f92cd0fb7d" 
                      target="_blank" class="expo-link" style="background-color: #5d7d47;">
-                    📥 Download Android APK (v1.1 - Fixed Scrolling)
+                    📥 Download Android APK (v1.1)
                   </a>
                   <p style="font-size: 12px; color: #c4c4c4; margin-bottom: 0;">
                     • No Expo Go required<br>
@@ -152,12 +169,7 @@ jobs:
                 
                 <div style="margin: 20px 0; padding: 20px; background-color: #3a4a3a; border-radius: 8px;">
                   <h3 style="margin-top: 0; color: #d4d4d4;">🍎 iOS Version (Coming Soon)</h3>
-                  <p style="color: #c4c4c4;">iOS builds require Apple Developer account. For now, iOS users can:</p>
-                  <ol style="text-align: left; color: #c4c4c4; max-width: 400px; margin: 0 auto;">
-                    <li>Install <a href="https://apps.apple.com/app/expo-go/id982107779" target="_blank" style="color: #8db4e2;">Expo Go</a></li>
-                    <li>Contact developer for Expo tunnel URL</li>
-                    <li>Test via Expo Go (requires dev server)</li>
-                  </ol>
+                  <p style="color: #c4c4c4;">iOS builds require Apple Developer account. For now, iOS users can use the web version above.</p>
                 </div>
               </div>
               
