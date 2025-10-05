@@ -106,7 +106,7 @@
       </div>
 
       <!-- Results Section -->
-      <div class="section results-section">
+      <div class="section results-section" id="resultsSection" style="display: none;">
         <div class="results-header">
           <div class="section-title">Generated Results</div>
           <button class="action-button clear-results" onclick="clearAllResults()">Clear All</button>
@@ -508,11 +508,14 @@
 
     function updateResultsDisplay() {
       const container = document.getElementById('resultsList');
+      const resultsSection = document.getElementById('resultsSection');
       
       if (results.length === 0) {
-        container.innerHTML = '<div class="empty-results">No results generated yet</div>';
+        resultsSection.style.display = 'none';
         return;
       }
+      
+      resultsSection.style.display = 'block';
       
       const resultsHTML = results.map(result => {
         let rollText = '';
