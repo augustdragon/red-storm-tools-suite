@@ -267,6 +267,10 @@
       
       const table = oobTables[tableId];
       
+      // First, clear any previously active sections
+      document.getElementById('rollInputSection').classList.remove('active');
+      document.getElementById('variableSelectionSection').classList.remove('active');
+      
       // Check if this table has variables that need to be selected
       if (table.hasATAF || table.hasDate) {
         const displayText = `${faction} Table ${tableId}`;
