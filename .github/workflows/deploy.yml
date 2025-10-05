@@ -135,11 +135,21 @@ jobs:
             <div class="container">
               <div class="coming-soon">
                 <h2>📱 Mobile App Available!</h2>
-                <p>The Red Storm Chit Pull app is ready for testing via Expo Go:</p>
-                <a href="exp://fuvgfvq-anonymous-8081.exp.direct" class="expo-link">
-                  Open in Expo Go
-                </a>
-                <p><small>You'll need the Expo Go app installed on your phone</small></p>
+                <p>The Red Storm Chit Pull app is ready for testing:</p>
+                
+                <div style="margin: 20px 0; padding: 15px; background-color: #3a4a3a; border-radius: 8px;">
+                  <h4 style="margin-top: 0; color: #d4d4d4;">To test the app:</h4>
+                  <ol style="text-align: left; color: #c4c4c4; max-width: 400px; margin: 0 auto;">
+                    <li>Install <strong>Expo Go</strong> on your phone:
+                      <br><a href="https://apps.apple.com/app/expo-go/id982107779" target="_blank" style="color: #8db4e2;">iOS App Store</a> | 
+                      <a href="https://play.google.com/store/apps/details?id=host.exp.exponent" target="_blank" style="color: #8db4e2;">Google Play</a>
+                    </li>
+                    <li>Contact the developer for the current Expo tunnel URL</li>
+                    <li>Open the URL in Expo Go to test the app</li>
+                  </ol>
+                </div>
+                
+                <p><small style="color: #a4a4a4;">Note: The development server must be running for mobile testing</small></p>
               </div>
               
               <div class="links">
