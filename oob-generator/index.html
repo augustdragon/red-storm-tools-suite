@@ -697,7 +697,7 @@
           nationRoll: result.nationRoll,
           aircraftRoll: result.aircraftRoll,
           result: result.text,
-          timestamp: new Date()
+          timestamp: new Date().getTime() + i // Ensure unique timestamps
         };
         
         results.unshift(resultEntry);
@@ -940,8 +940,14 @@
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
-        // Show nation roll ranges and aircraft for this variant
-        for (const [nationRange, nationData] of Object.entries(variant.nations)) {
+        // Show nation roll ranges and aircraft for this variant (sorted by roll number)
+        const sortedNations = Object.entries(variant.nations).sort((a, b) => {
+          const aMin = parseRange(a[0])[0];
+          const bMin = parseRange(b[0])[0];
+          return aMin - bMin;
+        });
+        
+        for (const [nationRange, nationData] of sortedNations) {
           tableHTML += `<div class="nation-section">`;
           tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
           tableHTML += `<div class="aircraft-list">`;
