@@ -13,12 +13,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.augustdragon.redstormchitpull",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#2c3e36"
-      }
+      },
+      "package": "com.augustdragon.redstormchitpull"
     },
     "web": {
       "bundler": "metro",
@@ -26,6 +31,11 @@
     },
     "experiments": {
       "typedRoutes": false
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a291a35f-581e-4a60-83cb-8863e1ff0bd6"
+      }
     }
   }
 }

@@ -134,22 +134,31 @@ jobs:
             
             <div class="container">
               <div class="coming-soon">
-                <h2>📱 Mobile App Available!</h2>
-                <p>The Red Storm Chit Pull app is ready for testing:</p>
+                <h2>📱 Red Storm App Ready!</h2>
                 
-                <div style="margin: 20px 0; padding: 15px; background-color: #3a4a3a; border-radius: 8px;">
-                  <h4 style="margin-top: 0; color: #d4d4d4;">To test the app:</h4>
-                  <ol style="text-align: left; color: #c4c4c4; max-width: 400px; margin: 0 auto;">
-                    <li>Install <strong>Expo Go</strong> on your phone:
-                      <br><a href="https://apps.apple.com/app/expo-go/id982107779" target="_blank" style="color: #8db4e2;">iOS App Store</a> | 
-                      <a href="https://play.google.com/store/apps/details?id=host.exp.exponent" target="_blank" style="color: #8db4e2;">Google Play</a>
-                    </li>
-                    <li>Contact the developer for the current Expo tunnel URL</li>
-                    <li>Open the URL in Expo Go to test the app</li>
-                  </ol>
+                <div style="margin: 20px 0; padding: 20px; background-color: #4a5a4a; border-radius: 8px; border: 2px solid #6a7a6a;">
+                  <h3 style="margin-top: 0; color: #f4f4f4;">🤖 Android Version (Ready Now!)</h3>
+                  <p style="color: #e4e4e4;">Download and install directly on your Android device:</p>
+                  <a href="https://expo.dev/accounts/augustdragon/projects/red-storm-chit-pull/builds/1ce64098-7a43-4c70-bbaf-e9d464caf358" 
+                     target="_blank" class="expo-link" style="background-color: #5d7d47;">
+                    📥 Download Android APK
+                  </a>
+                  <p style="font-size: 12px; color: #c4c4c4; margin-bottom: 0;">
+                    • No Expo Go required<br>
+                    • Works completely offline<br>
+                    • Full native app experience
+                  </p>
                 </div>
                 
-                <p><small style="color: #a4a4a4;">Note: The development server must be running for mobile testing</small></p>
+                <div style="margin: 20px 0; padding: 20px; background-color: #3a4a3a; border-radius: 8px;">
+                  <h3 style="margin-top: 0; color: #d4d4d4;">🍎 iOS Version (Coming Soon)</h3>
+                  <p style="color: #c4c4c4;">iOS builds require Apple Developer account. For now, iOS users can:</p>
+                  <ol style="text-align: left; color: #c4c4c4; max-width: 400px; margin: 0 auto;">
+                    <li>Install <a href="https://apps.apple.com/app/expo-go/id982107779" target="_blank" style="color: #8db4e2;">Expo Go</a></li>
+                    <li>Contact developer for Expo tunnel URL</li>
+                    <li>Test via Expo Go (requires dev server)</li>
+                  </ol>
+                </div>
               </div>
               
               <div class="links">
