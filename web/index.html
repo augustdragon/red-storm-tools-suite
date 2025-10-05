@@ -428,8 +428,6 @@
         drawHistory = drawHistory.slice(0, 100);
       }
       
-      console.log('Drew chit:', drawnChit, 'type:', type, 'total history length:', drawHistory.length);
-      
       drawnValue = drawnChit;
       selectedType = type;
       
@@ -438,9 +436,7 @@
       
       // Always update history content if the history container is visible
       const historyContainer = document.getElementById('historyContainer');
-      const isHistoryVisible = historyContainer && historyContainer.style.display !== 'none';
-      console.log('History container visible:', isHistoryVisible);
-      if (isHistoryVisible) {
+      if (historyContainer && historyContainer.style.display !== 'none') {
         updateHistoryContent();
       }
     }
@@ -523,7 +519,6 @@
 
     function updateHistoryContent() {
       const content = document.getElementById('historyContent');
-      console.log('updateHistoryContent called - drawHistory.length:', drawHistory.length);
       
       if (drawHistory.length === 0) {
         content.innerHTML = '<div class="empty-history">No draws yet</div>';
@@ -537,7 +532,6 @@
         `).join('');
         
         content.innerHTML = `<div class="history-list">${historyHTML}</div>`;
-        console.log('Updated history HTML with', drawHistory.length, 'items');
       }
     }
 
