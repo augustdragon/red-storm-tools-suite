@@ -12,11 +12,11 @@ Tool for generating aircraft flights according to official Red Storm OOB tables.
 
 ## 🌐 Web Applications
 
-Visit our GitHub Pages site to access all tools: [Red Storm Tools](https://augustdragon.github.io/red-storm-chit-pull/)
+Visit our GitHub Pages site to access all tools: [Red Storm Tools](https://augustdragon.github.io/red-storm-tools-suite/)
 
 ### Direct Links:
-- **Chit Pull App**: https://augustdragon.github.io/red-storm-chit-pull/chit-pull/
-- **OOB Generator**: https://augustdragon.github.io/red-storm-chit-pull/oob-generator/
+- **Chit Pull App**: https://augustdragon.github.io/red-storm-tools-suite/chit-pull/
+- **OOB Generator**: https://augustdragon.github.io/red-storm-tools-suite/oob-generator/
 
 ## 📱 Test the App Now!
 
@@ -37,8 +37,8 @@ Visit our GitHub Pages site to access all tools: [Red Storm Tools](https://augus
 ### Option 2: Local Development
 ```bash
 # Clone the repository
-git clone https://github.com/augustdragon/red-storm-chit-pull.git
-cd red-storm-chit-pull
+git clone https://github.com/augustdragon/red-storm-tools-suite.git
+cd red-storm-tools-suite
 
 # Install dependencies
 npm install
