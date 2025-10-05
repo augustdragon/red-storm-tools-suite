@@ -51,8 +51,8 @@
         <div class="selected-table" id="selectedTableDisplay"></div>
         
         <div class="input-group">
-          <label for="rollCount">Number of rolls:</label>
-          <input type="number" id="rollCount" min="1" max="20" value="1" />
+          <label for="rollCountBasic">Number of rolls:</label>
+          <input type="number" id="rollCountBasic" min="1" max="20" value="1" />
         </div>
         
         <div class="action-buttons">
@@ -85,8 +85,8 @@
         </div>
         
         <div class="input-group">
-          <label for="rollCount">Number of rolls:</label>
-          <input type="number" id="rollCount" min="1" max="20" value="1" />
+          <label for="rollCountVariable">Number of rolls:</label>
+          <input type="number" id="rollCountVariable" min="1" max="20" value="1" />
         </div>
         
         <div class="action-buttons">
@@ -287,13 +287,13 @@
         }
         
         document.getElementById('variableSelectionSection').classList.add('active');
-        document.getElementById('rollCount').focus();
+        document.getElementById('rollCountVariable').focus();
       } else {
         // No variables needed, use original flow
         const displayText = `${faction} Table ${tableId}`;
         document.getElementById('selectedTableDisplay').textContent = displayText;
         document.getElementById('rollInputSection').classList.add('active');
-        document.getElementById('rollCount').focus();
+        document.getElementById('rollCountBasic').focus();
       }
     }
 
@@ -301,20 +301,20 @@
       selectedTable = null;
       selectedFaction = null;
       document.getElementById('rollInputSection').classList.remove('active');
-      document.getElementById('rollCount').value = 1;
+      document.getElementById('rollCountBasic').value = 1;
     }
 
     function cancelVariableSelection() {
       selectedTable = null;
       selectedFaction = null;
       document.getElementById('variableSelectionSection').classList.remove('active');
-      document.getElementById('rollCount').value = 1;
+      document.getElementById('rollCountVariable').value = 1;
     }
 
     function makeRollsWithVariables() {
       if (!selectedTable) return;
       
-      const rollCount = parseInt(document.getElementById('rollCount').value);
+      const rollCount = parseInt(document.getElementById('rollCountVariable').value);
       if (rollCount < 1 || rollCount > 20) {
         alert('Please enter a number between 1 and 20');
         return;
@@ -361,7 +361,7 @@
     function makeRolls() {
       if (!selectedTable) return;
       
-      const rollCount = parseInt(document.getElementById('rollCount').value);
+      const rollCount = parseInt(document.getElementById('rollCountBasic').value);
       if (rollCount < 1 || rollCount > 20) {
         alert('Please enter a number between 1 and 20');
         return;
