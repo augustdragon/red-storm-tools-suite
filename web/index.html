@@ -433,6 +433,11 @@
       
       updateChitDisplay();
       updateHistoryButton();
+      
+      // Update history content if history is currently visible
+      if (showHistory) {
+        updateHistoryContent();
+      }
     }
 
     function updateChitDisplay() {
@@ -530,12 +535,17 @@
     }
 
     function clearHistory() {
+      const wasShowingHistory = showHistory;
       drawHistory = [];
       drawnValue = null;
       selectedType = null;
-      setShowHistory(false);
       updateChitDisplay();
       updateHistoryButton();
+      
+      // Update history content if it's currently visible
+      if (wasShowingHistory) {
+        updateHistoryContent();
+      }
     }
 
     // Initialize the app
