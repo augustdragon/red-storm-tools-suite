@@ -75,6 +75,20 @@
           </select>
         </div>
         
+        <!-- Scenario Date Context -->
+        <div class="input-group" id="dateContext" style="display: none;">
+          <div style="background-color: #2a3a2a; padding: 8px 12px; border-radius: 4px; font-size: 14px; color: #b4c4b4; text-align: center;">
+            <span id="dateContextMessage">Scenario Date Context: <span id="currentScenarioDate">Not set</span></span>
+          </div>
+        </div>
+        
+        <!-- Scenario Date Context -->
+        <div class="input-group" id="dateContext" style="display: none;">
+          <div style="background-color: #2a3a2a; padding: 8px 12px; border-radius: 4px; font-size: 14px; color: #b4c4b4; text-align: center;">
+            <span id="dateContextMessage">Scenario Date: <strong id="currentScenarioDate">Not set</strong> • <button onclick="resetScenarioContext()" style="background: none; border: none; color: #8ab48a; text-decoration: underline; cursor: pointer; font-size: 12px; padding: 0;">Change for new scenario</button></span>
+          </div>
+        </div>
+        
         <!-- Date Selection -->
         <div class="input-group" id="dateSelection" style="display: none;">
           <label>Scenario Date:</label>
@@ -125,6 +139,53 @@
     // Application state
     let selectedTable = null;
     let selectedFaction = null;
+    let scenarioDateContext = null; // Track the established scenario date
+    let hasGeneratedResults = false; // Track if any results have been generated
+
+    // Update scenario date context
+    function updateScenarioDateContext(dateValue) {
+      if (!scenarioDateContext) {
+        scenarioDateContext = dateValue;
+        const dateText = dateValue === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
+        document.getElementById('currentScenarioDate').textContent = dateText;
+        document.getElementById('dateContext').style.display = 'flex';
+      }
+    }
+
+    // Reset scenario date context (for new scenarios)
+    function resetScenarioContext() {
+      if (confirm('Start a new scenario? This will clear the current date context.')) {
+        scenarioDateContext = null;
+        hasGeneratedResults = false;
+        document.getElementById('dateContext').style.display = 'none';
+        // Reset the dropdown to default
+        document.getElementById('scenarioDate').value = 'pre';
+      }
+    }
+    let scenarioDateContext = null; // Track the established scenario date
+    let hasGeneratedResults = false; // Track if any results have been generated
+
+    // Update scenario date context
+    function updateScenarioDateContext(dateValue) {
+      if (!scenarioDateContext) {
+        scenarioDateContext = dateValue;
+        const dateText = dateValue === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
+        document.getElementById('currentScenarioDate').textContent = dateText;
+        document.getElementById('dateContext').style.display = 'flex';
+      }
+    }
+
+    // Reset scenario date context (for new scenarios)
+    function resetScenarioContext() {
+      if (confirm('Start a new scenario? This will clear the current date context.')) {
+        scenarioDateContext = null;
+        hasGeneratedResults = false;
+        document.getElementById('dateContext').style.display = 'none';
+        // Reset the dropdown to default
+        document.getElementById('scenarioDate').value = 'pre';
+      }
+    }
+    
     let results = [];
     let resultCounter = 1;
 
@@ -288,8 +349,17 @@
         
         if (table.hasDate) {
           dateSelection.style.display = 'flex';
+          // Set default date based on scenario context
+          if (scenarioDateContext) {
+            document.getElementById('scenarioDate').value = scenarioDateContext;
+          }
         } else {
           dateSelection.style.display = 'none';
+        }
+        
+        // Show date context if established
+        if (scenarioDateContext && table.hasDate) {
+          document.getElementById('dateContext').style.display = 'flex';
         }
         
         document.getElementById('variableSelectionSection').classList.add('active');
@@ -331,6 +401,10 @@
       // Get variable selections
       const atafZone = document.getElementById('atafZone').value;
       const scenarioDate = document.getElementById('scenarioDate').value;
+      
+      // Update scenario date context on first generation
+      updateScenarioDateContext(scenarioDate);
+      hasGeneratedResults = true;
       
       for (let i = 0; i < rollCount; i++) {
         const result = getTableResultWithVariables(selectedTable, atafZone, scenarioDate);
