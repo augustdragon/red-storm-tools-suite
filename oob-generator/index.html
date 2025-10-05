@@ -420,6 +420,40 @@
         </div>
       </div>
 
+      <!-- Variable Selection Section -->
+      <div class="roll-input-section" id="variableSelectionSection">
+        <div class="selected-table" id="variableTableDisplay"></div>
+        
+        <!-- ATAF Zone Selection -->
+        <div class="input-group" id="atafSelection" style="display: none;">
+          <label>ATAF Zone:</label>
+          <select id="atafZone" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
+            <option value="2ATAF">2ATAF</option>
+            <option value="4ATAF">4ATAF</option>
+          </select>
+        </div>
+        
+        <!-- Date Selection -->
+        <div class="input-group" id="dateSelection" style="display: none;">
+          <label>Scenario Date:</label>
+          <select id="scenarioDate" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
+            <option value="pre">Pre-6/1/87</option>
+            <option value="post">6/1/87 or later</option>
+          </select>
+        </div>
+        
+        <div class="input-group">
+          <label for="rollCount">Number of rolls:</label>
+          <input type="number" id="rollCount" min="1" max="20" value="1" />
+        </div>
+        
+        <div class="action-buttons">
+          <button class="action-button roll-button" onclick="makeRollsWithVariables()">Make Rolls</button>
+          <button class="action-button" style="background-color: #6d5d47;" onclick="viewTableWithVariables()">View Table</button>
+          <button class="action-button cancel-button" onclick="cancelVariableSelection()">Cancel</button>
+        </div>
+      </div>
+
       <!-- Table View Section -->
       <div class="section" id="tableViewSection" style="display: none;">
         <div class="section-title" id="tableViewTitle"></div>
@@ -457,26 +491,115 @@
         faction: 'NATO',
         description: '1 x {2} [QRA], CAP',
         flightSize: 2,
-        nations: {
-          '1-4': {
-            name: 'UK',
-            aircraft: {
-              '1-6': 'FGR2',
-              '7-10': 'Harrier GR3'
+        hasATAF: true,
+        hasDate: true,
+        variants: {
+          '2ATAF': {
+            'pre': {
+              nations: {
+                '1-4': {
+                  name: 'UK',
+                  aircraft: {
+                    '1-6': 'FGR2',
+                    '7-10': 'Harrier GR3'
+                  }
+                },
+                '5-6': {
+                  name: 'BE/NE',
+                  aircraft: {
+                    '1-5': 'F-16A(BE)',
+                    '6-9': 'F-16A(NE)',
+                    '10': 'NF-5A'
+                  }
+                },
+                '7-10': {
+                  name: 'FRG',
+                  aircraft: {
+                    '1-10': 'F-4F'
+                  }
+                }
+              }
+            },
+            'post': {
+              nations: {
+                '1-6': {
+                  name: 'UK',
+                  aircraft: {
+                    '1-6': 'FGR2',
+                    '7-10': 'Harrier GR3'
+                  }
+                },
+                '7': {
+                  name: 'BE/NE',
+                  aircraft: {
+                    '1-5': 'F-16A(BE)',
+                    '6-9': 'F-16A(NE)',
+                    '10': 'NF-5A'
+                  }
+                },
+                '8-10': {
+                  name: 'FRG',
+                  aircraft: {
+                    '1-10': 'F-4F'
+                  }
+                }
+              }
             }
           },
-          '5-6': {
-            name: 'BE/NE',
-            aircraft: {
-              '1-5': 'F-16A(BE)',
-              '6-9': 'F-16A(NE)',
-              '10': 'NF-5A'
-            }
-          },
-          '7-10': {
-            name: 'FRG',
-            aircraft: {
-              '1-10': 'F-4F'
+          '4ATAF': {
+            'pre': {
+              nations: {
+                '1-5': {
+                  name: 'US',
+                  aircraft: {
+                    '1-2': 'F-4D',
+                    '3-4': 'F-4E',
+                    '5-8': 'F-16A',
+                    '9-10': 'F-16C'
+                  }
+                },
+                '6-8': {
+                  name: 'FRG',
+                  aircraft: {
+                    '1-8': 'F-4F',
+                    '9-10': 'F-104G'
+                  }
+                },
+                '9-10': {
+                  name: 'CAN',
+                  aircraft: {
+                    '1-8': 'CF-18A',
+                    '9-10': 'CF-5A'
+                  }
+                }
+              }
+            },
+            'post': {
+              nations: {
+                '1-7': {
+                  name: 'US',
+                  aircraft: {
+                    '1-2': 'F-4D',
+                    '3-4': 'F-4E',
+                    '5-8': 'F-16A',
+                    '9-10': 'F-16C'
+                  }
+                },
+                '8-9': {
+                  name: 'FRG',
+                  aircraft: {
+                    '1-8': 'F-4F',
+                    '9-10': 'F-104G'
+                  }
+                },
+                '10': {
+                  name: 'CAN',
+                  aircraft: {
+                    '1-8': 'CF-18A',
+                    '9-10': 'CF-5A'
+                  }
+                }
+              }
             }
           }
         }
@@ -498,10 +621,38 @@
       selectedTable = tableId;
       selectedFaction = faction;
       
-      const displayText = `${faction} Table ${tableId}`;
-      document.getElementById('selectedTableDisplay').textContent = displayText;
-      document.getElementById('rollInputSection').classList.add('active');
-      document.getElementById('rollCount').focus();
+      const table = oobTables[tableId];
+      
+      // Check if this table has variables that need to be selected
+      if (table.hasATAF || table.hasDate) {
+        const displayText = `${faction} Table ${tableId}`;
+        document.getElementById('variableTableDisplay').textContent = displayText;
+        
+        // Show/hide variable selections based on table requirements
+        const atafSelection = document.getElementById('atafSelection');
+        const dateSelection = document.getElementById('dateSelection');
+        
+        if (table.hasATAF) {
+          atafSelection.style.display = 'flex';
+        } else {
+          atafSelection.style.display = 'none';
+        }
+        
+        if (table.hasDate) {
+          dateSelection.style.display = 'flex';
+        } else {
+          dateSelection.style.display = 'none';
+        }
+        
+        document.getElementById('variableSelectionSection').classList.add('active');
+        document.getElementById('rollCount').focus();
+      } else {
+        // No variables needed, use original flow
+        const displayText = `${faction} Table ${tableId}`;
+        document.getElementById('selectedTableDisplay').textContent = displayText;
+        document.getElementById('rollInputSection').classList.add('active');
+        document.getElementById('rollCount').focus();
+      }
     }
 
     function cancelSelection() {
@@ -509,6 +660,60 @@
       selectedFaction = null;
       document.getElementById('rollInputSection').classList.remove('active');
       document.getElementById('rollCount').value = 1;
+    }
+
+    function cancelVariableSelection() {
+      selectedTable = null;
+      selectedFaction = null;
+      document.getElementById('variableSelectionSection').classList.remove('active');
+      document.getElementById('rollCount').value = 1;
+    }
+
+    function makeRollsWithVariables() {
+      if (!selectedTable) return;
+      
+      const rollCount = parseInt(document.getElementById('rollCount').value);
+      if (rollCount < 1 || rollCount > 20) {
+        alert('Please enter a number between 1 and 20');
+        return;
+      }
+
+      const table = oobTables[selectedTable];
+      
+      // Get variable selections
+      const atafZone = document.getElementById('atafZone').value;
+      const scenarioDate = document.getElementById('scenarioDate').value;
+      
+      for (let i = 0; i < rollCount; i++) {
+        const result = getTableResultWithVariables(selectedTable, atafZone, scenarioDate);
+        
+        const resultEntry = {
+          id: resultCounter++,
+          table: selectedTable,
+          faction: selectedFaction,
+          tableName: table.name,
+          atafZone: atafZone,
+          scenarioDate: scenarioDate,
+          nationRoll: result.nationRoll,
+          aircraftRoll: result.aircraftRoll,
+          result: result.text,
+          timestamp: new Date()
+        };
+        
+        results.unshift(resultEntry);
+      }
+      
+      updateResultsDisplay();
+      cancelVariableSelection();
+    }
+
+    function viewTableWithVariables() {
+      if (!selectedTable) return;
+      
+      const atafZone = document.getElementById('atafZone').value;
+      const scenarioDate = document.getElementById('scenarioDate').value;
+      
+      viewTableStructure(selectedTable, atafZone, scenarioDate);
     }
 
     function makeRolls() {
@@ -541,6 +746,59 @@
       
       updateResultsDisplay();
       cancelSelection();
+    }
+
+    function getTableResultWithVariables(tableId, atafZone, scenarioDate) {
+      const table = oobTables[tableId];
+      
+      if (tableId === 'A') {
+        // Table A: NATO QRA Flight - two-roll system with variables
+        const variant = table.variants[atafZone][scenarioDate];
+        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        
+        // Determine nation based on roll and variant
+        let selectedNation, nationName;
+        for (const [nationRange, nationData] of Object.entries(variant.nations)) {
+          const [min, max] = parseRange(nationRange);
+          if (nationRoll >= min && nationRoll <= max) {
+            selectedNation = nationData;
+            nationName = nationData.name;
+            break;
+          }
+        }
+        
+        // Roll for aircraft within that nation
+        const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+        let aircraftType = null;
+        
+        // Find matching aircraft based on roll ranges
+        for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+          const [min, max] = parseRange(range);
+          if (aircraftRoll >= min && aircraftRoll <= max) {
+            aircraftType = aircraft;
+            // Add nation suffix if not already included
+            if (!aircraftType.includes('(') && nationName !== 'FRG' && !aircraftType.startsWith('CF-')) {
+              aircraftType += `(${nationName})`;
+            }
+            break;
+          }
+        }
+        
+        const resultText = `1 x {${table.flightSize}} ${aircraftType}`;
+        
+        return {
+          nationRoll: nationRoll,
+          aircraftRoll: aircraftRoll,
+          text: resultText
+        };
+      }
+      
+      // Placeholder for other tables
+      return {
+        nationRoll: null,
+        aircraftRoll: null,
+        text: `Placeholder result for Table ${tableId}`
+      };
     }
 
     function getTableResult(tableId) {
@@ -617,16 +875,25 @@
       
       const resultsHTML = results.map(result => {
         let rollText = '';
+        let variableText = '';
+        
         if (result.nationRoll && result.aircraftRoll) {
           rollText = `(nation: ${result.nationRoll}, aircraft: ${result.aircraftRoll})`;
         } else if (result.roll) {
           rollText = `(rolled ${result.roll})`;
         }
         
+        if (result.atafZone || result.scenarioDate) {
+          const parts = [];
+          if (result.atafZone) parts.push(result.atafZone);
+          if (result.scenarioDate) parts.push(result.scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87+');
+          variableText = ` [${parts.join(', ')}]`;
+        }
+        
         return `
           <div class="result-item">
             <div class="result-info">
-              <div class="result-table">${result.tableName}</div>
+              <div class="result-table">${result.tableName}${variableText}</div>
               <div class="result-text">
                 ${result.result}
                 <span class="result-roll">${rollText}</span>
@@ -656,32 +923,35 @@
       }
     }
 
-    function viewTable() {
-      if (!selectedTable) return;
-      
-      const table = oobTables[selectedTable];
+    function viewTableStructure(tableId, atafZone, scenarioDate) {
+      const table = oobTables[tableId];
       const titleElement = document.getElementById('tableViewTitle');
       const contentElement = document.getElementById('tableViewContent');
       
-      titleElement.textContent = table.name;
+      let titleText = table.name;
+      if (atafZone && scenarioDate) {
+        const dateText = scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
+        titleText += ` [${atafZone}, ${dateText}]`;
+      }
+      titleElement.textContent = titleText;
       
-      if (selectedTable === 'A') {
+      if (tableId === 'A') {
+        const variant = table.variants[atafZone][scenarioDate];
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
-        // Show nation roll ranges and aircraft
-        for (const [nationRange, nationData] of Object.entries(table.nations)) {
+        // Show nation roll ranges and aircraft for this variant
+        for (const [nationRange, nationData] of Object.entries(variant.nations)) {
           tableHTML += `<div class="nation-section">`;
           tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
           tableHTML += `<div class="aircraft-list">`;
           
           for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
-            const displayType = aircraftType.includes('(') ? aircraftType : `${aircraftType}(${nationData.name})`;
-            if (nationData.name === 'FRG') {
-              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
-            } else {
-              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${displayType}</div>`;
+            let displayType = aircraftType;
+            if (!aircraftType.includes('(') && nationData.name !== 'FRG' && !aircraftType.startsWith('CF-')) {
+              displayType = `${aircraftType}(${nationData.name})`;
             }
+            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${displayType}</div>`;
           }
           
           tableHTML += `</div></div>`;
@@ -690,10 +960,29 @@
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else {
-        contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${selectedTable}</div>`;
+        contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${tableId}</div>`;
       }
       
       document.getElementById('tableViewSection').style.display = 'block';
+    }
+
+    function viewTable() {
+      if (!selectedTable) return;
+      
+      // For tables without variables, use default values
+      if (selectedTable === 'A') {
+        // Default to 2ATAF, pre-6/1/87 for backward compatibility
+        viewTableStructure(selectedTable, '2ATAF', 'pre');
+      } else {
+        // Handle other tables that don't have variables yet
+        const table = oobTables[selectedTable];
+        const titleElement = document.getElementById('tableViewTitle');
+        const contentElement = document.getElementById('tableViewContent');
+        
+        titleElement.textContent = table.name;
+        contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${selectedTable}</div>`;
+        document.getElementById('tableViewSection').style.display = 'block';
+      }
     }
 
     function hideTableView() {
