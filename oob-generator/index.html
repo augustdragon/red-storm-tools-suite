@@ -338,6 +338,7 @@
           scenarioDate: scenarioDate,
           nationRoll: result.nationRoll,
           aircraftRoll: result.aircraftRoll,
+          nationName: result.nationName,
           result: result.text,
           timestamp: new Date().getTime() + i // Ensure unique timestamps
         };
@@ -428,6 +429,7 @@
         return {
           nationRoll: nationRoll,
           aircraftRoll: aircraftRoll,
+          nationName: nationName,
           text: resultText
         };
       }
@@ -517,7 +519,8 @@
         let variableText = '';
         
         if (result.nationRoll && result.aircraftRoll) {
-          rollText = `(nation: ${result.nationRoll}, aircraft: ${result.aircraftRoll})`;
+          const nationDisplay = result.nationName ? result.nationName : `nation: ${result.nationRoll}`;
+          rollText = `(${nationDisplay}, aircraft: ${result.aircraftRoll})`;
         } else if (result.roll) {
           rollText = `(rolled ${result.roll})`;
         }
