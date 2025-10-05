@@ -380,7 +380,7 @@
           nationRoll: result.nationRoll,
           aircraftRoll: result.aircraftRoll,
           result: result.text,
-          timestamp: new Date()
+          timestamp: new Date().getTime() + i // Ensure unique timestamps
         };
         
         results.unshift(resultEntry);
