@@ -424,7 +424,7 @@
           }
         }
         
-        const resultText = `1 x {${table.flightSize}} ${aircraftType}, CAP`;
+        const resultText = `${nationName}: 1 x {${table.flightSize}} ${aircraftType}, CAP`;
         
         return {
           nationRoll: nationRoll,
@@ -519,8 +519,7 @@
         let variableText = '';
         
         if (result.nationRoll && result.aircraftRoll) {
-          const nationDisplay = result.nationName ? result.nationName : `nation: ${result.nationRoll}`;
-          rollText = `(${nationDisplay}, aircraft: ${result.aircraftRoll})`;
+          rollText = `(aircraft: ${result.aircraftRoll})`;
         } else if (result.roll) {
           rollText = `(rolled ${result.roll})`;
         }
