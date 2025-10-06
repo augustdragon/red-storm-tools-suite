@@ -1796,7 +1796,7 @@
         let rollText = '';
         let variableText = '';
         
-        if (result.nationRoll && result.aircraftRoll && result.table !== 'A' && result.table !== 'B') {
+        if (result.nationRoll && result.aircraftRoll && result.table !== 'A' && result.table !== 'B' && result.table !== 'F') {
           rollText = `(aircraft: ${result.aircraftRoll})`;
         } else if (result.roll) {
           rollText = `(rolled ${result.roll})`;
