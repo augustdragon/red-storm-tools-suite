@@ -1001,8 +1001,8 @@
         return;
       }
 
-      // Check if Table C and scenario date is required
-      if (selectedTable === 'C' && !scenarioDate) {
+      // Check if Table C or D and scenario date is required
+      if ((selectedTable === 'C' || selectedTable === 'D') && selectedTable !== 'D' && !scenarioDate) {
         alert('Please select a scenario date first.');
         return;
       }
@@ -1013,8 +1013,11 @@
         let result;
         
         // Table C needs scenario date but no ATAF zone
+        // Table D needs no scenario date (date-independent)
         if (selectedTable === 'C') {
           result = getTableResultWithVariables(selectedTable, null, scenarioDate);
+        } else if (selectedTable === 'D') {
+          result = getTableResultWithVariables(selectedTable, null, null);
         } else {
           result = getTableResult(selectedTable);
         }
