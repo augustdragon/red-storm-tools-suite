@@ -2066,11 +2066,11 @@
         const missionData = table.missionTypes[selectedMissionType];
         
         let tableHTML = `<div class="table-view-content">`;
-        // tableHTML += `<div class="table-description">${table.description}</div>`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
         
         if (missionData) {
           tableHTML += `<div class="mission-header">${missionData.name}</div>`;
-          tableHTML += `<div class="mission-info">${missionData.flightCount} x {${missionData.flightSize}} [${missionData.name}], ${missionData.description}</div>`;
+          //tableHTML += `<div class="mission-info">${missionData.flightCount} x {${missionData.flightSize}} [${missionData.name}], ${missionData.description}</div>`;
           
           // Sort nations by roll number
           const sortedNations = Object.entries(missionData.nations).sort((a, b) => {
