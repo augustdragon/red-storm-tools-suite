@@ -48,6 +48,18 @@
       <div class="section" id="tableSelection" style="opacity: 0.5; pointer-events: none;">
         <div class="section-title">Select Order of Battle Table</div>
         
+        <!-- Invisible width placeholder to maintain consistent layout -->
+        <div style="visibility: hidden; height: 0; overflow: hidden; margin-bottom: 0;">
+          <div style="display: flex; justify-content: center; gap: 20px; align-items: center;">
+            <label>ATAF Zone:</label>
+            <select style="padding: 8px 12px; width: 120px;">
+              <option>2ATAF</option>
+            </select>
+            <label>Number of rolls:</label>
+            <input type="number" style="padding: 8px 12px; width: 60px;" value="1" />
+          </div>
+        </div>
+        
         <div class="faction-section">
           <div class="faction-header nato-header">NATO Tables</div>
           <div class="table-grid">
