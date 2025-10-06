@@ -664,6 +664,61 @@
         };
       }
       
+      if (tableId === 'B') {
+        // Table B: NATO CAP Flight - uses zones structure
+        const zoneData = table.zones[atafZone][scenarioDate];
+        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        
+        let selectedNation = null;
+        let selectedNationName = '';
+        
+        // Find which nation this roll corresponds to
+        for (const [range, nationData] of Object.entries(zoneData.nations)) {
+          const [min, max] = range.split('-').map(n => parseInt(n));
+          if (nationRoll >= min && nationRoll <= max) {
+            selectedNation = nationData;
+            selectedNationName = nationData.name;
+            break;
+          }
+        }
+        
+        if (!selectedNation) {
+          return {
+            nationRoll: nationRoll,
+            aircraftRoll: null,
+            text: `Error: No nation found for roll ${nationRoll}`
+          };
+        }
+        
+        // Roll for aircraft type
+        const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+        let selectedAircraft = null;
+        
+        // Find which aircraft this roll corresponds to
+        for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+          const [min, max] = range.split('-').map(n => parseInt(n));
+          if (aircraftRoll >= min && aircraftRoll <= max) {
+            selectedAircraft = aircraft;
+            break;
+          }
+        }
+        
+        if (!selectedAircraft) {
+          return {
+            nationRoll: nationRoll,
+            aircraftRoll: aircraftRoll,
+            text: `Error: No aircraft found for roll ${aircraftRoll}`
+          };
+        }
+        
+        return {
+          nationRoll: nationRoll,
+          aircraftRoll: aircraftRoll,
+          nationName: selectedNationName,
+          text: `${selectedNationName}: 1 x {2} ${selectedAircraft}, CAP`
+        };
+      }
+      
       // Placeholder for other tables
       return {
         nationRoll: null,
