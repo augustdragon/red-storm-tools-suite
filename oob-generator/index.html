@@ -734,7 +734,142 @@
           }
         }
       },
-      'D': { name: 'NATO Table D', faction: 'NATO', results: {} },
+      'D': { 
+        name: 'NATO Table D - Deep Strike Raid', 
+        faction: 'NATO',
+        hasTasking: true,
+        hasDate: false,
+        description: 'NATO Deep Strike Raid - Package of flights for deep behind WP lines',
+        result: '2 x {1} [Escort Jamming]; 4 x {2} [CAP]; 4 x {2} [SEAD]; 4 x {4} [Bombing]; 2 x {2} [Recon]',
+        taskings: {
+          'Escort Jamming': {
+            flightSize: 1,
+            flightCount: 2,
+            description: 'Escort Jamming',
+            nations: {
+              '1-10': {
+                name: 'US',
+                aircraft: {
+                  '1-10': 'EF-111A'
+                }
+              }
+            }
+          },
+          'CAP': {
+            flightSize: 2,
+            flightCount: 4,
+            description: 'Combat Air Patrol',
+            nations: {
+              '1-6': {
+                name: 'US',
+                aircraft: {
+                  '1-3': 'F-15A',
+                  '4-7': 'F-15C',
+                  '8-10': 'F-4E'
+                }
+              },
+              '7-8': {
+                name: 'UK',
+                aircraft: {
+                  '1-10': 'FGR2'
+                }
+              },
+              '9-10': {
+                name: 'CAN',
+                aircraft: {
+                  '1-10': 'CF-18A'
+                }
+              }
+            }
+          },
+          'SEAD': {
+            flightSize: 2,
+            flightCount: 4,
+            description: 'Suppression of Enemy Air Defenses',
+            nations: {
+              '1-6': {
+                name: 'US',
+                aircraft: {
+                  '1-6': 'F-4G',
+                  '7-9': 'F-4G/F-4E',
+                  '10': 'F-4G/F-16C'
+                }
+              },
+              '7-9': {
+                name: 'UK',
+                aircraft: {
+                  '1-8': 'Tornado GR1',
+                  '9-10': 'Jaguar GR1A'
+                }
+              },
+              '10': {
+                name: 'CAN',
+                aircraft: {
+                  '1-10': 'CF-18A'
+                }
+              }
+            }
+          },
+          'Bombing': {
+            flightSize: 4,
+            flightCount: 4,
+            description: 'Bombing',
+            nations: {
+              '1-6': {
+                name: 'US',
+                aircraft: {
+                  '1-5': 'F-4E or F-111D/E (player choice)',
+                  '6-10': 'F-111F'
+                }
+              },
+              '7-8': {
+                name: 'UK',
+                aircraft: {
+                  '1-10': 'Tornado GR1'
+                }
+              },
+              '9-10': {
+                name: 'FRG',
+                aircraft: {
+                  '1-10': 'Tornado IDS'
+                }
+              }
+            }
+          },
+          'Recon': {
+            flightSize: 2,
+            flightCount: 2,
+            description: 'Reconnaissance',
+            nations: {
+              '1-5': {
+                name: 'US',
+                aircraft: {
+                  '1-10': 'RF-4C'
+                }
+              },
+              '6-7': {
+                name: 'UK',
+                aircraft: {
+                  '1-7': 'Jaguar GR1A',
+                  '8-10': 'Tornado GR1A'
+                }
+              },
+              '8-9': {
+                name: 'FRG',
+                aircraft: {
+                  '1-10': 'RF-4E'
+                }
+              },
+              '10': {
+                name: 'BE',
+                aircraft: {
+                  '1-10': 'Mirage 5BR'
+                }
+              }
+            }
+          }
+        }
+      },
       'E': { name: 'NATO Table E', faction: 'NATO', results: {} },
       'F': { name: 'NATO Table F', faction: 'NATO', results: {} },
       'G': { name: 'Warsaw Pact Table G', faction: 'Warsaw Pact', results: {} },
@@ -749,8 +884,8 @@
       selectedTable = tableId;
       selectedFaction = faction;
       
-      // Check if scenario date is set
-      if (!scenarioDate) {
+      // Check if scenario date is set (except for Table D which is not date-dependent)
+      if (!scenarioDate && tableId !== 'D') {
         alert('Please select a scenario date first.');
         return;
       }
@@ -1065,17 +1200,110 @@
           let resultText = '';
           
           // Handle special cases with superscript references
-          if (tasking === 'SEAD' && selectedNationName === 'US' && selectedAircraft === 'F-4G/F-4E') {
-            // Reference 1: Split F-4G/F-4E into separate flights
+          if (tableId === 'C' && tasking === 'SEAD' && selectedNationName === 'US' && selectedAircraft === 'F-4G/F-4E') {
+            // Table C Reference 1: Split F-4G/F-4E into separate flights
             resultText = `2 x {${flightSize}} ${selectedNationName} F-4G, 2 x {${flightSize}} ${selectedNationName} F-4E, ${tasking}`;
-          } else if (tasking === 'Bombing' && selectedNationName === 'US' && selectedAircraft === 'F-4') {
-            // Reference 2: Hidden sub-roll for F-4D vs F-4E
+          } else if (tableId === 'C' && tasking === 'Bombing' && selectedNationName === 'US' && selectedAircraft === 'F-4') {
+            // Table C Reference 2: Hidden sub-roll for F-4D vs F-4E
             const subRoll = Math.floor(Math.random() * 10) + 1;
             const specificAircraft = subRoll <= 5 ? 'F-4D' : 'F-4E';
             resultText = `4 x {${flightSize}} ${selectedNationName} ${specificAircraft}, ${tasking}`;
+          } else if (tableId === 'D' && tasking === 'SEAD' && selectedNationName === 'US' && selectedAircraft === 'F-4G/F-4E') {
+            // Table D Reference: Split F-4G/F-4E into separate flights (rolls 7-9)
+            resultText = `2 x {${flightSize}} ${selectedNationName} F-4G, 2 x {${flightSize}} ${selectedNationName} F-4E, ${tasking}`;
+          } else if (tableId === 'D' && tasking === 'SEAD' && selectedNationName === 'US' && selectedAircraft === 'F-4G/F-16C') {
+            // Table D Reference: Split F-4G/F-16C into separate flights (roll 10)
+            resultText = `2 x {${flightSize}} ${selectedNationName} F-4G, 2 x {${flightSize}} ${selectedNationName} F-16C, ${tasking}`;
           } else {
             // Standard result
             resultText = `4 x {${flightSize}} ${selectedNationName} ${selectedAircraft}, ${tasking}`;
+          }
+          
+          results.push({
+            tasking: tasking,
+            nationRoll: nationRoll,
+            aircraftRoll: aircraftRoll,
+            nationName: selectedNationName,
+            text: resultText
+          });
+        }
+        
+        return {
+          taskingResults: results,
+          text: results.map(r => r.text).join('<br>')
+        };
+      } else if (tableId === 'D') {
+        // Table D: NATO Deep Strike Raid - five-tasking system
+        const taskingData = table.taskings;
+        
+        const results = [];
+        const taskings = ['Escort Jamming', 'CAP', 'SEAD', 'Bombing', 'Recon'];
+        const flightSizes = { 'Escort Jamming': 1, 'CAP': 2, 'SEAD': 2, 'Bombing': 4, 'Recon': 2 };
+        const flightCounts = { 'Escort Jamming': 2, 'CAP': 4, 'SEAD': 4, 'Bombing': 4, 'Recon': 2 };
+        
+        for (const tasking of taskings) {
+          const taskingVariant = taskingData[tasking];
+          
+          // Roll for nation
+          const nationRoll = Math.floor(Math.random() * 10) + 1;
+          let selectedNation = null;
+          let selectedNationName = '';
+          
+          for (const [range, nationData] of Object.entries(taskingVariant.nations)) {
+            const [min, max] = parseRange(range);
+            if (nationRoll >= min && nationRoll <= max) {
+              selectedNation = nationData;
+              selectedNationName = nationData.name;
+              break;
+            }
+          }
+          
+          if (!selectedNation) {
+            results.push({
+              tasking: tasking,
+              nationRoll: nationRoll,
+              aircraftRoll: null,
+              text: `Error: No nation found for ${tasking} roll ${nationRoll}`
+            });
+            continue;
+          }
+          
+          // Roll for aircraft
+          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          let selectedAircraft = null;
+          
+          for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+            const [min, max] = parseRange(range);
+            if (aircraftRoll >= min && aircraftRoll <= max) {
+              selectedAircraft = aircraft;
+              break;
+            }
+          }
+          
+          if (!selectedAircraft) {
+            results.push({
+              tasking: tasking,
+              nationRoll: nationRoll,
+              aircraftRoll: aircraftRoll,
+              text: `Error: No aircraft found for ${tasking} roll ${aircraftRoll}`
+            });
+            continue;
+          }
+          
+          const flightSize = flightSizes[tasking];
+          const flightCount = flightCounts[tasking];
+          let resultText = '';
+          
+          // Handle special cases with superscript references for Table D
+          if (tableId === 'D' && tasking === 'SEAD' && selectedNationName === 'US' && selectedAircraft === 'F-4G/F-4E') {
+            // Table D Reference: Split F-4G/F-4E into separate flights (rolls 7-9)
+            resultText = `2 x {${flightSize}} ${selectedNationName} F-4G, 2 x {${flightSize}} ${selectedNationName} F-4E, ${tasking}`;
+          } else if (tableId === 'D' && tasking === 'SEAD' && selectedNationName === 'US' && selectedAircraft === 'F-4G/F-16C') {
+            // Table D Reference: Split F-4G/F-16C into separate flights (roll 10)
+            resultText = `2 x {${flightSize}} ${selectedNationName} F-4G, 2 x {${flightSize}} ${selectedNationName} F-16C, ${tasking}`;
+          } else {
+            // Standard result
+            resultText = `${flightCount} x {${flightSize}} ${selectedNationName} ${selectedAircraft}, ${tasking}`;
           }
           
           results.push({
@@ -1355,6 +1583,52 @@
         
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'D') {
+        // Table D: NATO Deep Strike Raid - show all five taskings (no date variants)
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        tableHTML += `<div class="table-result">${table.result}</div>`;
+        
+        const taskings = ['Escort Jamming', 'CAP', 'SEAD', 'Bombing', 'Recon'];
+        
+        for (const tasking of taskings) {
+          const taskingData = table.taskings[tasking];
+          
+          tableHTML += `<div class="tasking-section">`;
+          const flightInfo = taskingData.flightCount + ' x {' + taskingData.flightSize + '}';
+          tableHTML += `<div class="tasking-header">${tasking} (${flightInfo})</div>`;
+          
+          // Sort nations by roll number
+          const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
+            const aMin = parseInt(a[0].split('-')[0]);
+            const bMin = parseInt(b[0].split('-')[0]);
+            return aMin - bMin;
+          });
+          
+          for (const [nationRange, nationData] of sortedNations) {
+            tableHTML += `<div class="nation-section">`;
+            tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+            tableHTML += `<div class="aircraft-list">`;
+            
+            // Sort aircraft ranges numerically
+            const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            for (const [aircraftRange, aircraftType] of sortedAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            }
+            
+            tableHTML += `</div></div>`;
+          }
+          
+          tableHTML += `</div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
       } else {
         contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${tableId}</div>`;
       }
@@ -1384,6 +1658,9 @@
         // Table C uses global scenario date for all taskings
         const globalDate = scenarioDate || 'pre';
         viewTableStructure(selectedTable, null, globalDate);
+      } else if (selectedTable === 'D') {
+        // Table D: No date dependency, so we can use any date value
+        viewTableStructure(selectedTable, null, null);
       } else {
         // Handle other tables that don't have variables yet
         const table = oobTables[selectedTable];
