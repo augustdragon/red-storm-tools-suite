@@ -979,7 +979,7 @@
         hasMissionType: true,
         hasDate: false,
         description: 'NATO Special Missions - Specialized missions for small numbers of aircraft',
-        result: 'Mission type determined result',
+        result: 'Mission type determines result',
         missionTypes: {
           'Fast FAC': {
             name: 'Fast FAC',
@@ -2066,7 +2066,7 @@
         const missionData = table.missionTypes[selectedMissionType];
         
         let tableHTML = `<div class="table-view-content">`;
-        tableHTML += `<div class="table-description">${table.description}</div>`;
+        // tableHTML += `<div class="table-description">${table.description}</div>`;
         
         if (missionData) {
           tableHTML += `<div class="mission-header">${missionData.name}</div>`;
