@@ -909,6 +909,33 @@
         
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'B') {
+        const zoneData = table.zones[atafZone][scenarioDate];
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        tableHTML += `<div class="table-result">${table.result}</div>`;
+        
+        // Show nation roll ranges and aircraft for this zone/date combination (sorted by roll number)
+        const sortedNations = Object.entries(zoneData.nations).sort((a, b) => {
+          const aMin = parseInt(a[0].split('-')[0]);
+          const bMin = parseInt(b[0].split('-')[0]);
+          return aMin - bMin;
+        });
+        
+        for (const [nationRange, nationData] of sortedNations) {
+          tableHTML += `<div class="nation-section">`;
+          tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+          tableHTML += `<div class="aircraft-list">`;
+          
+          for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+          }
+          
+          tableHTML += `</div></div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
       } else {
         contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${tableId}</div>`;
       }
