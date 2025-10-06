@@ -334,7 +334,140 @@
           }
         }
       },
-      'B': { name: 'NATO Table B', faction: 'NATO', results: {} },
+      'B': { 
+        name: 'NATO Table B - CAP Flight', 
+        faction: 'NATO',
+        hasATAF: true,
+        hasDate: true,
+        description: 'NATO CAP Flight - Flights in the air at designated Orbit Points',
+        result: '1 x {2} [CAP], CAP',
+        zones: {
+          '2ATAF': {
+            'pre': {
+              nations: {
+                '1-2': {
+                  name: 'US',
+                  aircraft: {
+                    '1-2': 'F-15A',
+                    '3-6': 'F-15C',
+                    '7-9': 'F-4E',
+                    '10': 'F-4D'
+                  }
+                },
+                '3-5': {
+                  name: 'UK',
+                  aircraft: {
+                    '1-7': 'FGR2',
+                    '8-10': 'Tornado F2A'
+                  }
+                },
+                '6-7': {
+                  name: 'BE/NE',
+                  aircraft: {
+                    '1-5': 'F-16A(BE)',
+                    '6-10': 'F-16A(NE)'
+                  }
+                },
+                '8-10': {
+                  name: 'FRG',
+                  aircraft: {
+                    '1-10': 'F-4F'
+                  }
+                }
+              }
+            },
+            'post': {
+              nations: {
+                '1-4': {
+                  name: 'US',
+                  aircraft: {
+                    '1-2': 'F-15A',
+                    '3-6': 'F-15C',
+                    '7-9': 'F-4E',
+                    '10': 'F-4D'
+                  }
+                },
+                '5-6': {
+                  name: 'UK',
+                  aircraft: {
+                    '1-7': 'FGR2',
+                    '8-10': 'Tornado F2A'
+                  }
+                },
+                '7-8': {
+                  name: 'BE/NE',
+                  aircraft: {
+                    '1-5': 'F-16A(BE)',
+                    '6-10': 'F-16A(NE)'
+                  }
+                },
+                '9-10': {
+                  name: 'FRG',
+                  aircraft: {
+                    '1-10': 'F-4F'
+                  }
+                }
+              }
+            }
+          },
+          '4ATAF': {
+            'pre': {
+              nations: {
+                '1-5': {
+                  name: 'US',
+                  aircraft: {
+                    '1-2': 'F-15A',
+                    '3-6': 'F-15C',
+                    '7-9': 'F-4E',
+                    '10': 'F-4D'
+                  }
+                },
+                '6-8': {
+                  name: 'FRG',
+                  aircraft: {
+                    '1-9': 'F-4F',
+                    '10': 'F-104G'
+                  }
+                },
+                '9-10': {
+                  name: 'CAN',
+                  aircraft: {
+                    '1-9': 'CF-18A',
+                    '10': 'CF-5A'
+                  }
+                }
+              }
+            },
+            'post': {
+              nations: {
+                '1-7': {
+                  name: 'US',
+                  aircraft: {
+                    '1-2': 'F-15A',
+                    '3-6': 'F-15C',
+                    '7-9': 'F-4E',
+                    '10': 'F-4D'
+                  }
+                },
+                '8-9': {
+                  name: 'FRG',
+                  aircraft: {
+                    '1-9': 'F-4F',
+                    '10': 'F-104G'
+                  }
+                },
+                '10': {
+                  name: 'CAN',
+                  aircraft: {
+                    '1-9': 'CF-18A',
+                    '10': 'CF-5A'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       'C': { name: 'NATO Table C', faction: 'NATO', results: {} },
       'D': { name: 'NATO Table D', faction: 'NATO', results: {} },
       'E': { name: 'NATO Table E', faction: 'NATO', results: {} },
