@@ -582,7 +582,6 @@
       
       updateResultsDisplay();
       updateDateButtonStates(); // Update button states
-      cancelVariableSelection();
     }
 
     function viewTableWithVariables() {
@@ -923,6 +922,11 @@
       if (selectedTable === 'A') {
         // Default to 2ATAF, pre-6/1/87 for backward compatibility
         viewTableStructure(selectedTable, '2ATAF', 'pre');
+      } else if (selectedTable === 'B') {
+        // Table B uses global scenario date and default ATAF zone
+        const defaultAtaf = '2ATAF';
+        const globalDate = scenarioDate || 'pre';
+        viewTableStructure(selectedTable, defaultAtaf, globalDate);
       } else {
         // Handle other tables that don't have variables yet
         const table = oobTables[selectedTable];

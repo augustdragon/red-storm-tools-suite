@@ -50,7 +50,7 @@ body {
 .main-content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 20px;
 }
 
 .section {
