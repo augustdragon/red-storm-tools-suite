@@ -717,3 +717,21 @@ body {
     font-size: 24px;
   }
 }
+
+/* Table C Tasking Styles */
+.tasking-section {
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: #1a2a1a;
+  border-radius: 6px;
+  border: 1px solid #3a4a3a;
+}
+
+.tasking-header {
+  font-size: 18px;
+  font-weight: bold;
+  color: #8fbc8f;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #3a4a3a;
+}
