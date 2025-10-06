@@ -859,6 +859,12 @@
         return;
       }
 
+      // Check if Table C and scenario date is required
+      if (selectedTable === 'C' && !scenarioDate) {
+        alert('Please select a scenario date first.');
+        return;
+      }
+
       const table = oobTables[selectedTable];
       
       for (let i = 0; i < rollCount; i++) {
@@ -991,7 +997,7 @@
       
       if (tableId === 'C') {
         // Table C: NATO Bombing Raid - three-tasking system (CAP, SEAD, Bombing)
-        const dateVariant = getDateVariant(scenarioDate);
+        const dateVariant = scenarioDate;
         const taskingData = table.taskings;
         
         const results = [];
@@ -1286,7 +1292,7 @@
         tableHTML += `<div class="table-result">${table.result}</div>`;
         
         const taskings = ['CAP', 'SEAD', 'Bombing'];
-        const dateVariant = getDateVariant(scenarioDate);
+        const dateVariant = scenarioDate;
         
         for (const tasking of taskings) {
           const taskingData = table.taskings[tasking][dateVariant];
@@ -1334,6 +1340,12 @@
 
     function viewTable() {
       if (!selectedTable) return;
+      
+      // Check if Table C and scenario date is required
+      if (selectedTable === 'C' && !scenarioDate) {
+        alert('Please select a scenario date first.');
+        return;
+      }
       
       // For tables without variables, use default values
       if (selectedTable === 'A') {
