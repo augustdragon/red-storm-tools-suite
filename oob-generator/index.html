@@ -684,7 +684,7 @@
         
         // Find which nation this roll corresponds to
         for (const [range, nationData] of Object.entries(zoneData.nations)) {
-          const [min, max] = range.split('-').map(n => parseInt(n));
+          const [min, max] = parseRange(range);
           if (nationRoll >= min && nationRoll <= max) {
             selectedNation = nationData;
             selectedNationName = nationData.name;
@@ -706,7 +706,7 @@
         
         // Find which aircraft this roll corresponds to
         for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
-          const [min, max] = range.split('-').map(n => parseInt(n));
+          const [min, max] = parseRange(range);
           if (aircraftRoll >= min && aircraftRoll <= max) {
             selectedAircraft = aircraft;
             break;
@@ -929,7 +929,14 @@
           tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
           tableHTML += `<div class="aircraft-list">`;
           
-          for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+          // Sort aircraft ranges numerically
+          const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+            const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+            const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+            return aStart - bStart;
+          });
+          
+          for (const [aircraftRange, aircraftType] of sortedAircraft) {
             tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
           }
           
