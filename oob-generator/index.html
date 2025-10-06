@@ -1062,12 +1062,28 @@
           }
           
           const flightSize = flightSizes[tasking];
+          let resultText = '';
+          
+          // Handle special cases with superscript references
+          if (tasking === 'SEAD' && selectedNationName === 'US' && selectedAircraft === 'F-4G/F-4E') {
+            // Reference 1: Split F-4G/F-4E into separate flights
+            resultText = `2 x {${flightSize}} ${selectedNationName} F-4G, 2 x {${flightSize}} ${selectedNationName} F-4E, ${tasking}`;
+          } else if (tasking === 'Bombing' && selectedNationName === 'US' && selectedAircraft === 'F-4E') {
+            // Reference 2: Hidden sub-roll for F-4D vs F-4E
+            const subRoll = Math.floor(Math.random() * 10) + 1;
+            const specificAircraft = subRoll <= 5 ? 'F-4D' : 'F-4E';
+            resultText = `4 x {${flightSize}} ${selectedNationName} ${specificAircraft}, ${tasking}`;
+          } else {
+            // Standard result
+            resultText = `4 x {${flightSize}} ${selectedNationName} ${selectedAircraft}, ${tasking}`;
+          }
+          
           results.push({
             tasking: tasking,
             nationRoll: nationRoll,
             aircraftRoll: aircraftRoll,
             nationName: selectedNationName,
-            text: `4 x {${flightSize}} ${selectedNationName} ${selectedAircraft}, ${tasking}`
+            text: resultText
           });
         }
         
