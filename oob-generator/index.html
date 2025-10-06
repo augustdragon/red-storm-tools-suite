@@ -124,6 +124,16 @@
           </select>
         </div>
         
+        <!-- Mission Type Selection for Special Missions -->
+        <div class="input-group" id="missionTypeSelection" style="display: none;">
+          <label>Mission Type:</label>
+          <select id="missionType" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
+            <option value="Fast FAC">Fast FAC</option>
+            <option value="Standoff Jamming">Standoff Jamming</option>
+            <option value="Tactical Recon">Tactical Recon</option>
+          </select>
+        </div>
+        
         <!-- Scenario Date Context -->
         <div class="input-group" id="dateContext" style="display: none;">
           <div style="background-color: #2a3a2a; padding: 8px 12px; border-radius: 4px; font-size: 14px; color: #b4c4b4; text-align: center;">
@@ -963,7 +973,109 @@
           }
         }
       },
-      'F': { name: 'NATO Table F', faction: 'NATO', results: {} },
+      'F': { 
+        name: 'NATO Table F - Special Missions', 
+        faction: 'NATO',
+        hasMissionType: true,
+        hasDate: false,
+        description: 'NATO Special Missions - Specialized missions for small numbers of aircraft',
+        result: 'Mission type determined result',
+        missionTypes: {
+          'Fast FAC': {
+            name: 'Fast FAC',
+            flightSize: 2,
+            flightCount: 1,
+            description: 'Fast Forward Air Control',
+            nations: {
+              '1-5': {
+                name: 'US',
+                aircraft: {
+                  '1-4': 'F-4E',
+                  '5-10': 'A-10A'
+                }
+              },
+              '6-7': {
+                name: 'UK',
+                aircraft: {
+                  '1-4': 'Harrier GR3',
+                  '5-10': 'Tornado GR1'
+                }
+              },
+              '8-9': {
+                name: 'FRG',
+                aircraft: {
+                  '1-5': 'F-4F',
+                  '6-10': 'Alpha Jet'
+                }
+              },
+              '10': {
+                name: 'BE/NE/CAN',
+                aircraft: {
+                  '1-4': 'Mirage 5BA',
+                  '5-7': 'F-16A',
+                  '8-10': 'CF-18A'
+                }
+              }
+            }
+          },
+          'Standoff Jamming': {
+            name: 'Standoff Jamming',
+            flightSize: 1,
+            flightCount: 1,
+            description: 'Electronic Warfare Jamming',
+            nations: {
+              '1-9': {
+                name: 'US',
+                aircraft: {
+                  '1-3': 'EC-130H',
+                  '4-10': 'EF-111A'
+                }
+              },
+              '10': {
+                name: 'UK/FRG',
+                aircraft: {
+                  '1-5': 'Falcon 20F',
+                  '6-10': 'HFB 320 Hansa Jet'
+                }
+              }
+            }
+          },
+          'Tactical Recon': {
+            name: 'Tactical Recon',
+            flightSize: 2,
+            flightCount: 1,
+            description: 'Tactical Reconnaissance',
+            nations: {
+              '1-3': {
+                name: 'US',
+                aircraft: {
+                  '1-10': 'RF-4C'
+                }
+              },
+              '4-5': {
+                name: 'UK',
+                aircraft: {
+                  '1-7': 'Jaguar GR1A',
+                  '8-10': 'Tornado GR1A'
+                }
+              },
+              '6-9': {
+                name: 'FRG',
+                aircraft: {
+                  '1-10': 'RF-4E'
+                }
+              },
+              '10': {
+                name: 'BE/NE',
+                aircraft: {
+                  '1-5': 'Mirage 5BR',
+                  '6-10': 'F-16A(NE)'
+                }
+              }
+            }
+          }
+        }
+      },
       'G': { name: 'Warsaw Pact Table G', faction: 'Warsaw Pact', results: {} },
       'H': { name: 'Warsaw Pact Table H', faction: 'Warsaw Pact', results: {} },
       'I': { name: 'Warsaw Pact Table I', faction: 'Warsaw Pact', results: {} },
@@ -1019,9 +1131,28 @@
         const nationalitySelection = document.getElementById('nationalitySelection');
         nationalitySelection.style.display = 'flex';
         
-        // Hide ATAF selection for this table
+        // Hide other selections for this table
         const atafSelection = document.getElementById('atafSelection');
+        const missionTypeSelection = document.getElementById('missionTypeSelection');
         atafSelection.style.display = 'none';
+        missionTypeSelection.style.display = 'none';
+        
+        document.getElementById('variableSelectionSection').classList.add('active');
+        document.getElementById('rollCountVariable').focus();
+      } else if (table.hasMissionType) {
+        // Table F: Special Missions - needs mission type selection
+        const displayText = `${faction} Table ${tableId}`;
+        document.getElementById('variableTableDisplay').textContent = displayText;
+        
+        // Show mission type selection
+        const missionTypeSelection = document.getElementById('missionTypeSelection');
+        missionTypeSelection.style.display = 'flex';
+        
+        // Hide other selections for this table
+        const atafSelection = document.getElementById('atafSelection');
+        const nationalitySelection = document.getElementById('nationalitySelection');
+        atafSelection.style.display = 'none';
+        nationalitySelection.style.display = 'none';
         
         document.getElementById('variableSelectionSection').classList.add('active');
         document.getElementById('rollCountVariable').focus();
@@ -1062,6 +1193,7 @@
       // Get variable selections
       let atafZone = null;
       let crewNationality = null;
+      let selectedMissionType = null;
       
       if (table.hasATAF) {
         atafZone = document.getElementById('atafZone').value;
@@ -1069,6 +1201,10 @@
         crewNationality = document.getElementById('crewNationality').value;
         // Use nationality as atafZone parameter for simplicity
         atafZone = crewNationality;
+      } else if (table.hasMissionType) {
+        selectedMissionType = document.getElementById('missionType').value;
+        // Use mission type as atafZone parameter for simplicity
+        atafZone = selectedMissionType;
       }
       
       // Use global scenario date instead of dropdown
@@ -1109,6 +1245,8 @@
         atafZone = document.getElementById('atafZone').value;
       } else if (table.hasNationality) {
         atafZone = document.getElementById('crewNationality').value;
+      } else if (table.hasMissionType) {
+        atafZone = document.getElementById('missionType').value;
       }
       
       // Use global scenario date
@@ -1507,6 +1645,68 @@
           flightResults: results,
           text: results.map(r => r.text).join('<br>')
         };
+      } else if (tableId === 'F') {
+        // Table F: NATO Special Missions - mission-type based system
+        const selectedMissionType = atafZone; // Mission type passed via atafZone parameter
+        
+        const missionData = table.missionTypes[selectedMissionType];
+        if (!missionData) {
+          return {
+            text: `Error: Unknown mission type ${selectedMissionType}`
+          };
+        }
+        
+        // Roll for nation
+        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        let selectedNation = null;
+        let selectedNationName = '';
+        
+        for (const [range, nationData] of Object.entries(missionData.nations)) {
+          const [min, max] = parseRange(range);
+          if (nationRoll >= min && nationRoll <= max) {
+            selectedNation = nationData;
+            selectedNationName = nationData.name;
+            break;
+          }
+        }
+        
+        if (!selectedNation) {
+          return {
+            nationRoll: nationRoll,
+            aircraftRoll: null,
+            text: `Error: No nation found for ${selectedMissionType} roll ${nationRoll}`
+          };
+        }
+        
+        // Roll for aircraft
+        const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+        let selectedAircraft = null;
+        
+        for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+          const [min, max] = parseRange(range);
+          if (aircraftRoll >= min && aircraftRoll <= max) {
+            selectedAircraft = aircraft;
+            break;
+          }
+        }
+        
+        if (!selectedAircraft) {
+          return {
+            nationRoll: nationRoll,
+            aircraftRoll: aircraftRoll,
+            text: `Error: No aircraft found for ${selectedMissionType} roll ${aircraftRoll}`
+          };
+        }
+        
+        const resultText = `${missionData.flightCount} x {${missionData.flightSize}} ${selectedNationName} ${selectedAircraft}, ${selectedMissionType}`;
+        
+        return {
+          missionType: selectedMissionType,
+          nationRoll: nationRoll,
+          aircraftRoll: aircraftRoll,
+          nationName: selectedNationName,
+          text: resultText
+        };
       }
       
       // Placeholder for other tables
@@ -1859,6 +2059,50 @@
         
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'F') {
+        // Table F: NATO Special Missions - show mission-type based structure
+        const selectedMissionType = atafZone; // Mission type passed via atafZone parameter
+        
+        const missionData = table.missionTypes[selectedMissionType];
+        
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        if (missionData) {
+          tableHTML += `<div class="mission-header">${missionData.name}</div>`;
+          tableHTML += `<div class="mission-info">${missionData.flightCount} x {${missionData.flightSize}} [${missionData.name}], ${missionData.description}</div>`;
+          
+          // Sort nations by roll number
+          const sortedNations = Object.entries(missionData.nations).sort((a, b) => {
+            const aMin = parseInt(a[0].split('-')[0]);
+            const bMin = parseInt(b[0].split('-')[0]);
+            return aMin - bMin;
+          });
+          
+          for (const [nationRange, nationData] of sortedNations) {
+            tableHTML += `<div class="nation-section">`;
+            tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+            tableHTML += `<div class="aircraft-list">`;
+            
+            // Sort aircraft ranges numerically
+            const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            for (const [aircraftRange, aircraftType] of sortedAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            }
+            
+            tableHTML += `</div></div>`;
+          }
+        } else {
+          tableHTML += `<div class="error">Unknown mission type: ${atafZone}</div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
       } else {
         contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${tableId}</div>`;
       }
@@ -1894,6 +2138,9 @@
       } else if (selectedTable === 'E') {
         // Table E: Combat Rescue - default to US nationality for view
         viewTableStructure(selectedTable, 'US', null);
+      } else if (selectedTable === 'F') {
+        // Table F: Special Missions - default to Fast FAC mission for view
+        viewTableStructure(selectedTable, 'Fast FAC', null);
       } else {
         // Handle other tables that don't have variables yet
         const table = oobTables[selectedTable];
