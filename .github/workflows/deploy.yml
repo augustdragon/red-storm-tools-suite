@@ -73,7 +73,7 @@ jobs:
               }
               .header {
                 text-align: center;
-                margin-bottom: 40px;
+                margin-bottom: 20px;
                 padding: 20px;
                 background-color: #1a2a1a;
                 width: 100%;
@@ -141,12 +141,11 @@ jobs:
           <body>
             <div class="header">
               <div class="title">Red Storm</div>
-              <div class="subtitle">Initiative Chit Pull</div>
+              <div class="subtitle">Tools Suite</div>
             </div>
             
             <div class="container">
               <div class="coming-soon">
-                <h2>🎯 Red Storm Tools Suite</h2>
                 
                 <div style="margin: 20px 0; padding: 20px; background-color: #4a5a4a; border-radius: 8px; border: 2px solid #6a7a6a;">
                   <h3 style="margin-top: 0; color: #f4f4f4;">� Initiative Chit Pull</h3>
