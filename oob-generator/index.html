@@ -970,6 +970,7 @@
           nationRoll: result.nationRoll,
           aircraftRoll: result.aircraftRoll,
           nationName: result.nationName,
+          result: result.text,
           timestamp: new Date().getTime() + i // Ensure unique timestamps
         };
         
@@ -1506,7 +1507,6 @@
         const zoneData = table.zones[atafZone][scenarioDate];
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
-        tableHTML += `<div class="table-result">${table.result}</div>`;
         
         // Show nation roll ranges and aircraft for this zone/date combination (sorted by roll number)
         const sortedNations = Object.entries(zoneData.nations).sort((a, b) => {
@@ -1540,7 +1540,6 @@
         // Table C: NATO Bombing Raid - show all three taskings
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
-        tableHTML += `<div class="table-result">${table.result}</div>`;
         
         const taskings = ['CAP', 'SEAD', 'Bombing'];
         const dateVariant = scenarioDate;
@@ -1586,7 +1585,6 @@
         // Table D: NATO Deep Strike Raid - show all five taskings (no date variants)
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
-        tableHTML += `<div class="table-result">${table.result}</div>`;
         
         const taskings = ['Escort Jamming', 'CAP', 'SEAD', 'Bombing', 'Recon'];
         
