@@ -17,8 +17,25 @@
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
 
     <div class="main-content">
+      <!-- Scenario Date Toggle -->
+      <div class="section" id="scenarioToggle">
+        <div class="section-title">Scenario Date</div>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button class="scenario-date-button" id="preDate" onclick="setScenarioDate('pre')">
+            Pre-6/1/87
+          </button>
+          <button class="scenario-date-button" id="postDate" onclick="setScenarioDate('post')">
+            6/1/87 or later
+          </button>
+        </div>
+        <div class="scenario-status" id="scenarioStatus" style="margin-top: 10px; text-align: center; font-size: 14px; color: #b4c4b4;">
+          Select scenario date to enable table generation
+        </div>
+      </div>
+
       <!-- Table Selection Section -->
-      <div class="section" id="tableSelection">
+            <!-- Table Selection Section -->
+      <div class="section" id="tableSelection" style="opacity: 0.5; pointer-events: none;">
         <div class="section-title">Select Order of Battle Table</div>
         
         <div class="faction-section">
@@ -82,22 +99,6 @@
           </div>
         </div>
         
-        <!-- Scenario Date Context -->
-        <div class="input-group" id="dateContext" style="display: none;">
-          <div style="background-color: #2a3a2a; padding: 8px 12px; border-radius: 4px; font-size: 14px; color: #b4c4b4; text-align: center;">
-            <span id="dateContextMessage">Scenario Date: <strong id="currentScenarioDate">Not set</strong> • <button onclick="resetScenarioContext()" style="background: none; border: none; color: #8ab48a; text-decoration: underline; cursor: pointer; font-size: 12px; padding: 0;">Change for new scenario</button></span>
-          </div>
-        </div>
-        
-        <!-- Date Selection -->
-        <div class="input-group" id="dateSelection" style="display: none;">
-          <label>Scenario Date:</label>
-          <select id="scenarioDate" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
-            <option value="pre">Pre-6/1/87</option>
-            <option value="post">6/1/87 or later</option>
-          </select>
-        </div>
-        
         <div class="input-group">
           <label for="rollCountVariable">Number of rolls:</label>
           <input type="number" id="rollCountVariable" min="1" max="20" value="1" />
@@ -139,55 +140,27 @@
     // Application state
     let selectedTable = null;
     let selectedFaction = null;
-    let scenarioDateContext = null; // Track the established scenario date
-    let hasGeneratedResults = false; // Track if any results have been generated
-
-    // Update scenario date context
-    function updateScenarioDateContext(dateValue) {
-      if (!scenarioDateContext) {
-        scenarioDateContext = dateValue;
-        const dateText = dateValue === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
-        document.getElementById('currentScenarioDate').textContent = dateText;
-        document.getElementById('dateContext').style.display = 'flex';
-      }
-    }
-
-    // Reset scenario date context (for new scenarios)
-    function resetScenarioContext() {
-      if (confirm('Start a new scenario? This will clear the current date context.')) {
-        scenarioDateContext = null;
-        hasGeneratedResults = false;
-        document.getElementById('dateContext').style.display = 'none';
-        // Reset the dropdown to default
-        document.getElementById('scenarioDate').value = 'pre';
-      }
-    }
-    let scenarioDateContext = null; // Track the established scenario date
-    let hasGeneratedResults = false; // Track if any results have been generated
-
-    // Update scenario date context
-    function updateScenarioDateContext(dateValue) {
-      if (!scenarioDateContext) {
-        scenarioDateContext = dateValue;
-        const dateText = dateValue === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
-        document.getElementById('currentScenarioDate').textContent = dateText;
-        document.getElementById('dateContext').style.display = 'flex';
-      }
-    }
-
-    // Reset scenario date context (for new scenarios)
-    function resetScenarioContext() {
-      if (confirm('Start a new scenario? This will clear the current date context.')) {
-        scenarioDateContext = null;
-        hasGeneratedResults = false;
-        document.getElementById('dateContext').style.display = 'none';
-        // Reset the dropdown to default
-        document.getElementById('scenarioDate').value = 'pre';
-      }
-    }
-    
+    let scenarioDate = null; // 'pre' or 'post'
     let results = [];
     let resultCounter = 1;
+    
+    // Set scenario date
+    function setScenarioDate(dateValue) {
+      scenarioDate = dateValue;
+      
+      // Update button styles
+      document.getElementById('preDate').classList.toggle('active', dateValue === 'pre');
+      document.getElementById('postDate').classList.toggle('active', dateValue === 'post');
+      
+      // Update status
+      const dateText = dateValue === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
+      document.getElementById('scenarioStatus').textContent = `Scenario Date: ${dateText}`;
+      
+      // Enable table selection if disabled
+      const tableSection = document.getElementById('tableSelection');
+      tableSection.style.opacity = '1';
+      tableSection.style.pointerEvents = 'auto';
+    }
 
     // OOB Tables with actual game data
     const oobTables = {
@@ -326,6 +299,12 @@
       selectedTable = tableId;
       selectedFaction = faction;
       
+      // Check if scenario date is set
+      if (!scenarioDate) {
+        alert('Please select a scenario date first.');
+        return;
+      }
+      
       const table = oobTables[tableId];
       
       // First, clear any previously active sections
@@ -333,33 +312,17 @@
       document.getElementById('variableSelectionSection').classList.remove('active');
       
       // Check if this table has variables that need to be selected
-      if (table.hasATAF || table.hasDate) {
+      if (table.hasATAF) {
         const displayText = `${faction} Table ${tableId}`;
         document.getElementById('variableTableDisplay').textContent = displayText;
         
         // Show/hide variable selections based on table requirements
         const atafSelection = document.getElementById('atafSelection');
-        const dateSelection = document.getElementById('dateSelection');
         
         if (table.hasATAF) {
           atafSelection.style.display = 'flex';
         } else {
           atafSelection.style.display = 'none';
-        }
-        
-        if (table.hasDate) {
-          dateSelection.style.display = 'flex';
-          // Set default date based on scenario context
-          if (scenarioDateContext) {
-            document.getElementById('scenarioDate').value = scenarioDateContext;
-          }
-        } else {
-          dateSelection.style.display = 'none';
-        }
-        
-        // Show date context if established
-        if (scenarioDateContext && table.hasDate) {
-          document.getElementById('dateContext').style.display = 'flex';
         }
         
         document.getElementById('variableSelectionSection').classList.add('active');
@@ -400,14 +363,11 @@
       
       // Get variable selections
       const atafZone = document.getElementById('atafZone').value;
-      const scenarioDate = document.getElementById('scenarioDate').value;
-      
-      // Update scenario date context on first generation
-      updateScenarioDateContext(scenarioDate);
-      hasGeneratedResults = true;
+      // Use global scenario date instead of dropdown
+      const selectedScenarioDate = scenarioDate;
       
       for (let i = 0; i < rollCount; i++) {
-        const result = getTableResultWithVariables(selectedTable, atafZone, scenarioDate);
+        const result = getTableResultWithVariables(selectedTable, atafZone, selectedScenarioDate);
         
         const resultEntry = {
           id: resultCounter++,
@@ -434,9 +394,10 @@
       if (!selectedTable) return;
       
       const atafZone = document.getElementById('atafZone').value;
-      const scenarioDate = document.getElementById('scenarioDate').value;
+      // Use global scenario date
+      const selectedScenarioDate = scenarioDate;
       
-      viewTableStructure(selectedTable, atafZone, scenarioDate);
+      viewTableStructure(selectedTable, atafZone, selectedScenarioDate);
     }
 
     function makeRolls() {

@@ -278,6 +278,31 @@ body {
   position: relative;
 }
 
+/* Scenario Date Toggle */
+.scenario-date-button {
+  background-color: #4a5a4a;
+  color: #f4f4f4;
+  border: 2px solid #6a7a6a;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 140px;
+}
+
+.scenario-date-button:hover {
+  background-color: #5a6a5a;
+  border-color: #7a8a7a;
+}
+
+.scenario-date-button.active {
+  background-color: #2a5a3a;
+  border-color: #4a8a5a;
+  color: #e4f4e4;
+}
+
 /* Forms and Inputs */
 .roll-input-section {
   display: none;
