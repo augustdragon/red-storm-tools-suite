@@ -892,6 +892,7 @@
           nationRoll: result.nationRoll,
           aircraftRoll: result.aircraftRoll,
           result: result.text,
+          scenarioDate: selectedTable === 'C' ? scenarioDate : undefined,
           timestamp: new Date().getTime() + i // Ensure unique timestamps
         };
         
@@ -1163,7 +1164,7 @@
         let rollText = '';
         let variableText = '';
         
-        if (result.nationRoll && result.aircraftRoll) {
+        if (result.nationRoll && result.aircraftRoll && result.table !== 'A' && result.table !== 'B') {
           rollText = `(aircraft: ${result.aircraftRoll})`;
         } else if (result.roll) {
           rollText = `(rolled ${result.roll})`;
