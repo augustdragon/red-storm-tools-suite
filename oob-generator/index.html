@@ -185,11 +185,13 @@
       const postButton = document.getElementById('postDate');
       
       if (hasGeneratedResults) {
-        // Lock the buttons
+        // Lock the buttons - truly disable them
         preButton.style.opacity = '0.5';
         postButton.style.opacity = '0.5';
         preButton.style.cursor = 'not-allowed';
         postButton.style.cursor = 'not-allowed';
+        preButton.style.pointerEvents = 'none';
+        postButton.style.pointerEvents = 'none';
         
         // Update status to show locked state
         const dateText = scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
@@ -200,6 +202,8 @@
         postButton.style.opacity = '1';
         preButton.style.cursor = 'pointer';
         postButton.style.cursor = 'pointer';
+        preButton.style.pointerEvents = 'auto';
+        postButton.style.pointerEvents = 'auto';
         
         if (scenarioDate) {
           const dateText = scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
@@ -741,6 +745,7 @@
 
     // Initialize the app
     updateResultsDisplay();
+    updateDateButtonStates(); // Set initial button states
   </script>
 </body>
 </html>
