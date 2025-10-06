@@ -16,7 +16,17 @@
 
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
 
-    <div class="main-content">
+    <div class="m    function removeResult(resultId) {
+      results = results.filter(r => r.id !== resultId);
+      
+      // Check if all results are gone
+      if (results.length === 0) {
+        hasGeneratedResults = false;
+        updateDateButtonStates(); // Unlock date selection
+      }
+      
+      updateResultsDisplay();
+    }content">
       <!-- Scenario Date Toggle -->
       <div class="section" id="scenarioToggle">
         <div class="section-title">Scenario Date</div>
@@ -143,9 +153,16 @@
     let scenarioDate = null; // 'pre' or 'post'
     let results = [];
     let resultCounter = 1;
+    let hasGeneratedResults = false; // Track if any results exist
     
     // Set scenario date
     function setScenarioDate(dateValue) {
+      // Don't allow changing date if results exist
+      if (hasGeneratedResults) {
+        alert('Cannot change scenario date while flights exist. Clear all results first.');
+        return;
+      }
+      
       scenarioDate = dateValue;
       
       // Update button styles
@@ -160,6 +177,37 @@
       const tableSection = document.getElementById('tableSelection');
       tableSection.style.opacity = '1';
       tableSection.style.pointerEvents = 'auto';
+    }
+    
+    // Update date button states based on results
+    function updateDateButtonStates() {
+      const preButton = document.getElementById('preDate');
+      const postButton = document.getElementById('postDate');
+      
+      if (hasGeneratedResults) {
+        // Lock the buttons
+        preButton.style.opacity = '0.5';
+        postButton.style.opacity = '0.5';
+        preButton.style.cursor = 'not-allowed';
+        postButton.style.cursor = 'not-allowed';
+        
+        // Update status to show locked state
+        const dateText = scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
+        document.getElementById('scenarioStatus').textContent = `Scenario Date: ${dateText} (locked - clear results to change)`;
+      } else {
+        // Unlock the buttons
+        preButton.style.opacity = '1';
+        postButton.style.opacity = '1';
+        preButton.style.cursor = 'pointer';
+        postButton.style.cursor = 'pointer';
+        
+        if (scenarioDate) {
+          const dateText = scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
+          document.getElementById('scenarioStatus').textContent = `Scenario Date: ${dateText}`;
+        } else {
+          document.getElementById('scenarioStatus').textContent = 'Select scenario date to enable table generation';
+        }
+      }
     }
 
     // OOB Tables with actual game data
@@ -384,9 +432,11 @@
         };
         
         results.unshift(resultEntry);
+        hasGeneratedResults = true; // Mark that results exist
       }
       
       updateResultsDisplay();
+      updateDateButtonStates(); // Update button states
       cancelVariableSelection();
     }
 
@@ -426,9 +476,11 @@
         };
         
         results.unshift(resultEntry);
+        hasGeneratedResults = true; // Mark that results exist
       }
       
       updateResultsDisplay();
+      updateDateButtonStates(); // Update button states
       cancelSelection();
     }
 
@@ -596,6 +648,13 @@
 
     function removeResult(resultId) {
       results = results.filter(result => result.id !== resultId);
+      
+      // Check if all results are gone
+      if (results.length === 0) {
+        hasGeneratedResults = false;
+        updateDateButtonStates(); // Unlock date selection
+      }
+      
       updateResultsDisplay();
     }
 
@@ -604,6 +663,8 @@
       
       if (confirm('Are you sure you want to clear all results?')) {
         results = [];
+        hasGeneratedResults = false; // Mark that no results exist
+        updateDateButtonStates(); // Unlock date selection
         updateResultsDisplay();
       }
     }
