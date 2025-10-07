@@ -1660,6 +1660,17 @@
         const tableName = table.name.split(' - ')[1] || table.name;
         const displayText = `${faction} Table ${tableId} - ${tableName}`;
         document.getElementById('selectedTableDisplay').textContent = displayText;
+        
+        // Hide all variable selections for tables that don't need them
+        const atafSelection = document.getElementById('atafSelection');
+        const nationalitySelection = document.getElementById('nationalitySelection');
+        const missionTypeSelection = document.getElementById('missionTypeSelection');
+        const tacticalReconNationSelection = document.getElementById('tacticalReconNationSelection');
+        atafSelection.style.display = 'none';
+        nationalitySelection.style.display = 'none';
+        missionTypeSelection.style.display = 'none';
+        tacticalReconNationSelection.style.display = 'none';
+        
         document.getElementById('rollInputSection').classList.add('active');
         document.getElementById('rollCountBasic').focus();
       }
