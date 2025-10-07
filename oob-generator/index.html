@@ -1986,10 +1986,12 @@
           const taskingVariant = taskingData[tasking][dateVariant];
           
           // Roll for nation
-          const nationRollResult = makeDebugRoll(10, 'Nation');
+          const nationRollResult = makeDebugRoll(10, `${tasking} Nation`);
           const nationRoll = nationRollResult.roll;
           let selectedNation = null;
           let selectedNationName = '';
+          let aircraftRollResult = null;
+          let subRollResult = null;
           
           for (const [range, nationData] of Object.entries(taskingVariant.nations)) {
             const [min, max] = parseRange(range);
@@ -2011,7 +2013,8 @@
           }
           
           // Roll for aircraft
-          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          aircraftRollResult = makeDebugRoll(10, `${tasking} Aircraft`);
+          const aircraftRoll = aircraftRollResult.roll;
           let selectedAircraft = null;
           
           for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
@@ -2055,12 +2058,20 @@
             resultText = `4 x {${flightSize}} ${selectedNationName} ${selectedAircraft}, ${tasking}`;
           }
           
+          // Collect debug text for this tasking
+          let taskingDebugText = `[${tasking}: ${nationRollResult.text} | ${aircraftRollResult.text}`;
+          if (subRollResult) {
+            taskingDebugText += ` | ${subRollResult.text}`;
+          }
+          taskingDebugText += ']';
+          
           results.push({
             tasking: tasking,
             nationRoll: nationRoll,
             aircraftRoll: aircraftRoll,
             nationName: selectedNationName,
-            text: resultText
+            text: resultText,
+            debugText: taskingDebugText
           });
         }
         
@@ -2090,6 +2101,7 @@
           const nationRoll = nationRollResult.roll;
           let selectedNation = null;
           let selectedNationName = '';
+          let aircraftRollResult = null;
           
           for (const [range, nationData] of Object.entries(taskingVariant.nations)) {
             const [min, max] = parseRange(range);
@@ -2111,7 +2123,8 @@
           }
           
           // Roll for aircraft
-          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          aircraftRollResult = makeDebugRoll(10, `${tasking} Aircraft`);
+          const aircraftRoll = aircraftRollResult.roll;
           let selectedAircraft = null;
           
           for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
@@ -2148,18 +2161,27 @@
             resultText = `${flightCount} x {${flightSize}} ${selectedNationName} ${selectedAircraft}, ${tasking}`;
           }
           
+          // Collect debug text for this tasking
+          const taskingDebugText = `[${tasking}: ${nationRollResult.text} | ${aircraftRollResult.text}]`;
+          
           results.push({
             tasking: tasking,
             nationRoll: nationRoll,
             aircraftRoll: aircraftRoll,
             nationName: selectedNationName,
-            text: resultText
+            text: resultText,
+            debugText: taskingDebugText
           });
         }
         
+        // Combine all debug texts for Table D
+        const allDebugTexts = results.map(r => r.debugText).filter(Boolean);
+        const combinedDebugText = allDebugTexts.length > 0 ? allDebugTexts.join(' ') : '';
+        
         return {
           taskingResults: results,
-          text: results.map(r => r.text).join('<br>')
+          text: results.map(r => r.text).join('<br>'),
+          debugText: combinedDebugText
         };
       } else if (tableId === 'E') {
         // Table E: NATO Combat Rescue - nationality-based system
