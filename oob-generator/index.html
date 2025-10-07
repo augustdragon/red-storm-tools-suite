@@ -16,17 +16,17 @@
 
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
 
-    <div class="m    function removeResult(resultId) {
-      results = results.filter(r => r.id !== resultId);
-      
-      // Check if all results are gone
-      if (results.length === 0) {
-        hasGeneratedResults = false;
-        updateDateButtonStates(); // Unlock date selection
-      }
-      
-      updateResultsDisplay();
-    }content">
+    <!-- Debug Toggle -->
+    <div class="section" id="debugToggle" style="text-align: center; margin-bottom: 10px;">
+      <button class="action-button" id="debugModeButton" onclick="toggleDebugMode()" style="background-color: #666; font-size: 12px; padding: 5px 10px;">
+        Debug Mode: OFF
+      </button>
+      <div id="debugStatus" style="font-size: 11px; color: #888; margin-top: 5px;">
+        Debug mode shows all die rolls for testing
+      </div>
+    </div>
+
+    <div class="content">
       <!-- Scenario Date Toggle -->
       <div class="section" id="scenarioToggle">
         <div class="section-title">Scenario Date</div>
@@ -197,6 +197,29 @@
     let results = [];
     let resultCounter = 1;
     let hasGeneratedResults = false; // Track if any results exist
+    let debugMode = false; // Debug mode for showing die rolls
+    
+    // Debug mode toggle
+    function toggleDebugMode() {
+      debugMode = !debugMode;
+      const button = document.getElementById('debugModeButton');
+      const status = document.getElementById('debugStatus');
+      
+      if (debugMode) {
+        button.textContent = 'Debug Mode: ON';
+        button.style.backgroundColor = '#d32f2f';
+        status.textContent = 'All die rolls will be shown';
+        status.style.color = '#d32f2f';
+      } else {
+        button.textContent = 'Debug Mode: OFF';
+        button.style.backgroundColor = '#666';
+        status.textContent = 'Debug mode shows all die rolls for testing';
+        status.style.color = '#888';
+      }
+      
+      // Refresh the results display to show/hide debug information
+      updateResultsDisplay();
+    }
     
     // Set scenario date
     function setScenarioDate(dateValue) {
@@ -1739,6 +1762,7 @@
           aircraftRoll: result.aircraftRoll,
           nationName: result.nationName,
           result: result.text,
+          debugInfo: result.debugInfo, // Include debug information
           timestamp: new Date().getTime() + i // Ensure unique timestamps
         };
         
@@ -1808,6 +1832,7 @@
           nationRoll: result.nationRoll,
           aircraftRoll: result.aircraftRoll,
           result: result.text,
+          debugInfo: result.debugInfo || [], // Ensure debugInfo is always an array
           scenarioDate: selectedTable === 'C' ? scenarioDate : undefined,
           timestamp: new Date().getTime() + i // Ensure unique timestamps
         };
@@ -2398,10 +2423,18 @@
         
         const resultText = `1 x {${table.flightSize}} ${aircraftType}`;
         
+        // Build debug information
+        const debugInfo = [];
+        if (debugMode) {
+          debugInfo.push(`Nation roll: ${nationRoll} → ${nationName}`);
+          debugInfo.push(`Aircraft roll: ${aircraftRoll} → ${aircraftType.replace(/\([^)]*\)/, '').trim()}`);
+        }
+        
         return {
           nationRoll: nationRoll,
           aircraftRoll: aircraftRoll,
-          text: resultText
+          text: resultText,
+          debugInfo: debugInfo
         };
       }
       
@@ -2443,10 +2476,21 @@
           
           const resultText = `${selectedNation.name}: 1 x {${table.flightSize}} ${aircraftType}`;
           
+          // Build debug information
+          const debugInfo = [];
+          if (debugMode) {
+            debugInfo.push(`Nation roll: ${nationRoll} → ${selectedNation.name}`);
+            debugInfo.push(`Aircraft roll: ${aircraftRoll} → ${aircraftType}`);
+            if (subRoll) {
+              debugInfo.push(`Sub-roll: ${subRoll} → ${aircraftType}`);
+            }
+          }
+          
           return {
             nationRoll: nationRoll,
             aircraftRoll: aircraftRoll,
-            text: resultText
+            text: resultText,
+            debugInfo: debugInfo
           };
         }
       }
@@ -2495,10 +2539,22 @@
           
           const resultText = `${selectedNation.name}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
           
+          // Build debug information
+          const debugInfo = [];
+          if (debugMode) {
+            debugInfo.push(`Tasking roll: → ${selectedTasking}`);
+            debugInfo.push(`Nation roll: ${nationRoll} → ${selectedNation.name}`);
+            debugInfo.push(`Aircraft roll: ${aircraftRoll} → ${aircraftType}`);
+            if (subRoll) {
+              debugInfo.push(`Sub-roll: ${subRoll} → ${aircraftType}`);
+            }
+          }
+          
           return {
             nationRoll: nationRoll,
             aircraftRoll: aircraftRoll,
-            text: resultText
+            text: resultText,
+            debugInfo: debugInfo
           };
         }
       }
@@ -2532,10 +2588,18 @@
         // Prepend nationality name to the result
         resultText = `${nationalityData.name.replace(' Combat Rescue Raid', '')}: ${resultText}`;
         
+        // Build debug information
+        const debugInfo = [];
+        if (debugMode) {
+          debugInfo.push(`Nationality roll: → ${selectedNationality}`);
+          // Note: aircraft rolls would be complex to track for multiple flights
+        }
+        
         return {
           nationRoll: null,
           aircraftRoll: null,
-          text: resultText
+          text: resultText,
+          debugInfo: debugInfo
         };
       }
       
@@ -2573,10 +2637,19 @@
           
           const resultText = `${selectedNation.name}: ${missionData.flightCount} x {${missionData.flightSize}} ${aircraftType}, ${selectedMissionType}`;
           
+          // Build debug information
+          const debugInfo = [];
+          if (debugMode) {
+            debugInfo.push(`Mission roll: → ${selectedMissionType}`);
+            debugInfo.push(`Nation roll: ${nationRoll} → ${selectedNation.name}`);
+            debugInfo.push(`Aircraft roll: ${aircraftRoll} → ${aircraftType}`);
+          }
+          
           return {
             nationRoll: nationRoll,
             aircraftRoll: aircraftRoll,
-            text: resultText
+            text: resultText,
+            debugInfo: debugInfo
           };
         }
       }
@@ -2585,7 +2658,8 @@
       return {
         nationRoll: null,
         aircraftRoll: null,
-        text: `Placeholder result for Table ${tableId}`
+        text: `Placeholder result for Table ${tableId}`,
+        debugInfo: []
       };
     }
     
@@ -2638,6 +2712,12 @@
         // Determine faction styling
         const factionClass = result.faction === 'NATO' ? 'nato-result' : 'wp-result';
         
+        // Build debug display
+        let debugDisplay = '';
+        if (debugMode && result.debugInfo && result.debugInfo.length > 0) {
+          debugDisplay = `<div class="debug-info" style="font-size: 11px; color: #888; font-family: monospace; margin-top: 4px; padding: 2px 4px; background-color: rgba(255,255,255,0.05); border-radius: 2px;">DEBUG: ${result.debugInfo.join(' | ')}</div>`;
+        }
+        
         return `
           <div class="result-item ${factionClass}">
             <div class="result-info">
@@ -2646,6 +2726,7 @@
                 ${result.result}
                 <span class="result-roll">${rollText}</span>
               </div>
+              ${debugDisplay}
             </div>
             <button class="action-button remove-result" onclick="removeResult(${result.id})">
               Remove
