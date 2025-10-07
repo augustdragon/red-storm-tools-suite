@@ -1525,7 +1525,49 @@
       }
     }
 
+    function initializeParameterSelections() {
+      // Hide all parameter selection sections initially
+      const atafSelection = document.getElementById('atafSelection');
+      const nationalitySelection = document.getElementById('nationalitySelection');
+      const missionTypeSelection = document.getElementById('missionTypeSelection');
+      const tacticalReconNationSelection = document.getElementById('tacticalReconNationSelection');
+      
+      // Safely hide all dropdowns
+      if (atafSelection) atafSelection.style.display = 'none';
+      if (nationalitySelection) nationalitySelection.style.display = 'none';
+      if (missionTypeSelection) missionTypeSelection.style.display = 'none';
+      if (tacticalReconNationSelection) tacticalReconNationSelection.style.display = 'none';
+      
+      // Reset all dropdown values to defaults
+      const atafZone = document.getElementById('atafZone');
+      const crewNationality = document.getElementById('crewNationality');
+      const missionType = document.getElementById('missionType');
+      const tacticalReconNation = document.getElementById('tacticalReconNation');
+      
+      if (atafZone) atafZone.selectedIndex = 0;
+      if (crewNationality) crewNationality.selectedIndex = 0;
+      if (missionType) missionType.selectedIndex = 0;
+      if (tacticalReconNation) tacticalReconNation.selectedIndex = 0;
+      
+      // Reset all labels to their default state
+      const atafLabel = document.querySelector('label[for="atafZone"]');
+      if (atafLabel) atafLabel.textContent = 'ATAF Zone:';
+      
+      const nationalityLabel = document.querySelector('#nationalitySelection label');
+      if (nationalityLabel) nationalityLabel.textContent = 'Nationality of downed crew:';
+      
+      const missionTypeLabel = document.querySelector('#missionTypeSelection label');
+      if (missionTypeLabel) missionTypeLabel.textContent = 'Mission Type:';
+      
+      // Clear any previous active sections
+      document.getElementById('rollInputSection').classList.remove('active');
+      document.getElementById('variableSelectionSection').classList.remove('active');
+    }
+
     function selectTable(tableId, faction) {
+      // Initialize all parameter selections first
+      initializeParameterSelections();
+      
       selectedTable = tableId;
       selectedFaction = faction;
       
@@ -1537,38 +1579,15 @@
         return;
       }
       
-      // First, clear any previously active sections
-      document.getElementById('rollInputSection').classList.remove('active');
-      document.getElementById('variableSelectionSection').classList.remove('active');
-      
-      // Reset all dropdown labels to their default state (safely)
-      const atafLabel = document.querySelector('label[for="atafZone"]');
-      if (atafLabel) atafLabel.textContent = 'ATAF Zone:';
-      
-      const nationalityLabel = document.querySelector('#nationalitySelection label');
-      if (nationalityLabel) nationalityLabel.textContent = 'Nationality of downed crew:';
-      
-      const missionTypeLabel = document.querySelector('#missionTypeSelection label');
-      if (missionTypeLabel) missionTypeLabel.textContent = 'Mission Type:';
-      
       // Check if this table has variables that need to be selected
       if (table.hasATAF) {
         const tableName = table.name.split(' - ')[1] || table.name;
         const displayText = `${faction} Table ${tableId} - ${tableName}`;
         document.getElementById('variableTableDisplay').textContent = displayText;
         
-        // Show/hide variable selections based on table requirements
+        // Show ATAF selection for this table
         const atafSelection = document.getElementById('atafSelection');
-        
-        if (table.hasATAF) {
-          atafSelection.style.display = 'flex';
-        } else {
-          atafSelection.style.display = 'none';
-        }
-        
-        // Hide other selections
-        document.getElementById('nationalitySelection').style.display = 'none';
-        document.getElementById('missionTypeSelection').style.display = 'none';
+        atafSelection.style.display = 'flex';
         
         document.getElementById('variableSelectionSection').classList.add('active');
         document.getElementById('rollCountVariable').focus();
@@ -1607,12 +1626,6 @@
           `;
         }
         
-        // Hide other selections for this table
-        const atafSelection = document.getElementById('atafSelection');
-        const missionTypeSelection = document.getElementById('missionTypeSelection');
-        atafSelection.style.display = 'none';
-        missionTypeSelection.style.display = 'none';
-        
         document.getElementById('variableSelectionSection').classList.add('active');
         document.getElementById('rollCountVariable').focus();
       } else if (table.hasMissionType) {
@@ -1642,14 +1655,6 @@
           `;
         }
         
-        // Hide other selections for this table
-        const atafSelection = document.getElementById('atafSelection');
-        const nationalitySelection = document.getElementById('nationalitySelection');
-        const tacticalReconNationSelection = document.getElementById('tacticalReconNationSelection');
-        atafSelection.style.display = 'none';
-        nationalitySelection.style.display = 'none';
-        tacticalReconNationSelection.style.display = 'none';
-        
         // Trigger the mission type change handler to show/hide nation selection if needed
         handleMissionTypeChange();
         
@@ -1660,16 +1665,6 @@
         const tableName = table.name.split(' - ')[1] || table.name;
         const displayText = `${faction} Table ${tableId} - ${tableName}`;
         document.getElementById('selectedTableDisplay').textContent = displayText;
-        
-        // Hide all variable selections for tables that don't need them
-        const atafSelection = document.getElementById('atafSelection');
-        const nationalitySelection = document.getElementById('nationalitySelection');
-        const missionTypeSelection = document.getElementById('missionTypeSelection');
-        const tacticalReconNationSelection = document.getElementById('tacticalReconNationSelection');
-        atafSelection.style.display = 'none';
-        nationalitySelection.style.display = 'none';
-        missionTypeSelection.style.display = 'none';
-        tacticalReconNationSelection.style.display = 'none';
         
         document.getElementById('rollInputSection').classList.add('active');
         document.getElementById('rollCountBasic').focus();
