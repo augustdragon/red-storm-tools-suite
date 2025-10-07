@@ -220,6 +220,13 @@
       // Refresh the results display to show/hide debug information
       updateResultsDisplay();
     }
+
+    // Simple debug roll function that tracks rolls when debug mode is on
+    function makeDebugRoll(sides, description) {
+      const roll = Math.floor(Math.random() * sides) + 1;
+      const debugEntry = debugMode ? `${description}: ${roll}` : null;
+      return { roll, debugEntry };
+    }
     
     // Set scenario date
     function setScenarioDate(dateValue) {
@@ -1762,7 +1769,7 @@
           aircraftRoll: result.aircraftRoll,
           nationName: result.nationName,
           result: result.text,
-          debugInfo: result.debugInfo, // Include debug information
+          debugText: result.debugText || result.debugInfo?.join(' | ') || '', // Handle both debugText and legacy debugInfo
           timestamp: new Date().getTime() + i // Ensure unique timestamps
         };
         
@@ -1832,7 +1839,7 @@
           nationRoll: result.nationRoll,
           aircraftRoll: result.aircraftRoll,
           result: result.text,
-          debugInfo: result.debugInfo || [], // Ensure debugInfo is always an array
+          debugText: result.debugText || result.debugInfo?.join(' | ') || '', // Handle both debugText and legacy debugInfo
           scenarioDate: selectedTable === 'C' ? scenarioDate : undefined,
           timestamp: new Date().getTime() + i // Ensure unique timestamps
         };
@@ -2389,7 +2396,8 @@
       
       if (tableId === 'A') {
         // Table A: NATO QRA Flight - two-roll system
-        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        const nationRollResult = makeDebugRoll(10, 'Nation');
+        const nationRoll = nationRollResult.roll;
         
         // Determine nation based on roll
         let selectedNation, nationName;
@@ -2405,7 +2413,8 @@
         }
         
         // Roll for aircraft within that nation
-        const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+        const aircraftRollResult = makeDebugRoll(10, 'Aircraft');
+        const aircraftRoll = aircraftRollResult.roll;
         let aircraftType = null;
         
         // Find matching aircraft based on roll ranges
@@ -2423,24 +2432,25 @@
         
         const resultText = `1 x {${table.flightSize}} ${aircraftType}`;
         
-        // Build debug information
-        const debugInfo = [];
+        // Build simple debug string
+        let debugText = '';
         if (debugMode) {
-          debugInfo.push(`Nation roll: ${nationRoll} → ${nationName}`);
-          debugInfo.push(`Aircraft roll: ${aircraftRoll} → ${aircraftType.replace(/\([^)]*\)/, '').trim()}`);
+          const debugParts = [nationRollResult.debugEntry, aircraftRollResult.debugEntry].filter(Boolean);
+          debugText = debugParts.length > 0 ? `[${debugParts.join(' | ')}]` : '';
         }
         
         return {
           nationRoll: nationRoll,
           aircraftRoll: aircraftRoll,
           text: resultText,
-          debugInfo: debugInfo
+          debugText: debugText
         };
       }
       
       if (tableId === 'G' || tableId === 'H') {
         // Warsaw Pact QRA Flight and Fighter Sweep - two-roll system
-        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        const nationRollResult = makeDebugRoll(10, 'Nation');
+        const nationRoll = nationRollResult.roll;
         
         // Determine nation based on roll
         let selectedNation = null;
@@ -2454,8 +2464,10 @@
         
         if (selectedNation) {
           // Roll for aircraft within that nation
-          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          const aircraftRollResult = makeDebugRoll(10, 'Aircraft');
+          const aircraftRoll = aircraftRollResult.roll;
           let aircraftType = null;
+          let subRollResult = null;
           
           // Find matching aircraft based on roll ranges
           for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
@@ -2468,29 +2480,27 @@
           
           // Handle hidden sub-rolls for superscript references
           if (aircraftType && aircraftType.includes('¹')) {
-            const subRoll = Math.floor(Math.random() * 10) + 1;
+            subRollResult = makeDebugRoll(10, 'Sub-roll');
             if (aircraftType.includes('MiG-25PD/Su-27S¹')) {
-              aircraftType = subRoll <= 5 ? 'MiG-25PD' : 'Su-27S';
+              aircraftType = subRollResult.roll <= 5 ? 'MiG-25PD' : 'Su-27S';
             }
           }
           
           const resultText = `${selectedNation.name}: 1 x {${table.flightSize}} ${aircraftType}`;
           
-          // Build debug information
-          const debugInfo = [];
+          // Build simple debug string
+          let debugText = '';
           if (debugMode) {
-            debugInfo.push(`Nation roll: ${nationRoll} → ${selectedNation.name}`);
-            debugInfo.push(`Aircraft roll: ${aircraftRoll} → ${aircraftType}`);
-            if (subRoll) {
-              debugInfo.push(`Sub-roll: ${subRoll} → ${aircraftType}`);
-            }
+            const debugParts = [nationRollResult.debugEntry, aircraftRollResult.debugEntry];
+            if (subRollResult) debugParts.push(subRollResult.debugEntry);
+            debugText = debugParts.filter(Boolean).length > 0 ? `[${debugParts.filter(Boolean).join(' | ')}]` : '';
           }
           
           return {
             nationRoll: nationRoll,
             aircraftRoll: aircraftRoll,
             text: resultText,
-            debugInfo: debugInfo
+            debugText: debugText
           };
         }
       }
@@ -2501,7 +2511,8 @@
         const selectedTasking = taskingNames[Math.floor(Math.random() * taskingNames.length)];
         const taskingData = table.taskings[selectedTasking];
         
-        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        const nationRollResult = makeDebugRoll(10, 'Nation');
+        const nationRoll = nationRollResult.roll;
         
         // Determine nation based on roll
         let selectedNation = null;
@@ -2515,8 +2526,10 @@
         
         if (selectedNation) {
           // Roll for aircraft within that nation
-          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          const aircraftRollResult = makeDebugRoll(10, 'Aircraft');
+          const aircraftRoll = aircraftRollResult.roll;
           let aircraftType = null;
+          let subRollResult = null;
           
           // Find matching aircraft based on roll ranges
           for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
@@ -2529,32 +2542,29 @@
           
           // Handle hidden sub-rolls for superscript references
           if (aircraftType && aircraftType.includes('²')) {
-            const subRoll = Math.floor(Math.random() * 10) + 1;
+            subRollResult = makeDebugRoll(10, 'Sub-roll');
             if (aircraftType.includes('MiG-23²')) {
-              if (subRoll <= 4) aircraftType = 'MiG-23M';
-              else if (subRoll <= 8) aircraftType = 'MiG-23MF';
+              if (subRollResult.roll <= 4) aircraftType = 'MiG-23M';
+              else if (subRollResult.roll <= 8) aircraftType = 'MiG-23MF';
               else aircraftType = 'MiG-23ML';
             }
           }
           
           const resultText = `${selectedNation.name}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
           
-          // Build debug information
-          const debugInfo = [];
+          // Build simple debug string
+          let debugText = '';
           if (debugMode) {
-            debugInfo.push(`Tasking roll: → ${selectedTasking}`);
-            debugInfo.push(`Nation roll: ${nationRoll} → ${selectedNation.name}`);
-            debugInfo.push(`Aircraft roll: ${aircraftRoll} → ${aircraftType}`);
-            if (subRoll) {
-              debugInfo.push(`Sub-roll: ${subRoll} → ${aircraftType}`);
-            }
+            const debugParts = [`Tasking: ${selectedTasking}`, nationRollResult.debugEntry, aircraftRollResult.debugEntry];
+            if (subRollResult) debugParts.push(subRollResult.debugEntry);
+            debugText = debugParts.filter(Boolean).length > 0 ? `[${debugParts.filter(Boolean).join(' | ')}]` : '';
           }
           
           return {
             nationRoll: nationRoll,
             aircraftRoll: aircraftRoll,
             text: resultText,
-            debugInfo: debugInfo
+            debugText: debugText
           };
         }
       }
@@ -2588,18 +2598,17 @@
         // Prepend nationality name to the result
         resultText = `${nationalityData.name.replace(' Combat Rescue Raid', '')}: ${resultText}`;
         
-        // Build debug information
-        const debugInfo = [];
+        // Build simple debug string
+        let debugText = '';
         if (debugMode) {
-          debugInfo.push(`Nationality roll: → ${selectedNationality}`);
-          // Note: aircraft rolls would be complex to track for multiple flights
+          debugText = `[Nationality: ${selectedNationality}]`;
         }
         
         return {
           nationRoll: null,
           aircraftRoll: null,
           text: resultText,
-          debugInfo: debugInfo
+          debugText: debugText
         };
       }
       
@@ -2637,19 +2646,17 @@
           
           const resultText = `${selectedNation.name}: ${missionData.flightCount} x {${missionData.flightSize}} ${aircraftType}, ${selectedMissionType}`;
           
-          // Build debug information
-          const debugInfo = [];
+          // Build simple debug string
+          let debugText = '';
           if (debugMode) {
-            debugInfo.push(`Mission roll: → ${selectedMissionType}`);
-            debugInfo.push(`Nation roll: ${nationRoll} → ${selectedNation.name}`);
-            debugInfo.push(`Aircraft roll: ${aircraftRoll} → ${aircraftType}`);
+            debugText = `[Mission: ${selectedMissionType} | Nation: ${nationRoll} | Aircraft: ${aircraftRoll}]`;
           }
           
           return {
             nationRoll: nationRoll,
             aircraftRoll: aircraftRoll,
             text: resultText,
-            debugInfo: debugInfo
+            debugText: debugText
           };
         }
       }
@@ -2659,7 +2666,7 @@
         nationRoll: null,
         aircraftRoll: null,
         text: `Placeholder result for Table ${tableId}`,
-        debugInfo: []
+        debugText: ''
       };
     }
     
@@ -2714,8 +2721,8 @@
         
         // Build debug display
         let debugDisplay = '';
-        if (debugMode && result.debugInfo && result.debugInfo.length > 0) {
-          debugDisplay = `<div class="debug-info" style="font-size: 11px; color: #888; font-family: monospace; margin-top: 4px; padding: 2px 4px; background-color: rgba(255,255,255,0.05); border-radius: 2px;">DEBUG: ${result.debugInfo.join(' | ')}</div>`;
+        if (debugMode && result.debugText && result.debugText.trim()) {
+          debugDisplay = `<div style="font-size: 11px; color: #888; font-family: monospace; margin-top: 4px; padding: 2px 4px; background-color: rgba(255,255,255,0.05); border-radius: 2px;">${result.debugText}</div>`;
         }
         
         return `
