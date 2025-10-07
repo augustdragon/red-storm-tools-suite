@@ -3065,11 +3065,11 @@
           tableHTML += `<div class="mission-section">`;
           const flightInfo = missionData.flightCount + ' x {' + missionData.flightSize + '}';
           tableHTML += `<div class="mission-header">${missionData.name} (${flightInfo})</div>`;
-          tableHTML += `<div class="mission-description">${missionData.description}</div>`;
+          //tableHTML += `<div class="mission-description">${missionData.description}</div>`;
           
           if (missionData.requiresNationSelection) {
             // For Tactical Recon, show available nations without die rolls
-            tableHTML += `<div class="nation-selection-note">Nation Selection Required (USSR or GDR)</div>`;
+            //tableHTML += `<div class="nation-selection-note">Nation Selection Required (USSR or GDR)</div>`;
             
             for (const [nationName, nationData] of Object.entries(missionData.nationData)) {
               tableHTML += `<div class="nation-section">`;
