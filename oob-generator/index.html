@@ -1544,7 +1544,8 @@
       
       // Check if this table has variables that need to be selected
       if (table.hasATAF) {
-        const displayText = `${faction} Table ${tableId}`;
+        const tableName = table.name.split(' - ')[1] || table.name;
+        const displayText = `${faction} Table ${tableId} - ${tableName}`;
         document.getElementById('variableTableDisplay').textContent = displayText;
         
         // Show/hide variable selections based on table requirements
@@ -1564,13 +1565,15 @@
         document.getElementById('rollCountVariable').focus();
       } else if (table.hasTasking) {
         // Table C/D: Has taskings but no user selection needed - generates all taskings per roll
-        const displayText = `${faction} Table ${tableId}`;
+        const tableName = table.name.split(' - ')[1] || table.name;
+        const displayText = `${faction} Table ${tableId} - ${tableName}`;
         document.getElementById('selectedTableDisplay').textContent = displayText;
         document.getElementById('rollInputSection').classList.add('active');
         document.getElementById('rollCountBasic').focus();
       } else if (table.hasNationality) {
         // Table E/K: Combat Rescue - needs nationality selection
-        const displayText = `${faction} Table ${tableId}`;
+        const tableName = table.name.split(' - ')[1] || table.name;
+        const displayText = `${faction} Table ${tableId} - ${tableName}`;
         document.getElementById('variableTableDisplay').textContent = displayText;
         
         // Show nationality selection
@@ -1605,7 +1608,8 @@
         document.getElementById('rollCountVariable').focus();
       } else if (table.hasMissionType) {
         // Table F/L: Special Missions - needs mission type selection
-        const displayText = `${faction} Table ${tableId}`;
+        const tableName = table.name.split(' - ')[1] || table.name;
+        const displayText = `${faction} Table ${tableId} - ${tableName}`;
         document.getElementById('variableTableDisplay').textContent = displayText;
         
         // Show mission type selection
@@ -1639,7 +1643,8 @@
         document.getElementById('rollCountVariable').focus();
       } else {
         // No variables needed, use original flow
-        const displayText = `${faction} Table ${tableId}`;
+        const tableName = table.name.split(' - ')[1] || table.name;
+        const displayText = `${faction} Table ${tableId} - ${tableName}`;
         document.getElementById('selectedTableDisplay').textContent = displayText;
         document.getElementById('rollInputSection').classList.add('active');
         document.getElementById('rollCountBasic').focus();
