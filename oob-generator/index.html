@@ -2059,11 +2059,14 @@
           }
           
           // Collect debug text for this tasking
-          let taskingDebugText = `[${tasking}: ${nationRollResult.text} | ${aircraftRollResult.text}`;
-          if (subRollResult) {
-            taskingDebugText += ` | ${subRollResult.text}`;
+          let taskingDebugText = '';
+          if (debugMode) {
+            taskingDebugText = `[${tasking}: ${nationRollResult.debugEntry} | ${aircraftRollResult.debugEntry}`;
+            if (subRollResult) {
+              taskingDebugText += ` | ${subRollResult.debugEntry}`;
+            }
+            taskingDebugText += ']';
           }
-          taskingDebugText += ']';
           
           results.push({
             tasking: tasking,
@@ -2162,7 +2165,10 @@
           }
           
           // Collect debug text for this tasking
-          const taskingDebugText = `[${tasking}: ${nationRollResult.text} | ${aircraftRollResult.text}]`;
+          let taskingDebugText = '';
+          if (debugMode) {
+            taskingDebugText = `[${tasking}: ${nationRollResult.debugEntry} | ${aircraftRollResult.debugEntry}]`;
+          }
           
           results.push({
             tasking: tasking,
