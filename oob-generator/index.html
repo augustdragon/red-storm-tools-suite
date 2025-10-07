@@ -1544,6 +1544,11 @@
       document.getElementById('rollInputSection').classList.remove('active');
       document.getElementById('variableSelectionSection').classList.remove('active');
       
+      // Reset all dropdown labels to their default state
+      document.querySelector('label[for="atafZone"]').textContent = 'ATAF Zone:';
+      document.querySelector('#nationalitySelection label').textContent = 'Nationality of downed crew:';
+      document.querySelector('#missionTypeSelection label').textContent = 'Mission Type:';
+      
       // Check if this table has variables that need to be selected
       if (table.hasATAF) {
         const displayText = `${faction} Table ${tableId}`;
@@ -1557,6 +1562,10 @@
         } else {
           atafSelection.style.display = 'none';
         }
+        
+        // Hide other selections
+        document.getElementById('nationalitySelection').style.display = 'none';
+        document.getElementById('missionTypeSelection').style.display = 'none';
         
         document.getElementById('variableSelectionSection').classList.add('active');
         document.getElementById('rollCountVariable').focus();
