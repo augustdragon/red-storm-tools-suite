@@ -1805,8 +1805,13 @@
         if (result.atafZone || result.scenarioDate) {
           const parts = [];
           if (result.atafZone) parts.push(result.atafZone);
-          if (result.scenarioDate) parts.push(result.scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87+');
-          variableText = ` [${parts.join(', ')}]`;
+          // Only show date for date-dependent tables (A, B, C)
+          if (result.scenarioDate && (result.table === 'A' || result.table === 'B' || result.table === 'C')) {
+            parts.push(result.scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87+');
+          }
+          if (parts.length > 0) {
+            variableText = ` [${parts.join(', ')}]`;
+          }
         }
         
         return `
@@ -1857,9 +1862,19 @@
       const contentElement = document.getElementById('tableViewContent');
       
       let titleText = table.name;
-      if (atafZone && scenarioDate) {
+      // Only add date/zone info for date-dependent tables (A, B, C)
+      if ((tableId === 'A' || tableId === 'B' || tableId === 'C') && atafZone && scenarioDate) {
         const dateText = scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
         titleText += ` [${atafZone}, ${dateText}]`;
+      } else if ((tableId === 'A' || tableId === 'B') && atafZone) {
+        // For tables A/B, show zone even without date
+        titleText += ` [${atafZone}]`;
+      } else if (tableId === 'E' && atafZone) {
+        // For table E, show nationality
+        titleText += ` [${atafZone}]`;
+      } else if (tableId === 'F' && atafZone) {
+        // For table F, show mission type
+        titleText += ` [${atafZone}]`;
       }
       titleElement.textContent = titleText;
       
