@@ -1821,11 +1821,12 @@
       for (let i = 0; i < rollCount; i++) {
         let result;
         
-        // Table C needs scenario date but no ATAF zone
-        // Table D needs no scenario date (date-independent)
+        // Tables with multiple taskings need special handling
         if (selectedTable === 'C') {
           result = getTableResultWithVariables(selectedTable, null, scenarioDate);
         } else if (selectedTable === 'D') {
+          result = getTableResultWithVariables(selectedTable, null, null);
+        } else if (selectedTable === 'I' || selectedTable === 'J') {
           result = getTableResultWithVariables(selectedTable, null, null);
         } else {
           result = getTableResult(selectedTable);
