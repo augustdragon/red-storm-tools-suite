@@ -2606,6 +2606,16 @@
         const taskingNames = Object.keys(table.taskings);
         const results = [];
         
+        // Debug: Check if taskings exist
+        if (!table.taskings || taskingNames.length === 0) {
+          return {
+            nationRoll: null,
+            aircraftRoll: null,
+            text: `Error: No taskings found for Table I`,
+            debugText: ''
+          };
+        }
+        
         for (const selectedTasking of taskingNames) {
           const taskingData = table.taskings[selectedTasking];
           
@@ -2700,13 +2710,21 @@
           text: results.map(r => r.text).join('<br>'),
           debugText: combinedDebugText
         };
-      }
-      
-      if (tableId === 'J') {
+      } else if (tableId === 'J') {
         // Table J: Warsaw Pact Deep Strike Raid - generates ALL taskings automatically (USSR only)
         const allTaskings = Object.keys(table.taskings);
         const resultParts = [];
         let debugParts = [];
+        
+        // Debug: Check if taskings exist
+        if (!table.taskings || allTaskings.length === 0) {
+          return {
+            nationRoll: null,
+            aircraftRoll: null,
+            text: `Error: No taskings found for Table J`,
+            debugText: ''
+          };
+        }
         
         for (const taskingName of allTaskings) {
           const taskingData = table.taskings[taskingName];
@@ -2758,9 +2776,7 @@
           text: resultText,
           debugText: debugText
         };
-      }
-      
-      if (tableId === 'K') {
+      } else if (tableId === 'K') {
         // Warsaw Pact Combat Rescue - nationality-based system
         const nationalityNames = Object.keys(table.nationalities);
         const selectedNationality = nationalityNames[Math.floor(Math.random() * nationalityNames.length)];
@@ -2801,9 +2817,7 @@
           text: resultText,
           debugText: debugText
         };
-      }
-      
-      if (tableId === 'L') {
+      } else if (tableId === 'L') {
         // Warsaw Pact Special Missions - mission type-based system
         const missionTypeNames = Object.keys(table.missionTypes);
         const selectedMissionType = missionTypeNames[Math.floor(Math.random() * missionTypeNames.length)];
