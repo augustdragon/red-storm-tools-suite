@@ -1544,10 +1544,15 @@
       document.getElementById('rollInputSection').classList.remove('active');
       document.getElementById('variableSelectionSection').classList.remove('active');
       
-      // Reset all dropdown labels to their default state
-      document.querySelector('label[for="atafZone"]').textContent = 'ATAF Zone:';
-      document.querySelector('#nationalitySelection label').textContent = 'Nationality of downed crew:';
-      document.querySelector('#missionTypeSelection label').textContent = 'Mission Type:';
+      // Reset all dropdown labels to their default state (safely)
+      const atafLabel = document.querySelector('label[for="atafZone"]');
+      if (atafLabel) atafLabel.textContent = 'ATAF Zone:';
+      
+      const nationalityLabel = document.querySelector('#nationalitySelection label');
+      if (nationalityLabel) nationalityLabel.textContent = 'Nationality of downed crew:';
+      
+      const missionTypeLabel = document.querySelector('#missionTypeSelection label');
+      if (missionTypeLabel) missionTypeLabel.textContent = 'Mission Type:';
       
       // Check if this table has variables that need to be selected
       if (table.hasATAF) {
