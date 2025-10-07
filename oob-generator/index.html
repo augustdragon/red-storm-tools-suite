@@ -1529,13 +1529,13 @@
       selectedTable = tableId;
       selectedFaction = faction;
       
-      // Check if scenario date is set (except for Table D which is not date-dependent)
-      if (!scenarioDate && tableId !== 'D') {
+      const table = oobTables[tableId];
+      
+      // Check if scenario date is set (except for Warsaw Pact tables and NATO Table D which are not date-dependent)
+      if (!scenarioDate && table.hasDate !== false && tableId !== 'D') {
         alert('Please select a scenario date first.');
         return;
       }
-      
-      const table = oobTables[tableId];
       
       // First, clear any previously active sections
       document.getElementById('rollInputSection').classList.remove('active');
@@ -2735,6 +2735,162 @@
         
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'G' || tableId === 'H') {
+        // Warsaw Pact Tables G & H - simple nation/aircraft structure
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        // Show nation roll ranges and aircraft (sorted by roll number)
+        const sortedNations = Object.entries(table.nations).sort((a, b) => {
+          const aMin = parseRange(a[0])[0];
+          const bMin = parseRange(b[0])[0];
+          return aMin - bMin;
+        });
+        
+        for (const [nationRange, nationData] of sortedNations) {
+          tableHTML += `<div class="nation-section">`;
+          tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+          tableHTML += `<div class="aircraft-list">`;
+          
+          // Sort aircraft ranges numerically
+          const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+            const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+            const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+            return aStart - bStart;
+          });
+          
+          for (const [aircraftRange, aircraftType] of sortedAircraft) {
+            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+          }
+          
+          tableHTML += `</div></div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'I' || tableId === 'J') {
+        // Warsaw Pact Tables I & J - tasking-based structure
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        for (const [taskingName, taskingData] of Object.entries(table.taskings)) {
+          tableHTML += `<div class="tasking-section">`;
+          const flightInfo = taskingData.flightCount + ' x {' + taskingData.flightSize + '}';
+          tableHTML += `<div class="tasking-header">${taskingName} (${flightInfo})</div>`;
+          
+          // Sort nations by roll number
+          const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
+            const aMin = parseInt(a[0].split('-')[0]);
+            const bMin = parseInt(b[0].split('-')[0]);
+            return aMin - bMin;
+          });
+          
+          for (const [nationRange, nationData] of sortedNations) {
+            tableHTML += `<div class="nation-section">`;
+            tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+            tableHTML += `<div class="aircraft-list">`;
+            
+            // Sort aircraft ranges numerically
+            const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            for (const [aircraftRange, aircraftType] of sortedAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            }
+            
+            tableHTML += `</div></div>`;
+          }
+          
+          tableHTML += `</div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'K') {
+        // Warsaw Pact Table K - nationality-based structure
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        if (atafZone && table.nationalities[atafZone]) {
+          const nationalityData = table.nationalities[atafZone];
+          tableHTML += `<div class="nationality-section">`;
+          tableHTML += `<div class="nationality-header">${nationalityData.name}</div>`;
+          
+          for (const flightType of nationalityData.flights) {
+            tableHTML += `<div class="flight-type-section">`;
+            const flightInfo = flightType.flightCount + ' x {' + flightType.flightSize + '}';
+            tableHTML += `<div class="flight-type-header">${flightType.type} (${flightInfo})</div>`;
+            tableHTML += `<div class="aircraft-list">`;
+            
+            // Sort aircraft ranges numerically
+            const sortedAircraft = Object.entries(flightType.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            for (const [aircraftRange, aircraftType] of sortedAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            }
+            
+            tableHTML += `</div></div>`;
+          }
+          
+          tableHTML += `</div>`;
+        } else {
+          tableHTML += `<div class="error">Unknown nationality: ${atafZone}</div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'L') {
+        // Warsaw Pact Table L - mission type-based structure
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        if (atafZone && table.missionTypes[atafZone]) {
+          const missionData = table.missionTypes[atafZone];
+          tableHTML += `<div class="mission-section">`;
+          const flightInfo = missionData.flightCount + ' x {' + missionData.flightSize + '}';
+          tableHTML += `<div class="mission-header">${missionData.name} (${flightInfo})</div>`;
+          tableHTML += `<div class="mission-description">${missionData.description}</div>`;
+          
+          // Sort nations by roll number
+          const sortedNations = Object.entries(missionData.nations).sort((a, b) => {
+            const aMin = parseInt(a[0].split('-')[0]);
+            const bMin = parseInt(b[0].split('-')[0]);
+            return aMin - bMin;
+          });
+          
+          for (const [nationRange, nationData] of sortedNations) {
+            tableHTML += `<div class="nation-section">`;
+            tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+            tableHTML += `<div class="aircraft-list">`;
+            
+            // Sort aircraft ranges numerically
+            const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            for (const [aircraftRange, aircraftType] of sortedAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            }
+            
+            tableHTML += `</div></div>`;
+          }
+          
+          tableHTML += `</div>`;
+        } else {
+          tableHTML += `<div class="error">Unknown mission type: ${atafZone}</div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
       } else {
         contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${tableId}</div>`;
       }
@@ -2773,6 +2929,18 @@
       } else if (selectedTable === 'F') {
         // Table F: Special Missions - default to Fast FAC mission for view
         viewTableStructure(selectedTable, 'Fast FAC', null);
+      } else if (selectedTable === 'G' || selectedTable === 'H') {
+        // Warsaw Pact Tables G & H - simple nation/aircraft structure
+        viewTableStructure(selectedTable, null, null);
+      } else if (selectedTable === 'I' || selectedTable === 'J') {
+        // Warsaw Pact Tables I & J - tasking-based, show all taskings
+        viewTableStructure(selectedTable, null, null);
+      } else if (selectedTable === 'K') {
+        // Warsaw Pact Table K - nationality-based, default to USSR
+        viewTableStructure(selectedTable, 'USSR', null);
+      } else if (selectedTable === 'L') {
+        // Warsaw Pact Table L - mission type-based, default to Standoff Jamming
+        viewTableStructure(selectedTable, 'Standoff Jamming', null);
       } else {
         // Handle other tables that don't have variables yet
         const table = oobTables[selectedTable];

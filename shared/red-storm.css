@@ -748,3 +748,57 @@ body {
   border-left: 4px solid #d32f2f !important;
   color: #b71c1c;
 }
+
+/* Warsaw Pact specific table view elements */
+.nationality-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #1a2a1a;
+  border-radius: 6px;
+  border: 1px solid #3a4a3a;
+}
+
+.nationality-header {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff9999;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #3a4a3a;
+}
+
+.flight-type-section {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #0f1f0f;
+  border-radius: 4px;
+}
+
+.flight-type-header {
+  font-size: 16px;
+  font-weight: bold;
+  color: #cc8888;
+  margin-bottom: 10px;
+}
+
+.mission-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #1a2a1a;
+  border-radius: 6px;
+  border: 1px solid #3a4a3a;
+}
+
+.mission-header {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff9999;
+  margin-bottom: 8px;
+}
+
+.mission-description {
+  font-size: 14px;
+  color: #b4c4b4;
+  margin-bottom: 15px;
+  font-style: italic;
+}
