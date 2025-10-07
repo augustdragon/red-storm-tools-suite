@@ -2601,27 +2601,40 @@
       }
       
       if (tableId === 'I') {
-        // Table I: Warsaw Pact Bombing Raid - single tasking selection
+        // Table I: Warsaw Pact Bombing Raid - generates ALL three taskings (CAP, SEAD, Bombing)
         const taskingNames = Object.keys(table.taskings);
-        const selectedTasking = taskingNames[Math.floor(Math.random() * taskingNames.length)];
-        const taskingData = table.taskings[selectedTasking];
+        const results = [];
         
-        const nationRollResult = makeDebugRoll(10, 'Nation');
-        const nationRoll = nationRollResult.roll;
-        
-        // Determine nation based on roll
-        let selectedNation = null;
-        for (const [range, nation] of Object.entries(taskingData.nations)) {
-          const [min, max] = parseRange(range);
-          if (nationRoll >= min && nationRoll <= max) {
-            selectedNation = nation;
-            break;
+        for (const selectedTasking of taskingNames) {
+          const taskingData = table.taskings[selectedTasking];
+          
+          const nationRollResult = makeDebugRoll(10, `${selectedTasking} Nation`);
+          const nationRoll = nationRollResult.roll;
+          
+          // Determine nation based on roll
+          let selectedNation = null;
+          let selectedNationName = '';
+          for (const [range, nation] of Object.entries(taskingData.nations)) {
+            const [min, max] = parseRange(range);
+            if (nationRoll >= min && nationRoll <= max) {
+              selectedNation = nation;
+              selectedNationName = nation.name;
+              break;
+            }
           }
-        }
-        
-        if (selectedNation) {
+          
+          if (!selectedNation) {
+            results.push({
+              tasking: selectedTasking,
+              nationRoll: nationRoll,
+              aircraftRoll: null,
+              text: `Error: No nation found for ${selectedTasking} roll ${nationRoll}`
+            });
+            continue;
+          }
+          
           // Roll for aircraft within that nation
-          const aircraftRollResult = makeDebugRoll(10, 'Aircraft');
+          const aircraftRollResult = makeDebugRoll(10, `${selectedTasking} Aircraft`);
           const aircraftRoll = aircraftRollResult.roll;
           let aircraftType = null;
           let subRollResult = null;
@@ -2635,9 +2648,19 @@
             }
           }
           
+          if (!aircraftType) {
+            results.push({
+              tasking: selectedTasking,
+              nationRoll: nationRoll,
+              aircraftRoll: aircraftRoll,
+              text: `Error: No aircraft found for ${selectedTasking} roll ${aircraftRoll}`
+            });
+            continue;
+          }
+          
           // Handle hidden sub-rolls for superscript references
           if (aircraftType && aircraftType.includes('²')) {
-            subRollResult = makeDebugRoll(10, 'Sub-roll');
+            subRollResult = makeDebugRoll(10, `${selectedTasking} Sub-roll`);
             if (aircraftType.includes('MiG-23²')) {
               if (subRollResult.roll <= 4) aircraftType = 'MiG-23M';
               else if (subRollResult.roll <= 8) aircraftType = 'MiG-23MF';
@@ -2645,23 +2668,37 @@
             }
           }
           
-          const resultText = `${selectedNation.name}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
+          const resultText = `${selectedNationName}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
           
-          // Build simple debug string
-          let debugText = '';
+          // Build comprehensive debug string for this tasking
+          let taskingDebugText = '';
           if (debugMode) {
-            const debugParts = [`Tasking: ${selectedTasking}`, nationRollResult.debugEntry, aircraftRollResult.debugEntry];
-            if (subRollResult) debugParts.push(subRollResult.debugEntry);
-            debugText = debugParts.filter(Boolean).length > 0 ? `[${debugParts.filter(Boolean).join(' | ')}]` : '';
+            taskingDebugText = `[${selectedTasking}: ${nationRollResult.debugEntry} → ${selectedNationName} | ${aircraftRollResult.debugEntry} → ${aircraftType}`;
+            if (subRollResult) {
+              taskingDebugText += ` | ${subRollResult.debugEntry} → ${aircraftType}`;
+            }
+            taskingDebugText += ']';
           }
           
-          return {
+          results.push({
+            tasking: selectedTasking,
             nationRoll: nationRoll,
             aircraftRoll: aircraftRoll,
+            nationName: selectedNationName,
             text: resultText,
-            debugText: debugText
-          };
+            debugText: taskingDebugText
+          });
         }
+        
+        // Combine all debug texts for Table I
+        const allDebugTexts = results.map(r => r.debugText).filter(Boolean);
+        const combinedDebugText = allDebugTexts.length > 0 ? allDebugTexts.join(' ') : '';
+        
+        return {
+          taskingResults: results,
+          text: results.map(r => r.text).join('<br>'),
+          debugText: combinedDebugText
+        };
       }
       
       if (tableId === 'J') {
