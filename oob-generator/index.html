@@ -129,10 +129,19 @@
         <!-- Mission Type Selection for Special Missions -->
         <div class="input-group" id="missionTypeSelection" style="display: none;">
           <label>Mission Type:</label>
-          <select id="missionType" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
+          <select id="missionType" onchange="handleMissionTypeChange()" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
             <option value="Fast FAC">Fast FAC</option>
             <option value="Standoff Jamming">Standoff Jamming</option>
             <option value="Tactical Recon">Tactical Recon</option>
+          </select>
+        </div>
+        
+        <!-- Nation Selection for WP Table L Tactical Recon -->
+        <div class="input-group" id="tacticalReconNationSelection" style="display: none;">
+          <label>Nation:</label>
+          <select id="tacticalReconNation" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
+            <option value="USSR">USSR</option>
+            <option value="GDR">GDR</option>
           </select>
         </div>
         
@@ -1449,6 +1458,7 @@
         name: 'WP Table L - Special Missions', 
         faction: 'WP',
         hasMissionType: true,
+        hasNationSelection: true, // Add nation selection for Tactical Recon
         hasDate: false,
         description: 'WP Special Missions - Specialized missions for small numbers of aircraft',
         missionTypes: {
@@ -1478,8 +1488,10 @@
             flightSize: 2,
             flightCount: 1,
             description: 'Tactical Reconnaissance',
-            nations: {
-              '1-2': {
+            requiresNationSelection: true, // Nation must be manually selected
+            availableNations: ['USSR', 'GDR'], // Available nations for selection
+            nationData: {
+              'USSR': {
                 name: 'USSR',
                 aircraft: {
                   '1-2': 'MiG-21R',
@@ -1488,22 +1500,7 @@
                   '8-10': 'MiG-25RB'
                 }
               },
-              '3-4': {
-                name: 'USSR',
-                aircraft: {
-                  '1-3': 'Su-24MR',
-                  '4-6': 'MiG-25RB',
-                  '7-10': 'Tu-22R'
-                }
-              },
-              '5-9': {
-                name: 'USSR',
-                aircraft: {
-                  '1-5': 'MiG-21R',
-                  '6-10': 'Su-17M3R'
-                }
-              },
-              '10': {
+              'GDR': {
                 name: 'GDR',
                 aircraft: {
                   '1-5': 'MiG-21R',
@@ -1515,6 +1512,18 @@
         }
       }
     };
+
+    function handleMissionTypeChange() {
+      const missionType = document.getElementById('missionType').value;
+      const tacticalReconNationSelection = document.getElementById('tacticalReconNationSelection');
+      
+      // Show nation selection only for WP Table L Tactical Recon
+      if (selectedTable === 'L' && missionType === 'Tactical Recon') {
+        tacticalReconNationSelection.style.display = 'flex';
+      } else {
+        tacticalReconNationSelection.style.display = 'none';
+      }
+    }
 
     function selectTable(tableId, faction) {
       selectedTable = tableId;
@@ -1636,8 +1645,13 @@
         // Hide other selections for this table
         const atafSelection = document.getElementById('atafSelection');
         const nationalitySelection = document.getElementById('nationalitySelection');
+        const tacticalReconNationSelection = document.getElementById('tacticalReconNationSelection');
         atafSelection.style.display = 'none';
         nationalitySelection.style.display = 'none';
+        tacticalReconNationSelection.style.display = 'none';
+        
+        // Trigger the mission type change handler to show/hide nation selection if needed
+        handleMissionTypeChange();
         
         document.getElementById('variableSelectionSection').classList.add('active');
         document.getElementById('rollCountVariable').focus();
@@ -1680,6 +1694,7 @@
       let atafZone = null;
       let crewNationality = null;
       let selectedMissionType = null;
+      let tacticalReconNation = null;
       
       if (table.hasATAF) {
         atafZone = document.getElementById('atafZone').value;
@@ -1689,8 +1704,16 @@
         atafZone = crewNationality;
       } else if (table.hasMissionType) {
         selectedMissionType = document.getElementById('missionType').value;
-        // Use mission type as atafZone parameter for simplicity
-        atafZone = selectedMissionType;
+        
+        // For Table L Tactical Recon, get the selected nation
+        if (selectedTable === 'L' && selectedMissionType === 'Tactical Recon') {
+          tacticalReconNation = document.getElementById('tacticalReconNation').value;
+          // Pass mission type and nation as a combined parameter
+          atafZone = `${selectedMissionType}|${tacticalReconNation}`;
+        } else {
+          // Use mission type as atafZone parameter for simplicity
+          atafZone = selectedMissionType;
+        }
       }
       
       // Use global scenario date instead of dropdown
@@ -2238,35 +2261,57 @@
       
       if (tableId === 'L') {
         // Warsaw Pact Table L: Special Missions - mission type-based
-        const missionData = table.missionTypes[atafZone];
-        if (!missionData) {
-          return {
-            nationRoll: null,
-            aircraftRoll: null,
-            text: `Error: Unknown mission type ${atafZone}`
-          };
-        }
+        let missionType, selectedNation, selectedNationName;
         
-        const nationRoll = Math.floor(Math.random() * 10) + 1;
-        
-        // Determine nation based on roll
-        let selectedNation = null;
-        let selectedNationName = '';
-        for (const [range, nation] of Object.entries(missionData.nations)) {
-          const [min, max] = parseRange(range);
-          if (nationRoll >= min && nationRoll <= max) {
-            selectedNation = nation;
-            selectedNationName = nation.name;
-            break;
+        // Check if this is Tactical Recon with nation selection
+        if (atafZone.includes('|')) {
+          const [mType, nation] = atafZone.split('|');
+          missionType = mType;
+          const missionData = table.missionTypes[missionType];
+          
+          if (!missionData || !missionData.requiresNationSelection) {
+            return {
+              nationRoll: null,
+              aircraftRoll: null,
+              text: `Error: Invalid mission configuration ${atafZone}`
+            };
           }
-        }
-        
-        if (!selectedNation) {
-          return {
-            nationRoll: nationRoll,
-            aircraftRoll: null,
-            text: `Error: No nation found for mission ${atafZone} roll ${nationRoll}`
-          };
+          
+          // Use manually selected nation for Tactical Recon
+          selectedNation = missionData.nationData[nation];
+          selectedNationName = selectedNation.name;
+        } else {
+          // Standard mission type with nation roll (Standoff Jamming)
+          missionType = atafZone;
+          const missionData = table.missionTypes[missionType];
+          
+          if (!missionData) {
+            return {
+              nationRoll: null,
+              aircraftRoll: null,
+              text: `Error: Unknown mission type ${atafZone}`
+            };
+          }
+          
+          // Roll for nation
+          const nationRoll = Math.floor(Math.random() * 10) + 1;
+          
+          for (const [range, nation] of Object.entries(missionData.nations)) {
+            const [min, max] = parseRange(range);
+            if (nationRoll >= min && nationRoll <= max) {
+              selectedNation = nation;
+              selectedNationName = nation.name;
+              break;
+            }
+          }
+          
+          if (!selectedNation) {
+            return {
+              nationRoll: nationRoll,
+              aircraftRoll: null,
+              text: `Error: No nation found for mission ${missionType} roll ${nationRoll}`
+            };
+          }
         }
         
         // Roll for aircraft within that nation
@@ -2284,16 +2329,17 @@
         
         if (!aircraftType) {
           return {
-            nationRoll: nationRoll,
+            nationRoll: null,
             aircraftRoll: aircraftRoll,
-            text: `Error: No aircraft found for mission ${atafZone} roll ${aircraftRoll}`
+            text: `Error: No aircraft found for mission ${missionType} roll ${aircraftRoll}`
           };
         }
         
-        const resultText = `${missionData.flightCount} x {${missionData.flightSize}} ${aircraftType}, ${atafZone}`;
+        const missionData = table.missionTypes[missionType];
+        const resultText = `${selectedNationName}: ${missionData.flightCount} x {${missionData.flightSize}} ${aircraftType}, ${missionType}`;
         
         return {
-          nationRoll: nationRoll,
+          nationRoll: null,
           aircraftRoll: aircraftRoll,
           text: resultText
         };
@@ -3010,46 +3056,68 @@
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'L') {
-        // Warsaw Pact Table L - mission type-based structure
+        // Warsaw Pact Table L - mission type-based structure - show all mission types
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
-        if (atafZone && table.missionTypes[atafZone]) {
-          const missionData = table.missionTypes[atafZone];
+        // Show all mission types for Table L
+        for (const [missionTypeName, missionData] of Object.entries(table.missionTypes)) {
           tableHTML += `<div class="mission-section">`;
           const flightInfo = missionData.flightCount + ' x {' + missionData.flightSize + '}';
           tableHTML += `<div class="mission-header">${missionData.name} (${flightInfo})</div>`;
           tableHTML += `<div class="mission-description">${missionData.description}</div>`;
           
-          // Sort nations by roll number
-          const sortedNations = Object.entries(missionData.nations).sort((a, b) => {
-            const aMin = parseInt(a[0].split('-')[0]);
-            const bMin = parseInt(b[0].split('-')[0]);
-            return aMin - bMin;
-          });
-          
-          for (const [nationRange, nationData] of sortedNations) {
-            tableHTML += `<div class="nation-section">`;
-            tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
-            tableHTML += `<div class="aircraft-list">`;
+          if (missionData.requiresNationSelection) {
+            // For Tactical Recon, show available nations without die rolls
+            tableHTML += `<div class="nation-selection-note">Nation Selection Required (USSR or GDR)</div>`;
             
-            // Sort aircraft ranges numerically
-            const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
-              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
-              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
-              return aStart - bStart;
+            for (const [nationName, nationData] of Object.entries(missionData.nationData)) {
+              tableHTML += `<div class="nation-section">`;
+              tableHTML += `<div class="nation-header">${nationName}</div>`;
+              tableHTML += `<div class="aircraft-list">`;
+              
+              // Sort aircraft ranges numerically
+              const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+                const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+                const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+                return aStart - bStart;
+              });
+              
+              for (const [aircraftRange, aircraftType] of sortedAircraft) {
+                tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              }
+              
+              tableHTML += `</div></div>`;
+            }
+          } else {
+            // For Standoff Jamming, show nations with die roll ranges
+            const sortedNations = Object.entries(missionData.nations).sort((a, b) => {
+              const aMin = parseInt(a[0].split('-')[0]);
+              const bMin = parseInt(b[0].split('-')[0]);
+              return aMin - bMin;
             });
             
-            for (const [aircraftRange, aircraftType] of sortedAircraft) {
-              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            for (const [nationRange, nationData] of sortedNations) {
+              tableHTML += `<div class="nation-section">`;
+              tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+              tableHTML += `<div class="aircraft-list">`;
+              
+              // Sort aircraft ranges numerically
+              const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+                const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+                const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+                return aStart - bStart;
+              });
+              
+              for (const [aircraftRange, aircraftType] of sortedAircraft) {
+                tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              }
+              
+              tableHTML += `</div></div>`;
             }
-            
-            tableHTML += `</div></div>`;
           }
           
           tableHTML += `</div>`;
-        } else {
-          tableHTML += `<div class="error">Unknown mission type: ${atafZone}</div>`;
         }
         
         tableHTML += `</div>`;
