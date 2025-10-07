@@ -2833,8 +2833,6 @@
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
         if (nationalityData) {
-          tableHTML += `<div class="rescue-raid-header">${nationalityData.name}</div>`;
-          
           for (const flightData of nationalityData.flights) {
             tableHTML += `<div class="tasking-section">`;
             const flightInfo = flightData.flightCount + ' x {' + flightData.flightSize + '}';
@@ -2871,7 +2869,6 @@
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
         if (missionData) {
-          tableHTML += `<div class="mission-header">${missionData.name}</div>`;
           //tableHTML += `<div class="mission-info">${missionData.flightCount} x {${missionData.flightSize}} [${missionData.name}], ${missionData.description}</div>`;
           
           // Sort nations by roll number
