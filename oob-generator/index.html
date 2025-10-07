@@ -1076,12 +1076,453 @@
           }
         }
       },
-      'G': { name: 'Warsaw Pact Table G', faction: 'Warsaw Pact', results: {} },
-      'H': { name: 'Warsaw Pact Table H', faction: 'Warsaw Pact', results: {} },
-      'I': { name: 'Warsaw Pact Table I', faction: 'Warsaw Pact', results: {} },
-      'J': { name: 'Warsaw Pact Table J', faction: 'Warsaw Pact', results: {} },
-      'K': { name: 'Warsaw Pact Table K', faction: 'Warsaw Pact', results: {} },
-      'L': { name: 'Warsaw Pact Table L', faction: 'Warsaw Pact', results: {} }
+      'G': { 
+        name: 'Warsaw Pact Table G - QRA Flights', 
+        faction: 'Warsaw Pact',
+        hasDate: false,
+        description: 'WP QRA Flights - Aircraft sitting alert at WP airfields in East Germany',
+        flightSize: 2,
+        nations: {
+          '1-3': {
+            name: 'USSR',
+            aircraft: {
+              '1-2': 'MiG-21bis',
+              '3-4': 'MiG-23M',
+              '5-6': 'MiG-23ML',
+              '7-8': 'MiG-29A',
+              '9-10': 'MiG-25PD/Su-27S¹' // Hidden sub-roll: 1-5 MiG-25PD, 6-10 Su-27S
+            }
+          },
+          '4-10': {
+            name: 'GDR',
+            aircraft: {
+              '1-6': 'MiG-21bis',
+              '7-10': 'MiG-23ML'
+            }
+          }
+        }
+      },
+      'H': { 
+        name: 'Warsaw Pact Table H - Fighter Sweep', 
+        faction: 'Warsaw Pact',
+        hasDate: false,
+        description: 'WP Fighter Sweep - Squadron-size groups of flights tasked with establishing air superiority',
+        nations: {
+          '1-7': {
+            name: 'USSR',
+            aircraft: {
+              '1-7': 'MiG-21bis',
+              '3-4': 'MiG-23M',
+              '5-6': 'MiG-23MLA',
+              '7-9': 'MiG-29A',
+              '10': 'MiG-25PD/Su-27S¹' // Hidden sub-roll: 1-5 MiG-25PD, 6-10 Su-27S
+            }
+          },
+          '8-10': {
+            name: 'GDR',
+            aircraft: {
+              '1-5': 'MiG-21bis',
+              '6-10': 'MiG-23ML'
+            }
+          }
+        }
+      },
+      'I': { 
+        name: 'Warsaw Pact Table I - Bombing Raid', 
+        faction: 'Warsaw Pact',
+        hasTasking: true,
+        hasDate: false,
+        description: 'WP Bombing Raid - Packages of flights assigned to provide air support to WP ground troops',
+        taskings: {
+          'CAP': {
+            flightSize: 4,
+            flightCount: 3,
+            description: 'Combat Air Patrol',
+            nations: {
+              '1-8': {
+                name: 'USSR',
+                aircraft: {
+                  '1-2': 'MiG-21bis',
+                  '3-4': 'MiG-23M',
+                  '5-7': 'MiG-27M',
+                  '8-9': 'MiG-29A',
+                  '10': 'MiG-25PD/Su-27S¹'
+                }
+              },
+              '9-10': {
+                name: 'GDR',
+                aircraft: {
+                  '1-8': 'MiG-21bis',
+                  '9-10': 'MiG-23ML'
+                }
+              }
+            }
+          },
+          'SEAD': {
+            flightSize: 4,
+            flightCount: 2,
+            description: 'Suppression of Enemy Air Defenses',
+            nations: {
+              '1-2': {
+                name: 'USSR',
+                aircraft: {
+                  '1-5': 'Su-17M4',
+                  '6-8': 'Su-24M',
+                  '9-10': 'MiG-27K'
+                }
+              },
+              '3-5': {
+                name: 'USSR',
+                aircraft: {
+                  '1-3': 'MiG-23MF',
+                  '4-7': 'MiG-23ML',
+                  '8-10': 'MiG-27M'
+                }
+              },
+              '6-7': {
+                name: 'USSR',
+                aircraft: {
+                  '1-4': 'Su-17M4',
+                  '5-8': 'Su-24M',
+                  '9-10': 'MiG-27K'
+                }
+              },
+              '8-10': {
+                name: 'GDR',
+                aircraft: {
+                  '1-10': 'MiG-23BN'
+                }
+              }
+            }
+          },
+          'Bombing': {
+            flightSize: 4,
+            flightCount: 5,
+            description: 'Bombing',
+            nations: {
+              '1-2': {
+                name: 'USSR',
+                aircraft: {
+                  '1-6': 'Bombs/CBU/Rockets',
+                  '7-10': 'Above plus EOGM/ARM'
+                }
+              },
+              '3-4': {
+                name: 'USSR',
+                aircraft: {
+                  '1-4': 'Su-17M4',
+                  '5-7': 'MiG-21F',
+                  '8-10': 'MiG-23²' // Hidden sub-roll: 1-4 MiG-23M, 5-8 MiG-23MF, 9-10 MiG-23ML
+                }
+              },
+              '5': {
+                name: 'USSR',
+                aircraft: {
+                  '1-10': 'Su-24M'
+                }
+              },
+              '6-10': {
+                name: 'GDR',
+                aircraft: {
+                  '1-6': 'MiG-21F',
+                  '7-10': 'Su-22M4'
+                }
+              }
+            }
+          }
+        }
+      },
+      'J': { 
+        name: 'Warsaw Pact Table J - Deep Strike Raid', 
+        faction: 'Warsaw Pact',
+        hasTasking: true,
+        hasDate: false,
+        description: 'WP Deep Strike Raid - Packages of flights intended to go deep behind NATO lines',
+        taskings: {
+          'Escort Jamming': {
+            flightSize: 1,
+            flightCount: 3,
+            description: 'Escort Jamming',
+            nations: {
+              '1-2': {
+                name: 'USSR',
+                aircraft: {
+                  '1-2': 'Su-24MP',
+                  '3-5': 'MiG-25RB',
+                  '6-8': 'Yak-28PP',
+                  '9-10': 'Tu-22PP'
+                }
+              },
+              '3-5': {
+                name: 'USSR',
+                aircraft: {
+                  '1-5': 'MiG-25RB',
+                  '6-10': 'Tu-22PP'
+                }
+              },
+              '6-8': {
+                name: 'USSR',
+                aircraft: {
+                  '1-4': 'Su-24MP',
+                  '5-8': 'MiG-25RB',
+                  '9-10': 'Yak-28PP'
+                }
+              },
+              '9-10': {
+                name: 'GDR',
+                aircraft: {
+                  '1-10': 'MiG-21PF'
+                }
+              }
+            }
+          },
+          'Chaff Laying': {
+            flightSize: 1,
+            flightCount: 3,
+            description: 'Chaff Laying',
+            nations: {
+              '1-5': {
+                name: 'USSR',
+                aircraft: {
+                  '1-5': 'MiG-21bis',
+                  '6-10': 'MiG-23M'
+                }
+              },
+              '6-8': {
+                name: 'USSR',
+                aircraft: {
+                  '1-4': 'Yak-28R',
+                  '5-8': 'MiG-25RB',
+                  '9-10': 'Su-24MR'
+                }
+              },
+              '9-10': {
+                name: 'GDR',
+                aircraft: {
+                  '1-10': 'MiG-21PF'
+                }
+              }
+            }
+          },
+          'Close Escort': {
+            flightSize: 4,
+            flightCount: 4,
+            description: 'Close Escort',
+            nations: {
+              '1-3': {
+                name: 'USSR',
+                aircraft: {
+                  '1-3': 'MiG-23MLA',
+                  '4-7': 'MiG-23MLD',
+                  '8-10': 'Su-27S'
+                }
+              },
+              '4-7': {
+                name: 'USSR',
+                aircraft: {
+                  '1-4': 'MiG-23ML',
+                  '5-7': 'MiG-29A',
+                  '8-10': 'Su-27S'
+                }
+              },
+              '8-10': {
+                name: 'GDR',
+                aircraft: {
+                  '1-10': 'MiG-23ML'
+                }
+              }
+            }
+          },
+          'Deep Bombing': {
+            flightSize: 4,
+            flightCount: 6,
+            description: 'Deep Bombing',
+            nations: {
+              '1-4': {
+                name: 'USSR',
+                aircraft: {
+                  '1-4': 'Su-24M',
+                  '5-8': 'Su-24M4',
+                  '9-10': 'MiG-27K'
+                }
+              },
+              '5-8': {
+                name: 'USSR',
+                aircraft: {
+                  '1-10': 'Tu-22M'
+                }
+              },
+              '9-10': {
+                name: 'GDR',
+                aircraft: {
+                  '1-10': 'Su-22M4'
+                }
+              }
+            }
+          },
+          'Recon': {
+            flightSize: 1,
+            flightCount: 2,
+            description: 'Reconnaissance',
+            nations: {
+              '1-5': {
+                name: 'USSR',
+                aircraft: {
+                  '1-5': 'Su-17M4R',
+                  '6-10': 'MiG-25RB'
+                }
+              },
+              '6-7': {
+                name: 'USSR',
+                aircraft: {
+                  '1-7': 'Yak-28R',
+                  '8-10': 'Su-24MR'
+                }
+              },
+              '8-9': {
+                name: 'USSR',
+                aircraft: {
+                  '1-5': 'MiG-21R',
+                  '6-10': 'MiG-25RB'
+                }
+              },
+              '10': {
+                name: 'GDR',
+                aircraft: {
+                  '1-10': 'MiG-21R'
+                }
+              }
+            }
+          }
+        }
+      },
+      'K': { 
+        name: 'Warsaw Pact Table K - Combat Rescue', 
+        faction: 'Warsaw Pact',
+        hasNationality: true,
+        hasDate: false,
+        description: 'WP Combat Rescue - Size of air battle and high number of losses would limit ability to conduct rescue',
+        nationalities: {
+          'USSR': {
+            name: 'USSR Combat Rescue Raid',
+            flights: [
+              {
+                type: 'Rescue Support',
+                flightSize: 2,
+                flightCount: 2,
+                description: 'Rescue Support',
+                aircraft: {
+                  '1-5': 'Su-25',
+                  '6-8': 'Su-17M4',
+                  '9-10': 'MiG-21bis'
+                }
+              },
+              {
+                type: 'CSAR',
+                flightSize: 1,
+                flightCount: 2,
+                description: 'Combat Search and Rescue',
+                aircraft: {
+                  '1-10': 'Mi-8'
+                }
+              }
+            ]
+          },
+          'GDR': {
+            name: 'GDR Combat Rescue Raid',
+            flights: [
+              {
+                type: 'Rescue Support',
+                flightSize: 2,
+                flightCount: 2,
+                description: 'Rescue Support',
+                aircraft: {
+                  '1-5': 'MiG-21bis',
+                  '6-10': 'MiG-23BN'
+                }
+              },
+              {
+                type: 'CSAR',
+                flightSize: 1,
+                flightCount: 2,
+                description: 'Combat Search and Rescue',
+                aircraft: {
+                  '1-10': 'Mi-8'
+                }
+              }
+            ]
+          }
+        }
+      },
+      'L': { 
+        name: 'Warsaw Pact Table L - Special Missions', 
+        faction: 'Warsaw Pact',
+        hasMissionType: true,
+        hasDate: false,
+        description: 'WP Special Missions - Specialized missions for small numbers of aircraft',
+        missionTypes: {
+          'Standoff Jamming': {
+            name: 'Standoff Jamming',
+            flightSize: 1,
+            flightCount: 1,
+            description: 'Standoff Jamming flights may not carry any ordnance or air-to-air weapons',
+            nations: {
+              '1-5': {
+                name: 'USSR',
+                aircraft: {
+                  '1-5': 'An-12PP',
+                  '6-10': 'Tu-16P'
+                }
+              },
+              '6-10': {
+                name: 'GDR',
+                aircraft: {
+                  '1-10': 'An-26'
+                }
+              }
+            }
+          },
+          'Tactical Recon': {
+            name: 'Tactical Recon',
+            flightSize: 2,
+            flightCount: 1,
+            description: 'Tactical Reconnaissance',
+            nations: {
+              '1-2': {
+                name: 'USSR',
+                aircraft: {
+                  '1-2': 'MiG-21R',
+                  '3-4': 'Su-17M3R',
+                  '5-7': 'Su-24MR',
+                  '8-10': 'MiG-25RB'
+                }
+              },
+              '3-4': {
+                name: 'USSR',
+                aircraft: {
+                  '1-3': 'Su-24MR',
+                  '4-6': 'MiG-25RB',
+                  '7-10': 'Tu-22R'
+                }
+              },
+              '5-9': {
+                name: 'USSR',
+                aircraft: {
+                  '1-5': 'MiG-21R',
+                  '6-10': 'Su-17M3R'
+                }
+              },
+              '10': {
+                name: 'GDR',
+                aircraft: {
+                  '1-5': 'MiG-21R',
+                  '6-10': 'Su-22M4R'
+                }
+              }
+            }
+          }
+        }
+      }
     };
 
     function selectTable(tableId, faction) {
@@ -1763,6 +2204,179 @@
         };
       }
       
+      if (tableId === 'G' || tableId === 'H') {
+        // Warsaw Pact QRA Flight and Fighter Sweep - two-roll system
+        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        
+        // Determine nation based on roll
+        let selectedNation = null;
+        for (const [range, nation] of Object.entries(table.nations)) {
+          const [min, max] = parseRange(range);
+          if (nationRoll >= min && nationRoll <= max) {
+            selectedNation = nation;
+            break;
+          }
+        }
+        
+        if (selectedNation) {
+          // Roll for aircraft within that nation
+          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          let aircraftType = null;
+          
+          // Find matching aircraft based on roll ranges
+          for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+            const [min, max] = parseRange(range);
+            if (aircraftRoll >= min && aircraftRoll <= max) {
+              aircraftType = aircraft;
+              break;
+            }
+          }
+          
+          // Handle hidden sub-rolls for superscript references
+          if (aircraftType && aircraftType.includes('¹')) {
+            const subRoll = Math.floor(Math.random() * 10) + 1;
+            if (aircraftType.includes('MiG-25PD/Su-27S¹')) {
+              aircraftType = subRoll <= 5 ? 'MiG-25PD' : 'Su-27S';
+            }
+          }
+          
+          const resultText = `1 x {${table.flightSize}} ${aircraftType}`;
+          
+          return {
+            nationRoll: nationRoll,
+            aircraftRoll: aircraftRoll,
+            text: resultText
+          };
+        }
+      }
+      
+      if (tableId === 'I' || tableId === 'J') {
+        // Warsaw Pact Bombing Raid and Deep Strike Raid - tasking-based system
+        const taskingNames = Object.keys(table.taskings);
+        const selectedTasking = taskingNames[Math.floor(Math.random() * taskingNames.length)];
+        const taskingData = table.taskings[selectedTasking];
+        
+        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        
+        // Determine nation based on roll
+        let selectedNation = null;
+        for (const [range, nation] of Object.entries(taskingData.nations)) {
+          const [min, max] = parseRange(range);
+          if (nationRoll >= min && nationRoll <= max) {
+            selectedNation = nation;
+            break;
+          }
+        }
+        
+        if (selectedNation) {
+          // Roll for aircraft within that nation
+          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          let aircraftType = null;
+          
+          // Find matching aircraft based on roll ranges
+          for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+            const [min, max] = parseRange(range);
+            if (aircraftRoll >= min && aircraftRoll <= max) {
+              aircraftType = aircraft;
+              break;
+            }
+          }
+          
+          // Handle hidden sub-rolls for superscript references
+          if (aircraftType && aircraftType.includes('²')) {
+            const subRoll = Math.floor(Math.random() * 10) + 1;
+            if (aircraftType.includes('MiG-23²')) {
+              if (subRoll <= 4) aircraftType = 'MiG-23M';
+              else if (subRoll <= 8) aircraftType = 'MiG-23MF';
+              else aircraftType = 'MiG-23ML';
+            }
+          }
+          
+          const resultText = `${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
+          
+          return {
+            nationRoll: nationRoll,
+            aircraftRoll: aircraftRoll,
+            text: resultText
+          };
+        }
+      }
+      
+      if (tableId === 'K') {
+        // Warsaw Pact Combat Rescue - nationality-based system
+        const nationalityNames = Object.keys(table.nationalities);
+        const selectedNationality = nationalityNames[Math.floor(Math.random() * nationalityNames.length)];
+        const nationalityData = table.nationalities[selectedNationality];
+        
+        let resultText = '';
+        
+        // Generate results for each flight type
+        nationalityData.flights.forEach(flightType => {
+          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          let aircraftType = null;
+          
+          // Find matching aircraft based on roll ranges
+          for (const [range, aircraft] of Object.entries(flightType.aircraft)) {
+            const [min, max] = parseRange(range);
+            if (aircraftRoll >= min && aircraftRoll <= max) {
+              aircraftType = aircraft;
+              break;
+            }
+          }
+          
+          if (resultText) resultText += ', ';
+          resultText += `${flightType.flightCount} x {${flightType.flightSize}} ${aircraftType}, ${flightType.type}`;
+        });
+        
+        return {
+          nationRoll: null,
+          aircraftRoll: null,
+          text: resultText
+        };
+      }
+      
+      if (tableId === 'L') {
+        // Warsaw Pact Special Missions - mission type-based system
+        const missionTypeNames = Object.keys(table.missionTypes);
+        const selectedMissionType = missionTypeNames[Math.floor(Math.random() * missionTypeNames.length)];
+        const missionData = table.missionTypes[selectedMissionType];
+        
+        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        
+        // Determine nation based on roll
+        let selectedNation = null;
+        for (const [range, nation] of Object.entries(missionData.nations)) {
+          const [min, max] = parseRange(range);
+          if (nationRoll >= min && nationRoll <= max) {
+            selectedNation = nation;
+            break;
+          }
+        }
+        
+        if (selectedNation) {
+          // Roll for aircraft within that nation
+          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          let aircraftType = null;
+          
+          // Find matching aircraft based on roll ranges
+          for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+            const [min, max] = parseRange(range);
+            if (aircraftRoll >= min && aircraftRoll <= max) {
+              aircraftType = aircraft;
+              break;
+            }
+          }
+          
+          const resultText = `${missionData.flightCount} x {${missionData.flightSize}} ${aircraftType}, ${selectedMissionType}`;
+          
+          return {
+            nationRoll: nationRoll,
+            aircraftRoll: aircraftRoll,
+            text: resultText
+          };
+        }
+      }
+      
       // Placeholder for other tables
       return {
         nationRoll: null,
@@ -1814,8 +2428,11 @@
           }
         }
         
+        // Determine faction styling
+        const factionClass = result.faction === 'NATO' ? 'nato-result' : 'wp-result';
+        
         return `
-          <div class="result-item">
+          <div class="result-item ${factionClass}">
             <div class="result-info">
               <div class="result-table">${result.tableName}${variableText}</div>
               <div class="result-text">

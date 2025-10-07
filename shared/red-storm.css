@@ -735,3 +735,16 @@ body {
   padding-bottom: 8px;
   border-bottom: 1px solid #3a4a3a;
 }
+
+/* Result Styling for NATO vs Warsaw Pact */
+.nato-result {
+  background-color: #e3f2fd !important; /* Light blue for NATO results */
+  border-left: 4px solid #1976d2 !important;
+  color: #0d47a1;
+}
+
+.wp-result {
+  background-color: #ffebee !important; /* Light red for Warsaw Pact results */
+  border-left: 4px solid #d32f2f !important;
+  color: #b71c1c;
+}
