@@ -759,7 +759,113 @@ body {
   font-weight: bold;
 }
 
-/* Warsaw Pact specific table view elements */
+/* Faction-Specific Table View Styling */
+
+/* NATO Table View Styling */
+.table-view-modal.nato-table-view {
+  background-color: #1a2a3a;
+  border: 2px solid #1976d2;
+}
+
+.table-view-modal.nato-table-view .section-title {
+  color: #1976d2;
+  font-weight: bold;
+  font-size: 22px;
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.table-view-modal.nato-table-view .table-description {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  border: 1px solid #1976d2;
+}
+
+.table-view-modal.nato-table-view .nation-section,
+.table-view-modal.nato-table-view .tasking-section,
+.table-view-modal.nato-table-view .nationality-section,
+.table-view-modal.nato-table-view .mission-section,
+.table-view-modal.nato-table-view .flight-type-section {
+  background-color: #bbdefb;
+  border-left: 4px solid #1976d2;
+  border: 1px solid #1976d2;
+}
+
+.table-view-modal.nato-table-view .nation-header,
+.table-view-modal.nato-table-view .tasking-header,
+.table-view-modal.nato-table-view .nationality-header,
+.table-view-modal.nato-table-view .mission-header,
+.table-view-modal.nato-table-view .flight-type-header {
+  color: #0d47a1;
+  font-weight: bold;
+  border-bottom: 1px solid #1976d2;
+}
+
+.table-view-modal.nato-table-view .aircraft-item {
+  color: #1565c0;
+  font-weight: 500;
+}
+
+.table-view-modal.nato-table-view .mission-description {
+  color: #1565c0;
+}
+
+/* Warsaw Pact Table View Styling */
+.table-view-modal.wp-table-view {
+  background-color: #3a1a1a;
+  border: 2px solid #d32f2f;
+}
+
+.table-view-modal.wp-table-view .section-title {
+  color: #d32f2f;
+  font-weight: bold;
+  font-size: 22px;
+  background-color: #ffebee;
+  color: #b71c1c;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.table-view-modal.wp-table-view .table-description {
+  background-color: #ffebee;
+  color: #b71c1c;
+  border: 1px solid #d32f2f;
+}
+
+.table-view-modal.wp-table-view .nation-section,
+.table-view-modal.wp-table-view .tasking-section,
+.table-view-modal.wp-table-view .nationality-section,
+.table-view-modal.wp-table-view .mission-section,
+.table-view-modal.wp-table-view .flight-type-section {
+  background-color: #ffcdd2;
+  border-left: 4px solid #d32f2f;
+  border: 1px solid #d32f2f;
+}
+
+.table-view-modal.wp-table-view .nation-header,
+.table-view-modal.wp-table-view .tasking-header,
+.table-view-modal.wp-table-view .nationality-header,
+.table-view-modal.wp-table-view .mission-header,
+.table-view-modal.wp-table-view .flight-type-header {
+  color: #b71c1c;
+  font-weight: bold;
+  border-bottom: 1px solid #d32f2f;
+}
+
+.table-view-modal.wp-table-view .aircraft-item {
+  color: #c62828;
+  font-weight: 500;
+}
+
+.table-view-modal.wp-table-view .mission-description {
+  color: #c62828;
+}
+
+/* Legacy Warsaw Pact styles for backward compatibility */
 .nationality-section {
   margin-bottom: 20px;
   padding: 15px;
