@@ -743,10 +743,20 @@ body {
   color: #0d47a1;
 }
 
+.nato-result .result-table {
+  color: #0d47a1 !important;
+  font-weight: bold;
+}
+
 .wp-result {
   background-color: #ffebee !important; /* Light red for Warsaw Pact results */
   border-left: 4px solid #d32f2f !important;
   color: #b71c1c;
+}
+
+.wp-result .result-table {
+  color: #b71c1c !important;
+  font-weight: bold;
 }
 
 /* Warsaw Pact specific table view elements */

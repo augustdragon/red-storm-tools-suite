@@ -121,6 +121,8 @@
             <option value="UK">UK/BE/NE</option>
             <option value="FRG">FRG</option>
             <option value="CAN">CAN (uses US rescue)</option>
+            <option value="USSR">USSR</option>
+            <option value="GDR">GDR</option>
           </select>
         </div>
         
@@ -1111,7 +1113,7 @@
           '1-7': {
             name: 'USSR',
             aircraft: {
-              '1-7': 'MiG-21bis',
+              '1-2': 'MiG-21bis',
               '3-4': 'MiG-23M',
               '5-6': 'MiG-23MLA',
               '7-9': 'MiG-29A',
@@ -1564,13 +1566,31 @@
         document.getElementById('rollInputSection').classList.add('active');
         document.getElementById('rollCountBasic').focus();
       } else if (table.hasNationality) {
-        // Table E: Combat Rescue - needs nationality selection
+        // Table E/K: Combat Rescue - needs nationality selection
         const displayText = `${faction} Table ${tableId}`;
         document.getElementById('variableTableDisplay').textContent = displayText;
         
         // Show nationality selection
         const nationalitySelection = document.getElementById('nationalitySelection');
         nationalitySelection.style.display = 'flex';
+        
+        // Populate dropdown based on faction
+        const crewNationalitySelect = document.getElementById('crewNationality');
+        crewNationalitySelect.innerHTML = '';
+        
+        if (faction === 'NATO') {
+          crewNationalitySelect.innerHTML = `
+            <option value="US">US</option>
+            <option value="UK">UK/BE/NE</option>
+            <option value="FRG">FRG</option>
+            <option value="CAN">CAN (uses US rescue)</option>
+          `;
+        } else if (faction === 'Warsaw Pact') {
+          crewNationalitySelect.innerHTML = `
+            <option value="USSR">USSR</option>
+            <option value="GDR">GDR</option>
+          `;
+        }
         
         // Hide other selections for this table
         const atafSelection = document.getElementById('atafSelection');
@@ -1581,13 +1601,30 @@
         document.getElementById('variableSelectionSection').classList.add('active');
         document.getElementById('rollCountVariable').focus();
       } else if (table.hasMissionType) {
-        // Table F: Special Missions - needs mission type selection
+        // Table F/L: Special Missions - needs mission type selection
         const displayText = `${faction} Table ${tableId}`;
         document.getElementById('variableTableDisplay').textContent = displayText;
         
         // Show mission type selection
         const missionTypeSelection = document.getElementById('missionTypeSelection');
         missionTypeSelection.style.display = 'flex';
+        
+        // Populate dropdown based on faction
+        const missionTypeSelect = document.getElementById('missionType');
+        missionTypeSelect.innerHTML = '';
+        
+        if (faction === 'NATO') {
+          missionTypeSelect.innerHTML = `
+            <option value="Fast FAC">Fast FAC</option>
+            <option value="Standoff Jamming">Standoff Jamming</option>
+            <option value="Tactical Recon">Tactical Recon</option>
+          `;
+        } else if (faction === 'Warsaw Pact') {
+          missionTypeSelect.innerHTML = `
+            <option value="Standoff Jamming">Standoff Jamming</option>
+            <option value="Tactical Recon">Tactical Recon</option>
+          `;
+        }
         
         // Hide other selections for this table
         const atafSelection = document.getElementById('atafSelection');
@@ -2150,6 +2187,110 @@
         };
       }
       
+      if (tableId === 'K') {
+        // Warsaw Pact Table K: Combat Rescue - nationality-based
+        const nationalityData = table.nationalities[atafZone];
+        if (!nationalityData) {
+          return {
+            nationRoll: null,
+            aircraftRoll: null,
+            text: `Error: Unknown nationality ${atafZone}`
+          };
+        }
+        
+        let resultParts = [];
+        
+        // Generate results for each flight type
+        nationalityData.flights.forEach(flightType => {
+          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          let aircraftType = null;
+          
+          // Find matching aircraft based on roll ranges
+          for (const [range, aircraft] of Object.entries(flightType.aircraft)) {
+            const [min, max] = parseRange(range);
+            if (aircraftRoll >= min && aircraftRoll <= max) {
+              aircraftType = aircraft;
+              break;
+            }
+          }
+          
+          if (aircraftType) {
+            resultParts.push(`${flightType.flightCount} x {${flightType.flightSize}} ${aircraftType}, ${flightType.type}`);
+          }
+        });
+        
+        const resultText = resultParts.join(', ');
+        
+        return {
+          nationRoll: null,
+          aircraftRoll: null,
+          text: resultText
+        };
+      }
+      
+      if (tableId === 'L') {
+        // Warsaw Pact Table L: Special Missions - mission type-based
+        const missionData = table.missionTypes[atafZone];
+        if (!missionData) {
+          return {
+            nationRoll: null,
+            aircraftRoll: null,
+            text: `Error: Unknown mission type ${atafZone}`
+          };
+        }
+        
+        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        
+        // Determine nation based on roll
+        let selectedNation = null;
+        let selectedNationName = '';
+        for (const [range, nation] of Object.entries(missionData.nations)) {
+          const [min, max] = parseRange(range);
+          if (nationRoll >= min && nationRoll <= max) {
+            selectedNation = nation;
+            selectedNationName = nation.name;
+            break;
+          }
+        }
+        
+        if (!selectedNation) {
+          return {
+            nationRoll: nationRoll,
+            aircraftRoll: null,
+            text: `Error: No nation found for mission ${atafZone} roll ${nationRoll}`
+          };
+        }
+        
+        // Roll for aircraft within that nation
+        const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+        let aircraftType = null;
+        
+        // Find matching aircraft based on roll ranges
+        for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+          const [min, max] = parseRange(range);
+          if (aircraftRoll >= min && aircraftRoll <= max) {
+            aircraftType = aircraft;
+            break;
+          }
+        }
+        
+        if (!aircraftType) {
+          return {
+            nationRoll: nationRoll,
+            aircraftRoll: aircraftRoll,
+            text: `Error: No aircraft found for mission ${atafZone} roll ${aircraftRoll}`
+          };
+        }
+        
+        const resultText = `${missionData.flightCount} x {${missionData.flightSize}} ${aircraftType}, ${atafZone}`;
+        
+        return {
+          nationRoll: nationRoll,
+          aircraftRoll: aircraftRoll,
+          text: resultText
+        };
+      }
+      
       // Placeholder for other tables
       return {
         nationRoll: null,
@@ -2410,10 +2551,13 @@
         let rollText = '';
         let variableText = '';
         
-        if (result.nationRoll && result.aircraftRoll && result.table !== 'A' && result.table !== 'B' && result.table !== 'F') {
-          rollText = `(aircraft: ${result.aircraftRoll})`;
-        } else if (result.roll) {
-          rollText = `(rolled ${result.roll})`;
+        // Only show roll text for NATO tables, not Warsaw Pact
+        if (result.faction === 'NATO') {
+          if (result.nationRoll && result.aircraftRoll && result.table !== 'A' && result.table !== 'B' && result.table !== 'F') {
+            rollText = `(aircraft: ${result.aircraftRoll})`;
+          } else if (result.roll) {
+            rollText = `(rolled ${result.roll})`;
+          }
         }
         
         if (result.atafZone || result.scenarioDate) {
