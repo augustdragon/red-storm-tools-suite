@@ -1859,7 +1859,8 @@
       if (tableId === 'A') {
         // Table A: NATO QRA Flight - two-roll system with variables
         const variant = table.variants[atafZone][scenarioDate];
-        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        const nationRollResult = makeDebugRoll(10, 'Nation');
+        const nationRoll = nationRollResult.roll;
         
         // Determine nation based on roll and variant
         let selectedNation, nationName;
@@ -1873,7 +1874,8 @@
         }
         
         // Roll for aircraft within that nation
-        const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+        const aircraftRollResult = makeDebugRoll(10, 'Aircraft');
+        const aircraftRoll = aircraftRollResult.roll;
         let aircraftType = null;
         
         // Find matching aircraft based on roll ranges
@@ -1888,18 +1890,27 @@
         
         const resultText = `${nationName}: 1 x {${table.flightSize}} ${aircraftType}, CAP`;
         
+        // Build simple debug string
+        let debugText = '';
+        if (debugMode) {
+          const debugParts = [nationRollResult.debugEntry, aircraftRollResult.debugEntry].filter(Boolean);
+          debugText = debugParts.length > 0 ? `[${debugParts.join(' | ')}]` : '';
+        }
+        
         return {
           nationRoll: nationRoll,
           aircraftRoll: aircraftRoll,
           nationName: nationName,
-          text: resultText
+          text: resultText,
+          debugText: debugText
         };
       }
       
       if (tableId === 'B') {
         // Table B: NATO CAP Flight - uses zones structure
         const zoneData = table.zones[atafZone][scenarioDate];
-        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        const nationRollResult = makeDebugRoll(10, 'Nation');
+        const nationRoll = nationRollResult.roll;
         
         let selectedNation = null;
         let selectedNationName = '';
@@ -1918,12 +1929,14 @@
           return {
             nationRoll: nationRoll,
             aircraftRoll: null,
-            text: `Error: No nation found for roll ${nationRoll}`
+            text: `Error: No nation found for roll ${nationRoll}`,
+            debugText: debugMode ? `[${nationRollResult.debugEntry}]` : ''
           };
         }
         
         // Roll for aircraft type
-        const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+        const aircraftRollResult = makeDebugRoll(10, 'Aircraft');
+        const aircraftRoll = aircraftRollResult.roll;
         let selectedAircraft = null;
         
         // Find which aircraft this roll corresponds to
@@ -1939,15 +1952,24 @@
           return {
             nationRoll: nationRoll,
             aircraftRoll: aircraftRoll,
-            text: `Error: No aircraft found for roll ${aircraftRoll}`
+            text: `Error: No aircraft found for roll ${aircraftRoll}`,
+            debugText: debugMode ? `[${nationRollResult.debugEntry} | ${aircraftRollResult.debugEntry}]` : ''
           };
+        }
+        
+        // Build simple debug string
+        let debugText = '';
+        if (debugMode) {
+          const debugParts = [nationRollResult.debugEntry, aircraftRollResult.debugEntry].filter(Boolean);
+          debugText = debugParts.length > 0 ? `[${debugParts.join(' | ')}]` : '';
         }
         
         return {
           nationRoll: nationRoll,
           aircraftRoll: aircraftRoll,
           nationName: selectedNationName,
-          text: `${selectedNationName}: 1 x {2} ${selectedAircraft}, CAP`
+          text: `${selectedNationName}: 1 x {2} ${selectedAircraft}, CAP`,
+          debugText: debugText
         };
       }
       
@@ -1964,7 +1986,8 @@
           const taskingVariant = taskingData[tasking][dateVariant];
           
           // Roll for nation
-          const nationRoll = Math.floor(Math.random() * 10) + 1;
+          const nationRollResult = makeDebugRoll(10, 'Nation');
+          const nationRoll = nationRollResult.roll;
           let selectedNation = null;
           let selectedNationName = '';
           
@@ -2018,8 +2041,8 @@
             resultText = `2 x {${flightSize}} ${selectedNationName} F-4G, 2 x {${flightSize}} ${selectedNationName} F-4E, ${tasking}`;
           } else if (tableId === 'C' && tasking === 'Bombing' && selectedNationName === 'US' && selectedAircraft === 'F-4') {
             // Table C Reference 2: Hidden sub-roll for F-4D vs F-4E
-            const subRoll = Math.floor(Math.random() * 10) + 1;
-            const specificAircraft = subRoll <= 5 ? 'F-4D' : 'F-4E';
+            subRollResult = makeDebugRoll(10, `${tasking} Sub-roll`);
+            const specificAircraft = subRollResult.roll <= 5 ? 'F-4D' : 'F-4E';
             resultText = `4 x {${flightSize}} ${selectedNationName} ${specificAircraft}, ${tasking}`;
           } else if (tableId === 'D' && tasking === 'SEAD' && selectedNationName === 'US' && selectedAircraft === 'F-4G/F-4E') {
             // Table D Reference: Split F-4G/F-4E into separate flights (rolls 7-9)
@@ -2041,9 +2064,14 @@
           });
         }
         
+        // Combine all debug texts for Table C
+        const allDebugTexts = results.map(r => r.debugText).filter(Boolean);
+        const combinedDebugText = allDebugTexts.length > 0 ? allDebugTexts.join(' ') : '';
+        
         return {
           taskingResults: results,
-          text: results.map(r => r.text).join('<br>')
+          text: results.map(r => r.text).join('<br>'),
+          debugText: combinedDebugText
         };
       } else if (tableId === 'D') {
         // Table D: NATO Deep Strike Raid - five-tasking system
@@ -2058,7 +2086,8 @@
           const taskingVariant = taskingData[tasking];
           
           // Roll for nation
-          const nationRoll = Math.floor(Math.random() * 10) + 1;
+          const nationRollResult = makeDebugRoll(10, `${tasking} Nation`);
+          const nationRoll = nationRollResult.roll;
           let selectedNation = null;
           let selectedNationName = '';
           
@@ -2157,7 +2186,8 @@
         // Generate each flight type for this nationality
         for (const flightData of nationalityData.flights) {
           // Roll for aircraft type
-          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          const aircraftRollResult = makeDebugRoll(10, `${flightData.type} Aircraft`);
+          const aircraftRoll = aircraftRollResult.roll;
           let selectedAircraft = null;
           
           for (const [range, aircraft] of Object.entries(flightData.aircraft)) {
@@ -2179,18 +2209,30 @@
           
           const resultText = `${flightData.flightCount} x {${flightData.flightSize}} ${selectedAircraft}, ${flightData.type}`;
           
+          // Build debug information for this flight type
+          let flightDebugText = '';
+          if (debugMode) {
+            flightDebugText = `[${aircraftRollResult.debugEntry}]`;
+          }
+          
           results.push({
             flightType: flightData.type,
             aircraftRoll: aircraftRoll,
-            text: resultText
+            text: resultText,
+            debugText: flightDebugText
           });
         }
+        
+        // Combine all debug texts for Table E
+        const allDebugTexts = results.map(r => r.debugText).filter(Boolean);
+        const combinedDebugText = allDebugTexts.length > 0 ? allDebugTexts.join(' ') : '';
         
         return {
           nationality: selectedNationality,
           raidType: nationalityData.name,
           flightResults: results,
-          text: results.map(r => r.text).join('<br>')
+          text: results.map(r => r.text).join('<br>'),
+          debugText: combinedDebugText
         };
       } else if (tableId === 'F') {
         // Table F: NATO Special Missions - mission-type based system
@@ -2204,7 +2246,8 @@
         }
         
         // Roll for nation
-        const nationRoll = Math.floor(Math.random() * 10) + 1;
+        const nationRollResult = makeDebugRoll(10, 'Nation');
+        const nationRoll = nationRollResult.roll;
         let selectedNation = null;
         let selectedNationName = '';
         
@@ -2226,7 +2269,8 @@
         }
         
         // Roll for aircraft
-        const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+        const aircraftRollResult = makeDebugRoll(10, 'Aircraft');
+        const aircraftRoll = aircraftRollResult.roll;
         let selectedAircraft = null;
         
         for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
@@ -2247,12 +2291,20 @@
         
         const resultText = `${missionData.flightCount} x {${missionData.flightSize}} ${selectedNationName} ${selectedAircraft}, ${selectedMissionType}`;
         
+        // Build simple debug string
+        let debugText = '';
+        if (debugMode) {
+          const debugParts = [nationRollResult.debugEntry, aircraftRollResult.debugEntry].filter(Boolean);
+          debugText = debugParts.length > 0 ? `[${debugParts.join(' | ')}]` : '';
+        }
+        
         return {
           missionType: selectedMissionType,
           nationRoll: nationRoll,
           aircraftRoll: aircraftRoll,
           nationName: selectedNationName,
-          text: resultText
+          text: resultText,
+          debugText: debugText
         };
       }
       
@@ -2332,7 +2384,8 @@
           }
           
           // Roll for nation
-          const nationRoll = Math.floor(Math.random() * 10) + 1;
+          const nationRollResult = makeDebugRoll(10, 'Nation');
+          const nationRoll = nationRollResult.roll;
           
           for (const [range, nation] of Object.entries(missionData.nations)) {
             const [min, max] = parseRange(range);
@@ -2353,7 +2406,8 @@
         }
         
         // Roll for aircraft within that nation
-        const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+        const aircraftRollResult = makeDebugRoll(10, 'Aircraft');
+        const aircraftRoll = aircraftRollResult.roll;
         let aircraftType = null;
         
         // Find matching aircraft based on roll ranges
@@ -2376,10 +2430,23 @@
         const missionData = table.missionTypes[missionType];
         const resultText = `${selectedNationName}: ${missionData.flightCount} x {${missionData.flightSize}} ${aircraftType}, ${missionType}`;
         
+        // Build debug text for Table L
+        let debugText = '';
+        if (debugMode) {
+          if (atafZone.includes('|')) {
+            // Tactical Recon with manual nation selection
+            debugText = `[Mission: ${missionType} | Nation: Manual | ${aircraftRollResult.debugEntry}]`;
+          } else {
+            // Standoff Jamming with nation roll
+            debugText = `[Mission: ${missionType} | ${nationRollResult.debugEntry} | ${aircraftRollResult.debugEntry}]`;
+          }
+        }
+        
         return {
           nationRoll: null,
           aircraftRoll: aircraftRoll,
-          text: resultText
+          text: resultText,
+          debugText: debugText
         };
       }
       
@@ -2505,8 +2572,8 @@
         }
       }
       
-      if (tableId === 'I' || tableId === 'J') {
-        // Warsaw Pact Bombing Raid and Deep Strike Raid - tasking-based system
+      if (tableId === 'I') {
+        // Table I: Warsaw Pact Bombing Raid - single tasking selection
         const taskingNames = Object.keys(table.taskings);
         const selectedTasking = taskingNames[Math.floor(Math.random() * taskingNames.length)];
         const taskingData = table.taskings[selectedTasking];
@@ -2567,6 +2634,64 @@
             debugText: debugText
           };
         }
+      }
+      
+      if (tableId === 'J') {
+        // Table J: Warsaw Pact Deep Strike Raid - generates ALL taskings automatically (USSR only)
+        const allTaskings = Object.keys(table.taskings);
+        const resultParts = [];
+        let debugParts = [];
+        
+        for (const taskingName of allTaskings) {
+          const taskingData = table.taskings[taskingName];
+          
+          // Table J is USSR only - no nation roll needed
+          const nationData = taskingData.nations['1-10']; // USSR covers full range
+          
+          // Roll for aircraft for this tasking
+          const aircraftRollResult = makeDebugRoll(10, `${taskingName} Aircraft`);
+          const aircraftRoll = aircraftRollResult.roll;
+          let aircraftType = null;
+          
+          // Find matching aircraft based on roll ranges
+          for (const [range, aircraft] of Object.entries(nationData.aircraft)) {
+            const [min, max] = parseRange(range);
+            if (aircraftRoll >= min && aircraftRoll <= max) {
+              aircraftType = aircraft;
+              break;
+            }
+          }
+          
+          // Handle hidden sub-rolls for superscript references
+          if (aircraftType && aircraftType.includes('²')) {
+            const subRollResult = makeDebugRoll(10, `${taskingName} Sub-roll`);
+            if (aircraftType.includes('MiG-23²')) {
+              if (subRollResult.roll <= 4) aircraftType = 'MiG-23M';
+              else if (subRollResult.roll <= 8) aircraftType = 'MiG-23MF';
+              else aircraftType = 'MiG-23ML';
+            }
+            if (debugMode) debugParts.push(subRollResult.debugEntry);
+          }
+          
+          // Add this tasking to results
+          resultParts.push(`${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${taskingName}`);
+          if (debugMode) debugParts.push(aircraftRollResult.debugEntry);
+        }
+        
+        const resultText = `USSR: ${resultParts.join(', ')}`;
+        
+        // Build simple debug string
+        let debugText = '';
+        if (debugMode && debugParts.length > 0) {
+          debugText = `[${debugParts.filter(Boolean).join(' | ')}]`;
+        }
+        
+        return {
+          nationRoll: null,
+          aircraftRoll: null,
+          text: resultText,
+          debugText: debugText
+        };
       }
       
       if (tableId === 'K') {
