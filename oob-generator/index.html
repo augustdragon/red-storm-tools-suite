@@ -72,14 +72,14 @@
         </div>
 
         <div class="faction-section">
-          <div class="faction-header warsaw-header">Warsaw Pact Tables</div>
+          <div class="faction-header warsaw-header">WP Tables</div>
           <div class="table-grid">
-            <button class="table-button warsaw-table" onclick="selectTable('G', 'Warsaw Pact')">G</button>
-            <button class="table-button warsaw-table" onclick="selectTable('H', 'Warsaw Pact')">H</button>
-            <button class="table-button warsaw-table" onclick="selectTable('I', 'Warsaw Pact')">I</button>
-            <button class="table-button warsaw-table" onclick="selectTable('J', 'Warsaw Pact')">J</button>
-            <button class="table-button warsaw-table" onclick="selectTable('K', 'Warsaw Pact')">K</button>
-            <button class="table-button warsaw-table" onclick="selectTable('L', 'Warsaw Pact')">L</button>
+            <button class="table-button warsaw-table" onclick="selectTable('G', 'WP')">G</button>
+            <button class="table-button warsaw-table" onclick="selectTable('H', 'WP')">H</button>
+            <button class="table-button warsaw-table" onclick="selectTable('I', 'WP')">I</button>
+            <button class="table-button warsaw-table" onclick="selectTable('J', 'WP')">J</button>
+            <button class="table-button warsaw-table" onclick="selectTable('K', 'WP')">K</button>
+            <button class="table-button warsaw-table" onclick="selectTable('L', 'WP')">L</button>
           </div>
         </div>
       </div>
@@ -1079,8 +1079,8 @@
         }
       },
       'G': { 
-        name: 'Warsaw Pact Table G - QRA Flights', 
-        faction: 'Warsaw Pact',
+        name: 'WP Table G - QRA Flights', 
+        faction: 'WP',
         hasDate: false,
         description: 'WP QRA Flights - Aircraft sitting alert at WP airfields in East Germany',
         flightSize: 2,
@@ -1105,8 +1105,8 @@
         }
       },
       'H': { 
-        name: 'Warsaw Pact Table H - Fighter Sweep', 
-        faction: 'Warsaw Pact',
+        name: 'WP Table H - Fighter Sweep', 
+        faction: 'WP',
         hasDate: false,
         flightSize: 2,
         description: 'WP Fighter Sweep - Squadron-size groups of flights tasked with establishing air superiority',
@@ -1131,8 +1131,8 @@
         }
       },
       'I': { 
-        name: 'Warsaw Pact Table I - Bombing Raid', 
-        faction: 'Warsaw Pact',
+        name: 'WP Table I - Bombing Raid', 
+        faction: 'WP',
         hasTasking: true,
         hasDate: false,
         description: 'WP Bombing Raid - Packages of flights assigned to provide air support to WP ground troops',
@@ -1224,8 +1224,8 @@
         }
       },
       'J': { 
-        name: 'Warsaw Pact Table J - Deep Strike Raid', 
-        faction: 'Warsaw Pact',
+        name: 'WP Table J - Deep Strike Raid', 
+        faction: 'WP',
         hasTasking: true,
         hasDate: false,
         description: 'WP Deep Strike Raid - Packages of flights intended to go deep behind NATO lines',
@@ -1388,8 +1388,8 @@
         }
       },
       'K': { 
-        name: 'Warsaw Pact Table K - Combat Rescue', 
-        faction: 'Warsaw Pact',
+        name: 'WP Table K - Combat Rescue', 
+        faction: 'WP',
         hasNationality: true,
         hasDate: false,
         description: 'WP Combat Rescue - Size of air battle and high number of losses would limit ability to conduct rescue',
@@ -1446,8 +1446,8 @@
         }
       },
       'L': { 
-        name: 'Warsaw Pact Table L - Special Missions', 
-        faction: 'Warsaw Pact',
+        name: 'WP Table L - Special Missions', 
+        faction: 'WP',
         hasMissionType: true,
         hasDate: false,
         description: 'WP Special Missions - Specialized missions for small numbers of aircraft',
@@ -1522,7 +1522,7 @@
       
       const table = oobTables[tableId];
       
-      // Check if scenario date is set (except for Warsaw Pact tables and NATO Table D which are not date-dependent)
+      // Check if scenario date is set (except for WP tables and NATO Table D which are not date-dependent)
       if (!scenarioDate && table.hasDate !== false && tableId !== 'D') {
         alert('Please select a scenario date first.');
         return;
@@ -1588,7 +1588,7 @@
             <option value="FRG">FRG</option>
             <option value="CAN">CAN (uses US rescue)</option>
           `;
-        } else if (faction === 'Warsaw Pact') {
+        } else if (faction === 'WP') {
           crewNationalitySelect.innerHTML = `
             <option value="USSR">USSR</option>
             <option value="GDR">GDR</option>
@@ -1622,7 +1622,7 @@
             <option value="Standoff Jamming">Standoff Jamming</option>
             <option value="Tactical Recon">Tactical Recon</option>
           `;
-        } else if (faction === 'Warsaw Pact') {
+        } else if (faction === 'WP') {
           missionTypeSelect.innerHTML = `
             <option value="Standoff Jamming">Standoff Jamming</option>
             <option value="Tactical Recon">Tactical Recon</option>
