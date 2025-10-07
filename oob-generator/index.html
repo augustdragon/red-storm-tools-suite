@@ -2384,7 +2384,7 @@
             }
           }
           
-          const resultText = `1 x {${table.flightSize}} ${aircraftType}`;
+          const resultText = `${selectedNation.name}: 1 x {${table.flightSize}} ${aircraftType}`;
           
           return {
             nationRoll: nationRoll,
@@ -2436,7 +2436,7 @@
             }
           }
           
-          const resultText = `${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
+          const resultText = `${selectedNation.name}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
           
           return {
             nationRoll: nationRoll,
@@ -2471,6 +2471,9 @@
           if (resultText) resultText += ', ';
           resultText += `${flightType.flightCount} x {${flightType.flightSize}} ${aircraftType}, ${flightType.type}`;
         });
+        
+        // Prepend nationality name to the result
+        resultText = `${nationalityData.name.replace(' Combat Rescue Raid', '')}: ${resultText}`;
         
         return {
           nationRoll: null,
@@ -2511,7 +2514,7 @@
             }
           }
           
-          const resultText = `${missionData.flightCount} x {${missionData.flightSize}} ${aircraftType}, ${selectedMissionType}`;
+          const resultText = `${selectedNation.name}: ${missionData.flightCount} x {${missionData.flightSize}} ${aircraftType}, ${selectedMissionType}`;
           
           return {
             nationRoll: nationRoll,
