@@ -12,7 +12,7 @@
     <div class="header">
       <div class="title">Red Storm</div>
       <div class="subtitle">Order of Battle Generator</div>
-      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-v3</div>
+      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-v4</div>
     </div>
 
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
@@ -1864,6 +1864,96 @@
     function getTableResultWithVariables(tableId, atafZone, scenarioDate) {
       console.log(`getTableResultWithVariables called with tableId: ${tableId}`);
       console.log(`Checking conditions: tableId === 'I' is ${tableId === 'I'}`);
+      
+      // DIRECT TABLE I INTERCEPT - Handle Table I first before anything else
+      if (tableId === 'I') {
+        console.log('DIRECT Table I intercept activated!');
+        const table = oobTables[tableId];
+        console.log('Table I object:', table);
+        
+        try {
+          // Table I: Warsaw Pact Bombing Raid - generates ALL three taskings
+          const taskingNames = Object.keys(table.taskings);
+          console.log('Table I taskings:', taskingNames);
+          const results = [];
+          
+          for (const selectedTasking of taskingNames) {
+            console.log(`Processing tasking: ${selectedTasking}`);
+            const taskingData = table.taskings[selectedTasking];
+            
+            const nationRollResult = makeDebugRoll(10, `${selectedTasking} Nation`);
+            const nationRoll = nationRollResult.roll;
+            
+            // Determine nation based on roll
+            let selectedNation = null;
+            let selectedNationName = '';
+            for (const [range, nation] of Object.entries(taskingData.nations)) {
+              const [min, max] = parseRange(range);
+              if (nationRoll >= min && nationRoll <= max) {
+                selectedNation = nation;
+                selectedNationName = nation.name;
+                break;
+              }
+            }
+            
+            if (!selectedNation) {
+              results.push({
+                tasking: selectedTasking,
+                text: `Error: No nation found for ${selectedTasking} roll ${nationRoll}`
+              });
+              continue;
+            }
+            
+            // Roll for aircraft
+            const aircraftRollResult = makeDebugRoll(10, `${selectedTasking} Aircraft`);
+            const aircraftRoll = aircraftRollResult.roll;
+            let aircraftType = null;
+            
+            for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+              const [min, max] = parseRange(range);
+              if (aircraftRoll >= min && aircraftRoll <= max) {
+                aircraftType = aircraft;
+                break;
+              }
+            }
+            
+            if (!aircraftType) {
+              results.push({
+                tasking: selectedTasking,
+                text: `Error: No aircraft found for ${selectedTasking} roll ${aircraftRoll}`
+              });
+              continue;
+            }
+            
+            const resultText = `${selectedNationName}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
+            console.log(`Result text for ${selectedTasking}:`, resultText);
+            
+            results.push({
+              tasking: selectedTasking,
+              text: resultText
+            });
+          }
+          
+          const finalResult = {
+            taskingResults: results,
+            text: results.map(r => r.text).join('<br>'),
+            debugText: debugMode ? '[Table I Direct Processing]' : ''
+          };
+          
+          console.log('Table I DIRECT final result:', finalResult);
+          return finalResult;
+          
+        } catch (error) {
+          console.error('Error in Table I direct processing:', error);
+          return {
+            nationRoll: null,
+            aircraftRoll: null,
+            text: `Error processing Table I: ${error.message}`,
+            debugText: ''
+          };
+        }
+      }
+      
       const table = oobTables[tableId];
       console.log(`Table object:`, table);
       
