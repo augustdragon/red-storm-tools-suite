@@ -12,7 +12,7 @@
     <div class="header">
       <div class="title">Red Storm</div>
       <div class="subtitle">Order of Battle Generator</div>
-      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.08-debug-25</div>
+      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.08-debug-26</div>
     </div>
 
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
@@ -3924,25 +3924,26 @@
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'L') {
-        // Warsaw Pact Table L - mission type-based structure - show all mission types
+        // Warsaw Pact Table L - mission type-based structure - show selected mission type only
+        const selectedMissionType = atafZone; // Mission type passed via atafZone parameter
+        
+        const missionData = table.missionTypes[selectedMissionType];
+        
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
-        // Show all mission types for Table L
-        for (const [missionTypeName, missionData] of Object.entries(table.missionTypes)) {
+        if (missionData) {
+          if (missionData.ordnanceNote) {
+            tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${missionData.ordnanceNote}</div>`;
+          }
+          
+          // Show only the selected mission type
           tableHTML += `<div class="mission-section">`;
           const flightInfo = missionData.flightCount + ' x {' + missionData.flightSize + '}';
           tableHTML += `<div class="mission-header">${missionData.name} (${flightInfo})</div>`;
-          //tableHTML += `<div class="mission-description">${missionData.description}</div>`;
-          
-          if (missionData.ordnanceNote) {
-            tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 5px; margin-bottom: 10px; padding: 6px; background-color: #f5f5f5; border-radius: 4px; font-size: 12px;">Ordnance: ${missionData.ordnanceNote}</div>`;
-          }
           
           if (missionData.requiresNationSelection) {
             // For Tactical Recon, show available nations without die rolls
-            //tableHTML += `<div class="nation-selection-note">Nation Selection Required (USSR or GDR)</div>`;
-            
             for (const [nationName, nationData] of Object.entries(missionData.nationData)) {
               tableHTML += `<div class="nation-section">`;
               tableHTML += `<div class="nation-header">${nationName}</div>`;
@@ -3989,7 +3990,9 @@
             }
           }
           
-          tableHTML += `</div>`;
+          tableHTML += `</div>`; // Close mission-section
+        } else {
+          tableHTML += `<div class="error-message">Mission type not found: ${selectedMissionType}</div>`;
         }
         
         tableHTML += `</div>`;
