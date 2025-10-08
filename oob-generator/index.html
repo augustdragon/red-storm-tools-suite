@@ -3561,7 +3561,7 @@
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'J') {
-        // Table J: USSR Deep Strike Raid - detailed format matching Table D structure
+        // Table J: USSR Deep Strike Raid - consolidated aircraft display (USSR only)
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
@@ -3581,7 +3581,10 @@
             tableHTML += `<div class="tasking-section">`;
             tableHTML += `<div class="tasking-header">${taskingInfo.display} (${flightInfo})</div>`;
             
-            // Sort nations by roll number
+            // Collect and consolidate all aircraft ranges across all nations for this tasking
+            let allAircraft = [];
+            
+            // Sort nations by roll number and collect aircraft
             const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
               const aMin = parseInt(a[0].split('-')[0]);
               const bMin = parseInt(b[0].split('-')[0]);
@@ -3589,21 +3592,22 @@
             });
             
             for (const [nationRange, nationData] of sortedNations) {
-              tableHTML += `<div class="nation-section">`;
-              tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
-              
-              // Sort aircraft ranges numerically
-              const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
-                const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
-                const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
-                return aStart - bStart;
-              });
-              
-              for (const [aircraftRange, aircraftType] of sortedAircraft) {
-                tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              // Add each aircraft with its range, preserving original ranges
+              for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+                allAircraft.push({ range: aircraftRange, type: aircraftType });
               }
-              
-              tableHTML += `</div>`;
+            }
+            
+            // Sort aircraft by range start number
+            allAircraft.sort((a, b) => {
+              const aStart = parseInt(a.range.split('-')[0]) || parseInt(a.range);
+              const bStart = parseInt(b.range.split('-')[0]) || parseInt(b.range);
+              return aStart - bStart;
+            });
+            
+            // Display consolidated aircraft list
+            for (const aircraft of allAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraft.range}: ${aircraft.type}</div>`;
             }
             
             tableHTML += `</div>`;
