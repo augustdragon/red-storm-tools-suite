@@ -12,7 +12,7 @@
     <div class="header">
       <div class="title">Red Storm</div>
       <div class="subtitle">Order of Battle Generator</div>
-      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-17</div>
+      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-18</div>
     </div>
 
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
@@ -2215,11 +2215,11 @@
         const flightSizes = { 'CAP': 2, 'SEAD': 2, 'Bombing': 4 };
         const flightCounts = { 'CAP': 4, 'SEAD': 4, 'Bombing': 4 };
         
-        // Ordnance table: 1-4 Bombs/CBU/Rockets, 5-7 +EOGM, 8-10 +EOGM+LGB/EOGB
+        // Ordnance table: 1-4 Bombs/CBU/Rockets, 5-7 Bombs/CBU/Rockets + EOGM, 8-10 Bombs/CBU/Rockets + EOGM + LGB/EOGB
         function getOrdnanceAvailability(roll) {
           if (roll <= 4) return "Bombs/CBU/Rockets";
-          else if (roll <= 7) return "+EOGM";
-          else return "+EOGM+LGB/EOGB";
+          else if (roll <= 7) return "Bombs/CBU/Rockets + EOGM";
+          else return "Bombs/CBU/Rockets + EOGM + LGB/EOGB";
         }
         
         for (const tasking of taskings) {
