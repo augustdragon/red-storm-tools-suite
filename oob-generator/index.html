@@ -12,7 +12,7 @@
     <div class="header">
       <div class="title">Red Storm</div>
       <div class="subtitle">Order of Battle Generator</div>
-      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-v6</div>
+      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-v7</div>
     </div>
 
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
@@ -1965,14 +1965,14 @@
         }
       }
       
-      // DIRECT TABLE J INTERCEPT - Handle Table J like Table D (Deep Strike Raid)
+      // DIRECT TABLE J INTERCEPT - Handle Table J like Table I (with nation rolls)
       if (tableId === 'J') {
         console.log('DIRECT Table J intercept activated!');
         const table = oobTables[tableId];
         console.log('Table J object:', table);
         
         try {
-          // Table J: Warsaw Pact Deep Strike Raid - generates ALL taskings automatically
+          // Table J: Warsaw Pact Deep Strike Raid - generates ALL taskings
           const allTaskings = Object.keys(table.taskings);
           console.log('Table J taskings:', allTaskings);
           const results = [];
@@ -1981,8 +1981,29 @@
             console.log(`Processing tasking: ${taskingName}`);
             const taskingData = table.taskings[taskingName];
             
-            // Table J is USSR only - no nation roll needed, use USSR data directly
-            const nationData = taskingData.nations['1-10']; // USSR covers full range
+            // Roll for nation (like Table I)
+            const nationRollResult = makeDebugRoll(10, `${taskingName} Nation`);
+            const nationRoll = nationRollResult.roll;
+            
+            // Determine nation based on roll
+            let selectedNation = null;
+            let selectedNationName = '';
+            for (const [range, nation] of Object.entries(taskingData.nations)) {
+              const [min, max] = parseRange(range);
+              if (nationRoll >= min && nationRoll <= max) {
+                selectedNation = nation;
+                selectedNationName = nation.name;
+                break;
+              }
+            }
+            
+            if (!selectedNation) {
+              results.push({
+                tasking: taskingName,
+                text: `Error: No nation found for ${taskingName} roll ${nationRoll}`
+              });
+              continue;
+            }
             
             // Roll for aircraft for this tasking
             const aircraftRollResult = makeDebugRoll(10, `${taskingName} Aircraft`);
@@ -1990,7 +2011,7 @@
             let aircraftType = null;
             
             // Find matching aircraft based on roll ranges
-            for (const [range, aircraft] of Object.entries(nationData.aircraft)) {
+            for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
               const [min, max] = parseRange(range);
               if (aircraftRoll >= min && aircraftRoll <= max) {
                 aircraftType = aircraft;
@@ -2006,13 +2027,13 @@
               continue;
             }
             
-            const resultText = `USSR: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${taskingName}`;
+            const resultText = `${selectedNationName}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${taskingName}`;
             console.log(`Result text for ${taskingName}:`, resultText);
             
             // Build debug text for this tasking
             let taskingDebugText = '';
             if (debugMode) {
-              taskingDebugText = `[${taskingName}: ${aircraftRollResult.debugEntry} → ${aircraftType}]`;
+              taskingDebugText = `[${taskingName}: ${nationRollResult.debugEntry} → ${selectedNationName} | ${aircraftRollResult.debugEntry} → ${aircraftType}]`;
             }
             
             results.push({
