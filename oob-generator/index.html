@@ -1820,6 +1820,7 @@
       
       for (let i = 0; i < rollCount; i++) {
         let result;
+        console.log(`Making roll ${i+1} for table ${selectedTable}`);
         
         // Tables with multiple taskings need special handling
         if (selectedTable === 'C') {
@@ -1827,10 +1828,13 @@
         } else if (selectedTable === 'D') {
           result = getTableResultWithVariables(selectedTable, null, null);
         } else if (selectedTable === 'I' || selectedTable === 'J') {
+          console.log(`Routing ${selectedTable} to getTableResultWithVariables`);
           result = getTableResultWithVariables(selectedTable, null, null);
         } else {
           result = getTableResult(selectedTable);
         }
+        
+        console.log(`Result for ${selectedTable}:`, result);
         
         const resultEntry = {
           id: resultCounter++,
@@ -1855,7 +1859,9 @@
     }
 
     function getTableResultWithVariables(tableId, atafZone, scenarioDate) {
+      console.log(`getTableResultWithVariables called with tableId: ${tableId}`);
       const table = oobTables[tableId];
+      console.log(`Table object:`, table);
       
       if (tableId === 'A') {
         // Table A: NATO QRA Flight - two-roll system with variables
@@ -2602,12 +2608,15 @@
       }
       
       if (tableId === 'I') {
+        console.log('Processing Table I');
         // Table I: Warsaw Pact Bombing Raid - generates ALL three taskings (CAP, SEAD, Bombing)
         const taskingNames = Object.keys(table.taskings);
+        console.log('Table I taskings:', taskingNames);
         const results = [];
         
         // Debug: Check if taskings exist
         if (!table.taskings || taskingNames.length === 0) {
+          console.log('No taskings found for Table I');
           return {
             nationRoll: null,
             aircraftRoll: null,
@@ -2711,13 +2720,16 @@
           debugText: combinedDebugText
         };
       } else if (tableId === 'J') {
+        console.log('Processing Table J');
         // Table J: Warsaw Pact Deep Strike Raid - generates ALL taskings automatically (USSR only)
         const allTaskings = Object.keys(table.taskings);
+        console.log('Table J taskings:', allTaskings);
         const resultParts = [];
         let debugParts = [];
         
         // Debug: Check if taskings exist
         if (!table.taskings || allTaskings.length === 0) {
+          console.log('No taskings found for Table J');
           return {
             nationRoll: null,
             aircraftRoll: null,
