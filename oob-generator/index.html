@@ -2610,116 +2610,139 @@
       
       if (tableId === 'I') {
         console.log('Processing Table I');
-        // Table I: Warsaw Pact Bombing Raid - generates ALL three taskings (CAP, SEAD, Bombing)
-        const taskingNames = Object.keys(table.taskings);
-        console.log('Table I taskings:', taskingNames);
-        const results = [];
-        
-        // Debug: Check if taskings exist
-        if (!table.taskings || taskingNames.length === 0) {
-          console.log('No taskings found for Table I');
-          return {
-            nationRoll: null,
-            aircraftRoll: null,
-            text: `Error: No taskings found for Table I`,
-            debugText: ''
-          };
-        }
-        
-        for (const selectedTasking of taskingNames) {
-          const taskingData = table.taskings[selectedTasking];
+        try {
+          // Table I: Warsaw Pact Bombing Raid - generates ALL three taskings (CAP, SEAD, Bombing)
+          const taskingNames = Object.keys(table.taskings);
+          console.log('Table I taskings:', taskingNames);
+          const results = [];
           
-          const nationRollResult = makeDebugRoll(10, `${selectedTasking} Nation`);
-          const nationRoll = nationRollResult.roll;
-          
-          // Determine nation based on roll
-          let selectedNation = null;
-          let selectedNationName = '';
-          for (const [range, nation] of Object.entries(taskingData.nations)) {
-            const [min, max] = parseRange(range);
-            if (nationRoll >= min && nationRoll <= max) {
-              selectedNation = nation;
-              selectedNationName = nation.name;
-              break;
-            }
-          }
-          
-          if (!selectedNation) {
-            results.push({
-              tasking: selectedTasking,
-              nationRoll: nationRoll,
+          // Debug: Check if taskings exist
+          if (!table.taskings || taskingNames.length === 0) {
+            console.log('No taskings found for Table I');
+            return {
+              nationRoll: null,
               aircraftRoll: null,
-              text: `Error: No nation found for ${selectedTasking} roll ${nationRoll}`
-            });
-            continue;
+              text: `Error: No taskings found for Table I`,
+              debugText: ''
+            };
           }
           
-          // Roll for aircraft within that nation
-          const aircraftRollResult = makeDebugRoll(10, `${selectedTasking} Aircraft`);
-          const aircraftRoll = aircraftRollResult.roll;
-          let aircraftType = null;
-          let subRollResult = null;
-          
-          // Find matching aircraft based on roll ranges
-          for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
-            const [min, max] = parseRange(range);
-            if (aircraftRoll >= min && aircraftRoll <= max) {
-              aircraftType = aircraft;
-              break;
+          for (const selectedTasking of taskingNames) {
+            console.log(`Processing tasking: ${selectedTasking}`);
+            const taskingData = table.taskings[selectedTasking];
+            console.log(`Tasking data:`, taskingData);
+            
+            const nationRollResult = makeDebugRoll(10, `${selectedTasking} Nation`);
+            const nationRoll = nationRollResult.roll;
+            console.log(`Nation roll for ${selectedTasking}:`, nationRoll);
+            
+            // Determine nation based on roll
+            let selectedNation = null;
+            let selectedNationName = '';
+            for (const [range, nation] of Object.entries(taskingData.nations)) {
+              const [min, max] = parseRange(range);
+              if (nationRoll >= min && nationRoll <= max) {
+                selectedNation = nation;
+                selectedNationName = nation.name;
+                console.log(`Selected nation for ${selectedTasking}:`, selectedNationName);
+                break;
+              }
             }
-          }
-          
-          if (!aircraftType) {
+            
+            if (!selectedNation) {
+              console.log(`No nation found for ${selectedTasking} roll ${nationRoll}`);
+              results.push({
+                tasking: selectedTasking,
+                nationRoll: nationRoll,
+                aircraftRoll: null,
+                text: `Error: No nation found for ${selectedTasking} roll ${nationRoll}`
+              });
+              continue;
+            }
+            
+            // Roll for aircraft within that nation
+            const aircraftRollResult = makeDebugRoll(10, `${selectedTasking} Aircraft`);
+            const aircraftRoll = aircraftRollResult.roll;
+            console.log(`Aircraft roll for ${selectedTasking}:`, aircraftRoll);
+            let aircraftType = null;
+            let subRollResult = null;
+            
+            // Find matching aircraft based on roll ranges
+            for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+              const [min, max] = parseRange(range);
+              if (aircraftRoll >= min && aircraftRoll <= max) {
+                aircraftType = aircraft;
+                console.log(`Selected aircraft for ${selectedTasking}:`, aircraftType);
+                break;
+              }
+            }
+            
+            if (!aircraftType) {
+              console.log(`No aircraft found for ${selectedTasking} roll ${aircraftRoll}`);
+              results.push({
+                tasking: selectedTasking,
+                nationRoll: nationRoll,
+                aircraftRoll: aircraftRoll,
+                text: `Error: No aircraft found for ${selectedTasking} roll ${aircraftRoll}`
+              });
+              continue;
+            }
+            
+            // Handle hidden sub-rolls for superscript references
+            if (aircraftType && aircraftType.includes('²')) {
+              subRollResult = makeDebugRoll(10, `${selectedTasking} Sub-roll`);
+              if (aircraftType.includes('MiG-23²')) {
+                if (subRollResult.roll <= 4) aircraftType = 'MiG-23M';
+                else if (subRollResult.roll <= 8) aircraftType = 'MiG-23MF';
+                else aircraftType = 'MiG-23ML';
+              }
+            }
+            
+            const resultText = `${selectedNationName}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
+            console.log(`Result text for ${selectedTasking}:`, resultText);
+            
+            // Build comprehensive debug string for this tasking
+            let taskingDebugText = '';
+            if (debugMode) {
+              taskingDebugText = `[${selectedTasking}: ${nationRollResult.debugEntry} → ${selectedNationName} | ${aircraftRollResult.debugEntry} → ${aircraftType}`;
+              if (subRollResult) {
+                taskingDebugText += ` | ${subRollResult.debugEntry} → ${aircraftType}`;
+              }
+              taskingDebugText += ']';
+            }
+            
             results.push({
               tasking: selectedTasking,
               nationRoll: nationRoll,
               aircraftRoll: aircraftRoll,
-              text: `Error: No aircraft found for ${selectedTasking} roll ${aircraftRoll}`
+              nationName: selectedNationName,
+              text: resultText,
+              debugText: taskingDebugText
             });
-            continue;
           }
           
-          // Handle hidden sub-rolls for superscript references
-          if (aircraftType && aircraftType.includes('²')) {
-            subRollResult = makeDebugRoll(10, `${selectedTasking} Sub-roll`);
-            if (aircraftType.includes('MiG-23²')) {
-              if (subRollResult.roll <= 4) aircraftType = 'MiG-23M';
-              else if (subRollResult.roll <= 8) aircraftType = 'MiG-23MF';
-              else aircraftType = 'MiG-23ML';
-            }
-          }
+          // Combine all debug texts for Table I
+          const allDebugTexts = results.map(r => r.debugText).filter(Boolean);
+          const combinedDebugText = allDebugTexts.length > 0 ? allDebugTexts.join(' ') : '';
           
-          const resultText = `${selectedNationName}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
+          const finalResult = {
+            taskingResults: results,
+            text: results.map(r => r.text).join('<br>'),
+            debugText: combinedDebugText
+          };
           
-          // Build comprehensive debug string for this tasking
-          let taskingDebugText = '';
-          if (debugMode) {
-            taskingDebugText = `[${selectedTasking}: ${nationRollResult.debugEntry} → ${selectedNationName} | ${aircraftRollResult.debugEntry} → ${aircraftType}`;
-            if (subRollResult) {
-              taskingDebugText += ` | ${subRollResult.debugEntry} → ${aircraftType}`;
-            }
-            taskingDebugText += ']';
-          }
+          console.log('Table I final result:', finalResult);
+          return finalResult;
           
-          results.push({
-            tasking: selectedTasking,
-            nationRoll: nationRoll,
-            aircraftRoll: aircraftRoll,
-            nationName: selectedNationName,
-            text: resultText,
-            debugText: taskingDebugText
-          });
+        } catch (error) {
+          console.error('Error in Table I processing:', error);
+          return {
+            nationRoll: null,
+            aircraftRoll: null,
+            text: `Error processing Table I: ${error.message}`,
+            debugText: ''
+          };
         }
-        
-        // Combine all debug texts for Table I
-        const allDebugTexts = results.map(r => r.debugText).filter(Boolean);
-        const combinedDebugText = allDebugTexts.length > 0 ? allDebugTexts.join(' ') : '';
-        
-        return {
-          taskingResults: results,
-          text: results.map(r => r.text).join('<br>'),
-          debugText: combinedDebugText
-        };
       } else if (tableId === 'J') {
         console.log('Processing Table J');
         // Table J: Warsaw Pact Deep Strike Raid - generates ALL taskings automatically (USSR only)
