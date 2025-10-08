@@ -2366,6 +2366,39 @@
               
               taskingDebugText = `[${tasking}: ${nationRollResult.debugEntry} | ${aircraftRollResult.debugEntry} | ${ordnanceDebugEntries}]`;
             }
+          } else if (tasking === 'SEAD' && selectedNationName === 'US' && selectedAircraft === 'F-4G/F-16C') {
+            // Split F-4G/F-16C into separate flights with ordnance
+            const f4gFlights = [];
+            const f16cFlights = [];
+            const ordnanceRolls = [];
+            
+            // Generate ordnance for each F-4G flight (2 flights)
+            for (let i = 1; i <= 2; i++) {
+              const ordnanceRollResult = makeDebugRoll(10, `${tasking} F-4G Flight ${i} Ordnance`);
+              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll);
+              ordnanceRolls.push(ordnanceRollResult);
+              f4gFlights.push(`1 x {${flightSize}} ${selectedNationName} F-4G, ${tasking} (${ordnance})`);
+            }
+            
+            // Generate ordnance for each F-16C flight (2 flights)
+            for (let i = 1; i <= 2; i++) {
+              const ordnanceRollResult = makeDebugRoll(10, `${tasking} F-16C Flight ${i} Ordnance`);
+              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll);
+              ordnanceRolls.push(ordnanceRollResult);
+              f16cFlights.push(`1 x {${flightSize}} ${selectedNationName} F-16C, ${tasking} (${ordnance})`);
+            }
+            
+            resultText = [...f4gFlights, ...f16cFlights].join('<br>');
+            
+            if (debugMode) {
+              const ordnanceDebugEntries = ordnanceRolls.map((roll, i) => {
+                const aircraftType = i < 2 ? 'F-4G' : 'F-16C';
+                const flightNum = (i % 2) + 1;
+                return `${aircraftType} Flight ${flightNum} Ordnance: ${roll.roll}`;
+              }).join(' | ');
+              
+              taskingDebugText = `[${tasking}: ${nationRollResult.debugEntry} | ${aircraftRollResult.debugEntry} | ${ordnanceDebugEntries}]`;
+            }
           } else if (tasking === 'CAP') {
             // CAP flights remain grouped (no ordnance)
             resultText = `${flightCount} x {${flightSize}} ${selectedNationName} ${finalAircraftType}, ${tasking}`;
