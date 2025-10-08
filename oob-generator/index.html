@@ -12,7 +12,7 @@
     <div class="header">
       <div class="title">Red Storm</div>
       <div class="subtitle">Order of Battle Generator</div>
-      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-16</div>
+      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-17</div>
     </div>
 
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
@@ -2289,11 +2289,37 @@
           
           // Handle special aircraft combinations (maintain existing logic for split flights)
           if (tasking === 'SEAD' && selectedNationName === 'US' && selectedAircraft === 'F-4G/F-4E') {
-            // Split F-4G/F-4E into separate flights
-            resultText = `2 x {${flightSize}} ${selectedNationName} F-4G, 2 x {${flightSize}} ${selectedNationName} F-4E, ${tasking}`;
+            // Split F-4G/F-4E into separate flights with ordnance
+            const f4gFlights = [];
+            const f4eFlights = [];
+            const ordnanceRolls = [];
+            
+            // Generate ordnance for each F-4G flight (2 flights)
+            for (let i = 1; i <= 2; i++) {
+              const ordnanceRollResult = makeDebugRoll(10, `${tasking} F-4G Flight ${i} Ordnance`);
+              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll);
+              ordnanceRolls.push(ordnanceRollResult);
+              f4gFlights.push(`1 x {${flightSize}} ${selectedNationName} F-4G, ${tasking} (${ordnance})`);
+            }
+            
+            // Generate ordnance for each F-4E flight (2 flights)
+            for (let i = 1; i <= 2; i++) {
+              const ordnanceRollResult = makeDebugRoll(10, `${tasking} F-4E Flight ${i} Ordnance`);
+              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll);
+              ordnanceRolls.push(ordnanceRollResult);
+              f4eFlights.push(`1 x {${flightSize}} ${selectedNationName} F-4E, ${tasking} (${ordnance})`);
+            }
+            
+            resultText = [...f4gFlights, ...f4eFlights].join('<br>');
             
             if (debugMode) {
-              taskingDebugText = `[${tasking}: ${nationRollResult.debugEntry} | ${aircraftRollResult.debugEntry}]`;
+              const ordnanceDebugEntries = ordnanceRolls.map((roll, i) => {
+                const aircraftType = i < 2 ? 'F-4G' : 'F-4E';
+                const flightNum = (i % 2) + 1;
+                return `${aircraftType} Flight ${flightNum} Ordnance: ${roll.roll}`;
+              }).join(' | ');
+              
+              taskingDebugText = `[${tasking}: ${nationRollResult.debugEntry} | ${aircraftRollResult.debugEntry} | ${ordnanceDebugEntries}]`;
             }
           } else if (tasking === 'CAP') {
             // CAP flights remain grouped (no ordnance)
