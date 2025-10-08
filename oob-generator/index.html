@@ -3561,7 +3561,7 @@
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'J') {
-        // Table J: USSR Deep Strike Raid - summary format with aircraft details (USSR only)
+        // Table J: USSR Deep Strike Raid - detailed format matching Table D structure
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
@@ -3579,29 +3579,31 @@
           if (taskingData) {
             const flightInfo = taskingData.flightCount + ' x {' + taskingData.flightSize + '}';
             tableHTML += `<div class="tasking-section">`;
-            tableHTML += `<div class="tasking-header">${flightInfo} [${taskingInfo.display}], ${taskingInfo.display}</div>`;
+            tableHTML += `<div class="tasking-header">${taskingInfo.display} (${flightInfo})</div>`;
             
-            // Collect all aircraft from all USSR nation ranges (Table J is USSR only)
-            let aircraftList = [];
-            for (const [nationRange, nationData] of Object.entries(taskingData.nations)) {
-              if (nationData.name === 'USSR') {
-                for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
-                  aircraftList.push(`${aircraftRange} ${aircraftType}`);
-                }
+            // Sort nations by roll number
+            const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
+              const aMin = parseInt(a[0].split('-')[0]);
+              const bMin = parseInt(b[0].split('-')[0]);
+              return aMin - bMin;
+            });
+            
+            for (const [nationRange, nationData] of sortedNations) {
+              tableHTML += `<div class="nation-section">`;
+              tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+              
+              // Sort aircraft ranges numerically
+              const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+                const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+                const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+                return aStart - bStart;
+              });
+              
+              for (const [aircraftRange, aircraftType] of sortedAircraft) {
+                tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
               }
-            }
-            
-            // Also include GDR aircraft if present
-            for (const [nationRange, nationData] of Object.entries(taskingData.nations)) {
-              if (nationData.name === 'GDR') {
-                for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
-                  aircraftList.push(`${aircraftRange} ${aircraftType}`);
-                }
-              }
-            }
-            
-            if (aircraftList.length > 0) {
-              tableHTML += `<div class="aircraft-summary">Aircraft: ${aircraftList.join('; ')}</div>`;
+              
+              tableHTML += `</div>`;
             }
             
             tableHTML += `</div>`;
