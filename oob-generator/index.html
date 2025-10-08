@@ -3519,8 +3519,8 @@
         
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
-      } else if (tableId === 'I' || tableId === 'J') {
-        // Warsaw Pact Tables I & J - tasking-based structure
+      } else if (tableId === 'I') {
+        // Warsaw Pact Table I - tasking-based structure with die roll details
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
@@ -3556,6 +3556,56 @@
           }
           
           tableHTML += `</div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'J') {
+        // Table J: USSR Deep Strike Raid - summary format with aircraft details (USSR only)
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        // Define the exact order and naming from reference
+        const taskingOrder = [
+          { key: 'Escort Jamming', display: 'Escort Jamming' },
+          { key: 'Chaff Laying', display: 'Chaff Laying' },
+          { key: 'Close Escort', display: 'Close Escort' },
+          { key: 'Deep Bombing', display: 'Bombing' },
+          { key: 'Recon', display: 'Recon' }
+        ];
+        
+        for (const taskingInfo of taskingOrder) {
+          const taskingData = table.taskings[taskingInfo.key];
+          if (taskingData) {
+            const flightInfo = taskingData.flightCount + ' x {' + taskingData.flightSize + '}';
+            tableHTML += `<div class="tasking-section">`;
+            tableHTML += `<div class="tasking-header">${flightInfo} [${taskingInfo.display}], ${taskingInfo.display}</div>`;
+            
+            // Collect all aircraft from all USSR nation ranges (Table J is USSR only)
+            let aircraftList = [];
+            for (const [nationRange, nationData] of Object.entries(taskingData.nations)) {
+              if (nationData.name === 'USSR') {
+                for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+                  aircraftList.push(`${aircraftRange} ${aircraftType}`);
+                }
+              }
+            }
+            
+            // Also include GDR aircraft if present
+            for (const [nationRange, nationData] of Object.entries(taskingData.nations)) {
+              if (nationData.name === 'GDR') {
+                for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+                  aircraftList.push(`${aircraftRange} ${aircraftType}`);
+                }
+              }
+            }
+            
+            if (aircraftList.length > 0) {
+              tableHTML += `<div class="aircraft-summary">Aircraft: ${aircraftList.join('; ')}</div>`;
+            }
+            
+            tableHTML += `</div>`;
+          }
         }
         
         tableHTML += `</div>`;
