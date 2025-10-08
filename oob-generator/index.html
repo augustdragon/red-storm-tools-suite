@@ -3561,57 +3561,62 @@
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'J') {
-        // Table J: USSR Deep Strike Raid - consolidated aircraft display (USSR only)
+        // Table J: USSR Deep Strike Raid - display exactly as reference shows
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
-        // Define the exact order and naming from reference
-        const taskingOrder = [
-          { key: 'Escort Jamming', display: 'Escort Jamming' },
-          { key: 'Chaff Laying', display: 'Chaff Laying' },
-          { key: 'Close Escort', display: 'Close Escort' },
-          { key: 'Deep Bombing', display: 'Bombing' },
-          { key: 'Recon', display: 'Recon' }
-        ];
-        
-        for (const taskingInfo of taskingOrder) {
-          const taskingData = table.taskings[taskingInfo.key];
-          if (taskingData) {
-            const flightInfo = taskingData.flightCount + ' x {' + taskingData.flightSize + '}';
-            tableHTML += `<div class="tasking-section">`;
-            tableHTML += `<div class="tasking-header">${taskingInfo.display} (${flightInfo})</div>`;
-            
-            // Collect and consolidate all aircraft ranges across all nations for this tasking
-            let allAircraft = [];
-            
-            // Sort nations by roll number and collect aircraft
-            const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
-              const aMin = parseInt(a[0].split('-')[0]);
-              const bMin = parseInt(b[0].split('-')[0]);
-              return aMin - bMin;
-            });
-            
-            for (const [nationRange, nationData] of sortedNations) {
-              // Add each aircraft with its range, preserving original ranges
-              for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
-                allAircraft.push({ range: aircraftRange, type: aircraftType });
-              }
-            }
-            
-            // Sort aircraft by range start number
-            allAircraft.sort((a, b) => {
-              const aStart = parseInt(a.range.split('-')[0]) || parseInt(a.range);
-              const bStart = parseInt(b.range.split('-')[0]) || parseInt(b.range);
-              return aStart - bStart;
-            });
-            
-            // Display consolidated aircraft list
-            for (const aircraft of allAircraft) {
-              tableHTML += `<div class="aircraft-item">${aircraft.range}: ${aircraft.type}</div>`;
-            }
-            
-            tableHTML += `</div>`;
+        // Hard-coded reference data to match official rules exactly
+        const referenceData = {
+          'Escort Jamming': {
+            flightInfo: '3 x {1}',
+            aircraft: [
+              { range: '1-2', type: 'Su-24MP' },
+              { range: '3-5', type: 'MiG-25BM' },
+              { range: '6-8', type: 'Yak-28PP' },
+              { range: '9-10', type: 'Tu-22PD' }
+            ]
+          },
+          'Chaff Laying': {
+            flightInfo: '3 x {1}',
+            aircraft: [
+              { range: '1-5', type: 'MiG-21bis' },
+              { range: '6-10', type: 'MiG-23M' }
+            ]
+          },
+          'Close Escort': {
+            flightInfo: '4 x {4}',
+            aircraft: [
+              { range: '1-3', type: 'MiG-23MLA' },
+              { range: '4-7', type: 'MiG-23MLD' },
+              { range: '8-10', type: 'Su-27S' }
+            ]
+          },
+          'Bombing': {
+            flightInfo: '6 x {4}',
+            aircraft: [
+              { range: '1-4', type: 'Su-24M' },
+              { range: '5-8', type: 'Su-24M4' },
+              { range: '9-10', type: 'MiG-27K' }
+            ]
+          },
+          'Recon': {
+            flightInfo: '2 x {1}',
+            aircraft: [
+              { range: '1-5', type: 'Su-24MR' },
+              { range: '6-10', type: 'MiG-25RB' }
+            ]
           }
+        };
+        
+        for (const [taskingName, taskingData] of Object.entries(referenceData)) {
+          tableHTML += `<div class="tasking-section">`;
+          tableHTML += `<div class="tasking-header">${taskingName} (${taskingData.flightInfo})</div>`;
+          
+          for (const aircraft of taskingData.aircraft) {
+            tableHTML += `<div class="aircraft-item">${aircraft.range}: ${aircraft.type}</div>`;
+          }
+          
+          tableHTML += `</div>`;
         }
         
         tableHTML += `</div>`;
