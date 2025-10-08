@@ -3277,7 +3277,14 @@
           tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
           tableHTML += `<div class="aircraft-list">`;
           
-          for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+          // Sort aircraft ranges numerically
+          const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+            const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+            const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+            return aStart - bStart;
+          });
+          
+          for (const [aircraftRange, aircraftType] of sortedAircraft) {
             // Use aircraft names exactly as defined in source data
             const displayType = aircraftType;
             tableHTML += `<div class="aircraft-item">${aircraftRange}: ${displayType}</div>`;
@@ -3531,29 +3538,26 @@
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'I') {
-        // Warsaw Pact Table I - tasking-based structure with die roll details
+        // Warsaw Pact Table I - nationality-based structure
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
+        tableHTML += `<div class="raid-nationality"><strong>Raid Nationality: 1-8 USSR, 9-10 GDR</strong></div>`;
         
-        for (const [taskingName, taskingData] of Object.entries(table.taskings)) {
-          tableHTML += `<div class="tasking-section">`;
-          const flightInfo = taskingData.flightCount + ' x {' + taskingData.flightSize + '}';
-          tableHTML += `<div class="tasking-header">${taskingName} (${flightInfo})</div>`;
+        // Show both USSR and GDR sections
+        for (const [nationalityName, nationalityData] of Object.entries(table.nationalities)) {
+          tableHTML += `<div class="nationality-section">`;
+          tableHTML += `<div class="nationality-header">${nationalityData.name}</div>`;
           
-          // Sort nations by roll number
-          const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
-            const aMin = parseInt(a[0].split('-')[0]);
-            const bMin = parseInt(b[0].split('-')[0]);
-            return aMin - bMin;
-          });
-          
-          for (const [nationRange, nationData] of sortedNations) {
-            tableHTML += `<div class="nation-section">`;
-            tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+          // Show each tasking for this nationality
+          for (const [taskingName, taskingData] of Object.entries(nationalityData.taskings)) {
+            tableHTML += `<div class="tasking-section">`;
+            const flightInfo = taskingData.flightCount + ' x {' + taskingData.flightSize + '}';
+            tableHTML += `<div class="tasking-header">${taskingName} (${flightInfo})</div>`;
+            
             tableHTML += `<div class="aircraft-list">`;
             
             // Sort aircraft ranges numerically
-            const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+            const sortedAircraft = Object.entries(taskingData.aircraft).sort((a, b) => {
               const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
               const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
               return aStart - bStart;
