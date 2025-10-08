@@ -12,7 +12,7 @@
     <div class="header">
       <div class="title">Red Storm</div>
       <div class="subtitle">Order of Battle Generator</div>
-      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-13</div>
+      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-15</div>
     </div>
 
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
@@ -3342,6 +3342,9 @@
           tableHTML += `<div class="tasking-section">`;
           tableHTML += `<div class="tasking-header">${tasking} (4 x {${tasking === 'Bombing' ? '4' : '2'}})</div>`;
           
+          // Array to collect sub-roll notes for this tasking
+          const subRollNotes = [];
+          
           // Sort nations by roll number
           const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
             const aMin = parseInt(a[0].split('-')[0]);
@@ -3363,9 +3366,23 @@
             
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
               tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              
+              // Check for superscripted aircraft and add sub-roll explanations
+              if (aircraftType.includes('F-4 (roll again for D or E)')) {
+                subRollNotes.push('² Roll again: 1-5 F-4D; 6-10 F-4E');
+              }
             }
             
             tableHTML += `</div></div>`;
+          }
+          
+          // Add sub-roll notes at the bottom of this tasking section
+          if (subRollNotes.length > 0) {
+            tableHTML += `<div class="sub-roll-notes">`;
+            for (const note of subRollNotes) {
+              tableHTML += `<div class="sub-roll-note" style="font-size: 11px; color: #666; margin-top: 8px; padding: 4px; background-color: rgba(255,255,255,0.05); border-radius: 3px;">${note}</div>`;
+            }
+            tableHTML += `</div>`;
           }
           
           tableHTML += `</div>`;
@@ -3582,7 +3599,7 @@
             if (subRollNotes.length > 0) {
               tableHTML += `<div class="sub-roll-notes">`;
               for (const note of subRollNotes) {
-                tableHTML += `<div class="sub-roll-note" style="font-size: 11px; color: #666; margin-top: 8px; padding: 4px; background-color: rgba(255,255,255,0.1); border-radius: 3px;">${note}</div>`;
+                tableHTML += `<div class="sub-roll-note" style="font-size: 11px; color: #666; margin-top: 8px; padding: 4px; background-color: rgba(255,255,255,0.05); border-radius: 3px;">${note}</div>`;
               }
               tableHTML += `</div>`;
             }
