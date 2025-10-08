@@ -3556,18 +3556,38 @@
             
             tableHTML += `<div class="aircraft-list">`;
             
-            // Sort aircraft ranges numerically
+            // Sort aircraft ranges numerically and collect sub-roll notes
             const sortedAircraft = Object.entries(taskingData.aircraft).sort((a, b) => {
               const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
               const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
               return aStart - bStart;
             });
             
+            let subRollNotes = [];
+            
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
               tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              
+              // Check for superscripted aircraft and add sub-roll explanations
+              if (aircraftType.includes('MiG-23²')) {
+                subRollNotes.push('² Roll again: 1-4 MiG-23M; 5-8 MiG-23MF; 9-10 MiG-23ML');
+              } else if (aircraftType.includes('MiG-23MF/ML¹')) {
+                subRollNotes.push('¹ Roll again: 1-5 MiG-23MF; 6-10 MiG-23ML');
+              }
             }
             
-            tableHTML += `</div></div>`;
+            tableHTML += `</div>`;
+            
+            // Add sub-roll notes at the bottom of this tasking section
+            if (subRollNotes.length > 0) {
+              tableHTML += `<div class="sub-roll-notes">`;
+              for (const note of subRollNotes) {
+                tableHTML += `<div class="sub-roll-note" style="font-size: 11px; color: #666; margin-top: 8px; padding: 4px; background-color: rgba(255,255,255,0.1); border-radius: 3px;">${note}</div>`;
+              }
+              tableHTML += `</div>`;
+            }
+            
+            tableHTML += `</div>`;
           }
           
           tableHTML += `</div>`;
