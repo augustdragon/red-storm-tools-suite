@@ -2726,7 +2726,7 @@
       
       if (tableId === 'L') {
         // Warsaw Pact Table L: Special Missions - mission type-based
-        let missionType, selectedNation, selectedNationName;
+        let missionType, selectedNation, selectedNationName, nationRollResult;
         
         // Check if this is Tactical Recon with nation selection
         if (atafZone.includes('|')) {
@@ -2759,7 +2759,7 @@
           }
           
           // Roll for nation
-          const nationRollResult = makeDebugRoll(10, 'Nation');
+          nationRollResult = makeDebugRoll(10, 'Nation');
           const nationRoll = nationRollResult.roll;
           
           for (const [range, nation] of Object.entries(missionData.nations)) {
