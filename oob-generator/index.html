@@ -1850,6 +1850,8 @@
           timestamp: new Date().getTime() + i // Ensure unique timestamps
         };
         
+        console.log(`Result entry for display:`, resultEntry);
+        
         results.unshift(resultEntry);
         hasGeneratedResults = true; // Mark that results exist
       }
@@ -2606,9 +2608,7 @@
             debugText: debugText
           };
         }
-      }
-      
-      if (tableId === 'I') {
+      } else if (tableId === 'I') {
         console.log('Processing Table I');
         try {
           // Table I: Warsaw Pact Bombing Raid - generates ALL three taskings (CAP, SEAD, Bombing)
@@ -2732,6 +2732,7 @@
           };
           
           console.log('Table I final result:', finalResult);
+          console.log('About to return from Table I...');
           return finalResult;
           
         } catch (error) {
@@ -2744,6 +2745,7 @@
           };
         }
       } else if (tableId === 'J') {
+        console.log('Execution continued past Table I - this should not happen!');
         console.log('Processing Table J');
         // Table J: Warsaw Pact Deep Strike Raid - generates ALL taskings automatically (USSR only)
         const allTaskings = Object.keys(table.taskings);
