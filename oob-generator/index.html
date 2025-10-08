@@ -2557,15 +2557,18 @@
           return {
             nationRoll: null,
             aircraftRoll: null,
-            text: `Error: Unknown nationality ${atafZone}`
+            text: `Error: Unknown nationality ${atafZone}`,
+            debugText: ''
           };
         }
-        
+
         let resultParts = [];
+        let debugParts = [];
         
         // Generate results for each flight type
         nationalityData.flights.forEach(flightType => {
-          const aircraftRoll = Math.floor(Math.random() * 10) + 1;
+          const aircraftRollResult = makeDebugRoll(10, `${flightType.type} Aircraft`);
+          const aircraftRoll = aircraftRollResult.roll;
           let aircraftType = null;
           
           // Find matching aircraft based on roll ranges
@@ -2579,15 +2582,22 @@
           
           if (aircraftType) {
             resultParts.push(`${flightType.flightCount} x {${flightType.flightSize}} ${aircraftType}, ${flightType.type}`);
+            
+            // Add debug info if in debug mode
+            if (debugMode) {
+              debugParts.push(`[${flightType.type}: ${aircraftRollResult.debugEntry} → ${aircraftType}]`);
+            }
           }
         });
         
         const resultText = resultParts.join(', ');
+        const debugText = debugParts.length > 0 ? debugParts.join(' ') : '';
         
         return {
           nationRoll: null,
           aircraftRoll: null,
-          text: resultText
+          text: resultText,
+          debugText: debugText
         };
       }
       
