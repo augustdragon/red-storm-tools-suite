@@ -548,6 +548,7 @@
         hasTasking: true,
         hasDate: true,
         description: 'NATO Bombing Raid - Package of CAP, SEAD, and Bombing flights',
+        ordnanceNote: 'SEAD flights may always carry ARM as well, if capable.',
         result: '4 x {2} [CAP], CAP; 4 x {2} [SEAD], SEAD; 4 x {4} [Bombing], Bombing',
         taskings: {
           'CAP': {
@@ -803,6 +804,7 @@
         hasTasking: true,
         hasDate: false,
         description: 'NATO Deep Strike Raid - Package of flights for deep behind WP lines',
+        ordnanceNote: 'All SEAD or Bombing flights may carry any air-to-ground ordnance allowed for that aircraft type. Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.',
         result: '2 x {1} [Escort Jamming]; 4 x {2} [CAP]; 4 x {2} [SEAD]; 4 x {4} [Bombing]; 2 x {2} [Recon]',
         taskings: {
           'Escort Jamming': {
@@ -939,6 +941,7 @@
         hasNationality: true,
         hasDate: false,
         description: 'NATO Combat Rescue - Rescue missions for downed aircrew',
+        ordnanceNote: 'All flights tasked with Rescue Support may carry any ordnance allowed for the specific aircraft type.',
         result: 'Nationality determined rescue package',
         nationalities: {
           'US': {
@@ -1028,6 +1031,7 @@
             flightSize: 2,
             flightCount: 1,
             description: 'Fast Forward Air Control',
+            ordnanceNote: 'Aircraft tasked with Fast FAC may not carry any ordnance. They may carry gun and IRM air-to-air weapons if otherwise allowed.',
             nations: {
               '1-5': {
                 name: 'US',
@@ -1065,6 +1069,7 @@
             flightSize: 1,
             flightCount: 1,
             description: 'Electronic Warfare Jamming',
+            ordnanceNote: 'Aircraft tasked with Standoff Jamming may not carry any air-to-ground ordnance.',
             nations: {
               '1-9': {
                 name: 'US',
@@ -1087,6 +1092,7 @@
             flightSize: 2,
             flightCount: 1,
             description: 'Tactical Reconnaissance',
+            ordnanceNote: 'Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.',
             nations: {
               '1-3': {
                 name: 'US',
@@ -2261,10 +2267,29 @@
         const flightCounts = { 'CAP': 4, 'SEAD': 4, 'Bombing': 4 };
         
         // Ordnance table: 1-4 Bombs/CBU/Rockets, 5-7 Bombs/CBU/Rockets + EOGM, 8-10 Bombs/CBU/Rockets + EOGM + LGB/EOGB
-        function getOrdnanceAvailability(roll) {
-          if (roll <= 4) return "Bombs/CBU/Rockets";
-          else if (roll <= 7) return "Bombs/CBU/Rockets + EOGM";
-          else return "Bombs/CBU/Rockets + EOGM + LGB/EOGB";
+        function getOrdnanceAvailability(roll, aircraftType = '', tasking = '') {
+          // Apply die roll modifiers for specific aircraft types
+          let modifiedRoll = roll;
+          if (aircraftType.includes('F-16') || aircraftType.includes('A-10')) {
+            modifiedRoll += 2;
+          } else if (aircraftType.includes('Tornado GR1') || aircraftType.includes('Tornado IDS') || aircraftType.includes('CF-18')) {
+            modifiedRoll += 1;
+          }
+          
+          // Cap the modified roll at 10
+          modifiedRoll = Math.min(modifiedRoll, 10);
+          
+          let ordnance;
+          if (modifiedRoll <= 4) ordnance = "Bombs/CBU/Rockets";
+          else if (modifiedRoll <= 7) ordnance = "Bombs/CBU/Rockets + EOGM";
+          else ordnance = "Bombs/CBU/Rockets + EOGM + LGB/EOGB";
+          
+          // Add ARM to SEAD flights
+          if (tasking === 'SEAD') {
+            ordnance += " + ARM";
+          }
+          
+          return ordnance;
         }
         
         for (const tasking of taskings) {
@@ -2342,7 +2367,7 @@
             // Generate ordnance for each F-4G flight (2 flights)
             for (let i = 1; i <= 2; i++) {
               const ordnanceRollResult = makeDebugRoll(10, `${tasking} F-4G Flight ${i} Ordnance`);
-              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll);
+              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll, 'F-4G', tasking);
               ordnanceRolls.push(ordnanceRollResult);
               f4gFlights.push(`1 x {${flightSize}} ${selectedNationName} F-4G, ${tasking} (${ordnance})`);
             }
@@ -2350,7 +2375,7 @@
             // Generate ordnance for each F-4E flight (2 flights)
             for (let i = 1; i <= 2; i++) {
               const ordnanceRollResult = makeDebugRoll(10, `${tasking} F-4E Flight ${i} Ordnance`);
-              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll);
+              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll, 'F-4E', tasking);
               ordnanceRolls.push(ordnanceRollResult);
               f4eFlights.push(`1 x {${flightSize}} ${selectedNationName} F-4E, ${tasking} (${ordnance})`);
             }
@@ -2375,7 +2400,7 @@
             // Generate ordnance for each F-4G flight (2 flights)
             for (let i = 1; i <= 2; i++) {
               const ordnanceRollResult = makeDebugRoll(10, `${tasking} F-4G Flight ${i} Ordnance`);
-              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll);
+              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll, 'F-4G', tasking);
               ordnanceRolls.push(ordnanceRollResult);
               f4gFlights.push(`1 x {${flightSize}} ${selectedNationName} F-4G, ${tasking} (${ordnance})`);
             }
@@ -2383,7 +2408,7 @@
             // Generate ordnance for each F-16C flight (2 flights)
             for (let i = 1; i <= 2; i++) {
               const ordnanceRollResult = makeDebugRoll(10, `${tasking} F-16C Flight ${i} Ordnance`);
-              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll);
+              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll, 'F-16C', tasking);
               ordnanceRolls.push(ordnanceRollResult);
               f16cFlights.push(`1 x {${flightSize}} ${selectedNationName} F-16C, ${tasking} (${ordnance})`);
             }
@@ -2417,7 +2442,7 @@
             
             for (let i = 1; i <= flightCount; i++) {
               const ordnanceRollResult = makeDebugRoll(10, `${tasking} Flight ${i} Ordnance`);
-              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll);
+              const ordnance = getOrdnanceAvailability(ordnanceRollResult.roll, finalAircraftType, tasking);
               ordnanceRolls.push(ordnanceRollResult);
               
               individualFlights.push(`1 x {${flightSize}} ${selectedNationName} ${finalAircraftType}, ${tasking} (${ordnance})`);
@@ -3470,6 +3495,9 @@
         // Table C: NATO Bombing Raid - show all three taskings
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
+        if (table.ordnanceNote) {
+          tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${table.ordnanceNote}</div>`;
+        }
         
         const taskings = ['CAP', 'SEAD', 'Bombing'];
         const dateVariant = scenarioDate;
@@ -3534,6 +3562,9 @@
         // Table D: NATO Deep Strike Raid - show all five taskings (no date variants)
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
+        if (table.ordnanceNote) {
+          tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${table.ordnanceNote}</div>`;
+        }
         
         const taskings = ['Escort Jamming', 'CAP', 'SEAD', 'Bombing', 'Recon'];
         
@@ -3590,6 +3621,9 @@
         
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
+        if (table.ordnanceNote) {
+          tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${table.ordnanceNote}</div>`;
+        }
         
         if (nationalityData) {
           for (const flightData of nationalityData.flights) {
@@ -3628,6 +3662,9 @@
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
         if (missionData) {
+          if (missionData.ordnanceNote) {
+            tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${missionData.ordnanceNote}</div>`;
+          }
           //tableHTML += `<div class="mission-info">${missionData.flightCount} x {${missionData.flightSize}} [${missionData.name}], ${missionData.description}</div>`;
           
           // Sort nations by roll number
