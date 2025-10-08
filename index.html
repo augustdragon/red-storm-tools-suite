@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Storm Tools Suite</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .header h1 {
+            font-size: 3.5em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            font-size: 1.3em;
+            margin: 15px 0;
+            opacity: 0.9;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .tool-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        
+        .tool-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .tool-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .tool-description {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .tool-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .tool-button:hover {
+            background: linear-gradient(45deg, #5a6fd8, #6b42a1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .features {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .features li {
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+        
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4ade80;
+            font-weight: bold;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            opacity: 0.8;
+        }
+        
+        .version-info {
+            font-size: 0.9em;
+            margin-top: 15px;
+            opacity: 0.7;
+        }
+        
+        .github-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .github-link:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .tool-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Red Storm</h1>
+            <p>Comprehensive Tools Suite for Modern Air Combat Operations</p>
+            <p>Generate realistic order of battle scenarios, validate combat outcomes, and analyze tactical operations</p>
+        </div>
+        
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">🎯</div>
+                <div class="tool-title">Order of Battle Generator</div>
+                <div class="tool-description">
+                    Generate realistic air tasking orders with complete ordnance assignments, modifiers, and split flight logic for NATO and Warsaw Pact forces.
+                </div>
+                <div class="features">
+                    <ul>
+                        <li>NATO Tables C & F (Standard & Special Missions)</li>
+                        <li>Warsaw Pact Tables I & L (Standard & Special)</li>
+                        <li>Comprehensive ordnance system with modifiers</li>
+                        <li>Split flight logic (F-4G/F-4E, F-4G/F-16C)</li>
+                        <li>Individual flight tracking and ARM integration</li>
+                        <li>Debug mode with detailed roll history</li>
+                    </ul>
+                </div>
+                <a href="oob-generator/" class="tool-button">Launch Generator</a>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">🔬</div>
+                <div class="tool-title">Test Harness</div>
+                <div class="tool-description">
+                    Comprehensive validation system for testing all possible outcomes, modifiers, and statistical distributions across all tables.
+                </div>
+                <div class="features">
+                    <ul>
+                        <li>Single test execution with detailed output</li>
+                        <li>Statistical testing (100-10,000 iterations)</li>
+                        <li>Ordnance system validation</li>
+                        <li>Modifier testing and verification</li>
+                        <li>Die roll distribution analysis</li>
+                        <li>System diagnostics and health checks</li>
+                    </ul>
+                </div>
+                <a href="test-harness/" class="tool-button">Launch Test Harness</a>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">📊</div>
+                <div class="tool-title">CHIT Pull Generator</div>
+                <div class="tool-description">
+                    Random event generator for creating dynamic scenarios and unexpected combat situations during gameplay.
+                </div>
+                <div class="features">
+                    <ul>
+                        <li>Dynamic event generation</li>
+                        <li>Scenario complications</li>
+                        <li>Random tactical challenges</li>
+                        <li>Mission parameter modifications</li>
+                        <li>Weather and environmental factors</li>
+                        <li>Equipment and personnel events</li>
+                    </ul>
+                </div>
+                <a href="chit-pull/" class="tool-button">Launch CHIT Pull</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Red Storm Tools Suite - Comprehensive air combat simulation utilities</p>
+            <div class="version-info">
+                Version 2024.10.08 | Built for modern air warfare simulation
+            </div>
+            <a href="https://github.com/augustdragon/red-storm-tools-suite" class="github-link" target="_blank">
+                📂 View on GitHub
+            </a>
+        </div>
+    </div>
+</body>
+</html>
