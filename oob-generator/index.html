@@ -720,7 +720,7 @@
                     '3': 'F-16C',
                     '4-6': 'A-10A',
                     '7': 'A-7D',
-                    '8-10': 'F-4 (roll again for D or E)'
+                    '8-10': 'F-4²'
                   }
                 },
                 '5-6': {
@@ -765,7 +765,7 @@
                     '3': 'F-16C',
                     '4-6': 'A-10A',
                     '7': 'A-7D',
-                    '8-10': 'F-4 (roll again for D or E)'
+                    '8-10': 'F-4²'
                   }
                 },
                 '7': {
@@ -2274,7 +2274,7 @@
           if (tableId === 'C' && tasking === 'SEAD' && selectedNationName === 'US' && selectedAircraft === 'F-4G/F-4E') {
             // Table C Reference 1: Split F-4G/F-4E into separate flights
             resultText = `2 x {${flightSize}} ${selectedNationName} F-4G, 2 x {${flightSize}} ${selectedNationName} F-4E, ${tasking}`;
-          } else if (tableId === 'C' && tasking === 'Bombing' && selectedNationName === 'US' && selectedAircraft === 'F-4 (roll again for D or E)') {
+          } else if (tableId === 'C' && tasking === 'Bombing' && selectedNationName === 'US' && selectedAircraft === 'F-4²') {
             // Table C Reference 2: Hidden sub-roll for F-4D vs F-4E
             subRollResult = makeDebugRoll(10, `${tasking} Sub-roll`);
             const specificAircraft = subRollResult.roll <= 5 ? 'F-4D' : 'F-4E';
@@ -3342,9 +3342,6 @@
           tableHTML += `<div class="tasking-section">`;
           tableHTML += `<div class="tasking-header">${tasking} (4 x {${tasking === 'Bombing' ? '4' : '2'}})</div>`;
           
-          // Array to collect sub-roll notes for this tasking
-          const subRollNotes = [];
-          
           // Sort nations by roll number
           const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
             const aMin = parseInt(a[0].split('-')[0]);
@@ -3364,24 +3361,29 @@
               return aStart - bStart;
             });
             
+            // Array to collect sub-roll notes for this nation
+            const nationSubRollNotes = [];
+            
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
               tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
               
               // Check for superscripted aircraft and add sub-roll explanations
-              if (aircraftType.includes('F-4 (roll again for D or E)')) {
-                subRollNotes.push('² Roll again: 1-5 F-4D; 6-10 F-4E');
+              if (aircraftType.includes('F-4²')) {
+                nationSubRollNotes.push('² Roll again: 1-5 F-4D; 6-10 F-4E');
               }
             }
             
-            tableHTML += `</div></div>`;
-          }
-          
-          // Add sub-roll notes at the bottom of this tasking section
-          if (subRollNotes.length > 0) {
-            tableHTML += `<div class="sub-roll-notes">`;
-            for (const note of subRollNotes) {
-              tableHTML += `<div class="sub-roll-note" style="font-size: 11px; color: #666; margin-top: 8px; padding: 4px; background-color: rgba(255,255,255,0.05); border-radius: 3px;">${note}</div>`;
+            tableHTML += `</div>`;
+            
+            // Add sub-roll notes at the bottom of this nation section
+            if (nationSubRollNotes.length > 0) {
+              tableHTML += `<div class="sub-roll-notes">`;
+              for (const note of nationSubRollNotes) {
+                tableHTML += `<div class="sub-roll-note" style="font-size: 11px; color: #666; margin-top: 8px; padding: 4px; background-color: rgba(255,255,255,0.05); border-radius: 3px;">${note}</div>`;
+              }
+              tableHTML += `</div>`;
             }
+            
             tableHTML += `</div>`;
           }
           
