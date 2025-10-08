@@ -12,7 +12,7 @@
     <div class="header">
       <div class="title">Red Storm</div>
       <div class="subtitle">Order of Battle Generator</div>
-      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-21</div>
+      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.08-debug-24</div>
     </div>
 
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
@@ -178,9 +178,12 @@
       </div>
 
       <!-- Table View Overlay -->
-      <div class="table-view-overlay" id="tableViewOverlay" style="display: none;">
-        <div class="table-view-modal">
-          <div class="section-title" id="tableViewTitle"></div>
+      <div class="table-view-overlay" id="tableViewOverlay" style="display: none;" onclick="closeModalOnOverlayClick(event)">
+        <div class="table-view-modal" onclick="event.stopPropagation()">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div class="section-title" id="tableViewTitle" style="margin: 0;"></div>
+            <button class="action-button cancel-button" onclick="hideTableView()" style="padding: 5px 10px; font-size: 12px;">✕ Close</button>
+          </div>
           <div id="tableViewContent"></div>
           <div style="text-align: center; margin-top: 20px;">
             <button class="action-button cancel-button" onclick="hideTableView()">Close Table View</button>
@@ -4019,6 +4022,23 @@
     function hideTableView() {
       document.getElementById('tableViewOverlay').style.display = 'none';
     }
+
+    // Close modal when clicking outside the modal content
+    function closeModalOnOverlayClick(event) {
+      if (event.target === event.currentTarget) {
+        hideTableView();
+      }
+    }
+
+    // Close modal on Escape key press
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const overlay = document.getElementById('tableViewOverlay');
+        if (overlay && overlay.style.display === 'flex') {
+          hideTableView();
+        }
+      }
+    });
 
     // Initialize the app
     updateResultsDisplay();
