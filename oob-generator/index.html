@@ -1866,44 +1866,44 @@
         console.log('Table I object:', table);
         
         try {
-          // Table I: Warsaw Pact Bombing Raid - generates ALL three taskings
-          const taskingNames = Object.keys(table.taskings);
-          console.log('Table I taskings:', taskingNames);
+          // Table I: Warsaw Pact Bombing Raid - nationality-based like Table K
+          // First roll for nationality: 1-8 USSR, 9-10 GDR
+          const nationalityRollResult = makeDebugRoll(10, 'Nationality');
+          const nationalityRoll = nationalityRollResult.roll;
+          
+          let selectedNationality;
+          if (nationalityRoll <= 8) {
+            selectedNationality = 'USSR';
+          } else {
+            selectedNationality = 'GDR';
+          }
+          
+          console.log(`Nationality roll: ${nationalityRoll} → ${selectedNationality}`);
+          
+          const nationalityData = table.nationalities[selectedNationality];
+          if (!nationalityData) {
+            return {
+              nationRoll: nationalityRoll,
+              aircraftRoll: null,
+              text: `Error: Unknown nationality ${selectedNationality}`,
+              debugText: ''
+            };
+          }
+          
           const results = [];
           
-          for (const selectedTasking of taskingNames) {
-            console.log(`Processing tasking: ${selectedTasking}`);
-            const taskingData = table.taskings[selectedTasking];
+          // Generate results for each tasking (Close Escort, SEAD, Bombing)
+          for (const [taskingName, taskingData] of Object.entries(nationalityData.taskings)) {
+            console.log(`Processing tasking: ${taskingName}`);
             
-            const nationRollResult = makeDebugRoll(10, `${selectedTasking} Nation`);
-            const nationRoll = nationRollResult.roll;
-            
-            // Determine nation based on roll
-            let selectedNation = null;
-            let selectedNationName = '';
-            for (const [range, nation] of Object.entries(taskingData.nations)) {
-              const [min, max] = parseRange(range);
-              if (nationRoll >= min && nationRoll <= max) {
-                selectedNation = nation;
-                selectedNationName = nation.name;
-                break;
-              }
-            }
-            
-            if (!selectedNation) {
-              results.push({
-                tasking: selectedTasking,
-                text: `Error: No nation found for ${selectedTasking} roll ${nationRoll}`
-              });
-              continue;
-            }
-            
-            // Roll for aircraft
-            const aircraftRollResult = makeDebugRoll(10, `${selectedTasking} Aircraft`);
+            // Roll for aircraft within this tasking
+            const aircraftRollResult = makeDebugRoll(10, `${taskingName} Aircraft`);
             const aircraftRoll = aircraftRollResult.roll;
             let aircraftType = null;
+            let subRollResult = null;
             
-            for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+            // Find matching aircraft based on roll ranges
+            for (const [range, aircraft] of Object.entries(taskingData.aircraft)) {
               const [min, max] = parseRange(range);
               if (aircraftRoll >= min && aircraftRoll <= max) {
                 aircraftType = aircraft;
@@ -1913,31 +1913,55 @@
             
             if (!aircraftType) {
               results.push({
-                tasking: selectedTasking,
-                text: `Error: No aircraft found for ${selectedTasking} roll ${aircraftRoll}`
+                tasking: taskingName,
+                text: `Error: No aircraft found for ${taskingName} roll ${aircraftRoll}`
               });
               continue;
             }
             
-            const resultText = `${selectedNationName}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
-            console.log(`Result text for ${selectedTasking}:`, resultText);
+            // Handle hidden sub-rolls for superscript references
+            if (aircraftType && (aircraftType.includes('²') || aircraftType.includes('¹'))) {
+              subRollResult = makeDebugRoll(10, `${taskingName} Sub-roll`);
+              if (aircraftType.includes('MiG-23²')) {
+                if (subRollResult.roll <= 4) aircraftType = 'MiG-23M';
+                else if (subRollResult.roll <= 8) aircraftType = 'MiG-23MF';
+                else aircraftType = 'MiG-23ML';
+              } else if (aircraftType.includes('MiG-23MF/ML¹')) {
+                // Sub-roll: 1-5 MiG-23MF, 6-10 MiG-23ML
+                aircraftType = subRollResult.roll <= 5 ? 'MiG-23MF' : 'MiG-23ML';
+              }
+            }
+            
+            const resultText = `${selectedNationality}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${taskingName}`;
+            console.log(`Result text for ${taskingName}:`, resultText);
             
             // Build debug text for this tasking
             let taskingDebugText = '';
             if (debugMode) {
-              taskingDebugText = `[${selectedTasking}: ${nationRollResult.debugEntry} → ${selectedNationName} | ${aircraftRollResult.debugEntry} → ${aircraftType}]`;
+              taskingDebugText = `[${taskingName}: ${aircraftRollResult.debugEntry} → ${aircraftType}`;
+              if (subRollResult) {
+                taskingDebugText += ` | ${subRollResult.debugEntry} → ${aircraftType}`;
+              }
+              taskingDebugText += ']';
             }
             
             results.push({
-              tasking: selectedTasking,
+              tasking: taskingName,
               text: resultText,
               debugText: taskingDebugText
             });
           }
           
-          // Combine all debug texts for Table I
+          // Combine nationality roll with all tasking debug texts
           const allDebugTexts = results.map(r => r.debugText).filter(Boolean);
-          const combinedDebugText = allDebugTexts.length > 0 ? allDebugTexts.join(' ') : '';
+          let combinedDebugText = '';
+          if (debugMode) {
+            const debugParts = [`Nationality: ${nationalityRollResult.debugEntry} → ${selectedNationality}`];
+            if (allDebugTexts.length > 0) {
+              debugParts.push(...allDebugTexts);
+            }
+            combinedDebugText = debugParts.length > 0 ? debugParts.join(' ') : '';
+          }
           
           const finalResult = {
             taskingResults: results,
