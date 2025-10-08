@@ -1919,29 +1919,74 @@
               continue;
             }
             
-            // Handle hidden sub-rolls for superscript references
+            // Handle hidden sub-rolls for superscript references (applies to ALL aircraft in tasking)
+            let finalAircraftType = aircraftType;
             if (aircraftType && (aircraftType.includes('²') || aircraftType.includes('¹'))) {
               subRollResult = makeDebugRoll(10, `${taskingName} Sub-roll`);
               if (aircraftType.includes('MiG-23²')) {
-                if (subRollResult.roll <= 4) aircraftType = 'MiG-23M';
-                else if (subRollResult.roll <= 8) aircraftType = 'MiG-23MF';
-                else aircraftType = 'MiG-23ML';
+                if (subRollResult.roll <= 4) finalAircraftType = 'MiG-23M';
+                else if (subRollResult.roll <= 8) finalAircraftType = 'MiG-23MF';
+                else finalAircraftType = 'MiG-23ML';
               } else if (aircraftType.includes('MiG-23MF/ML¹')) {
                 // Sub-roll: 1-5 MiG-23MF, 6-10 MiG-23ML
-                aircraftType = subRollResult.roll <= 5 ? 'MiG-23MF' : 'MiG-23ML';
+                finalAircraftType = subRollResult.roll <= 5 ? 'MiG-23MF' : 'MiG-23ML';
               }
             }
             
-            const resultText = `${selectedNationality}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${taskingName}`;
+            // Ordnance table for Table I - differs by nationality
+            function getOrdnanceAvailabilityTableI(roll, nationality) {
+              if (nationality === 'USSR') {
+                // USSR: 1-5 Bombs/CBU/Rockets, 6-7 +EOGM/ARM, 8-10 +EOGB/LGB
+                if (roll <= 5) return "Bombs/CBU/Rockets";
+                else if (roll <= 7) return "Bombs/CBU/Rockets + EOGM/ARM";
+                else return "Bombs/CBU/Rockets + EOGM/ARM + EOGB/LGB";
+              } else {
+                // GDR: 1-6 Bombs/CBU/Rockets, 7-10 +EOGM
+                if (roll <= 6) return "Bombs/CBU/Rockets";
+                else return "Bombs/CBU/Rockets + EOGM";
+              }
+            }
+            
+            let resultText = '';
+            let ordnanceRolls = []; // Track ordnance rolls for debug
+            
+            // Handle ordnance for SEAD and Bombing flights
+            if (taskingName === 'Close Escort') {
+              // Close Escort flights remain grouped (no ordnance)
+              resultText = `${selectedNationality}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${finalAircraftType}, ${taskingName}`;
+            } else if (taskingName === 'SEAD' || taskingName === 'Bombing') {
+              // SEAD and Bombing flights get individual ordnance rolls
+              const individualFlights = [];
+              
+              for (let i = 1; i <= taskingData.flightCount; i++) {
+                const ordnanceRollResult = makeDebugRoll(10, `${taskingName} Flight ${i} Ordnance`);
+                const ordnance = getOrdnanceAvailabilityTableI(ordnanceRollResult.roll, selectedNationality);
+                ordnanceRolls.push(ordnanceRollResult);
+                
+                individualFlights.push(`${selectedNationality}: 1 x {${taskingData.flightSize}} ${finalAircraftType}, ${taskingName} (${ordnance})`);
+              }
+              
+              resultText = individualFlights.join('<br>');
+            }
+            
             console.log(`Result text for ${taskingName}:`, resultText);
             
             // Build debug text for this tasking
             let taskingDebugText = '';
             if (debugMode) {
-              taskingDebugText = `[${taskingName}: ${aircraftRollResult.debugEntry} → ${aircraftType}`;
+              taskingDebugText = `[${taskingName}: ${aircraftRollResult.debugEntry} → ${finalAircraftType}`;
               if (subRollResult) {
-                taskingDebugText += ` | ${subRollResult.debugEntry} → ${aircraftType}`;
+                taskingDebugText += ` | ${subRollResult.debugEntry} → ${finalAircraftType}`;
               }
+              
+              // Add ordnance debug info for SEAD and Bombing
+              if ((taskingName === 'SEAD' || taskingName === 'Bombing') && ordnanceRolls.length > 0) {
+                const ordnanceDebugEntries = ordnanceRolls.map((roll, i) => 
+                  `Flight ${i+1} Ordnance: ${roll.roll}`
+                ).join(' | ');
+                taskingDebugText += ` | ${ordnanceDebugEntries}`;
+              }
+              
               taskingDebugText += ']';
             }
             
