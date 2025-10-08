@@ -12,7 +12,7 @@
     <div class="header">
       <div class="title">Red Storm</div>
       <div class="subtitle">Order of Battle Generator</div>
-      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-v4</div>
+      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.07-debug-v5</div>
     </div>
 
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
@@ -1928,16 +1928,27 @@
             const resultText = `${selectedNationName}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${aircraftType}, ${selectedTasking}`;
             console.log(`Result text for ${selectedTasking}:`, resultText);
             
+            // Build debug text for this tasking
+            let taskingDebugText = '';
+            if (debugMode) {
+              taskingDebugText = `[${selectedTasking}: ${nationRollResult.debugEntry} → ${selectedNationName} | ${aircraftRollResult.debugEntry} → ${aircraftType}]`;
+            }
+            
             results.push({
               tasking: selectedTasking,
-              text: resultText
+              text: resultText,
+              debugText: taskingDebugText
             });
           }
+          
+          // Combine all debug texts for Table I
+          const allDebugTexts = results.map(r => r.debugText).filter(Boolean);
+          const combinedDebugText = allDebugTexts.length > 0 ? allDebugTexts.join(' ') : '';
           
           const finalResult = {
             taskingResults: results,
             text: results.map(r => r.text).join('<br>'),
-            debugText: debugMode ? '[Table I Direct Processing]' : ''
+            debugText: combinedDebugText
           };
           
           console.log('Table I DIRECT final result:', finalResult);
