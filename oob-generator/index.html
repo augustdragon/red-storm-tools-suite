@@ -4152,7 +4152,7 @@
       padding: 8px;
       page-break-inside: avoid;
       background: white;
-      max-width: 400px;
+      max-width: 450px;
     }
     
     .flight-header {
@@ -4259,8 +4259,8 @@
     
     .ordnance-area {
       border: 1px solid #666;
-      min-height: 30px;
-      margin-bottom: 3px;
+      min-height: 24px;
+      margin-bottom: 2px;
       padding: 2px;
       width: 100%;
     }
@@ -4276,15 +4276,20 @@
       padding: 2px;
       background: #f0f0f0;
       border-top: 1px solid #ccc;
-      min-height: 16px;
+      min-height: 14px;
+    }
+    
+    .fuel-section {
+      margin-top: 8px;
+      border-top: 1px solid #ccc;
+      padding-top: 6px;
     }
     
     .fuel-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 3px;
-      margin-top: 6px;
-      max-width: 120px;
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
     
     .fuel-box {
@@ -4346,9 +4351,37 @@
     }
 
     function generateFlightCard(flight) {
-      const flightSize = parseInt(flight.flightSize) || 2;
-      const aircraft = flight.aircraft || 'Unknown';
-      const tasking = flight.tasking || flight.table || 'Unknown';
+      // Parse the result text to extract aircraft and flight info
+      // Example result format: "FRG: 1 x {2} F-4F, CAP"
+      const resultText = flight.result || '';
+      const nationName = flight.nationName || '';
+      const tableName = flight.tableName || '';
+      
+      // Extract aircraft type from result text (between braces and comma/end)
+      let aircraft = 'Unknown';
+      let flightSize = 4; // Default to 4 for testing
+      let tasking = '';
+      
+      // Try to parse flight size from "1 x {2}" pattern
+      const flightSizeMatch = resultText.match(/(\d+)\s*x\s*\{(\d+)\}/);
+      if (flightSizeMatch) {
+        flightSize = parseInt(flightSizeMatch[2]);
+      }
+      
+      // Extract aircraft type (everything after the } up to comma or end, trim brackets/parentheses)
+      const aircraftMatch = resultText.match(/\}\s*([^,<]+)/);
+      if (aircraftMatch) {
+        aircraft = aircraftMatch[1].trim();
+      }
+      
+      // Extract tasking (everything after comma, before any debug info)
+      const taskingMatch = resultText.match(/,\s*([^<\[]+)/);
+      if (taskingMatch) {
+        tasking = taskingMatch[1].trim();
+      } else {
+        // Fallback: use table name if no explicit tasking
+        tasking = tableName.split(' - ')[1] || tableName;
+      }
       
       let card = `
     <div class="flight-card">
@@ -4429,17 +4462,19 @@
       card += `
       </div>
       
-      <!-- Fuel Grid -->
-      <div class="fuel-label">Fuel:</div>
-      <div class="fuel-grid">
+      <!-- Fuel Section: Single row under all aircraft -->
+      <div class="fuel-section">
+        <div class="fuel-label">Fuel:</div>
+        <div class="fuel-grid">
 `;
 
-      // Generate 3x6 = 18 fuel boxes
+      // Generate 18 fuel boxes in a single row
       for (let i = 0; i < 18; i++) {
-        card += `        <div class="fuel-box"></div>\n`;
+        card += `          <div class="fuel-box"></div>\n`;
       }
 
       card += `
+        </div>
       </div>
     </div>
 `;
