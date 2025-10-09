@@ -514,7 +514,7 @@
               nations: {
                 '1-4': { name: 'US', aircraft: { '1-3': 'F-4G', '4-8': 'F-4G/F-4E', '9': 'F-4G/F-16C', '10': 'A-7D' } },
                 '5-6': { name: 'UK', aircraft: { '1-5': 'Torn GR1', '6-8': 'Harrier GR3', '9-10': 'Jaguar GR1A' } },
-                '7-9': { name: 'FRG', aircraft: { '1-5': 'Torn IDS', '6-9': 'F-4F', '8-9': 'Alpha Jet', '10': 'F-104G' } },
+                '7-9': { name: 'FRG', aircraft: { '1-5': 'Torn IDS', '6-9': 'F-4F', '10': 'F-104G' } },
                 '9': { name: 'BE', aircraft: { '1-5': 'F-16A', '6-10': 'Mirage 5BA' } },
                 '10': { name: 'NE/CAN', aircraft: { '1-5': 'F-16A', '6-10': 'CF-18A' } }
               }
@@ -523,7 +523,7 @@
               nations: {
                 '1-6': { name: 'US', aircraft: { '1-3': 'F-4G', '4-8': 'F-4G/F-4E', '9': 'F-4G/F-16C', '10': 'A-7D' } },
                 '7': { name: 'UK', aircraft: { '1-5': 'Torn GR1', '6-8': 'Harrier GR3', '9-10': 'Jaguar GR1A' } },
-                '8-9': { name: 'FRG', aircraft: { '1-5': 'Torn IDS', '6-9': 'F-4F', '8-9': 'Alpha Jet', '10': 'F-104G' } },
+                '8-9': { name: 'FRG', aircraft: { '1-5': 'Torn IDS', '6-9': 'F-4F', '10': 'F-104G' } },
                 '10': { name: 'NE/CAN', aircraft: { '1-5': 'F-16A', '6-10': 'CF-18A' } }
               }
             }
@@ -1561,16 +1561,13 @@
                         
                         outputResults(label, outcomes, expectedCount);
                         
-                        // Add note about overlapping ranges if not all outcomes generated
+                        // Add note about overlapping nation ranges if not all outcomes generated
                         const actualCount = Object.keys(outcomes).length;
                         if (actualCount < expectedCount && tasking === 'SEAD') {
-                            output += `ℹ Note: Table C ${tasking} has overlapping ranges causing unreachable aircraft:\n`;
+                            output += `ℹ Note: Table C ${tasking} has overlapping nation ranges:\n`;
+                            output += `     - Nation roll 9: FRG (7-9) matches before BE (9), blocking BE aircraft\n`;
                             if (timeframe === 'pre') {
-                                output += `     - Nation roll 9: FRG (7-9) matches before BE (9), blocking BE aircraft\n`;
-                                output += `     - FRG aircraft rolls 8-9: F-4F (6-9) matches before Alpha Jet (8-9)\n`;
-                                output += `     Result: Alpha Jet is unreachable due to overlapping aircraft ranges\n`;
-                            } else {
-                                output += `     - BE nation removed in post-6/1/87, so BE aircraft not available\n`;
+                                output += `     Result: BE aircraft (F-16A, Mirage 5BA) unreachable on roll 9\n`;
                             }
                         }
                     });
