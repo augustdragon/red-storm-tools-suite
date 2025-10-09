@@ -4181,9 +4181,9 @@
       font-size: 9pt;
     }
     
-    .tasking-guns-missiles {
+    .tasking-fuel-row {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: 2fr 3fr;
       gap: 5px;
       margin-bottom: 8px;
     }
@@ -4191,21 +4191,23 @@
     .weapon-field {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 1px;
+      justify-content: flex-start;
+      gap: 3px;
       font-size: 7pt;
       color: #666;
+      padding: 1px 3px;
     }
     
     .weapon-bracket {
-      font-size: 12pt;
+      font-size: 10pt;
       color: #999;
     }
     
     .weapon-space {
       display: inline-block;
-      width: 16px;
-      border-bottom: 1px solid #ccc;
+      width: 12px;
+      height: 8px;
+      border: 1px solid #ccc;
     }
     
     .aircraft-section {
@@ -4220,14 +4222,28 @@
       padding: 2px;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: stretch;
     }
     
     .aircraft-row {
       display: flex;
       gap: 4px;
-      align-items: center;
+      align-items: stretch;
       margin-bottom: 4px;
+    }
+    
+    .aircraft-left {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    
+    .aircraft-weapons {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      justify-content: center;
+      margin-left: auto;
     }
     
     .aircraft-silhouette {
@@ -4291,12 +4307,12 @@
     }
     
     .fuel-section {
-      margin-top: 6px;
-      border-top: 1px solid #ccc;
-      padding-top: 4px;
+      border: 1px solid #666;
+      padding: 3px 5px;
+      min-height: 22px;
       display: flex;
-      align-items: center;
-      gap: 6px;
+      flex-direction: column;
+      gap: 2px;
     }
     
     .fuel-label {
@@ -4306,14 +4322,14 @@
     }
     
     .fuel-grid {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
       gap: 2px;
-      flex-wrap: nowrap;
     }
     
     .fuel-box {
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       border: 1px solid black;
       border-radius: 50%;
       flex-shrink: 0;
@@ -4466,19 +4482,23 @@
         </div>
       </div>
       
-      <!-- Tasking, Gun, IRM, RHM -->
-      <div class="tasking-guns-missiles">
+      <!-- Tasking and Fuel Row -->
+      <div class="tasking-fuel-row">
         <div class="field">
           <div class="field-value">${escapeHtml(tasking)}</div>
         </div>
-        <div class="field weapon-field">
-          Gun <span class="weapon-bracket">{</span><span class="weapon-space"></span><span class="weapon-bracket">}</span>
-        </div>
-        <div class="field weapon-field">
-          IRM <span class="weapon-bracket">{</span><span class="weapon-space"></span><span class="weapon-bracket">}</span>
-        </div>
-        <div class="field weapon-field">
-          RHM <span class="weapon-bracket">{</span><span class="weapon-space"></span><span class="weapon-bracket">}</span>
+        <div class="fuel-section">
+          <div class="fuel-label">Fuel:</div>
+          <div class="fuel-grid">
+`;
+
+      // Generate 18 fuel boxes in 2 rows of 9
+      for (let i = 0; i < 18; i++) {
+        card += `            <div class="fuel-box"></div>\n`;
+      }
+
+      card += `
+          </div>
         </div>
       </div>
       
@@ -4490,23 +4510,38 @@
       for (let i = 0; i < flightSize; i++) {
         card += `
         <div class="aircraft-card">
-          <!-- Aircraft row with silhouette and health checkboxes side by side -->
+          <!-- Aircraft row with silhouette, health checkboxes, and weapons -->
           <div class="aircraft-row">
-            <div class="aircraft-silhouette">✈</div>
+            <div class="aircraft-left">
+              <div class="aircraft-silhouette">✈</div>
+              
+              <!-- Health checkboxes stacked vertically -->
+              <div class="health-checkboxes">
+                <div class="checkbox">
+                  <span class="checkbox-box"></span>
+                  <span>Da</span>
+                </div>
+                <div class="checkbox">
+                  <span class="checkbox-box"></span>
+                  <span>Cr</span>
+                </div>
+                <div class="checkbox">
+                  <span class="checkbox-box"></span>
+                  <span>☠</span>
+                </div>
+              </div>
+            </div>
             
-            <!-- Health checkboxes stacked vertically -->
-            <div class="health-checkboxes">
-              <div class="checkbox">
-                <span class="checkbox-box"></span>
-                <span>Da</span>
+            <!-- Air-to-air weapons stacked vertically on right -->
+            <div class="aircraft-weapons">
+              <div class="weapon-field">
+                Gun <span class="weapon-bracket">{</span><span class="weapon-space"></span><span class="weapon-bracket">}</span>
               </div>
-              <div class="checkbox">
-                <span class="checkbox-box"></span>
-                <span>Cr</span>
+              <div class="weapon-field">
+                IRM <span class="weapon-bracket">{</span><span class="weapon-space"></span><span class="weapon-bracket">}</span>
               </div>
-              <div class="checkbox">
-                <span class="checkbox-box"></span>
-                <span>☠</span>
+              <div class="weapon-field">
+                RHM <span class="weapon-bracket">{</span><span class="weapon-space"></span><span class="weapon-bracket">}</span>
               </div>
             </div>
           </div>
@@ -4520,21 +4555,6 @@
       }
 
       card += `
-      </div>
-      
-      <!-- Fuel Section: Single row under all aircraft -->
-      <div class="fuel-section">
-        <div class="fuel-label">Fuel:</div>
-        <div class="fuel-grid">
-`;
-
-      // Generate 18 fuel boxes in a single row
-      for (let i = 0; i < 18; i++) {
-        card += `          <div class="fuel-box"></div>\n`;
-      }
-
-      card += `
-        </div>
       </div>
     </div>
 `;
