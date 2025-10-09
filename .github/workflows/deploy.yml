@@ -35,6 +35,7 @@ jobs:
           mkdir -p dist
           mkdir -p dist/chit-pull
           mkdir -p dist/oob-generator
+          mkdir -p dist/testharness
           mkdir -p dist/shared
           
           # Copy the chit pull app to the chit-pull subdirectory
@@ -43,10 +44,21 @@ jobs:
           # Copy the OOB generator to the oob-generator subdirectory
           cp oob-generator/index.html dist/oob-generator/index.html
           
+          # Copy the test harness to the testharness subdirectory
+          cp testharness/index.html dist/testharness/index.html
+          
+          # Copy backup test harness files to root
+          cp tests.html dist/tests.html
+          cp test.html dist/test.html
+          cp harness.html dist/harness.html
+          
           # Copy the shared CSS file
           cp shared/red-storm.css dist/shared/red-storm.css
           
-          # Create a landing page
+          # Copy the main index.html
+          cp index.html dist/index.html
+          
+          # Create a landing page (backup)
           cat > dist/index.html << 'EOF'
           <!DOCTYPE html>
           <html lang="en">
