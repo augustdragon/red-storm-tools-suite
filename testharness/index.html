@@ -233,14 +233,18 @@
                 <label for="testTable">Test Table:</label>
                 <select id="testTable">
                     <option value="all">All Tables</option>
-                    <option value="A">Table A Only</option>
-                    <option value="B">Table B Only</option>
-                    <option value="G">Table G Only</option>
-                    <option value="H">Table H Only</option>
-                    <option value="C">Table C Only</option>
-                    <option value="F">Table F Only</option>
-                    <option value="I">Table I Only</option>
-                    <option value="L">Table L Only</option>
+                    <option value="A">Table A - NATO QRA</option>
+                    <option value="B">Table B - NATO CAP</option>
+                    <option value="C">Table C - NATO Bombing</option>
+                    <option value="D">Table D - NATO Deep Strike</option>
+                    <option value="E">Table E - NATO Rescue</option>
+                    <option value="F">Table F - NATO Special</option>
+                    <option value="G">Table G - WP QRA</option>
+                    <option value="H">Table H - WP Fighter Sweep</option>
+                    <option value="I">Table I - WP Bombing</option>
+                    <option value="J">Table J - WP Deep Strike</option>
+                    <option value="K">Table K - WP Rescue</option>
+                    <option value="L">Table L - WP Special</option>
                 </select>
                 
                 <button onclick="runComprehensiveTest()" id="comprehensiveBtn">Run Comprehensive Test</button>
@@ -478,6 +482,275 @@
           '1-7': { name: 'USSR', aircraft: { '1-2': 'MiG-21bis', '3-4': 'MiG-23M', '5-6': 'MiG-23MLA', '7-9': 'MiG-29A', '10': 'MiG-25PD/Su-27S' } },
           '8-10': { name: 'GDR', aircraft: { '1-5': 'MiG-21bis', '6-10': 'MiG-23ML' } }
         }
+      },
+      'C': {
+        name: 'NATO Table C - Bombing Raid',
+        faction: 'NATO',
+        description: 'NATO Bombing Raid - CAP, SEAD, and Bombing',
+        hasTasking: true,
+        hasDate: true,
+        taskings: {
+          'CAP': {
+            'pre': {
+              nations: {
+                '1-5': { name: 'US', aircraft: { '1-2': 'F-15A', '3-6': 'F-15C', '7-8': 'F-4E', '9': 'F-4D', '10': 'F-16C' } },
+                '6': { name: 'UK', aircraft: { '1-7': 'FGR2', '8-10': 'Tornado F2A' } },
+                '7-8': { name: 'FRG', aircraft: { '1-10': 'F-4F' } },
+                '9': { name: 'BE', aircraft: { '1-5': 'F-16A(BE)', '6-10': 'Mirage 5BA' } },
+                '10': { name: 'NE/CAN', aircraft: { '1-5': 'F-16A(NE)', '6-10': 'CF-18A' } }
+              }
+            },
+            'post': {
+              nations: {
+                '1-6': { name: 'US', aircraft: { '1-2': 'F-15A', '3-6': 'F-15C', '7-8': 'F-4E', '9': 'F-4D', '10': 'F-16C' } },
+                '7': { name: 'UK', aircraft: { '1-7': 'FGR2', '8-10': 'Tornado F2A' } },
+                '8-9': { name: 'FRG', aircraft: { '1-10': 'F-4F' } },
+                '10': { name: 'NE/CAN', aircraft: { '1-5': 'F-16A', '6-10': 'CF-18A' } }
+              }
+            }
+          },
+          'SEAD': {
+            'pre': {
+              nations: {
+                '1-4': { name: 'US', aircraft: { '1-3': 'F-4G', '4-8': 'F-4G/F-4E', '9': 'F-4G/F-16C', '10': 'A-7D' } },
+                '5-6': { name: 'UK', aircraft: { '1-5': 'Torn GR1', '6-8': 'Harrier GR3', '9-10': 'Jaguar GR1A' } },
+                '7-9': { name: 'FRG', aircraft: { '1-5': 'Torn IDS', '6-9': 'F-4F', '8-9': 'Alpha Jet', '10': 'F-104G' } },
+                '9': { name: 'BE', aircraft: { '1-5': 'F-16A', '6-10': 'Mirage 5BA' } },
+                '10': { name: 'NE/CAN', aircraft: { '1-5': 'F-16A', '6-10': 'CF-18A' } }
+              }
+            },
+            'post': {
+              nations: {
+                '1-6': { name: 'US', aircraft: { '1-3': 'F-4G', '4-8': 'F-4G/F-4E', '9': 'F-4G/F-16C', '10': 'A-7D' } },
+                '7': { name: 'UK', aircraft: { '1-5': 'Torn GR1', '6-8': 'Harrier GR3', '9-10': 'Jaguar GR1A' } },
+                '8-9': { name: 'FRG', aircraft: { '1-5': 'Torn IDS', '6-9': 'F-4F', '8-9': 'Alpha Jet', '10': 'F-104G' } },
+                '10': { name: 'NE/CAN', aircraft: { '1-5': 'F-16A', '6-10': 'CF-18A' } }
+              }
+            }
+          },
+          'Bombing': {
+            'pre': {
+              nations: {
+                '1-4': { name: 'US', aircraft: { '1-2': 'F-16A', '3': 'F-16C', '4-6': 'A-10A', '7': 'A-7D', '8-10': 'F-4²' } },
+                '5-6': { name: 'UK', aircraft: { '1-5': 'Torn GR1', '6-9': 'Harrier GR3', '10': 'Jaguar GR1A' } },
+                '7-9': { name: 'FRG', aircraft: { '1-4': 'Torn IDS', '5-7': 'F-4F', '8-9': 'Alpha Jet', '10': 'F-104G' } },
+                '9': { name: 'BE', aircraft: { '1-5': 'F-16A', '6-10': 'Mirage 5BA' } },
+                '10': { name: 'NE/CAN', aircraft: { '1-4': 'F-16A', '5-10': 'CF-18A' } }
+              }
+            },
+            'post': {
+              nations: {
+                '1-6': { name: 'US', aircraft: { '1-2': 'F-16A', '3': 'F-16C', '4-6': 'A-10A', '7': 'A-7D', '8-10': 'F-4²' } },
+                '7': { name: 'UK', aircraft: { '1-5': 'Torn GR1', '6-9': 'Harrier GR3', '10': 'Jaguar GR1A' } },
+                '8-9': { name: 'FRG', aircraft: { '1-4': 'Torn IDS', '5-7': 'F-4F', '8-9': 'Alpha Jet', '10': 'F-104G' } },
+                '10': { name: 'NE/CAN', aircraft: { '1-4': 'F-16A', '5-10': 'CF-18A' } }
+              }
+            }
+          }
+        }
+      },
+      'D': {
+        name: 'NATO Table D - Deep Strike Raid',
+        faction: 'NATO',
+        description: 'NATO Deep Strike - Escort Jamming, CAP, SEAD, Bombing, Recon',
+        hasTasking: true,
+        taskings: {
+          'Escort Jamming': { nations: { '1-10': { name: 'US', aircraft: { '1-10': 'EF-111A' } } } },
+          'CAP': {
+            nations: {
+              '1-6': { name: 'US', aircraft: { '1-3': 'F-15A', '4-7': 'F-15C', '8-10': 'F-4E' } },
+              '7-8': { name: 'UK', aircraft: { '1-10': 'FGR2' } },
+              '9-10': { name: 'CAN', aircraft: { '1-10': 'CF-18A' } }
+            }
+          },
+          'SEAD': {
+            nations: {
+              '1-6': { name: 'US', aircraft: { '1-6': 'F-4G', '7-9': 'F-4G/F-4E', '10': 'F-4G/F-16C' } },
+              '7-9': { name: 'UK', aircraft: { '1-8': 'Tornado GR1', '9-10': 'Jaguar GR1A' } },
+              '10': { name: 'CAN', aircraft: { '1-10': 'CF-18A' } }
+            }
+          },
+          'Bombing': {
+            nations: {
+              '1-6': { name: 'US', aircraft: { '1-5': 'F-4E or F-111D/E', '6-10': 'F-111F' } },
+              '7-8': { name: 'UK', aircraft: { '1-10': 'Tornado GR1' } },
+              '9-10': { name: 'FRG', aircraft: { '1-10': 'Tornado IDS' } }
+            }
+          },
+          'Recon': {
+            nations: {
+              '1-5': { name: 'US', aircraft: { '1-10': 'RF-4C' } },
+              '6-7': { name: 'UK', aircraft: { '1-7': 'Jaguar GR1A', '8-10': 'Tornado GR1A' } },
+              '8-9': { name: 'FRG', aircraft: { '1-10': 'RF-4E' } },
+              '10': { name: 'BE', aircraft: { '1-10': 'Mirage 5BR' } }
+            }
+          }
+        }
+      },
+      'E': {
+        name: 'NATO Table E - Combat Rescue',
+        faction: 'NATO',
+        description: 'NATO Combat Rescue - Rescue Support and CSAR',
+        hasNationality: true,
+        nationalities: {
+          'US': {
+            flights: [
+              { type: 'Rescue Support', aircraft: { '1-6': 'A-10A', '7-10': 'A-7D' } },
+              { type: 'CSAR', aircraft: { '1-10': 'H-53' } }
+            ]
+          },
+          'UK': {
+            flights: [
+              { type: 'Rescue Support', aircraft: { '1-8': 'Harrier GR3', '9-10': 'Jaguar GR1A' } },
+              { type: 'CSAR', aircraft: { '1-10': 'Puma' } }
+            ]
+          },
+          'FRG': {
+            flights: [
+              { type: 'Rescue Support', aircraft: { '1-5': 'Alpha Jet', '6-10': 'F-4F' } },
+              { type: 'CSAR', aircraft: { '1-10': 'CH-53' } }
+            ]
+          }
+        }
+      },
+      'F': {
+        name: 'NATO Table F - Special Missions',
+        faction: 'NATO',
+        description: 'NATO Special Missions - Fast FAC, Standoff Jamming, Tactical Recon',
+        hasMissionType: true,
+        missionTypes: {
+          'Fast FAC': {
+            nations: {
+              '1-5': { name: 'US', aircraft: { '1-4': 'F-4E', '5-10': 'A-10A' } },
+              '6-7': { name: 'UK', aircraft: { '1-4': 'Harrier GR3', '5-10': 'Tornado GR1' } },
+              '8-9': { name: 'FRG', aircraft: { '1-5': 'F-4F', '6-10': 'Alpha Jet' } },
+              '10': { name: 'BE/NE/CAN', aircraft: { '1-4': 'Mirage 5BA', '5-7': 'F-16A', '8-10': 'CF-18A' } }
+            }
+          },
+          'Standoff Jamming': {
+            nations: {
+              '1-9': { name: 'US', aircraft: { '1-3': 'EC-130H', '4-10': 'EF-111A' } },
+              '10': { name: 'UK/FRG', aircraft: { '1-5': 'Falcon 20F', '6-10': 'HFB 320 Hansa Jet' } }
+            }
+          },
+          'Tactical Recon': {
+            nations: {
+              '1-3': { name: 'US', aircraft: { '1-10': 'RF-4C' } },
+              '4-5': { name: 'UK', aircraft: { '1-7': 'Jaguar GR1A', '8-10': 'Tornado GR1A' } },
+              '6-9': { name: 'FRG', aircraft: { '1-10': 'RF-4E' } },
+              '10': { name: 'BE/NE', aircraft: { '1-5': 'Mirage 5BR', '6-10': 'F-16A(NE)' } }
+            }
+          }
+        }
+      },
+      'I': {
+        name: 'WP Table I - Bombing Raid',
+        faction: 'WP',
+        description: 'WP Bombing Raid - Close Escort, SEAD, Bombing',
+        hasTasking: true,
+        hasNationality: true,
+        nationalities: {
+          'USSR': {
+            taskings: {
+              'Close Escort': { aircraft: { '1': 'MiG-21bis', '2': 'MiG-23M', '3-4': 'MiG-23MLA', '5-7': 'MiG-23MLD', '8-10': 'MiG-29A' } },
+              'SEAD': { aircraft: { '1-2': 'Su-17M4', '3-4': 'MiG-23²', '5-6': 'Su-24', '7-8': 'MiG-27M', '9-10': 'MiG-27K' } },
+              'Bombing': { aircraft: { '1-2': 'Su-17M4', '3-4': 'MiG-23²', '5-6': 'Su-25', '7-8': 'MiG-27M', '9-10': 'MiG-27K' } }
+            }
+          },
+          'GDR': {
+            taskings: {
+              'Close Escort': { aircraft: { '1-5': 'MiG-21MF', '6': 'MiG-21SPS', '7-9': 'MiG-21bis', '10': 'MiG-23MF/ML' } },
+              'SEAD': { aircraft: { '1-4': 'Su-22M4', '5-7': 'MiG-21MF', '8-10': 'MiG-23²' } },
+              'Bombing': { aircraft: { '1-4': 'Su-22M4', '5-7': 'MiG-21MF', '8-10': 'MiG-23BN' } }
+            }
+          }
+        }
+      },
+      'J': {
+        name: 'WP Table J - Deep Strike Raid',
+        faction: 'WP',
+        description: 'WP Deep Strike - Escort Jamming, Chaff, Close Escort, Bombing, Recon',
+        hasTasking: true,
+        taskings: {
+          'Escort Jamming': {
+            nations: {
+              '1-2': { name: 'USSR', aircraft: { '1-2': 'Su-24MP', '3-5': 'MiG-25RB', '6-8': 'Yak-28PP', '9-10': 'Tu-22PP' } },
+              '3-5': { name: 'USSR', aircraft: { '1-5': 'MiG-25RB', '6-10': 'Tu-22PP' } },
+              '6-8': { name: 'USSR', aircraft: { '1-4': 'Su-24MP', '5-8': 'MiG-25RB', '9-10': 'Yak-28PP' } },
+              '9-10': { name: 'GDR', aircraft: { '1-10': 'MiG-21PF' } }
+            }
+          },
+          'Chaff Laying': {
+            nations: {
+              '1-5': { name: 'USSR', aircraft: { '1-5': 'MiG-21bis', '6-10': 'MiG-23M' } },
+              '6-8': { name: 'USSR', aircraft: { '1-4': 'Yak-28R', '5-8': 'MiG-25RB', '9-10': 'Su-24MR' } },
+              '9-10': { name: 'GDR', aircraft: { '1-10': 'MiG-21PF' } }
+            }
+          },
+          'Close Escort': {
+            nations: {
+              '1-3': { name: 'USSR', aircraft: { '1-3': 'MiG-23MLA', '4-7': 'MiG-23MLD', '8-10': 'Su-27S' } },
+              '4-7': { name: 'USSR', aircraft: { '1-4': 'MiG-23ML', '5-7': 'MiG-29A', '8-10': 'Su-27S' } },
+              '8-10': { name: 'GDR', aircraft: { '1-10': 'MiG-23ML' } }
+            }
+          },
+          'Deep Bombing': {
+            nations: {
+              '1-4': { name: 'USSR', aircraft: { '1-4': 'Su-24M', '5-8': 'Su-24M4', '9-10': 'MiG-27K' } },
+              '5-8': { name: 'USSR', aircraft: { '1-10': 'Tu-22M' } },
+              '9-10': { name: 'GDR', aircraft: { '1-10': 'Su-22M4' } }
+            }
+          },
+          'Recon': {
+            nations: {
+              '1-5': { name: 'USSR', aircraft: { '1-5': 'Su-17M4R', '6-10': 'MiG-25RB' } },
+              '6-7': { name: 'USSR', aircraft: { '1-7': 'Yak-28R', '8-10': 'Su-24MR' } },
+              '8-9': { name: 'USSR', aircraft: { '1-5': 'MiG-21R', '6-10': 'MiG-25RB' } },
+              '10': { name: 'GDR', aircraft: { '1-10': 'MiG-21R' } }
+            }
+          }
+        }
+      },
+      'K': {
+        name: 'WP Table K - Combat Rescue',
+        faction: 'WP',
+        description: 'WP Combat Rescue - Rescue Support and CSAR',
+        hasNationality: true,
+        nationalities: {
+          'USSR': {
+            flights: [
+              { type: 'Rescue Support', aircraft: { '1-5': 'Su-25', '6-8': 'Su-17M4', '9-10': 'MiG-21bis' } },
+              { type: 'CSAR', aircraft: { '1-10': 'Mi-8' } }
+            ]
+          },
+          'GDR': {
+            flights: [
+              { type: 'Rescue Support', aircraft: { '1-5': 'MiG-21bis', '6-10': 'MiG-23BN' } },
+              { type: 'CSAR', aircraft: { '1-10': 'Mi-8' } }
+            ]
+          }
+        }
+      },
+      'L': {
+        name: 'WP Table L - Special Missions',
+        faction: 'WP',
+        description: 'WP Special Missions - Standoff Jamming, Tactical Recon',
+        hasMissionType: true,
+        missionTypes: {
+          'Standoff Jamming': {
+            nations: {
+              '1-5': { name: 'USSR', aircraft: { '1-5': 'An-12PP', '6-10': 'Tu-16P' } },
+              '6-10': { name: 'GDR', aircraft: { '1-10': 'An-26' } }
+            }
+          },
+          'Tactical Recon': {
+            hasNationSelection: true,
+            nationData: {
+              'USSR': { aircraft: { '1-2': 'MiG-21R', '3-4': 'Su-17M3R', '5-7': 'Su-24MR', '8-10': 'MiG-25RB' } },
+              'GDR': { aircraft: { '1-5': 'MiG-21R', '6-10': 'Su-22M4R' } }
+            }
+          }
+        }
       }
     };
     
@@ -497,12 +770,16 @@
         const tableMissions = {
             'A': ['2ATAF-pre', '2ATAF-post', '4ATAF-pre', '4ATAF-post'],
             'B': ['2ATAF-pre', '2ATAF-post', '4ATAF-pre', '4ATAF-post'],
+            'C': ['CAP-pre', 'CAP-post', 'SEAD-pre', 'SEAD-post', 'Bombing-pre', 'Bombing-post'],
+            'D': ['Escort Jamming', 'CAP', 'SEAD', 'Bombing', 'Recon'],
+            'E': ['US', 'UK', 'FRG'],
+            'F': ['Fast FAC', 'Standoff Jamming', 'Tactical Recon'],
             'G': ['simple'],
             'H': ['simple'],
-            'C': ['bombing', 'sead', 'cap', 'close-escort'],
-            'F': ['strategic-bombing', 'naval-strike', 'tactical-recon'],
-            'I': ['bombing', 'sead', 'cap', 'close-escort'],
-            'L': ['standoff-jamming', 'tactical-recon']
+            'I': ['USSR-Close Escort', 'USSR-SEAD', 'USSR-Bombing', 'GDR-Close Escort', 'GDR-SEAD', 'GDR-Bombing'],
+            'J': ['Escort Jamming', 'Chaff Laying', 'Close Escort', 'Deep Bombing', 'Recon'],
+            'K': ['USSR', 'GDR'],
+            'L': ['Standoff Jamming', 'Tactical Recon-USSR', 'Tactical Recon-GDR']
         };
 
         // Initialize mission select based on table selection
@@ -966,6 +1243,220 @@
             return outcomeTracker;
         }
         
+        // Accurate Table C simulation (NATO Bombing Raid with taskings)
+        function simulateTableC(tasking, timeframe, iterations) {
+            const outcomeTracker = {};
+            const tableData = oobTables['C'].taskings[tasking][timeframe];
+            
+            for (let i = 0; i < iterations; i++) {
+                const nationRoll = rollD10();
+                
+                for (const [nationRange, nationData] of Object.entries(tableData.nations)) {
+                    if (isInRange(nationRoll, nationRange)) {
+                        const aircraftRoll = rollD10();
+                        
+                        for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+                            if (isInRange(aircraftRoll, aircraftRange)) {
+                                const key = `${nationData.name} - ${aircraftType}`;
+                                outcomeTracker[key] = (outcomeTracker[key] || 0) + 1;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            return outcomeTracker;
+        }
+        
+        // Accurate Table D simulation (NATO Deep Strike)
+        function simulateTableD(tasking, iterations) {
+            const outcomeTracker = {};
+            const tableData = oobTables['D'].taskings[tasking];
+            
+            for (let i = 0; i < iterations; i++) {
+                const nationRoll = rollD10();
+                
+                for (const [nationRange, nationData] of Object.entries(tableData.nations)) {
+                    if (isInRange(nationRoll, nationRange)) {
+                        const aircraftRoll = rollD10();
+                        
+                        for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+                            if (isInRange(aircraftRoll, aircraftRange)) {
+                                const key = `${nationData.name} - ${aircraftType}`;
+                                outcomeTracker[key] = (outcomeTracker[key] || 0) + 1;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            return outcomeTracker;
+        }
+        
+        // Accurate Table E simulation (NATO Combat Rescue)
+        function simulateTableE(nationality, iterations) {
+            const outcomeTracker = {};
+            const nationalityData = oobTables['E'].nationalities[nationality];
+            
+            for (let i = 0; i < iterations; i++) {
+                nationalityData.flights.forEach(flight => {
+                    const aircraftRoll = rollD10();
+                    
+                    for (const [aircraftRange, aircraftType] of Object.entries(flight.aircraft)) {
+                        if (isInRange(aircraftRoll, aircraftRange)) {
+                            const key = `${flight.type} - ${aircraftType}`;
+                            outcomeTracker[key] = (outcomeTracker[key] || 0) + 1;
+                            break;
+                        }
+                    }
+                });
+            }
+            
+            return outcomeTracker;
+        }
+        
+        // Accurate Table F simulation (NATO Special Missions)
+        function simulateTableF(missionType, iterations) {
+            const outcomeTracker = {};
+            const missionData = oobTables['F'].missionTypes[missionType];
+            
+            for (let i = 0; i < iterations; i++) {
+                const nationRoll = rollD10();
+                
+                for (const [nationRange, nationData] of Object.entries(missionData.nations)) {
+                    if (isInRange(nationRoll, nationRange)) {
+                        const aircraftRoll = rollD10();
+                        
+                        for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+                            if (isInRange(aircraftRoll, aircraftRange)) {
+                                const key = `${nationData.name} - ${aircraftType}`;
+                                outcomeTracker[key] = (outcomeTracker[key] || 0) + 1;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            return outcomeTracker;
+        }
+        
+        // Accurate Table I simulation (WP Bombing Raid)
+        function simulateTableI(nationality, tasking, iterations) {
+            const outcomeTracker = {};
+            const taskingData = oobTables['I'].nationalities[nationality].taskings[tasking];
+            
+            for (let i = 0; i < iterations; i++) {
+                const aircraftRoll = rollD10();
+                
+                for (const [aircraftRange, aircraftType] of Object.entries(taskingData.aircraft)) {
+                    if (isInRange(aircraftRoll, aircraftRange)) {
+                        const key = aircraftType;
+                        outcomeTracker[key] = (outcomeTracker[key] || 0) + 1;
+                        break;
+                    }
+                }
+            }
+            
+            return outcomeTracker;
+        }
+        
+        // Accurate Table J simulation (WP Deep Strike)
+        function simulateTableJ(tasking, iterations) {
+            const outcomeTracker = {};
+            const tableData = oobTables['J'].taskings[tasking];
+            
+            for (let i = 0; i < iterations; i++) {
+                const nationRoll = rollD10();
+                
+                for (const [nationRange, nationData] of Object.entries(tableData.nations)) {
+                    if (isInRange(nationRoll, nationRange)) {
+                        const aircraftRoll = rollD10();
+                        
+                        for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+                            if (isInRange(aircraftRoll, aircraftRange)) {
+                                const key = `${nationData.name} - ${aircraftType}`;
+                                outcomeTracker[key] = (outcomeTracker[key] || 0) + 1;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            return outcomeTracker;
+        }
+        
+        // Accurate Table K simulation (WP Combat Rescue)
+        function simulateTableK(nationality, iterations) {
+            const outcomeTracker = {};
+            const nationalityData = oobTables['K'].nationalities[nationality];
+            
+            for (let i = 0; i < iterations; i++) {
+                nationalityData.flights.forEach(flight => {
+                    const aircraftRoll = rollD10();
+                    
+                    for (const [aircraftRange, aircraftType] of Object.entries(flight.aircraft)) {
+                        if (isInRange(aircraftRoll, aircraftRange)) {
+                            const key = `${flight.type} - ${aircraftType}`;
+                            outcomeTracker[key] = (outcomeTracker[key] || 0) + 1;
+                            break;
+                        }
+                    }
+                });
+            }
+            
+            return outcomeTracker;
+        }
+        
+        // Accurate Table L simulation (WP Special Missions)
+        function simulateTableL(missionType, nationality, iterations) {
+            const outcomeTracker = {};
+            const missionData = oobTables['L'].missionTypes[missionType];
+            
+            for (let i = 0; i < iterations; i++) {
+                if (missionType === 'Tactical Recon') {
+                    // Tactical Recon requires nationality selection
+                    const nationData = missionData.nationData[nationality];
+                    const aircraftRoll = rollD10();
+                    
+                    for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+                        if (isInRange(aircraftRoll, aircraftRange)) {
+                            const key = `${nationality} - ${aircraftType}`;
+                            outcomeTracker[key] = (outcomeTracker[key] || 0) + 1;
+                            break;
+                        }
+                    }
+                } else {
+                    // Standoff Jamming uses standard nation roll
+                    const nationRoll = rollD10();
+                    
+                    for (const [nationRange, nationData] of Object.entries(missionData.nations)) {
+                        if (isInRange(nationRoll, nationRange)) {
+                            const aircraftRoll = rollD10();
+                            
+                            for (const [aircraftRange, aircraftType] of Object.entries(nationData.aircraft)) {
+                                if (isInRange(aircraftRoll, aircraftRange)) {
+                                    const key = `${nationData.name} - ${aircraftType}`;
+                                    outcomeTracker[key] = (outcomeTracker[key] || 0) + 1;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return outcomeTracker;
+        }
+        
         // Comprehensive outcome analysis using actual table data
         function runOutcomeAnalysis() {
             const testTable = document.getElementById('testTable').value;
@@ -979,158 +1470,256 @@
             let output = '<div class="test-details">';
             output += `Running ${iterations} iterations per configuration...\n\n`;
             
-            // Test Table A - NATO QRA Flight
+            // Helper function to output results
+            function outputResults(label, outcomes, expectedCount = null) {
+                output += `\n--- ${label} ---\n`;
+                const sortedOutcomes = Object.entries(outcomes).sort((a, b) => b[1] - a[1]);
+                const totalRolls = sortedOutcomes.reduce((sum, [_, count]) => sum + count, 0);
+                
+                sortedOutcomes.forEach(([outcome, count]) => {
+                    const percentage = ((count / totalRolls) * 100).toFixed(2);
+                    const expectedPer100 = (count / iterations * 100).toFixed(1);
+                    output += `${outcome.padEnd(35)} | Count: ${count.toString().padStart(5)} | ${percentage.padStart(6)}% | Per 100: ${expectedPer100.padStart(5)}\n`;
+                });
+                
+                output += `\nTotal outcomes: ${totalRolls} from ${iterations} table rolls\n`;
+                
+                if (expectedCount !== null) {
+                    const actualOutcomes = sortedOutcomes.length;
+                    if (actualOutcomes === expectedCount) {
+                        output += `✓ All ${expectedCount} possible outcomes generated\n`;
+                    } else {
+                        output += `⚠ WARNING: Only ${actualOutcomes} of ${expectedCount} possible outcomes generated\n`;
+                    }
+                }
+            }
+            
+            // Test Table A
             if (testTable === 'all' || testTable === 'A') {
                 output += `${'='.repeat(80)}\n`;
                 output += `TABLE A - NATO QRA FLIGHT\n`;
                 output += `${'='.repeat(80)}\n\n`;
                 
-                const atafZones = ['2ATAF', '4ATAF'];
-                const timeframes = ['pre', 'post'];
-                
-                atafZones.forEach(ataf => {
-                    timeframes.forEach(timeframe => {
+                ['2ATAF', '4ATAF'].forEach(ataf => {
+                    ['pre', 'post'].forEach(timeframe => {
                         const label = `${ataf} ${timeframe === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later'}`;
-                        output += `\n--- ${label} ---\n`;
-                        
                         const outcomes = simulateTableA(ataf, timeframe, iterations);
-                        const sortedOutcomes = Object.entries(outcomes).sort((a, b) => b[1] - a[1]);
                         
-                        const totalRolls = sortedOutcomes.reduce((sum, [_, count]) => sum + count, 0);
-                        
-                        sortedOutcomes.forEach(([outcome, count]) => {
-                            const percentage = ((count / totalRolls) * 100).toFixed(2);
-                            const expectedPer100 = (count / iterations * 100).toFixed(1);
-                            output += `${outcome.padEnd(30)} | Count: ${count.toString().padStart(5)} | ${percentage.padStart(6)}% | Per 100: ${expectedPer100.padStart(5)}\n`;
+                        let expectedCount = 0;
+                        Object.values(oobTables['A'].variants[ataf][timeframe].nations).forEach(nation => {
+                            expectedCount += Object.keys(nation.aircraft).length;
                         });
                         
-                        output += `\nTotal outcomes: ${totalRolls} from ${iterations} table rolls\n`;
-                        
-                        // Validation
-                        const tableData = oobTables['A'].variants[ataf][timeframe];
-                        let expectedOutcomes = 0;
-                        Object.values(tableData.nations).forEach(nation => {
-                            expectedOutcomes += Object.keys(nation.aircraft).length;
-                        });
-                        
-                        const actualOutcomes = sortedOutcomes.length;
-                        if (actualOutcomes === expectedOutcomes) {
-                            output += `✓ All ${expectedOutcomes} possible aircraft types generated\n`;
-                        } else {
-                            output += `⚠ WARNING: Only ${actualOutcomes} of ${expectedOutcomes} possible aircraft types generated\n`;
-                        }
+                        outputResults(label, outcomes, expectedCount);
                     });
                 });
             }
             
-            // Test Table B - NATO CAP Flight
+            // Test Table B
             if (testTable === 'all' || testTable === 'B') {
                 output += `\n${'='.repeat(80)}\n`;
                 output += `TABLE B - NATO CAP FLIGHT\n`;
                 output += `${'='.repeat(80)}\n\n`;
                 
-                const atafZones = ['2ATAF', '4ATAF'];
-                const timeframes = ['pre', 'post'];
-                
-                atafZones.forEach(ataf => {
-                    timeframes.forEach(timeframe => {
+                ['2ATAF', '4ATAF'].forEach(ataf => {
+                    ['pre', 'post'].forEach(timeframe => {
                         const label = `${ataf} ${timeframe === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later'}`;
-                        output += `\n--- ${label} ---\n`;
-                        
                         const outcomes = simulateTableB(ataf, timeframe, iterations);
-                        const sortedOutcomes = Object.entries(outcomes).sort((a, b) => b[1] - a[1]);
                         
-                        const totalRolls = sortedOutcomes.reduce((sum, [_, count]) => sum + count, 0);
-                        
-                        sortedOutcomes.forEach(([outcome, count]) => {
-                            const percentage = ((count / totalRolls) * 100).toFixed(2);
-                            const expectedPer100 = (count / iterations * 100).toFixed(1);
-                            output += `${outcome.padEnd(30)} | Count: ${count.toString().padStart(5)} | ${percentage.padStart(6)}% | Per 100: ${expectedPer100.padStart(5)}\n`;
+                        let expectedCount = 0;
+                        Object.values(oobTables['B'].zones[ataf][timeframe].nations).forEach(nation => {
+                            expectedCount += Object.keys(nation.aircraft).length;
                         });
                         
-                        output += `\nTotal outcomes: ${totalRolls} from ${iterations} table rolls\n`;
-                        
-                        // Validation
-                        const tableData = oobTables['B'].zones[ataf][timeframe];
-                        let expectedOutcomes = 0;
-                        Object.values(tableData.nations).forEach(nation => {
-                            expectedOutcomes += Object.keys(nation.aircraft).length;
-                        });
-                        
-                        const actualOutcomes = sortedOutcomes.length;
-                        if (actualOutcomes === expectedOutcomes) {
-                            output += `✓ All ${expectedOutcomes} possible aircraft types generated\n`;
-                        } else {
-                            output += `⚠ WARNING: Only ${actualOutcomes} of ${expectedOutcomes} possible aircraft types generated\n`;
-                        }
+                        outputResults(label, outcomes, expectedCount);
                     });
                 });
             }
             
-            // Test Table G - WP QRA
+            // Test Table C
+            if (testTable === 'all' || testTable === 'C') {
+                output += `\n${'='.repeat(80)}\n`;
+                output += `TABLE C - NATO BOMBING RAID\n`;
+                output += `${'='.repeat(80)}\n\n`;
+                
+                ['CAP', 'SEAD', 'Bombing'].forEach(tasking => {
+                    ['pre', 'post'].forEach(timeframe => {
+                        const label = `${tasking} - ${timeframe === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later'}`;
+                        const outcomes = simulateTableC(tasking, timeframe, iterations);
+                        
+                        let expectedCount = 0;
+                        Object.values(oobTables['C'].taskings[tasking][timeframe].nations).forEach(nation => {
+                            expectedCount += Object.keys(nation.aircraft).length;
+                        });
+                        
+                        outputResults(label, outcomes, expectedCount);
+                    });
+                });
+            }
+            
+            // Test Table D
+            if (testTable === 'all' || testTable === 'D') {
+                output += `\n${'='.repeat(80)}\n`;
+                output += `TABLE D - NATO DEEP STRIKE RAID\n`;
+                output += `${'='.repeat(80)}\n\n`;
+                
+                ['Escort Jamming', 'CAP', 'SEAD', 'Bombing', 'Recon'].forEach(tasking => {
+                    const outcomes = simulateTableD(tasking, iterations);
+                    
+                    let expectedCount = 0;
+                    Object.values(oobTables['D'].taskings[tasking].nations).forEach(nation => {
+                        expectedCount += Object.keys(nation.aircraft).length;
+                    });
+                    
+                    outputResults(tasking, outcomes, expectedCount);
+                });
+            }
+            
+            // Test Table E
+            if (testTable === 'all' || testTable === 'E') {
+                output += `\n${'='.repeat(80)}\n`;
+                output += `TABLE E - NATO COMBAT RESCUE\n`;
+                output += `${'='.repeat(80)}\n\n`;
+                
+                ['US', 'UK', 'FRG'].forEach(nationality => {
+                    const outcomes = simulateTableE(nationality, iterations);
+                    
+                    let expectedCount = 0;
+                    oobTables['E'].nationalities[nationality].flights.forEach(flight => {
+                        expectedCount += Object.keys(flight.aircraft).length;
+                    });
+                    
+                    outputResults(nationality, outcomes, expectedCount);
+                });
+            }
+            
+            // Test Table F
+            if (testTable === 'all' || testTable === 'F') {
+                output += `\n${'='.repeat(80)}\n`;
+                output += `TABLE F - NATO SPECIAL MISSIONS\n`;
+                output += `${'='.repeat(80)}\n\n`;
+                
+                ['Fast FAC', 'Standoff Jamming', 'Tactical Recon'].forEach(missionType => {
+                    const outcomes = simulateTableF(missionType, iterations);
+                    
+                    let expectedCount = 0;
+                    Object.values(oobTables['F'].missionTypes[missionType].nations).forEach(nation => {
+                        expectedCount += Object.keys(nation.aircraft).length;
+                    });
+                    
+                    outputResults(missionType, outcomes, expectedCount);
+                });
+            }
+            
+            // Test Table G
             if (testTable === 'all' || testTable === 'G') {
                 output += `\n${'='.repeat(80)}\n`;
                 output += `TABLE G - WP QRA FLIGHTS\n`;
                 output += `${'='.repeat(80)}\n\n`;
                 
                 const outcomes = simulateTableG(iterations);
-                const sortedOutcomes = Object.entries(outcomes).sort((a, b) => b[1] - a[1]);
                 
-                const totalRolls = sortedOutcomes.reduce((sum, [_, count]) => sum + count, 0);
-                
-                sortedOutcomes.forEach(([outcome, count]) => {
-                    const percentage = ((count / totalRolls) * 100).toFixed(2);
-                    const expectedPer100 = (count / iterations * 100).toFixed(1);
-                    output += `${outcome.padEnd(30)} | Count: ${count.toString().padStart(5)} | ${percentage.padStart(6)}% | Per 100: ${expectedPer100.padStart(5)}\n`;
-                });
-                
-                output += `\nTotal outcomes: ${totalRolls} from ${iterations} table rolls\n`;
-                
-                // Validation
-                let expectedOutcomes = 0;
+                let expectedCount = 0;
                 Object.values(oobTables['G'].nations).forEach(nation => {
-                    expectedOutcomes += Object.keys(nation.aircraft).length;
+                    expectedCount += Object.keys(nation.aircraft).length;
                 });
                 
-                const actualOutcomes = sortedOutcomes.length;
-                if (actualOutcomes === expectedOutcomes) {
-                    output += `✓ All ${expectedOutcomes} possible aircraft types generated\n`;
-                } else {
-                    output += `⚠ WARNING: Only ${actualOutcomes} of ${expectedOutcomes} possible aircraft types generated\n`;
-                }
+                outputResults('WP QRA', outcomes, expectedCount);
             }
             
-            // Test Table H - WP Fighter Sweep
+            // Test Table H
             if (testTable === 'all' || testTable === 'H') {
                 output += `\n${'='.repeat(80)}\n`;
                 output += `TABLE H - WP FIGHTER SWEEP\n`;
                 output += `${'='.repeat(80)}\n\n`;
                 
                 const outcomes = simulateTableH(iterations);
-                const sortedOutcomes = Object.entries(outcomes).sort((a, b) => b[1] - a[1]);
                 
-                const totalRolls = sortedOutcomes.reduce((sum, [_, count]) => sum + count, 0);
-                
-                sortedOutcomes.forEach(([outcome, count]) => {
-                    const percentage = ((count / totalRolls) * 100).toFixed(2);
-                    const expectedPer100 = (count / iterations * 100).toFixed(1);
-                    output += `${outcome.padEnd(30)} | Count: ${count.toString().padStart(5)} | ${percentage.padStart(6)}% | Per 100: ${expectedPer100.padStart(5)}\n`;
-                });
-                
-                output += `\nTotal outcomes: ${totalRolls} from ${iterations} table rolls\n`;
-                
-                // Validation
-                let expectedOutcomes = 0;
+                let expectedCount = 0;
                 Object.values(oobTables['H'].nations).forEach(nation => {
-                    expectedOutcomes += Object.keys(nation.aircraft).length;
+                    expectedCount += Object.keys(nation.aircraft).length;
                 });
                 
-                const actualOutcomes = sortedOutcomes.length;
-                if (actualOutcomes === expectedOutcomes) {
-                    output += `✓ All ${expectedOutcomes} possible aircraft types generated\n`;
-                } else {
-                    output += `⚠ WARNING: Only ${actualOutcomes} of ${expectedOutcomes} possible aircraft types generated\n`;
-                }
+                outputResults('Fighter Sweep', outcomes, expectedCount);
+            }
+            
+            // Test Table I
+            if (testTable === 'all' || testTable === 'I') {
+                output += `\n${'='.repeat(80)}\n`;
+                output += `TABLE I - WP BOMBING RAID\n`;
+                output += `${'='.repeat(80)}\n\n`;
+                
+                ['USSR', 'GDR'].forEach(nationality => {
+                    ['Close Escort', 'SEAD', 'Bombing'].forEach(tasking => {
+                        const label = `${nationality} - ${tasking}`;
+                        const outcomes = simulateTableI(nationality, tasking, iterations);
+                        
+                        const expectedCount = Object.keys(oobTables['I'].nationalities[nationality].taskings[tasking].aircraft).length;
+                        
+                        outputResults(label, outcomes, expectedCount);
+                    });
+                });
+            }
+            
+            // Test Table J
+            if (testTable === 'all' || testTable === 'J') {
+                output += `\n${'='.repeat(80)}\n`;
+                output += `TABLE J - WP DEEP STRIKE RAID\n`;
+                output += `${'='.repeat(80)}\n\n`;
+                
+                ['Escort Jamming', 'Chaff Laying', 'Close Escort', 'Deep Bombing', 'Recon'].forEach(tasking => {
+                    const outcomes = simulateTableJ(tasking, iterations);
+                    
+                    let expectedCount = 0;
+                    Object.values(oobTables['J'].taskings[tasking].nations).forEach(nation => {
+                        expectedCount += Object.keys(nation.aircraft).length;
+                    });
+                    
+                    outputResults(tasking, outcomes, expectedCount);
+                });
+            }
+            
+            // Test Table K
+            if (testTable === 'all' || testTable === 'K') {
+                output += `\n${'='.repeat(80)}\n`;
+                output += `TABLE K - WP COMBAT RESCUE\n`;
+                output += `${'='.repeat(80)}\n\n`;
+                
+                ['USSR', 'GDR'].forEach(nationality => {
+                    const outcomes = simulateTableK(nationality, iterations);
+                    
+                    let expectedCount = 0;
+                    oobTables['K'].nationalities[nationality].flights.forEach(flight => {
+                        expectedCount += Object.keys(flight.aircraft).length;
+                    });
+                    
+                    outputResults(nationality, outcomes, expectedCount);
+                });
+            }
+            
+            // Test Table L
+            if (testTable === 'all' || testTable === 'L') {
+                output += `\n${'='.repeat(80)}\n`;
+                output += `TABLE L - WP SPECIAL MISSIONS\n`;
+                output += `${'='.repeat(80)}\n\n`;
+                
+                // Standoff Jamming
+                const jamOutcomes = simulateTableL('Standoff Jamming', null, iterations);
+                let jamExpected = 0;
+                Object.values(oobTables['L'].missionTypes['Standoff Jamming'].nations).forEach(nation => {
+                    jamExpected += Object.keys(nation.aircraft).length;
+                });
+                outputResults('Standoff Jamming', jamOutcomes, jamExpected);
+                
+                // Tactical Recon - USSR
+                const ussrReconOutcomes = simulateTableL('Tactical Recon', 'USSR', iterations);
+                const ussrReconExpected = Object.keys(oobTables['L'].missionTypes['Tactical Recon'].nationData['USSR'].aircraft).length;
+                outputResults('Tactical Recon - USSR', ussrReconOutcomes, ussrReconExpected);
+                
+                // Tactical Recon - GDR
+                const gdrReconOutcomes = simulateTableL('Tactical Recon', 'GDR', iterations);
+                const gdrReconExpected = Object.keys(oobTables['L'].missionTypes['Tactical Recon'].nationData['GDR'].aircraft).length;
+                outputResults('Tactical Recon - GDR', gdrReconOutcomes, gdrReconExpected);
             }
             
             output += `\n${'='.repeat(80)}\n`;
@@ -1184,7 +1773,7 @@
                 if (testState.stopped) break;
                 
                 // Determine which tables/missions to test
-                const tables = testTable === 'all' ? ['A', 'B', 'G', 'H', 'C', 'F', 'I', 'L'] : [testTable];
+                const tables = testTable === 'all' ? ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'] : [testTable];
                 const table = tables[Math.floor(Math.random() * tables.length)];
                 const missions = tableMissions[table];
                 const mission = missions[Math.floor(Math.random() * missions.length)];
