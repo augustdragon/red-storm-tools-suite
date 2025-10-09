@@ -1549,12 +1549,24 @@
                         const label = `${tasking} - ${timeframe === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later'}`;
                         const outcomes = simulateTableC(tasking, timeframe, iterations);
                         
-                        let expectedCount = 0;
+                        // For Table C, count unique aircraft types across all nation ranges
+                        // Note: Some aircraft may be unreachable due to overlapping nation/aircraft ranges
+                        const uniqueAircraft = new Set();
                         Object.values(oobTables['C'].taskings[tasking][timeframe].nations).forEach(nation => {
-                            expectedCount += Object.keys(nation.aircraft).length;
+                            Object.values(nation.aircraft).forEach(aircraft => {
+                                uniqueAircraft.add(`${nation.name} - ${aircraft}`);
+                            });
                         });
+                        const expectedCount = uniqueAircraft.size;
                         
                         outputResults(label, outcomes, expectedCount);
+                        
+                        // Add note about overlapping ranges if not all outcomes generated
+                        const actualCount = Object.keys(outcomes).length;
+                        if (actualCount < expectedCount && tasking === 'SEAD') {
+                            output += `ℹ Note: Table C ${tasking} has overlapping nation ranges (e.g., roll 9 matches both FRG and BE)\n`;
+                            output += `     Some aircraft may be unreachable due to the first-match-wins logic\n`;
+                        }
                     });
                 });
             }
