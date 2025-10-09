@@ -1564,8 +1564,14 @@
                         // Add note about overlapping ranges if not all outcomes generated
                         const actualCount = Object.keys(outcomes).length;
                         if (actualCount < expectedCount && tasking === 'SEAD') {
-                            output += `ℹ Note: Table C ${tasking} has overlapping nation ranges (e.g., roll 9 matches both FRG and BE)\n`;
-                            output += `     Some aircraft may be unreachable due to the first-match-wins logic\n`;
+                            output += `ℹ Note: Table C ${tasking} has overlapping ranges causing unreachable aircraft:\n`;
+                            if (timeframe === 'pre') {
+                                output += `     - Nation roll 9: FRG (7-9) matches before BE (9), blocking BE aircraft\n`;
+                                output += `     - FRG aircraft rolls 8-9: F-4F (6-9) matches before Alpha Jet (8-9)\n`;
+                                output += `     Result: Alpha Jet is unreachable due to overlapping aircraft ranges\n`;
+                            } else {
+                                output += `     - BE nation removed in post-6/1/87, so BE aircraft not available\n`;
+                            }
                         }
                     });
                 });
