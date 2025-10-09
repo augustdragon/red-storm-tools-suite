@@ -169,6 +169,7 @@
       <div class="section results-section" id="resultsSection" style="display: none;">
         <div class="results-header">
           <div class="section-title">Generated Results</div>
+          <button class="action-button" onclick="generatePrintableSheet()" style="background-color: #5a6a5a; margin-right: 10px;">📄 Print Flight Sheet</button>
           <button class="action-button clear-results" onclick="clearAllResults()">Clear All</button>
         </div>
         
@@ -4092,6 +4093,341 @@
         }
       }
     });
+
+    // Generate Printable Flight Sheet
+    function generatePrintableSheet() {
+      const results = JSON.parse(localStorage.getItem('oobResults') || '[]');
+      
+      if (results.length === 0) {
+        alert('No flights generated yet. Generate some flights first!');
+        return;
+      }
+
+      // Create a new window for printing
+      const printWindow = window.open('', '_blank');
+      
+      // Build the HTML for the printable sheet
+      let htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Red Storm Flight Sheet</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 0.5in;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 10pt;
+      background: white;
+      color: black;
+    }
+    
+    .page-title {
+      text-align: center;
+      font-size: 18pt;
+      font-weight: bold;
+      margin-bottom: 20px;
+      border-bottom: 2px solid black;
+      padding-bottom: 5px;
+    }
+    
+    .flight-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .flight-card {
+      border: 2px solid black;
+      padding: 8px;
+      page-break-inside: avoid;
+      background: white;
+    }
+    
+    .flight-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 5px;
+      margin-bottom: 8px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid black;
+    }
+    
+    .field {
+      border: 1px solid #666;
+      padding: 3px 5px;
+      min-height: 24px;
+    }
+    
+    .field-label {
+      font-size: 8pt;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .field-value {
+      font-weight: bold;
+      font-size: 9pt;
+    }
+    
+    .tasking-guns-missiles {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+    
+    .aircraft-section {
+      display: grid;
+      grid-template-columns: repeat(${getMaxFlightSize(results)}, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .aircraft-card {
+      border: 1px solid #333;
+      padding: 4px;
+      text-align: center;
+    }
+    
+    .aircraft-silhouette {
+      width: 100%;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28pt;
+      border: 1px dashed #ccc;
+      margin-bottom: 4px;
+      background: #f9f9f9;
+    }
+    
+    .health-checkboxes {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 4px;
+      font-size: 8pt;
+    }
+    
+    .checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+    
+    .checkbox-box {
+      width: 12px;
+      height: 12px;
+      border: 1px solid black;
+      display: inline-block;
+    }
+    
+    .ordnance-area {
+      border: 1px solid #666;
+      min-height: 40px;
+      margin-bottom: 3px;
+      padding: 2px;
+    }
+    
+    .ordnance-label {
+      font-size: 7pt;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .ordnance-rolled {
+      font-size: 8pt;
+      padding: 2px;
+      background: #f0f0f0;
+      border-top: 1px solid #ccc;
+      min-height: 20px;
+    }
+    
+    .fuel-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 2px;
+      margin-top: 8px;
+    }
+    
+    .fuel-box {
+      width: 100%;
+      aspect-ratio: 1;
+      border: 1px solid black;
+    }
+    
+    .fuel-label {
+      font-size: 8pt;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+    
+    @media print {
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+      .flight-card {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-title">Red Storm - Flight Sheet</div>
+  <div class="flight-grid">
+`;
+
+      // Generate flight cards
+      for (const flight of results) {
+        htmlContent += generateFlightCard(flight);
+      }
+
+      htmlContent += `
+  </div>
+</body>
+</html>
+`;
+
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      
+      // Trigger print dialog after a short delay to ensure content is loaded
+      setTimeout(() => {
+        printWindow.print();
+      }, 250);
+    }
+
+    function getMaxFlightSize(results) {
+      let max = 2;
+      for (const flight of results) {
+        const flightSize = parseInt(flight.flightSize) || 2;
+        if (flightSize > max) max = flightSize;
+      }
+      return Math.min(max, 6); // Cap at 6 aircraft per row
+    }
+
+    function generateFlightCard(flight) {
+      const flightSize = parseInt(flight.flightSize) || 2;
+      const aircraft = flight.aircraft || 'Unknown';
+      const tasking = flight.tasking || flight.table || 'Unknown';
+      
+      let card = `
+    <div class="flight-card">
+      <!-- Header: Callsign, Counter, Aggression -->
+      <div class="flight-header">
+        <div class="field">
+          <div class="field-label">Callsign</div>
+          <div class="field-value"></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Counter</div>
+          <div class="field-value"></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Aggression</div>
+          <div class="field-value"></div>
+        </div>
+      </div>
+      
+      <!-- Tasking, Gun, IRM, RHM -->
+      <div class="tasking-guns-missiles">
+        <div class="field">
+          <div class="field-value">${escapeHtml(tasking)}</div>
+        </div>
+        <div class="field">
+          <span style="color: #999; font-size: 8pt;">Gun {}</span>
+        </div>
+        <div class="field">
+          <span style="color: #999; font-size: 8pt;">IRM {}</span>
+        </div>
+        <div class="field">
+          <span style="color: #999; font-size: 8pt;">RHM {}</span>
+        </div>
+      </div>
+      
+      <!-- Aircraft Type -->
+      <div class="field" style="margin-bottom: 8px; font-weight: bold;">
+        ${escapeHtml(aircraft)}
+      </div>
+      
+      <!-- Aircraft Section -->
+      <div class="aircraft-section">
+`;
+
+      // Generate individual aircraft cards
+      for (let i = 0; i < flightSize; i++) {
+        card += `
+        <div class="aircraft-card">
+          <!-- Aircraft silhouette placeholder -->
+          <div class="aircraft-silhouette">✈</div>
+          
+          <!-- Health checkboxes -->
+          <div class="health-checkboxes">
+            <div class="checkbox">
+              <span class="checkbox-box"></span>
+              <span>Da</span>
+            </div>
+            <div class="checkbox">
+              <span class="checkbox-box"></span>
+              <span>Cr</span>
+            </div>
+            <div class="checkbox">
+              <span class="checkbox-box"></span>
+              <span>☠</span>
+            </div>
+          </div>
+          
+          <!-- Ordnance area -->
+          <div class="ordnance-area">
+            <div class="ordnance-label">Ordnance</div>
+          </div>
+          
+          <!-- Ordnance rolled -->
+          <div class="ordnance-rolled">
+            ${flight.ordnance ? escapeHtml(flight.ordnance) : ''}
+          </div>
+        </div>
+`;
+      }
+
+      card += `
+      </div>
+      
+      <!-- Fuel Grid -->
+      <div class="fuel-label">Fuel:</div>
+      <div class="fuel-grid">
+`;
+
+      // Generate 3x6 = 18 fuel boxes
+      for (let i = 0; i < 18; i++) {
+        card += `        <div class="fuel-box"></div>\n`;
+      }
+
+      card += `
+      </div>
+    </div>
+`;
+
+      return card;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
 
     // Initialize the app
     updateResultsDisplay();
