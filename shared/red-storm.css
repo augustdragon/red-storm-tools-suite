@@ -276,7 +276,8 @@ body {
   border-radius: 8px;
   padding: 20px;
   border: 1px solid #4a5a4a;
-  max-width: 90vw;
+  max-width: 750px;
+  width: 90vw;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;

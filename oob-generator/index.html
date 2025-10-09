@@ -180,9 +180,9 @@
       <!-- Table View Overlay -->
       <div class="table-view-overlay" id="tableViewOverlay" style="display: none;" onclick="closeModalOnOverlayClick(event)">
         <div class="table-view-modal" onclick="event.stopPropagation()">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <div class="section-title" id="tableViewTitle" style="margin: 0;"></div>
-            <button class="action-button cancel-button" onclick="hideTableView()" style="padding: 5px 10px; font-size: 12px;">✕ Close</button>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 15px;">
+            <div class="section-title" id="tableViewTitle" style="margin: 0; flex: 1; min-width: 0;"></div>
+            <button class="action-button cancel-button" onclick="hideTableView()" style="padding: 5px 10px; font-size: 12px; flex-shrink: 0;">✕ Close</button>
           </div>
           <div id="tableViewContent"></div>
           <div style="text-align: center; margin-top: 20px;">
