@@ -4276,6 +4276,12 @@
       font-style: italic;
     }
     
+    .ordnance-text {
+      font-size: 7pt;
+      margin-top: 2px;
+      color: #333;
+    }
+    
     .ordnance-rolled {
       font-size: 7pt;
       padding: 2px;
@@ -4364,29 +4370,74 @@
     function generateFlightCard(flight) {
       // Parse the result text to extract aircraft and flight info
       // Example result format: "FRG: 1 x {2} F-4F, CAP"
+      // For multi-flight results (Table C): Individual flights separated by <br> tags
       const resultText = flight.result || '';
       const nationName = flight.nationName || '';
       const tableName = flight.tableName || '';
       
-      // Extract aircraft type from result text (between braces and comma/end)
-      let aircraft = 'Unknown';
-      let flightSize = 4; // Default to 4 for testing
-      let tasking = '';
+      // Check if this is a multi-flight result (contains <br> or semicolons)
+      if (resultText.includes('<br>') || resultText.includes(';')) {
+        // Split by <br> or semicolon and generate separate cards for each flight
+        const separator = resultText.includes('<br>') ? '<br>' : ';';
+        const flightParts = resultText.split(separator).map(part => part.trim()).filter(part => part.length > 0);
+        let allCards = '';
+        
+        for (const flightPart of flightParts) {
+          // Create a temporary flight object for each part
+          const tempFlight = {
+            ...flight,
+            result: flightPart
+          };
+          allCards += generateSingleFlightCard(tempFlight);
+        }
+        
+        return allCards;
+      } else {
+        // Single flight - process normally
+        return generateSingleFlightCard(flight);
+      }
+    }
+    
+    function generateSingleFlightCard(flight) {
+      const resultText = flight.result || '';
+      const nationName = flight.nationName || '';
+      const tableName = flight.tableName || '';
       
-      // Try to parse flight size from "1 x {2}" pattern
+      // Extract aircraft type from result text
+      let aircraft = 'Unknown';
+      let flightSize = 4; // Default to 4
+      let tasking = '';
+      let ordnance = '';
+      
+      // Try to parse flight size from "4 x {2}" or "1 x {2}" pattern
       const flightSizeMatch = resultText.match(/(\d+)\s*x\s*\{(\d+)\}/);
       if (flightSizeMatch) {
         flightSize = parseInt(flightSizeMatch[2]);
       }
       
-      // Extract aircraft type (everything after the } up to comma or end, trim brackets/parentheses)
-      const aircraftMatch = resultText.match(/\}\s*([^,<]+)/);
+      // Extract ordnance if present (text in parentheses)
+      const ordnanceMatch = resultText.match(/\(([^)]+)\)/);
+      if (ordnanceMatch) {
+        ordnance = ordnanceMatch[1].trim();
+      }
+      
+      // Extract aircraft type (everything after the } up to comma, excluding ordnance in parens)
+      const aircraftMatch = resultText.match(/\}\s*([^,\(<]+)/);
       if (aircraftMatch) {
         aircraft = aircraftMatch[1].trim();
       }
       
-      // Extract tasking (everything after comma, before any debug info)
-      const taskingMatch = resultText.match(/,\s*([^<\[]+)/);
+      // For Table C format: "1 x {2} US F-4G" - nation is in the aircraft string
+      // Extract nation from aircraft string if it starts with a nation code
+      let extractedNation = nationName;
+      const nationInAircraft = aircraft.match(/^(US|UK|FRG|CAN|HOL|BEL|USSR|DDR|POL|CZE)\s+(.+)/);
+      if (nationInAircraft) {
+        extractedNation = nationInAircraft[1];
+        aircraft = nationInAircraft[2];
+      }
+      
+      // Extract tasking (everything after comma, before ordnance parens or debug info)
+      const taskingMatch = resultText.match(/,\s*([^<\(]+)/);
       if (taskingMatch) {
         tasking = taskingMatch[1].trim();
       } else {
@@ -4394,12 +4445,15 @@
         tasking = tableName.split(' - ')[1] || tableName;
       }
       
+      // Format aircraft display with nation
+      const aircraftDisplay = extractedNation ? `${aircraft} (${extractedNation})` : aircraft;
+      
       let card = `
     <div class="flight-card">
       <!-- Header: Aircraft Type, Callsign, Counter, Aggression -->
       <div class="flight-header">
         <div class="field">
-          <div class="field-value">${escapeHtml(aircraft)}</div>
+          <div class="field-value">${escapeHtml(aircraftDisplay)}</div>
         </div>
         <div class="field">
           <div class="field-label">Callsign</div>
@@ -4460,11 +4514,6 @@
           <!-- Ordnance area -->
           <div class="ordnance-area">
             <div class="ordnance-label">Ordnance</div>
-          </div>
-          
-          <!-- Ordnance rolled -->
-          <div class="ordnance-rolled">
-            ${flight.ordnance ? escapeHtml(flight.ordnance) : ''}
           </div>
         </div>
 `;
