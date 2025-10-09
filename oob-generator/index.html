@@ -12,13 +12,13 @@
     <div class="header">
       <div class="title">Red Storm</div>
       <div class="subtitle">Order of Battle Generator</div>
-      <div style="font-size: 10px; color: #888; text-align: right; margin-top: 5px;">v2024.10.08-debug-26</div>
+      <!-- Version info hidden for production - uncomment to show: v2024.10.08-debug-26 -->
     </div>
 
     <a href="../" class="back-link">← Back to Red Storm Tools</a>
 
-    <!-- Debug Toggle -->
-    <div class="section" id="debugToggle" style="text-align: center; margin-bottom: 10px;">
+    <!-- Debug Toggle - Hidden for production -->
+    <div class="section" id="debugToggle" style="display: none; text-align: center; margin-bottom: 10px;">
       <button class="action-button" id="debugModeButton" onclick="toggleDebugMode()" style="background-color: #666; font-size: 12px; padding: 5px 10px;">
         Debug Mode: OFF
       </button>
@@ -3892,8 +3892,11 @@
         
         if (atafZone && table.nationalities[atafZone]) {
           const nationalityData = table.nationalities[atafZone];
-          tableHTML += `<div class="nationality-section">`;
-          tableHTML += `<div class="nationality-header">${nationalityData.name}</div>`;
+          
+          // Display nationality as header without extra wrapper section
+          tableHTML += `<div style="font-size: 18px; font-weight: bold; color: #ff9999; margin: 20px 0 15px 0;">
+            ${nationalityData.name}
+          </div>`;
           
           for (const flightType of nationalityData.flights) {
             tableHTML += `<div class="flight-type-section">`;
@@ -3914,8 +3917,6 @@
             
             tableHTML += `</div></div>`;
           }
-          
-          tableHTML += `</div>`;
         } else {
           tableHTML += `<div class="error">Unknown nationality: ${atafZone}</div>`;
         }
