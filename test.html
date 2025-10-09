@@ -229,6 +229,7 @@
                 <label for="testTable">Test Table:</label>
                 <select id="testTable">
                     <option value="all">All Tables</option>
+                    <option value="A">Table A Only</option>
                     <option value="C">Table C Only</option>
                     <option value="F">Table F Only</option>
                     <option value="I">Table I Only</option>
@@ -236,6 +237,7 @@
                 </select>
                 
                 <button onclick="runComprehensiveTest()" id="comprehensiveBtn">Run Comprehensive Test</button>
+                <button onclick="runOutcomeAnalysis()" id="outcomeBtn">Analyze All Outcomes</button>
                 <button onclick="stopTesting()" id="stopBtn" disabled>Stop Testing</button>
             </div>
             
@@ -263,7 +265,7 @@
             </div>
             
             <div class="results-area" id="comprehensiveResults">
-                Click "Run Comprehensive Test" to execute statistical validation across all possible outcomes.
+                Click "Run Comprehensive Test" for statistical validation or "Analyze All Outcomes" for detailed frequency analysis.
             </div>
         </div>
         
@@ -307,6 +309,7 @@
 
         // Mission type mappings for each table
         const tableMissions = {
+            'A': ['2ATAF-pre', '2ATAF-post', '4ATAF-pre', '4ATAF-post'],
             'C': ['bombing', 'sead', 'cap', 'close-escort'],
             'F': ['strategic-bombing', 'naval-strike', 'tactical-recon'],
             'I': ['bombing', 'sead', 'cap', 'close-escort'],
@@ -336,17 +339,16 @@
             document.getElementById('tableSelect').addEventListener('change', updateMissionSelect);
         });
 
-        // Utility function to generate random die roll (1-20)
-        function rollD20() {
-            return Math.floor(Math.random() * 20) + 1;
+        // Utility function to generate random die roll (1-10)
+        function rollD10() {
+            return Math.floor(Math.random() * 10) + 1;
         }
 
         // Mock OOB generator functions for testing
         // These replicate the logic from the main generator for testing purposes
         function mockGenerateOOB(table, missionType) {
             try {
-                const roll = rollD20();
-                const atafZone = missionType;
+                const roll = rollD10();
                 
                 let result = {
                     table: table,
@@ -358,8 +360,10 @@
                     timestamp: new Date().toISOString()
                 };
 
-                // Simulate the OOB generation logic based on table
-                if (table === 'C' || table === 'I') {
+                // Generate flights based on table type
+                if (table === 'A') {
+                    result.flights = generateTableAFlights(missionType, roll);
+                } else if (table === 'C' || table === 'I') {
                     // Standard tables with ordnance systems
                     result.flights = generateMockFlights(table, missionType, roll);
                     result.ordnance = generateMockOrdnance(table, missionType, result.flights);
@@ -380,41 +384,103 @@
             }
         }
 
+        function generateTableAFlights(missionType, roll) {
+            // Table A - NATO Close Air Support with nation and aircraft sub-rolls
+            const flights = [];
+            
+            // Parse mission type (e.g., "2ATAF-pre", "4ATAF-post")
+            const [ataf, timeframe] = missionType.split('-');
+            
+            // Simplified Table A logic - nation selection based on roll
+            let nation = '';
+            if (ataf === '2ATAF') {
+                if (roll <= 3) nation = 'West German';
+                else if (roll <= 6) nation = 'British';
+                else if (roll <= 8) nation = 'Belgian';
+                else nation = 'Dutch';
+            } else { // 4ATAF
+                if (roll <= 4) nation = 'US';
+                else if (roll <= 7) nation = 'West German';
+                else nation = 'British';
+            }
+            
+            // Aircraft sub-roll
+            const aircraftRoll = rollD10();
+            let aircraftType = 'F-16A';
+            
+            // Simplified aircraft selection based on nation and timeframe
+            if (nation === 'US') {
+                if (aircraftRoll <= 3) aircraftType = 'A-10A';
+                else if (aircraftRoll <= 6) aircraftType = 'F-16A';
+                else aircraftType = 'A-7D';
+            } else if (nation === 'West German') {
+                if (timeframe === 'pre') {
+                    if (aircraftRoll <= 4) aircraftType = 'Alpha Jet';
+                    else aircraftType = 'F-4F';
+                } else {
+                    if (aircraftRoll <= 3) aircraftType = 'Alpha Jet';
+                    else if (aircraftRoll <= 6) aircraftType = 'F-4F';
+                    else aircraftType = 'Tornado IDS';
+                }
+            } else if (nation === 'British') {
+                if (aircraftRoll <= 5) aircraftType = 'Harrier GR3';
+                else aircraftType = 'Jaguar GR1';
+            } else if (nation === 'Belgian') {
+                aircraftType = 'F-16A';
+            } else if (nation === 'Dutch') {
+                aircraftType = 'F-16A';
+            }
+            
+            flights.push({
+                id: 1,
+                nation: nation,
+                aircraftType: aircraftType,
+                roll: roll,
+                aircraftRoll: aircraftRoll,
+                ataf: ataf,
+                timeframe: timeframe
+            });
+            
+            return flights;
+        }
+
         function generateMockFlights(table, missionType, roll) {
-            // Simplified flight generation for testing
+            // Simplified flight generation for testing using 1d10
             const flights = [];
             let flightCount = 1;
             
             // Determine flight count based on mission type and roll
             if (missionType === 'bombing' || missionType === 'sead') {
-                flightCount = roll <= 10 ? 2 : 4;
+                flightCount = roll <= 5 ? 2 : 4; // Adjusted for 1d10
             } else {
-                flightCount = roll <= 15 ? 2 : 4;
+                flightCount = roll <= 7 ? 2 : 4; // Adjusted for 1d10
             }
 
             // Generate individual flights
             for (let i = 0; i < flightCount; i++) {
-                const aircraftRoll = rollD20();
+                const aircraftRoll = rollD10();
                 let aircraftType = 'F-16C';
                 
-                // Simplified aircraft selection
+                // Simplified aircraft selection using 1d10
                 if (table === 'C') {
-                    if (aircraftRoll <= 5) aircraftType = 'F-16C';
-                    else if (aircraftRoll <= 10) aircraftType = 'A-10A';
-                    else if (aircraftRoll <= 15) aircraftType = 'F-4G';
-                    else aircraftType = 'Tornado GR1';
+                    if (aircraftRoll <= 2) aircraftType = 'F-16C';
+                    else if (aircraftRoll <= 4) aircraftType = 'A-10A';
+                    else if (aircraftRoll <= 6) aircraftType = 'F-4G';
+                    else if (aircraftRoll <= 8) aircraftType = 'Tornado GR1';
+                    else aircraftType = 'CF-18';
                 } else if (table === 'I') {
-                    if (aircraftRoll <= 5) aircraftType = 'MiG-29A';
-                    else if (aircraftRoll <= 10) aircraftType = 'Su-24';
-                    else if (aircraftRoll <= 15) aircraftType = 'Su-17M4';
-                    else aircraftType = 'MiG-27K';
+                    if (aircraftRoll <= 2) aircraftType = 'MiG-29A';
+                    else if (aircraftRoll <= 4) aircraftType = 'Su-24';
+                    else if (aircraftRoll <= 6) aircraftType = 'Su-17M4';
+                    else if (aircraftRoll <= 8) aircraftType = 'MiG-27K';
+                    else aircraftType = 'MiG-23BN';
                 }
 
                 flights.push({
                     id: i + 1,
                     aircraftType: aircraftType,
                     roll: aircraftRoll,
-                    ordnanceRoll: rollD20()
+                    ordnanceRoll: rollD10()
                 });
             }
 
@@ -472,7 +538,7 @@
         }
 
         function generateMockOrdnance(table, missionType, flights) {
-            // Simplified ordnance generation with modifiers
+            // Simplified ordnance generation with modifiers using 1d10
             const ordnance = {
                 flights: [],
                 cumulative: '',
@@ -502,11 +568,11 @@
                     }
                 }
 
-                // Generate ordnance based on modified roll
+                // Generate ordnance based on modified roll (1d10 + modifier)
                 const modifiedRoll = flight.ordnanceRoll + modifier;
-                if (modifiedRoll <= 5) ordnanceText = 'Iron Bombs';
-                else if (modifiedRoll <= 10) ordnanceText = 'Cluster Bombs';
-                else if (modifiedRoll <= 15) ordnanceText = 'Precision Munitions';
+                if (modifiedRoll <= 3) ordnanceText = 'Iron Bombs';
+                else if (modifiedRoll <= 6) ordnanceText = 'Cluster Bombs';
+                else if (modifiedRoll <= 9) ordnanceText = 'Precision Munitions';
                 else ordnanceText = 'Advanced Precision';
 
                 // Add ARM for SEAD missions
@@ -584,7 +650,80 @@
             output += `</div>`;
         }
 
-        // Comprehensive testing
+        // Comprehensive outcome analysis
+        function runOutcomeAnalysis() {
+            const testTable = document.getElementById('testTable').value;
+            const iterations = parseInt(document.getElementById('iterationCount').value);
+            
+            document.getElementById('outcomeBtn').disabled = true;
+            
+            const results = document.getElementById('comprehensiveResults');
+            results.innerHTML = '<div class="success">Analyzing all possible outcomes...</div>';
+            
+            // Define outcome tracking structure
+            const outcomeTracker = {};
+            
+            // Run analysis for selected table(s)
+            const tablesToTest = testTable === 'all' ? ['A', 'C', 'F', 'I', 'L'] : [testTable];
+            
+            tablesToTest.forEach(table => {
+                const missions = tableMissions[table];
+                
+                missions.forEach(mission => {
+                    const key = `${table}-${mission}`;
+                    outcomeTracker[key] = {};
+                    
+                    // Run iterations to collect outcome frequencies
+                    for (let i = 0; i < iterations; i++) {
+                        const result = mockGenerateOOB(table, mission);
+                        if (result.success) {
+                            result.flights.forEach(flight => {
+                                const outcomeKey = `${flight.aircraftType}`;
+                                if (!outcomeTracker[key][outcomeKey]) {
+                                    outcomeTracker[key][outcomeKey] = 0;
+                                }
+                                outcomeTracker[key][outcomeKey]++;
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Display results
+            displayOutcomeAnalysis(outcomeTracker, iterations);
+            document.getElementById('outcomeBtn').disabled = false;
+        }
+
+        function displayOutcomeAnalysis(outcomeTracker, iterations) {
+            const results = document.getElementById('comprehensiveResults');
+            
+            let output = '<div class="success">Outcome frequency analysis completed!</div>';
+            output += '<div class="test-details">';
+            
+            Object.entries(outcomeTracker).forEach(([tableKey, outcomes]) => {
+                const [table, mission] = tableKey.split('-');
+                output += `\n=== ${table} - ${mission.toUpperCase()} ===\n`;
+                
+                // Sort outcomes by frequency (descending)
+                const sortedOutcomes = Object.entries(outcomes).sort((a, b) => b[1] - a[1]);
+                
+                let totalFlights = 0;
+                sortedOutcomes.forEach(([aircraft, count]) => {
+                    totalFlights += count;
+                });
+                
+                sortedOutcomes.forEach(([aircraft, count]) => {
+                    const percentage = ((count / totalFlights) * 100).toFixed(1);
+                    const expectedPer10 = (count / iterations * 10).toFixed(1);
+                    output += `${aircraft.padEnd(20)} | Count: ${count.toString().padStart(4)} | ${percentage.padStart(5)}% | Per 10 rolls: ${expectedPer10}\n`;
+                });
+                
+                output += `Total flights generated: ${totalFlights} (from ${iterations} table rolls)\n\n`;
+            });
+            
+            output += '</div>';
+            results.innerHTML = output;
+        }
         function runComprehensiveTest() {
             const iterations = parseInt(document.getElementById('iterationCount').value);
             const testTable = document.getElementById('testTable').value;
@@ -828,14 +967,14 @@
             // Test die roll generation
             const rolls = [];
             for (let i = 0; i < 100; i++) {
-                rolls.push(rollD20());
+                rolls.push(rollD10());
             }
             
             const minRoll = Math.min(...rolls);
             const maxRoll = Math.max(...rolls);
             const avgRoll = (rolls.reduce((a, b) => a + b, 0) / rolls.length).toFixed(2);
             
-            if (minRoll >= 1 && maxRoll <= 20) {
+            if (minRoll >= 1 && maxRoll <= 10) {
                 output += `  PASS: Die rolls in valid range (${minRoll}-${maxRoll}, avg: ${avgRoll})\n`;
             } else {
                 output += `  FAIL: Die rolls out of range (${minRoll}-${maxRoll})\n`;
@@ -902,22 +1041,22 @@
             const results = document.getElementById('diagnosticsResults');
             results.innerHTML = '<div class="success">Testing die roll distribution...</div>';
             
-            const rollCounts = new Array(21).fill(0); // Index 0 unused, 1-20 for die results
+            const rollCounts = new Array(11).fill(0); // Index 0 unused, 1-10 for die results
             const totalRolls = 10000;
             
             // Generate rolls and count frequency
             for (let i = 0; i < totalRolls; i++) {
-                const roll = rollD20();
+                const roll = rollD10();
                 rollCounts[roll]++;
             }
             
             let output = '<div class="test-details">';
-            output += `Die Roll Distribution (${totalRolls} rolls):\n\n`;
+            output += `Die Roll Distribution - 1d10 (${totalRolls} rolls):\n\n`;
             
-            const expectedFreq = totalRolls / 20; // Should be ~500 for each number
+            const expectedFreq = totalRolls / 10; // Should be ~1000 for each number
             let maxDeviation = 0;
             
-            for (let i = 1; i <= 20; i++) {
+            for (let i = 1; i <= 10; i++) {
                 const frequency = rollCounts[i];
                 const percentage = ((frequency / totalRolls) * 100).toFixed(1);
                 const deviation = Math.abs(frequency - expectedFreq);
@@ -933,7 +1072,7 @@
             output += `\nMax deviation: ${overallDeviation}%\n`;
             
             if (overallDeviation < 10) {
-                output += 'Distribution quality: GOOD\n';
+                output += 'Distribution quality: GOOD (each result should appear ~10% of the time)\n';
             } else if (overallDeviation < 20) {
                 output += 'Distribution quality: ACCEPTABLE\n';
             } else {
