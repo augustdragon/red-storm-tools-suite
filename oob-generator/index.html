@@ -553,7 +553,7 @@
         hasDate: true,
         description: 'NATO Bombing Raid - Package of CAP, SEAD, and Bombing flights',
         ordnanceNote: 'SEAD flights may always carry ARM as well, if capable.',
-        result: '4 x {2} [CAP], CAP; 4 x {2} [SEAD], SEAD; 4 x {4} [Bombing], Bombing',
+        result: '4 x {2} [CAP], CAP; 4 x {2} [SEAD], SEAD; 4 x {4} [Deep Strike], Bombing',
         taskings: {
           'CAP': {
             'pre': {
@@ -3013,7 +3013,7 @@
             }
           }
           
-          const resultText = `${selectedNation.name}: 1 x {${table.flightSize}} ${aircraftType}`;
+          const resultText = `${selectedNation.name}: 1 x {${table.flightSize}} ${aircraftType}, CAP`;
           
           // Build simple debug string
           let debugText = '';
