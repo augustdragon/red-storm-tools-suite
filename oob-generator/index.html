@@ -4096,8 +4096,7 @@
 
     // Generate Printable Flight Sheet
     function generatePrintableSheet() {
-      const results = JSON.parse(localStorage.getItem('oobResults') || '[]');
-      
+      // Use the results array directly instead of localStorage
       if (results.length === 0) {
         alert('No flights generated yet. Generate some flights first!');
         return;
