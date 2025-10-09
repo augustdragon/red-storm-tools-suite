@@ -4152,13 +4152,14 @@
       padding: 8px;
       page-break-inside: avoid;
       background: white;
+      max-width: 400px;
     }
     
     .flight-header {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-columns: 2fr 1.5fr 1fr 1fr;
       gap: 5px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       padding-bottom: 5px;
       border-bottom: 1px solid black;
     }
@@ -4166,11 +4167,11 @@
     .field {
       border: 1px solid #666;
       padding: 3px 5px;
-      min-height: 24px;
+      min-height: 22px;
     }
     
     .field-label {
-      font-size: 8pt;
+      font-size: 7pt;
       color: #999;
       font-style: italic;
     }
@@ -4187,56 +4188,81 @@
       margin-bottom: 8px;
     }
     
+    .weapon-field {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 8pt;
+      color: #999;
+    }
+    
+    .weapon-bracket {
+      border: 1px solid #ccc;
+      padding: 2px 8px;
+      min-width: 20px;
+      display: inline-block;
+    }
+    
     .aircraft-section {
       display: grid;
       grid-template-columns: repeat(${getMaxFlightSize(results)}, 1fr);
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 6px;
+      margin-bottom: 6px;
     }
     
     .aircraft-card {
       border: 1px solid #333;
       padding: 4px;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .aircraft-row {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      margin-bottom: 4px;
     }
     
     .aircraft-silhouette {
-      width: 100%;
+      width: 60px;
       height: 50px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28pt;
+      font-size: 24pt;
       border: 1px dashed #ccc;
-      margin-bottom: 4px;
       background: #f9f9f9;
     }
     
     .health-checkboxes {
       display: flex;
-      justify-content: space-around;
-      margin-bottom: 4px;
-      font-size: 8pt;
-    }
-    
-    .checkbox {
-      display: inline-flex;
-      align-items: center;
+      flex-direction: column;
       gap: 2px;
     }
     
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 7pt;
+    }
+    
     .checkbox-box {
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       border: 1px solid black;
       display: inline-block;
+      flex-shrink: 0;
     }
     
     .ordnance-area {
       border: 1px solid #666;
-      min-height: 40px;
+      min-height: 30px;
       margin-bottom: 3px;
       padding: 2px;
+      width: 100%;
     }
     
     .ordnance-label {
@@ -4246,28 +4272,30 @@
     }
     
     .ordnance-rolled {
-      font-size: 8pt;
+      font-size: 7pt;
       padding: 2px;
       background: #f0f0f0;
       border-top: 1px solid #ccc;
-      min-height: 20px;
+      min-height: 16px;
     }
     
     .fuel-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 2px;
-      margin-top: 8px;
+      gap: 3px;
+      margin-top: 6px;
+      max-width: 120px;
     }
     
     .fuel-box {
-      width: 100%;
-      aspect-ratio: 1;
+      width: 18px;
+      height: 18px;
       border: 1px solid black;
+      border-radius: 50%;
     }
     
     .fuel-label {
-      font-size: 8pt;
+      font-size: 7pt;
       font-weight: bold;
       margin-bottom: 3px;
     }
@@ -4324,19 +4352,19 @@
       
       let card = `
     <div class="flight-card">
-      <!-- Header: Callsign, Counter, Aggression -->
+      <!-- Header: Aircraft Type, Callsign, Counter, Aggression -->
       <div class="flight-header">
         <div class="field">
+          <div class="field-value">${escapeHtml(aircraft)}</div>
+        </div>
+        <div class="field">
           <div class="field-label">Callsign</div>
-          <div class="field-value"></div>
         </div>
         <div class="field">
           <div class="field-label">Counter</div>
-          <div class="field-value"></div>
         </div>
         <div class="field">
           <div class="field-label">Aggression</div>
-          <div class="field-value"></div>
         </div>
       </div>
       
@@ -4345,20 +4373,15 @@
         <div class="field">
           <div class="field-value">${escapeHtml(tasking)}</div>
         </div>
-        <div class="field">
-          <span style="color: #999; font-size: 8pt;">Gun {}</span>
+        <div class="field weapon-field">
+          Gun <span class="weapon-bracket"></span>
         </div>
-        <div class="field">
-          <span style="color: #999; font-size: 8pt;">IRM {}</span>
+        <div class="field weapon-field">
+          IRM <span class="weapon-bracket"></span>
         </div>
-        <div class="field">
-          <span style="color: #999; font-size: 8pt;">RHM {}</span>
+        <div class="field weapon-field">
+          RHM <span class="weapon-bracket"></span>
         </div>
-      </div>
-      
-      <!-- Aircraft Type -->
-      <div class="field" style="margin-bottom: 8px; font-weight: bold;">
-        ${escapeHtml(aircraft)}
       </div>
       
       <!-- Aircraft Section -->
@@ -4369,22 +4392,24 @@
       for (let i = 0; i < flightSize; i++) {
         card += `
         <div class="aircraft-card">
-          <!-- Aircraft silhouette placeholder -->
-          <div class="aircraft-silhouette">✈</div>
-          
-          <!-- Health checkboxes -->
-          <div class="health-checkboxes">
-            <div class="checkbox">
-              <span class="checkbox-box"></span>
-              <span>Da</span>
-            </div>
-            <div class="checkbox">
-              <span class="checkbox-box"></span>
-              <span>Cr</span>
-            </div>
-            <div class="checkbox">
-              <span class="checkbox-box"></span>
-              <span>☠</span>
+          <!-- Aircraft row with silhouette and health checkboxes side by side -->
+          <div class="aircraft-row">
+            <div class="aircraft-silhouette">✈</div>
+            
+            <!-- Health checkboxes stacked vertically -->
+            <div class="health-checkboxes">
+              <div class="checkbox">
+                <span class="checkbox-box"></span>
+                <span>Da</span>
+              </div>
+              <div class="checkbox">
+                <span class="checkbox-box"></span>
+                <span>Cr</span>
+              </div>
+              <div class="checkbox">
+                <span class="checkbox-box"></span>
+                <span>☠</span>
+              </div>
             </div>
           </div>
           
