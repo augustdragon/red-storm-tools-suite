@@ -4461,14 +4461,20 @@
       const faction = flight.faction || 'NATO';
       
       // Determine which silhouette image to use based on faction
-      // Construct absolute path that works in both local and GitHub Pages
-      const origin = window.location.origin;
-      const pathname = window.location.pathname;
-      // Extract base path (e.g., /red-storm-tools-suite/)
-      const repoPath = pathname.substring(0, pathname.lastIndexOf('/oob-generator'));
-      const silhouetteImage = faction === 'WP' 
-        ? `${origin}${repoPath}/assets/wp.jpg` 
-        : `${origin}${repoPath}/assets/nato.jpg`;
+      // For GitHub Pages: Use simple path construction
+      // If pathname is /red-storm-tools-suite/oob-generator/ or /red-storm-tools-suite/oob-generator/index.html
+      // We want /red-storm-tools-suite/assets/
+      let imagePath;
+      if (window.location.hostname === 'augustdragon.github.io') {
+        // GitHub Pages - hardcode the correct path
+        imagePath = faction === 'WP' 
+          ? 'https://augustdragon.github.io/red-storm-tools-suite/assets/wp.jpg'
+          : 'https://augustdragon.github.io/red-storm-tools-suite/assets/nato.jpg';
+      } else {
+        // Local development - use relative path
+        imagePath = faction === 'WP' ? '../assets/wp.jpg' : '../assets/nato.jpg';
+      }
+      const silhouetteImage = imagePath;
       
       // Extract aircraft type from result text
       let aircraft = 'Unknown';
