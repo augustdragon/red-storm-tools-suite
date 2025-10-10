@@ -4447,7 +4447,11 @@
       const faction = flight.faction || 'NATO';
       
       // Determine which silhouette image to use based on faction
-      const silhouetteImage = faction === 'WP' ? '../assets/wp.jpg' : '../assets/nato.jpg';
+      // Use absolute path from the current page location
+      const basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+      const silhouetteImage = faction === 'WP' 
+        ? basePath.replace('/oob-generator', '/assets/wp.jpg')
+        : basePath.replace('/oob-generator', '/assets/nato.jpg');
       
       // Extract aircraft type from result text
       let aircraft = 'Unknown';
