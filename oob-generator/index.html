@@ -4461,8 +4461,13 @@
       const faction = flight.faction || 'NATO';
       
       // Determine which silhouette image to use based on faction
-      // Use relative path to local assets folder
-      const silhouetteImage = faction === 'WP' ? './assets/wp.jpg' : './assets/nato.jpg';
+      // For print window, we need absolute URLs since it's a new blank document
+      // Get the base URL of the current page
+      const currentUrl = window.location.href;
+      const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+      const silhouetteImage = faction === 'WP' 
+        ? `${baseUrl}assets/wp.jpg` 
+        : `${baseUrl}assets/nato.jpg`;
       
       // Extract aircraft type from result text
       let aircraft = 'Unknown';
