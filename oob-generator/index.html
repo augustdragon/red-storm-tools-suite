@@ -4682,6 +4682,9 @@
               nato: baseUrl + 'assets/nato.jpg',
               wp: baseUrl + 'assets/wp.jpg'
             };
+            
+            // Debug: log the URLs we're trying to prefetch
+            console.log('Prefetching silhouette images from:', urls);
 
             async function toDataURL(url) {
               const resp = await fetch(url);
@@ -4697,8 +4700,18 @@
 
             // Fetch both in parallel; ignore failures but keep any successful ones
             const results = await Promise.allSettled([toDataURL(urls.nato), toDataURL(urls.wp)]);
-            if (results[0].status === 'fulfilled') window.silhouetteData.nato = results[0].value;
-            if (results[1].status === 'fulfilled') window.silhouetteData.wp = results[1].value;
+            if (results[0].status === 'fulfilled') {
+              window.silhouetteData.nato = results[0].value;
+              console.log('NATO silhouette prefetched successfully');
+            } else {
+              console.warn('NATO silhouette prefetch failed:', results[0].reason);
+            }
+            if (results[1].status === 'fulfilled') {
+              window.silhouetteData.wp = results[1].value;
+              console.log('WP silhouette prefetched successfully');
+            } else {
+              console.warn('WP silhouette prefetch failed:', results[1].reason);
+            }
           } catch (err) {
             console.warn('silhouette prefetch failed', err);
           }
