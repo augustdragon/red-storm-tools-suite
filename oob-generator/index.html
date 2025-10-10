@@ -4377,11 +4377,13 @@
         htmlContent += generateFlightCard(flight);
       }
       
-      // Add page break before WP flights if both factions exist
+      // Close the NATO grid and add page break before WP flights if both factions exist
       if (natoFlights.length > 0 && wpFlights.length > 0) {
         htmlContent += `
   </div>
-  <div class="flight-grid faction-break">
+  <div style="page-break-after: always;"></div>
+  <div class="page-title">Red Storm - Flight Sheet (Warsaw Pact)</div>
+  <div class="flight-grid">
 `;
       }
       
