@@ -374,11 +374,6 @@ body {
   margin-bottom: 15px;
 }
 
-.results-list {
-  max-height: 400px;
-  overflow-y: auto;
-}
-
 .result-item {
   display: flex;
   justify-content: space-between;

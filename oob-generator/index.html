@@ -4461,19 +4461,11 @@
       const faction = flight.faction || 'NATO';
       
       // Determine which silhouette image to use based on faction
-      // Build path to sibling assets folder
-      const pathParts = window.location.pathname.split('/').filter(p => p); // Remove empty strings
-      // Remove everything after the repo name, then navigate to assets
-      // Assumes structure: /repo-name/oob-generator/index.html -> /repo-name/assets/
-      if (pathParts[pathParts.length - 1] === 'index.html' || pathParts[pathParts.length - 1] === '') {
-        pathParts.pop(); // Remove filename if present
-      }
-      if (pathParts[pathParts.length - 1] === 'oob-generator') {
-        pathParts.pop(); // Remove oob-generator folder
-      }
-      pathParts.push('assets'); // Add assets folder
-      const assetsPath = window.location.origin + '/' + pathParts.join('/');
-      const silhouetteImage = faction === 'WP' ? `${assetsPath}/wp.jpg` : `${assetsPath}/nato.jpg`;
+      // Use relative path from oob-generator to assets folder
+      const basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+      const silhouetteImage = faction === 'WP' 
+        ? `${basePath}/../assets/wp.jpg` 
+        : `${basePath}/../assets/nato.jpg`;
       
       // Extract aircraft type from result text
       let aircraft = 'Unknown';
