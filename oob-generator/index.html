@@ -4461,11 +4461,14 @@
       const faction = flight.faction || 'NATO';
       
       // Determine which silhouette image to use based on faction
-      // Use relative path from oob-generator to assets folder
-      const basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+      // Construct absolute path that works in both local and GitHub Pages
+      const origin = window.location.origin;
+      const pathname = window.location.pathname;
+      // Extract base path (e.g., /red-storm-tools-suite/)
+      const repoPath = pathname.substring(0, pathname.lastIndexOf('/oob-generator'));
       const silhouetteImage = faction === 'WP' 
-        ? `${basePath}/../assets/wp.jpg` 
-        : `${basePath}/../assets/nato.jpg`;
+        ? `${origin}${repoPath}/assets/wp.jpg` 
+        : `${origin}${repoPath}/assets/nato.jpg`;
       
       // Extract aircraft type from result text
       let aircraft = 'Unknown';
