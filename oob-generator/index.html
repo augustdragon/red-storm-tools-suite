@@ -4488,14 +4488,13 @@
       
       // Determine which silhouette image to use based on faction
       // Prefer in-memory data URLs (prefetched) so the print window doesn't need to fetch images.
-      // Fall back to absolute URL based on current page if data URLs aren't ready.
+      // Fall back to relative URLs if data URLs aren't ready.
       let silhouetteImage = null;
       if (window.silhouetteData && window.silhouetteData.nato) {
         silhouetteImage = faction === 'WP' ? window.silhouetteData.wp : window.silhouetteData.nato;
       } else {
-        const currentUrl = window.location.href;
-        const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
-        silhouetteImage = faction === 'WP' ? `${baseUrl}assets/wp.jpg` : `${baseUrl}assets/nato.jpg`;
+        // Use relative paths to the local assets folder
+        silhouetteImage = faction === 'WP' ? './assets/wp.jpg' : './assets/nato.jpg';
       }
       // Debug: log which image string will be embedded/used for this flight card
       try { console.debug('generateSingleFlightCard: silhouetteImage =', silhouetteImage, 'faction=', faction); } catch (e) {}
@@ -4676,11 +4675,10 @@
         window.silhouetteData = window.silhouetteData || {};
         window.silhouetteLoadPromise = (async function() {
           try {
-            const currentUrl = window.location.href;
-            const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+            // Use relative paths to the local assets folder
             const urls = {
-              nato: baseUrl + 'assets/nato.jpg',
-              wp: baseUrl + 'assets/wp.jpg'
+              nato: './assets/nato.jpg',
+              wp: './assets/wp.jpg'
             };
             
             // Debug: log the URLs we're trying to prefetch
