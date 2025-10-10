@@ -4104,8 +4104,11 @@
 
       // Create a new window for printing
       const printWindow = window.open('', '_blank');
-      
-      // Build the HTML for the printable sheet
+
+      // Wait for silhouette prefetch to (attempt to) complete so we can embed data-URL images.
+      const loadPromise = window.silhouetteLoadPromise || Promise.resolve();
+      loadPromise.then(() => {
+        // Build the HTML for the printable sheet
       let htmlContent = `
 <!DOCTYPE html>
 <html>
@@ -4410,8 +4413,18 @@
 </html>
 `;
 
-      printWindow.document.write(htmlContent);
-      printWindow.document.close();
+        printWindow.document.open();
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+      }).catch(() => {
+        // Fallback: build and write without waiting on silhouettes
+        let htmlContent = `<!doctype html><html><head><meta charset="utf-8"><title>Red Storm Flight Sheet</title>` +
+          `<style>${document.getElementById('print-styles') ? document.getElementById('print-styles').innerText : ''}</style></head><body>` +
+          document.getElementById('print-area').innerHTML + `</body></html>`;
+        printWindow.document.open();
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+      });
     }
 
     function getMaxFlightSize(results) {
@@ -4461,13 +4474,18 @@
       const faction = flight.faction || 'NATO';
       
       // Determine which silhouette image to use based on faction
-      // For print window, we need absolute URLs since it's a new blank document
-      // Get the base URL of the current page
-      const currentUrl = window.location.href;
-      const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
-      const silhouetteImage = faction === 'WP' 
-        ? `${baseUrl}assets/wp.jpg` 
-        : `${baseUrl}assets/nato.jpg`;
+      // Prefer in-memory data URLs (prefetched) so the print window doesn't need to fetch images.
+      // Fall back to absolute URL based on current page if data URLs aren't ready.
+      let silhouetteImage = null;
+      if (window.silhouetteData && window.silhouetteData.nato) {
+        silhouetteImage = faction === 'WP' ? window.silhouetteData.wp : window.silhouetteData.nato;
+      } else {
+        const currentUrl = window.location.href;
+        const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+        silhouetteImage = faction === 'WP' ? `${baseUrl}assets/wp.jpg` : `${baseUrl}assets/nato.jpg`;
+      }
+      // Debug: log which image string will be embedded/used for this flight card
+      try { console.debug('generateSingleFlightCard: silhouetteImage =', silhouetteImage, 'faction=', faction); } catch (e) {}
       
       // Extract aircraft type from result text
       let aircraft = 'Unknown';
@@ -4635,6 +4653,45 @@
     // Initialize the app
     updateResultsDisplay();
     updateDateButtonStates(); // Set initial button states
+  </script>
+  
+  <script>
+    // Prefetch silhouette images and convert to data URLs so printable HTML can embed them.
+    // This avoids any path resolution issues inside a newly opened print window.
+    (function() {
+      if (!window.silhouetteLoadPromise) {
+        window.silhouetteData = window.silhouetteData || {};
+        window.silhouetteLoadPromise = (async function() {
+          try {
+            const currentUrl = window.location.href;
+            const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+            const urls = {
+              nato: baseUrl + 'assets/nato.jpg',
+              wp: baseUrl + 'assets/wp.jpg'
+            };
+
+            async function toDataURL(url) {
+              const resp = await fetch(url);
+              if (!resp.ok) throw new Error('Failed to fetch ' + url);
+              const blob = await resp.blob();
+              return await new Promise((res, rej) => {
+                const reader = new FileReader();
+                reader.onloadend = () => res(reader.result);
+                reader.onerror = rej;
+                reader.readAsDataURL(blob);
+              });
+            }
+
+            // Fetch both in parallel; ignore failures but keep any successful ones
+            const results = await Promise.allSettled([toDataURL(urls.nato), toDataURL(urls.wp)]);
+            if (results[0].status === 'fulfilled') window.silhouetteData.nato = results[0].value;
+            if (results[1].status === 'fulfilled') window.silhouetteData.wp = results[1].value;
+          } catch (err) {
+            console.warn('silhouette prefetch failed', err);
+          }
+        })();
+      }
+    })();
   </script>
 </body>
 </html>
