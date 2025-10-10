@@ -4183,7 +4183,7 @@
     
     .tasking-fuel-row {
       display: grid;
-      grid-template-columns: 1.2fr 2fr;
+      grid-template-columns: 1.2fr 0.6fr 2fr;
       gap: 5px;
       margin-bottom: 8px;
     }
@@ -4212,13 +4212,6 @@
     .weapon-bracket {
       font-size: 10pt;
       color: #999;
-    }
-    
-    .weapon-space {
-      display: inline-block;
-      width: 10px;
-      height: 8px;
-      border: 1px solid #ccc;
     }
     
     .aircraft-section {
@@ -4263,9 +4256,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24pt;
       border: 1px dashed #ccc;
       background: #f9f9f9;
+      overflow: hidden;
+    }
+    
+    .aircraft-silhouette img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
     
     .health-checkboxes {
@@ -4335,13 +4334,13 @@
       display: grid;
       grid-template-columns: repeat(9, 1fr);
       grid-template-rows: repeat(2, 1fr);
-      gap: 1px;
+      gap: 0px;
       flex: 1;
     }
     
     .fuel-box {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border: 1px solid black;
       border-radius: 50%;
       flex-shrink: 0;
@@ -4358,6 +4357,9 @@
       .flight-card {
         page-break-inside: avoid;
       }
+      .faction-break {
+        page-break-before: always;
+      }
     }
   </style>
 </head>
@@ -4366,8 +4368,25 @@
   <div class="flight-grid">
 `;
 
-      // Generate flight cards
-      for (const flight of results) {
+      // Sort flights by faction: NATO first, then WP
+      const natoFlights = results.filter(f => f.faction === 'NATO');
+      const wpFlights = results.filter(f => f.faction === 'WP');
+      
+      // Generate NATO flight cards
+      for (const flight of natoFlights) {
+        htmlContent += generateFlightCard(flight);
+      }
+      
+      // Add page break before WP flights if both factions exist
+      if (natoFlights.length > 0 && wpFlights.length > 0) {
+        htmlContent += `
+  </div>
+  <div class="flight-grid faction-break">
+`;
+      }
+      
+      // Generate WP flight cards
+      for (const flight of wpFlights) {
         htmlContent += generateFlightCard(flight);
       }
 
@@ -4379,11 +4398,6 @@
 
       printWindow.document.write(htmlContent);
       printWindow.document.close();
-      
-      // Trigger print dialog after a short delay to ensure content is loaded
-      setTimeout(() => {
-        printWindow.print();
-      }, 250);
     }
 
     function getMaxFlightSize(results) {
@@ -4430,6 +4444,10 @@
       const resultText = flight.result || '';
       const nationName = flight.nationName || '';
       const tableName = flight.tableName || '';
+      const faction = flight.faction || 'NATO';
+      
+      // Determine which silhouette image to use based on faction
+      const silhouetteImage = faction === 'WP' ? '../assets/wp.jpg' : '../assets/nato.jpg';
       
       // Extract aircraft type from result text
       let aircraft = 'Unknown';
@@ -4499,6 +4517,9 @@
         <div class="field">
           <div class="field-value">${escapeHtml(tasking)}</div>
         </div>
+        <div class="field">
+          <div class="field-label">Crew</div>
+        </div>
         <div class="fuel-section">
           <div class="fuel-label">Fuel:</div>
           <div class="fuel-grid">
@@ -4525,7 +4546,9 @@
           <!-- Aircraft row with silhouette, health checkboxes, and weapons -->
           <div class="aircraft-row">
             <div class="aircraft-left">
-              <div class="aircraft-silhouette">✈</div>
+              <div class="aircraft-silhouette">
+                <img src="${silhouetteImage}" alt="${faction}" />
+              </div>
               
               <!-- Health checkboxes stacked vertically -->
               <div class="health-checkboxes">
@@ -4549,19 +4572,19 @@
               <div class="weapon-field">
                 <span class="weapon-label">Gun</span>
                 <span class="weapon-brackets">
-                  <span class="weapon-bracket">{</span><span class="weapon-space"></span><span class="weapon-bracket">}</span>
+                  <span class="weapon-bracket">{</span><span class="weapon-bracket">}</span>
                 </span>
               </div>
               <div class="weapon-field">
                 <span class="weapon-label">IRM</span>
                 <span class="weapon-brackets">
-                  <span class="weapon-bracket">{</span><span class="weapon-space"></span><span class="weapon-bracket">}</span>
+                  <span class="weapon-bracket">{</span><span class="weapon-bracket">}</span>
                 </span>
               </div>
               <div class="weapon-field">
                 <span class="weapon-label">RHM</span>
                 <span class="weapon-brackets">
-                  <span class="weapon-bracket">{</span><span class="weapon-space"></span><span class="weapon-bracket">}</span>
+                  <span class="weapon-bracket">{</span><span class="weapon-bracket">}</span>
                 </span>
               </div>
             </div>
