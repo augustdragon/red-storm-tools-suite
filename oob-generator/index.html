@@ -4447,11 +4447,13 @@
       const faction = flight.faction || 'NATO';
       
       // Determine which silhouette image to use based on faction
-      // Use absolute path from the current page location
-      const basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
-      const silhouetteImage = faction === 'WP' 
-        ? basePath.replace('/oob-generator', '/assets/wp.jpg')
-        : basePath.replace('/oob-generator', '/assets/nato.jpg');
+      // Get the base directory path
+      const pathParts = window.location.pathname.split('/');
+      pathParts.pop(); // Remove index.html
+      pathParts.pop(); // Remove oob-generator
+      pathParts.push('assets'); // Add assets
+      const assetsPath = window.location.origin + pathParts.join('/');
+      const silhouetteImage = faction === 'WP' ? `${assetsPath}/wp.jpg` : `${assetsPath}/nato.jpg`;
       
       // Extract aircraft type from result text
       let aircraft = 'Unknown';
