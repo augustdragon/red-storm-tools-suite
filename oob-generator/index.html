@@ -4,315 +4,328 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Red Storm Order of Battle Generator</title>
-  <!-- Updated: Table A implementation with nested roll system -->
-  <link rel="stylesheet" href="../shared/red-storm.css">
+      // Create a new window for printing
+      const printWindow = window.open('', '_blank');
+
+      // Wait for silhouette prefetch to (attempt to) complete so we can embed data-URL images.
+      const loadPromise = window.silhouetteLoadPromise || Promise.resolve();
+      loadPromise.then(() => {
+        // Build the HTML for the printable sheet
+        let htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Red Storm Flight Sheet</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 0.5in;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 10pt;
+      background: white;
+      color: black;
+    }
+    
+    .page-title {
+      text-align: center;
+      font-size: 18pt;
+      font-weight: bold;
+      margin-bottom: 20px;
+      border-bottom: 2px solid black;
+      padding-bottom: 5px;
+    }
+    
+    .flight-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .flight-card {
+      border: 2px solid black;
+      padding: 8px;
+      page-break-inside: avoid;
+      background: white;
+      max-width: 450px;
+    }
+    
+    .flight-header {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1fr 1fr;
+      gap: 5px;
+      margin-bottom: 6px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid black;
+    }
+    
+    .field {
+      border: 1px solid #666;
+      padding: 3px 5px;
+      min-height: 22px;
+    }
+    
+    .field-label {
+      font-size: 7pt;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .field-value {
+      font-weight: bold;
+      font-size: 9pt;
+    }
+    
+    .tasking-fuel-row {
+      display: grid;
+      grid-template-columns: 1.2fr 0.6fr 2fr;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+    
+    .weapon-field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2px;
+      font-size: 7pt;
+      color: #666;
+      padding: 1px 3px;
+    }
+    
+    .weapon-label {
+      min-width: 22px;
+      text-align: right;
+    }
+    
+    .weapon-brackets {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    
+    .weapon-bracket {
+      font-size: 10pt;
+      color: #999;
+    }
+    
+    .aircraft-section {
+      display: grid;
+      grid-template-columns: repeat(${getMaxFlightSize(results)}, 1fr);
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    
+    .aircraft-card {
+      border: 1px solid #333;
+      padding: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .aircraft-row {
+      display: flex;
+      gap: 4px;
+      align-items: stretch;
+      margin-bottom: 4px;
+    }
+    
+    .aircraft-left {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    
+    .aircraft-weapons {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      justify-content: center;
+      margin-left: auto;
+    }
+    
+    .aircraft-silhouette {
+      width: 60px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #ccc;
+      background: #f9f9f9;
+      overflow: hidden;
+    }
+    
+    .aircraft-silhouette img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    .health-checkboxes {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 7pt;
+    
+    .checkbox-box {
+      width: 10px;
+      height: 10px;
+      border: 1px solid black;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    
+    .ordnance-area {
+      border: 1px solid #666;
+      min-height: 20px;
+      margin-bottom: 0px;
+      padding: 2px;
+      width: 100%;
+    }
+    
+    .ordnance-label {
+      font-size: 7pt;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .ordnance-text {
+      font-size: 7pt;
+      margin-top: 2px;
+      color: #333;
+    }
+    
+    .ordnance-rolled {
+      font-size: 7pt;
+      padding: 2px;
+      background: #f0f0f0;
+      border-top: 1px solid #ccc;
+      min-height: 12px;
+    }
+    
+    .fuel-section {
+      border: 1px solid #666;
+      padding: 2px 4px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    
+    .fuel-label {
+      font-size: 7pt;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    
+    .fuel-grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 0px;
+      flex: 1;
+    }
+    
+    .fuel-box {
+      width: 7px;
+      height: 7px;
+      border: 1px solid black;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+    
+    @media print {
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+      .flight-card {
+        page-break-inside: avoid;
+      }
+      .faction-break {
+        page-break-before: always;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="title">Red Storm</div>
-      <div class="subtitle">Order of Battle Generator</div>
-      <!-- Version info hidden for production - uncomment to show: v2024.10.08-debug-26 -->
-    </div>
+`;
 
-    <a href="../" class="back-link">← Back to Red Storm Tools</a>
-
-    <!-- Debug Toggle - Hidden for production -->
-    <div class="section" id="debugToggle" style="display: none; text-align: center; margin-bottom: 10px;">
-      <button class="action-button" id="debugModeButton" onclick="toggleDebugMode()" style="background-color: #666; font-size: 12px; padding: 5px 10px;">
-        Debug Mode: OFF
-      </button>
-      <div id="debugStatus" style="font-size: 11px; color: #888; margin-top: 5px;">
-        Debug mode shows all die rolls for testing
-      </div>
-    </div>
-
-    <div class="content">
-      <!-- Scenario Date Toggle -->
-      <div class="section" id="scenarioToggle">
-        <div class="section-title">Scenario Date</div>
-        <div style="display: flex; gap: 10px; justify-content: center;">
-          <button class="scenario-date-button" id="preDate" onclick="setScenarioDate('pre')">
-            Pre-6/1/87
-          </button>
-          <button class="scenario-date-button" id="postDate" onclick="setScenarioDate('post')">
-            6/1/87 or later
-          </button>
-        </div>
-        <div class="scenario-status" id="scenarioStatus" style="margin-top: 10px; text-align: center; font-size: 14px; color: #b4c4b4;">
-          Select scenario date to enable table generation
-        </div>
-      </div>
-
-      <!-- Table Selection Section -->
-            <!-- Table Selection Section -->
-      <div class="section" id="tableSelection" style="opacity: 0.5; pointer-events: none;">
-        <div class="section-title">Select Order of Battle Table</div>
+        // Sort flights by faction: NATO first, then WP
+        const natoFlights = results.filter(f => f.faction === 'NATO');
+        const wpFlights = results.filter(f => f.faction === 'WP');
         
-        <!-- Invisible width placeholder to maintain consistent layout -->
-        <div style="visibility: hidden; height: 0; overflow: hidden; margin-bottom: 0;">
-          <div style="background-color: #4a5a4a; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="flex: 1; min-width: 0;">
-              <div style="font-weight: bold; margin-bottom: 5px;">NATO Table B - CAP Flight [4ATAF, 6/1/87+]</div>
-              <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">UK: 1 x {2} Tornado F2A, CAP (aircraft: 10)</div>
-            </div>
-            <button style="padding: 6px 12px; margin-left: 10px; flex-shrink: 0;">Remove</button>
-          </div>
-        </div>
-        
-        <div class="faction-section">
-          <div class="faction-header nato-header">NATO Tables</div>
-          <div class="table-grid">
-            <button class="table-button nato-table" onclick="selectTable('A', 'NATO')">A</button>
-            <button class="table-button nato-table" onclick="selectTable('B', 'NATO')">B</button>
-            <button class="table-button nato-table" onclick="selectTable('C', 'NATO')">C</button>
-            <button class="table-button nato-table" onclick="selectTable('D', 'NATO')">D</button>
-            <button class="table-button nato-table" onclick="selectTable('E', 'NATO')">E</button>
-            <button class="table-button nato-table" onclick="selectTable('F', 'NATO')">F</button>
-          </div>
-        </div>
-
-        <div class="faction-section">
-          <div class="faction-header warsaw-header">WP Tables</div>
-          <div class="table-grid">
-            <button class="table-button warsaw-table" onclick="selectTable('G', 'WP')">G</button>
-            <button class="table-button warsaw-table" onclick="selectTable('H', 'WP')">H</button>
-            <button class="table-button warsaw-table" onclick="selectTable('I', 'WP')">I</button>
-            <button class="table-button warsaw-table" onclick="selectTable('J', 'WP')">J</button>
-            <button class="table-button warsaw-table" onclick="selectTable('K', 'WP')">K</button>
-            <button class="table-button warsaw-table" onclick="selectTable('L', 'WP')">L</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Roll Input Section -->
-      <div class="roll-input-section" id="rollInputSection">
-        <div class="selected-table" id="selectedTableDisplay"></div>
-        
-        <div class="input-group">
-          <label for="rollCountBasic">Number of rolls:</label>
-          <input type="number" id="rollCountBasic" min="1" max="20" value="1" />
-        </div>
-        
-        <div class="action-buttons">
-          <button class="action-button roll-button" onclick="makeRolls()">Make Rolls</button>
-          <button class="action-button" style="background-color: #6d5d47;" onclick="viewTable()">View Table</button>
-          <button class="action-button cancel-button" onclick="cancelSelection()">Cancel</button>
-        </div>
-      </div>
-
-      <!-- Variable Selection Section -->
-      <div class="roll-input-section" id="variableSelectionSection">
-        <div class="selected-table" id="variableTableDisplay"></div>
-        
-        <!-- ATAF Zone Selection -->
-        <div class="input-group" id="atafSelection" style="display: none;">
-          <label>ATAF Zone:</label>
-          <select id="atafZone" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
-            <option value="2ATAF">2ATAF</option>
-            <option value="4ATAF">4ATAF</option>
-          </select>
-        </div>
-        
-        <!-- Nationality Selection for Combat Rescue -->
-        <div class="input-group" id="nationalitySelection" style="display: none;">
-          <label>Nationality of downed crew:</label>
-          <select id="crewNationality" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
-            <option value="US">US</option>
-            <option value="UK">UK/BE/NE</option>
-            <option value="FRG">FRG</option>
-            <option value="CAN">CAN (uses US rescue)</option>
-            <option value="USSR">USSR</option>
-            <option value="GDR">GDR</option>
-          </select>
-        </div>
-        
-        <!-- Mission Type Selection for Special Missions -->
-        <div class="input-group" id="missionTypeSelection" style="display: none;">
-          <label>Mission Type:</label>
-          <select id="missionType" onchange="handleMissionTypeChange()" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
-            <option value="Fast FAC">Fast FAC</option>
-            <option value="Standoff Jamming">Standoff Jamming</option>
-            <option value="Tactical Recon">Tactical Recon</option>
-          </select>
-        </div>
-        
-        <!-- Nation Selection for WP Table L Tactical Recon -->
-        <div class="input-group" id="tacticalReconNationSelection" style="display: none;">
-          <label>Nation:</label>
-          <select id="tacticalReconNation" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
-            <option value="USSR">USSR</option>
-            <option value="GDR">GDR</option>
-          </select>
-        </div>
-        
-        <!-- Scenario Date Context -->
-        <div class="input-group" id="dateContext" style="display: none;">
-          <div style="background-color: #2a3a2a; padding: 8px 12px; border-radius: 4px; font-size: 14px; color: #b4c4b4; text-align: center;">
-            <span id="dateContextMessage">Scenario Date Context: <span id="currentScenarioDate">Not set</span></span>
-          </div>
-        </div>
-        
-        <div class="input-group">
-          <label for="rollCountVariable">Number of rolls:</label>
-          <input type="number" id="rollCountVariable" min="1" max="20" value="1" />
-        </div>
-        
-        <div class="action-buttons">
-          <button class="action-button roll-button" onclick="makeRollsWithVariables()">Make Rolls</button>
-          <button class="action-button" style="background-color: #6d5d47;" onclick="viewTableWithVariables()">View Table</button>
-          <button class="action-button cancel-button" onclick="cancelVariableSelection()">Cancel</button>
-        </div>
-      </div>
-
-      <!-- Results Section -->
-      <div class="section results-section" id="resultsSection" style="display: none;">
-        <div class="results-header">
-          <div class="section-title">Generated Results</div>
-          <button class="action-button" onclick="generatePrintableSheet()" style="background-color: #5a6a5a; margin-right: 10px;">📄 Print Flight Sheet</button>
-          <button class="action-button clear-results" onclick="clearAllResults()">Clear All</button>
-        </div>
-        
-        <div class="results-list" id="resultsList">
-          <div class="empty-results">No results generated yet</div>
-        </div>
-      </div>
-
-      <!-- Table View Overlay -->
-      <div class="table-view-overlay" id="tableViewOverlay" style="display: none;" onclick="closeModalOnOverlayClick(event)">
-        <div class="table-view-modal" onclick="event.stopPropagation()">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 15px;">
-            <div class="section-title" id="tableViewTitle" style="margin: 0; flex: 1; min-width: 0;"></div>
-            <button class="action-button cancel-button" onclick="hideTableView()" style="padding: 5px 10px; font-size: 12px; flex-shrink: 0;">✕ Close</button>
-          </div>
-          <div id="tableViewContent"></div>
-          <div style="text-align: center; margin-top: 20px;">
-            <button class="action-button cancel-button" onclick="hideTableView()">Close Table View</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Application state
-    let selectedTable = null;
-    let selectedFaction = null;
-    let scenarioDate = null; // 'pre' or 'post'
-    let results = [];
-    let resultCounter = 1;
-    let hasGeneratedResults = false; // Track if any results exist
-    let debugMode = false; // Debug mode for showing die rolls
-    
-    // Debug mode toggle
-    function toggleDebugMode() {
-      debugMode = !debugMode;
-      const button = document.getElementById('debugModeButton');
-      const status = document.getElementById('debugStatus');
-      
-      if (debugMode) {
-        button.textContent = 'Debug Mode: ON';
-        button.style.backgroundColor = '#d32f2f';
-        status.textContent = 'All die rolls will be shown';
-        status.style.color = '#d32f2f';
-      } else {
-        button.textContent = 'Debug Mode: OFF';
-        button.style.backgroundColor = '#666';
-        status.textContent = 'Debug mode shows all die rolls for testing';
-        status.style.color = '#888';
-      }
-      
-      // Refresh the results display to show/hide debug information
-      updateResultsDisplay();
-    }
-
-    // Simple debug roll function that tracks rolls when debug mode is on
-    function makeDebugRoll(sides, description) {
-      const roll = Math.floor(Math.random() * sides) + 1;
-      const debugEntry = debugMode ? `${description}: ${roll}` : null;
-      return { roll, debugEntry };
-    }
-    
-    // Set scenario date
-    function setScenarioDate(dateValue) {
-      // Don't allow changing date if results exist
-      if (hasGeneratedResults) {
-        alert('Cannot change scenario date while flights exist. Clear all results first.');
-        return;
-      }
-      
-      scenarioDate = dateValue;
-      
-      // Update button styles
-      document.getElementById('preDate').classList.toggle('active', dateValue === 'pre');
-      document.getElementById('postDate').classList.toggle('active', dateValue === 'post');
-      
-      // Update status
-      const dateText = dateValue === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
-      document.getElementById('scenarioStatus').textContent = `Scenario Date: ${dateText}`;
-      
-      // Enable table selection if disabled
-      const tableSection = document.getElementById('tableSelection');
-      tableSection.style.opacity = '1';
-      tableSection.style.pointerEvents = 'auto';
-    }
-    
-    // Update date button states based on results
-    function updateDateButtonStates() {
-      const preButton = document.getElementById('preDate');
-      const postButton = document.getElementById('postDate');
-      
-      if (hasGeneratedResults) {
-        // Lock the buttons - truly disable them
-        preButton.style.opacity = '0.5';
-        postButton.style.opacity = '0.5';
-        preButton.style.cursor = 'not-allowed';
-        postButton.style.cursor = 'not-allowed';
-        preButton.style.pointerEvents = 'none';
-        postButton.style.pointerEvents = 'none';
-        
-        // Update status to show locked state
-        const dateText = scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
-        document.getElementById('scenarioStatus').textContent = `Scenario Date: ${dateText} (locked - clear results to change)`;
-      } else {
-        // Unlock the buttons
-        preButton.style.opacity = '1';
-        postButton.style.opacity = '1';
-        preButton.style.cursor = 'pointer';
-        postButton.style.cursor = 'pointer';
-        preButton.style.pointerEvents = 'auto';
-        postButton.style.pointerEvents = 'auto';
-        
-        if (scenarioDate) {
-          const dateText = scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
-          document.getElementById('scenarioStatus').textContent = `Scenario Date: ${dateText}`;
-        } else {
-          document.getElementById('scenarioStatus').textContent = 'Select scenario date to enable table generation';
+        // Add NATO title and grid only if there are NATO flights
+        if (natoFlights.length > 0) {
+          htmlContent += `
+  <div class="page-title">Red Storm - Flight Sheet (NATO)</div>
+  <div class="flight-grid">
+`;
         }
-      }
-    }
+        
+        // Generate NATO flight cards
+        for (const flight of natoFlights) {
+          htmlContent += generateFlightCard(flight);
+        }
+        
+        // Close the NATO grid and add page break before WP flights if both factions exist
+        if (natoFlights.length > 0 && wpFlights.length > 0) {
+          htmlContent += `
+  </div>
+  <div style="page-break-after: always;"></div>
+`;
+        }
+        
+        // Add WP title and grid only if there are WP flights
+        if (wpFlights.length > 0) {
+          htmlContent += `
+  <div class="page-title">Red Storm - Flight Sheet (Warsaw Pact)</div>
+  <div class="flight-grid">
+`;
+        }
+        
+        // Generate WP flight cards
+        for (const flight of wpFlights) {
+          htmlContent += generateFlightCard(flight);
+        }
 
-    // OOB Tables with actual game data
-    const oobTables = {
-      'A': { 
-        name: 'NATO Table A - QRA Flight', 
-        faction: 'NATO',
-        description: 'NATO QRA Flight - Quick Reaction Alert flights on standby at designated airbases',
-        flightSize: 2,
-        hasATAF: true,
-        hasDate: true,
-        variants: {
-          '2ATAF': {
-            'pre': {
-              nations: {
-                '1-4': {
-                  name: 'UK',
-                  aircraft: {
-                    '1-6': 'FGR2',
-                    '7-10': 'Harrier GR3'
-                  }
-                },
-                '5-6': {
+        htmlContent += `
+  </div>
+</body>
+</html>
+`;
+
+        printWindow.document.open();
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+      }).catch(() => {
+        // Fallback: build and write without waiting on silhouettes
+        let htmlContent = `<!doctype html><html><head><meta charset="utf-8"><title>Red Storm Flight Sheet</title>` +
+          `<style>${document.getElementById('print-styles') ? document.getElementById('print-styles').innerText : ''}</style></head><body>` +
+          document.getElementById('print-area').innerHTML + `</body></html>`;
+        printWindow.document.open();
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+      });
                   name: 'BE/NE',
                   aircraft: {
                     '1-5': 'F-16A(BE)',
@@ -4461,13 +4474,18 @@
       const faction = flight.faction || 'NATO';
       
       // Determine which silhouette image to use based on faction
-      // For print window, we need absolute URLs since it's a new blank document
-      // Get the base URL of the current page
-      const currentUrl = window.location.href;
-      const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
-      const silhouetteImage = faction === 'WP' 
-        ? `${baseUrl}assets/wp.jpg` 
-        : `${baseUrl}assets/nato.jpg`;
+      // Prefer in-memory data URLs (prefetched) so the print window doesn't need to fetch images.
+      // Fall back to absolute URL based on current page if data URLs aren't ready.
+      let silhouetteImage = null;
+      if (window.silhouetteData && window.silhouetteData.nato) {
+        silhouetteImage = faction === 'WP' ? window.silhouetteData.wp : window.silhouetteData.nato;
+      } else {
+        const currentUrl = window.location.href;
+        const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+        silhouetteImage = faction === 'WP' ? `${baseUrl}assets/wp.jpg` : `${baseUrl}assets/nato.jpg`;
+      }
+      // Debug: log which image string will be embedded/used for this flight card
+      try { console.debug('generateSingleFlightCard: silhouetteImage =', silhouetteImage, 'faction=', faction); } catch (e) {}
       
       // Extract aircraft type from result text
       let aircraft = 'Unknown';
@@ -4635,6 +4653,44 @@
     // Initialize the app
     updateResultsDisplay();
     updateDateButtonStates(); // Set initial button states
+  </script>
+  <script>
+    // Prefetch silhouette images and convert to data URLs so printable HTML can embed them.
+    // This avoids any path resolution issues inside a newly opened print window.
+    (function() {
+      if (!window.silhouetteLoadPromise) {
+        window.silhouetteData = window.silhouetteData || {};
+        window.silhouetteLoadPromise = (async function() {
+          try {
+            const currentUrl = window.location.href;
+            const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+            const urls = {
+              nato: baseUrl + 'assets/nato.jpg',
+              wp: baseUrl + 'assets/wp.jpg'
+            };
+
+            async function toDataURL(url) {
+              const resp = await fetch(url);
+              if (!resp.ok) throw new Error('Failed to fetch ' + url);
+              const blob = await resp.blob();
+              return await new Promise((res, rej) => {
+                const reader = new FileReader();
+                reader.onloadend = () => res(reader.result);
+                reader.onerror = rej;
+                reader.readAsDataURL(blob);
+              });
+            }
+
+            // Fetch both in parallel; ignore failures but keep any successful ones
+            const results = await Promise.allSettled([toDataURL(urls.nato), toDataURL(urls.wp)]);
+            if (results[0].status === 'fulfilled') window.silhouetteData.nato = results[0].value;
+            if (results[1].status === 'fulfilled') window.silhouetteData.wp = results[1].value;
+          } catch (err) {
+            console.warn('silhouette prefetch failed', err);
+          }
+        })();
+      }
+    })();
   </script>
 </body>
 </html>
