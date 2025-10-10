@@ -4364,13 +4364,19 @@
   </style>
 </head>
 <body>
-  <div class="page-title">Red Storm - Flight Sheet (NATO)</div>
-  <div class="flight-grid">
 `;
 
       // Sort flights by faction: NATO first, then WP
       const natoFlights = results.filter(f => f.faction === 'NATO');
       const wpFlights = results.filter(f => f.faction === 'WP');
+      
+      // Add NATO title and grid only if there are NATO flights
+      if (natoFlights.length > 0) {
+        htmlContent += `
+  <div class="page-title">Red Storm - Flight Sheet (NATO)</div>
+  <div class="flight-grid">
+`;
+      }
       
       // Generate NATO flight cards
       for (const flight of natoFlights) {
@@ -4382,6 +4388,12 @@
         htmlContent += `
   </div>
   <div style="page-break-after: always;"></div>
+`;
+      }
+      
+      // Add WP title and grid only if there are WP flights
+      if (wpFlights.length > 0) {
+        htmlContent += `
   <div class="page-title">Red Storm - Flight Sheet (Warsaw Pact)</div>
   <div class="flight-grid">
 `;
