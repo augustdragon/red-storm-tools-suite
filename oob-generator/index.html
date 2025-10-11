@@ -4669,9 +4669,35 @@
   </script>
   
   <script>
+    // Embedded silhouette SVGs to avoid external file dependencies
+    window.silhouetteData = {
+      nato: 'data:image/svg+xml;base64,' + btoa(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 50">
+          <rect width="60" height="50" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+          <text x="30" y="25" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="8" fill="#666">NATO</text>
+          <path d="M15,15 L45,15 L40,35 L20,35 Z" fill="#4a90e2" stroke="#333" stroke-width="0.5"/>
+        </svg>
+      `),
+      wp: 'data:image/svg+xml;base64,' + btoa(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 50">
+          <rect width="60" height="50" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+          <text x="30" y="25" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="8" fill="#666">WP</text>
+          <path d="M15,15 L45,15 L40,35 L20,35 Z" fill="#e74c3c" stroke="#333" stroke-width="0.5"/>
+        </svg>
+      `)
+    };
+    window.silhouetteLoadPromise = Promise.resolve(); // Mark as immediately available
+  </script>
+  
+  <script>
+    // Legacy prefetch functionality (kept for fallback but should use embedded SVGs above)
     // Prefetch silhouette images and convert to data URLs so printable HTML can embed them.
     // This avoids any path resolution issues inside a newly opened print window.
     (function() {
+      if (!window.silhouetteLoadPromise || window.silhouetteLoadPromise === Promise.resolve()) {
+        return; // Skip if we already have embedded silhouettes
+      }
+      
       if (!window.silhouetteLoadPromise) {
         window.silhouetteData = window.silhouetteData || {};
         window.silhouetteLoadPromise = (async function() {
