@@ -4134,23 +4134,23 @@
     
     .page-title {
       text-align: center;
-      font-size: 18pt;
+      font-size: 14pt;
       font-weight: bold;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
       border-bottom: 2px solid black;
-      padding-bottom: 5px;
+      padding-bottom: 3px;
     }
     
     .flight-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      margin-bottom: 20px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
     
     .flight-card {
       border: 2px solid black;
-      padding: 8px;
+      padding: 6px;
       page-break-inside: avoid;
       background: white;
       max-width: 450px;
@@ -4159,9 +4159,9 @@
     .flight-header {
       display: grid;
       grid-template-columns: 2fr 1.5fr 1fr 1fr;
-      gap: 5px;
-      margin-bottom: 6px;
-      padding-bottom: 5px;
+      gap: 4px;
+      margin-bottom: 4px;
+      padding-bottom: 3px;
       border-bottom: 1px solid black;
     }
     
@@ -4185,8 +4185,8 @@
     .tasking-fuel-row {
       display: grid;
       grid-template-columns: 1.2fr 0.6fr 2fr;
-      gap: 5px;
-      margin-bottom: 8px;
+      gap: 4px;
+      margin-bottom: 5px;
     }
     
     .weapon-field {
@@ -4218,13 +4218,13 @@
     .aircraft-section {
       display: grid;
       grid-template-columns: repeat(${getMaxFlightSize(results)}, 1fr);
-      gap: 6px;
-      margin-bottom: 6px;
+      gap: 4px;
+      margin-bottom: 4px;
     }
     
     .aircraft-card {
       border: 1px solid #333;
-      padding: 2px;
+      padding: 1px;
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -4232,9 +4232,9 @@
     
     .aircraft-row {
       display: flex;
-      gap: 4px;
+      gap: 3px;
       align-items: stretch;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     
     .aircraft-left {
@@ -4376,7 +4376,7 @@
       if (natoFlights.length > 0) {
         htmlContent += `
   <div class="page-title">Red Storm - Flight Sheet (NATO)</div>
-  <div class="flight-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+  <div class="flight-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px;">
 `;
       }
       
@@ -4397,7 +4397,7 @@
       if (wpFlights.length > 0) {
         htmlContent += `
   <div class="page-title">Red Storm - Flight Sheet (Warsaw Pact)</div>
-  <div class="flight-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+  <div class="flight-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px;">
 `;
       }
       
