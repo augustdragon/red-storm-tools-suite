@@ -4463,18 +4463,18 @@
       const tableName = flight.tableName || '';
       const faction = flight.faction || 'NATO';
       
-      // Simplified - no silhouette images for now, just use faction text
-      
       // Extract aircraft type from result text
       let aircraft = 'Unknown';
-      let flightSize = 4; // Default to 4
+      let flightSize = 4; // Default aircraft per flight
+      let numFlights = 1; // Default number of flights
       let tasking = '';
       let ordnance = '';
       
-      // Try to parse flight size from "4 x {2}" or "1 x {2}" pattern
+      // Try to parse flight multiplier and size from "4 x {2}" pattern
       const flightSizeMatch = resultText.match(/(\d+)\s*x\s*\{(\d+)\}/);
       if (flightSizeMatch) {
-        flightSize = parseInt(flightSizeMatch[2]);
+        numFlights = parseInt(flightSizeMatch[1]); // Number of flights (4)
+        flightSize = parseInt(flightSizeMatch[2]); // Aircraft per flight (2)
       }
       
       // Extract ordnance if present (text in parentheses)
@@ -4510,7 +4510,10 @@
       // Format aircraft display with nation
       const aircraftDisplay = extractedNation ? `${aircraft} (${extractedNation})` : aircraft;
       
-      let card = `
+      // Generate multiple flight cards if needed (for results like "4 x {2}")
+      let allCards = '';
+      for (let flightNum = 0; flightNum < numFlights; flightNum++) {
+        let card = `
     <div class="flight-card">
       <!-- Header: Aircraft Type, Callsign, Counter, Aggression -->
       <div class="flight-header">
@@ -4541,12 +4544,12 @@
           <div class="fuel-grid">
 `;
 
-      // Generate 18 fuel boxes in 2 rows of 9
-      for (let i = 0; i < 18; i++) {
-        card += `            <div class="fuel-box"></div>\n`;
-      }
+        // Generate 18 fuel boxes in 2 rows of 9
+        for (let i = 0; i < 18; i++) {
+          card += `            <div class="fuel-box"></div>\n`;
+        }
 
-      card += `
+        card += `
           </div>
         </div>
       </div>
@@ -4555,9 +4558,9 @@
       <div class="aircraft-section">
 `;
 
-      // Generate individual aircraft cards
-      for (let i = 0; i < flightSize; i++) {
-        card += `
+        // Generate individual aircraft cards for this flight
+        for (let i = 0; i < flightSize; i++) {
+          card += `
         <div class="aircraft-card">
           <!-- Aircraft row with silhouette, health checkboxes, and weapons -->
           <div class="aircraft-row">
@@ -4639,14 +4642,17 @@
           </div>
         </div>
 `;
-      }
+        }
 
-      card += `
+        card += `
       </div>
     </div>
 `;
+        
+        allCards += card;
+      }
 
-      return card;
+      return allCards;
     }
 
     function escapeHtml(text) {
