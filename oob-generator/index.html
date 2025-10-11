@@ -4488,13 +4488,14 @@
       
       // Determine which silhouette image to use based on faction
       // Prefer in-memory data URLs (prefetched) so the print window doesn't need to fetch images.
-      // Fall back to relative URLs if data URLs aren't ready.
+      // Fall back to GitHub Pages absolute URLs if data URLs aren't ready.
       let silhouetteImage = null;
       if (window.silhouetteData && window.silhouetteData.nato) {
         silhouetteImage = faction === 'WP' ? window.silhouetteData.wp : window.silhouetteData.nato;
       } else {
-        // Use relative paths to the local assets folder
-        silhouetteImage = faction === 'WP' ? './assets/wp.jpg' : './assets/nato.jpg';
+        // Use GitHub Pages absolute URLs as fallback
+        const baseUrl = 'https://augustdragon.github.io/red-storm-tools-suite/';
+        silhouetteImage = faction === 'WP' ? baseUrl + 'assets/wp.jpg' : baseUrl + 'assets/nato.jpg';
       }
       // Debug: log which image string will be embedded/used for this flight card
       try { console.debug('generateSingleFlightCard: silhouetteImage =', silhouetteImage, 'faction=', faction); } catch (e) {}
@@ -4675,10 +4676,11 @@
         window.silhouetteData = window.silhouetteData || {};
         window.silhouetteLoadPromise = (async function() {
           try {
-            // Use relative paths to the local assets folder
+            // Try multiple potential asset locations for GitHub Pages compatibility
+            const baseUrl = 'https://augustdragon.github.io/red-storm-tools-suite/';
             const urls = {
-              nato: './assets/nato.jpg',
-              wp: './assets/wp.jpg'
+              nato: baseUrl + 'assets/nato.jpg',  // Try root assets first
+              wp: baseUrl + 'assets/wp.jpg'
             };
             
             // Debug: log the URLs we're trying to prefetch
