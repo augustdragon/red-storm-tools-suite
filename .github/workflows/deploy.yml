@@ -33,6 +33,7 @@ jobs:
       - name: Create web build manually
         run: |
           mkdir -p dist
+          mkdir -p dist/assets
           mkdir -p dist/chit-pull
           mkdir -p dist/oob-generator
           mkdir -p dist/testharness
@@ -54,6 +55,10 @@ jobs:
           
           # Copy the shared CSS file
           cp shared/red-storm.css dist/shared/red-storm.css
+
+          # Copy top-level assets used by print sheets
+          cp assets/nato.jpg dist/assets/nato.jpg
+          cp assets/wp.jpg dist/assets/wp.jpg
           
           # Copy the main index.html
           cp index.html dist/index.html
