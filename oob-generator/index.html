@@ -4111,6 +4111,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <base href="https://augustdragon.github.io/red-storm-tools-suite/">
   <title>Red Storm Flight Sheet</title>
   <style>
     @page {
@@ -4361,6 +4362,10 @@
         page-break-before: always;
       }
     }
+    /* debug area is visible on screen, hidden in print */
+    #debug-panel { font: 11px/1.3 monospace; background:#111; color:#eee; padding:8px; margin:10px 0; border:1px solid #444; max-height:140px; overflow:auto; }
+    #debug-panel .debug-title { color:#9cf; font-weight:bold; margin-bottom:6px; }
+    @media print { #debug-panel { display:none !important; } }
   </style>
 </head>
 <body>
@@ -4370,6 +4375,33 @@
       const natoFlights = results.filter(f => f.faction === 'NATO');
       const wpFlights = results.filter(f => f.faction === 'WP');
       
+      // Debug helper utilities inside print window
+      htmlContent += `
+  <div id="debug-panel">
+    <div class="debug-title">Print Debug</div>
+    <div id="debug-log"></div>
+  </div>
+  <script>
+    (function(){
+      const t0 = Date.now();
+      function log(msg){
+        try {
+          const el = document.getElementById('debug-log');
+          const time = ((Date.now()-t0)/1000).toFixed(3);
+          const line = document.createElement('div');
+          line.textContent = '[' + time + 's] ' + msg;
+          el && el.appendChild(line);
+          console.log('[PRINT]', msg);
+        } catch(e){ console.log('[PRINT][log-error]', e); }
+      }
+      window.__printLog = log;
+      log('UserAgent: ' + navigator.userAgent);
+      log('Location (opener): ' + (window.opener ? window.opener.location.href : 'n/a'));
+      log('Referrer: ' + document.referrer);
+    })();
+  </script>
+`;
+
       // Add NATO title and grid only if there are NATO flights
       if (natoFlights.length > 0) {
         htmlContent += `
@@ -4409,6 +4441,10 @@
 </body>
 </html>
 `;
+
+      // Add candidate URL probe after document HTML to run once the print window parses the DOM
+      const probeScript = `\n<script>(function(){\n  function log(x){ try{ (window.__printLog||console.log).call(console, x);}catch(e){console.log(x);} }\n  var ts = Date.now();\n  var candidates = [\n    'https://augustdragon.github.io/red-storm-tools-suite/docs/assets/images/nato.jpg',\n    'https://augustdragon.github.io/red-storm-tools-suite/assets/nato.jpg',\n    'https://augustdragon.github.io/red-storm-tools-suite/oob-generator/assets/nato.jpg'\n  ];\n  candidates.forEach(function(u){\n    var img = new Image();\n    img.onload = function(){ log('PROBE loaded: ' + u); };\n    img.onerror = function(){ log('PROBE error: ' + u); };\n    img.src = u + '?v=' + ts;\n  });\n})();<\/script>`;
+      printWindow.document.write(probeScript);
 
       printWindow.document.write(htmlContent);
       printWindow.document.close();
@@ -4560,10 +4596,13 @@
           <div class="aircraft-row">
             <div class="aircraft-left">
               <div class="aircraft-silhouette">
-                <img src="https://augustdragon.github.io/red-storm-tools-suite/docs/assets/images/${faction === 'NATO' ? 'nato' : 'wp'}.jpg" 
-                     alt="${faction} Aircraft" 
-                     style="width: 100%; height: 100%; object-fit: contain;"
-                     onerror="console.log('Image failed to load:', this.src); this.onload = null; this.onerror = null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+       <img 
+         alt="${faction} Aircraft" 
+         style="width: 100%; height: 100%; object-fit: contain;"
+         onload="window.__printLog && window.__printLog('IMG loaded: ' + this.src)"
+         onerror="window.__printLog && window.__printLog('IMG error: ' + this.src); this.onload = null; this.onerror = null; this.style.display='none'; this.nextElementSibling.style.display='flex';"
+         src="https://augustdragon.github.io/red-storm-tools-suite/docs/assets/images/${faction === 'NATO' ? 'nato' : 'wp'}.jpg?v=${Date.now()}"
+       >
                 <svg width="60" height="50" viewBox="0 0 60 50" style="width: 100%; height: 100%; display: none;">
                   <!-- NATO aircraft silhouette (F-16 style) -->
                   <g fill="#666" style="display: ${faction === 'NATO' ? 'block' : 'none'}">
