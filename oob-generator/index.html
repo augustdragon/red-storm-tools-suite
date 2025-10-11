@@ -4399,7 +4399,7 @@
       log('Location (opener): ' + (window.opener ? window.opener.location.href : 'n/a'));
       log('Referrer: ' + document.referrer);
     })();
-  </script>
+  <\/script>
 `;
 
       // Add NATO title and grid only if there are NATO flights
@@ -4443,7 +4443,7 @@
 `;
 
       // Add candidate URL probe after document HTML to run once the print window parses the DOM
-      const probeScript = `\n<script>(function(){\n  function log(x){ try{ (window.__printLog||console.log).call(console, x);}catch(e){console.log(x);} }\n  var ts = Date.now();\n  var candidates = [\n    'https://augustdragon.github.io/red-storm-tools-suite/docs/assets/images/nato.jpg',\n    'https://augustdragon.github.io/red-storm-tools-suite/assets/nato.jpg',\n    'https://augustdragon.github.io/red-storm-tools-suite/oob-generator/assets/nato.jpg'\n  ];\n  candidates.forEach(function(u){\n    var img = new Image();\n    img.onload = function(){ log('PROBE loaded: ' + u); };\n    img.onerror = function(){ log('PROBE error: ' + u); };\n    img.src = u + '?v=' + ts;\n  });\n})();<\/script>`;
+  const probeScript = `\n<script>(function(){\n  function log(x){ try{ (window.__printLog||console.log).call(console, x);}catch(e){console.log(x);} }\n  var ts = Date.now();\n  var candidates = [\n    'https://augustdragon.github.io/red-storm-tools-suite/docs/assets/images/nato.jpg',\n    'https://augustdragon.github.io/red-storm-tools-suite/assets/nato.jpg',\n    'https://augustdragon.github.io/red-storm-tools-suite/oob-generator/assets/nato.jpg'\n  ];\n  candidates.forEach(function(u){\n    var img = new Image();\n    img.onload = function(){ log('PROBE loaded: ' + u); };\n    img.onerror = function(){ log('PROBE error: ' + u); };\n    img.src = u + '?v=' + ts;\n  });\n})();<\\/script>`;
       printWindow.document.write(probeScript);
 
       printWindow.document.write(htmlContent);
