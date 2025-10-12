@@ -1157,7 +1157,8 @@
         name: 'WP Table H - Fighter Sweep', 
         faction: 'WP',
         hasDate: false,
-        flightSize: 2,
+        flightSize: 4,
+        flightCount: 3,
         description: 'WP Fighter Sweep - Squadron-size groups of flights tasked with establishing air superiority',
         nations: {
           '1-7': {
@@ -2990,45 +2991,97 @@
         }
         
         if (selectedNation) {
-          // Roll for aircraft within that nation
-          const aircraftRollResult = makeDebugRoll(10, 'Aircraft');
-          const aircraftRoll = aircraftRollResult.roll;
-          let aircraftType = null;
-          let subRollResult = null;
-          
-          // Find matching aircraft based on roll ranges
-          for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
-            const [min, max] = parseRange(range);
-            if (aircraftRoll >= min && aircraftRoll <= max) {
-              aircraftType = aircraft;
-              break;
+          // Handle Table H with multiple flights
+          if (tableId === 'H') {
+            const results = [];
+            const debugParts = [nationRollResult.debugEntry];
+            
+            // Generate 3 flights for Table H
+            for (let flightNum = 1; flightNum <= table.flightCount; flightNum++) {
+              // Roll for aircraft within that nation for each flight
+              const aircraftRollResult = makeDebugRoll(10, `Flight ${flightNum} Aircraft`);
+              const aircraftRoll = aircraftRollResult.roll;
+              let aircraftType = null;
+              let subRollResult = null;
+              
+              // Find matching aircraft based on roll ranges
+              for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+                const [min, max] = parseRange(range);
+                if (aircraftRoll >= min && aircraftRoll <= max) {
+                  aircraftType = aircraft;
+                  break;
+                }
+              }
+              
+              // Handle hidden sub-rolls for superscript references
+              if (aircraftType && aircraftType.includes('¹')) {
+                subRollResult = makeDebugRoll(10, `Flight ${flightNum} Sub-roll`);
+                if (aircraftType.includes('MiG-25PD/Su-27S¹')) {
+                  aircraftType = subRollResult.roll <= 5 ? 'MiG-25PD' : 'Su-27S';
+                }
+              }
+              
+              results.push(`1 x {${table.flightSize}} ${aircraftType}, CAP`);
+              debugParts.push(aircraftRollResult.debugEntry);
+              if (subRollResult) debugParts.push(subRollResult.debugEntry);
             }
-          }
-          
-          // Handle hidden sub-rolls for superscript references
-          if (aircraftType && aircraftType.includes('¹')) {
-            subRollResult = makeDebugRoll(10, 'Sub-roll');
-            if (aircraftType.includes('MiG-25PD/Su-27S¹')) {
-              aircraftType = subRollResult.roll <= 5 ? 'MiG-25PD' : 'Su-27S';
+            
+            const resultText = `${selectedNation.name}: ${results.join('; ')}`;
+            
+            // Build debug string
+            let debugText = '';
+            if (debugMode) {
+              debugText = debugParts.filter(Boolean).length > 0 ? `[${debugParts.filter(Boolean).join(' | ')}]` : '';
             }
+            
+            return {
+              nationRoll: nationRoll,
+              aircraftRoll: null, // Multiple aircraft rolls for Table H
+              text: resultText,
+              debugText: debugText
+            };
+          } else {
+            // Table G - single flight
+            // Roll for aircraft within that nation
+            const aircraftRollResult = makeDebugRoll(10, 'Aircraft');
+            const aircraftRoll = aircraftRollResult.roll;
+            let aircraftType = null;
+            let subRollResult = null;
+            
+            // Find matching aircraft based on roll ranges
+            for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+              const [min, max] = parseRange(range);
+              if (aircraftRoll >= min && aircraftRoll <= max) {
+                aircraftType = aircraft;
+                break;
+              }
+            }
+            
+            // Handle hidden sub-rolls for superscript references
+            if (aircraftType && aircraftType.includes('¹')) {
+              subRollResult = makeDebugRoll(10, 'Sub-roll');
+              if (aircraftType.includes('MiG-25PD/Su-27S¹')) {
+                aircraftType = subRollResult.roll <= 5 ? 'MiG-25PD' : 'Su-27S';
+              }
+            }
+            
+            const resultText = `${selectedNation.name}: 1 x {${table.flightSize}} ${aircraftType}, CAP`;
+            
+            // Build simple debug string
+            let debugText = '';
+            if (debugMode) {
+              const debugParts = [nationRollResult.debugEntry, aircraftRollResult.debugEntry];
+              if (subRollResult) debugParts.push(subRollResult.debugEntry);
+              debugText = debugParts.filter(Boolean).length > 0 ? `[${debugParts.filter(Boolean).join(' | ')}]` : '';
+            }
+            
+            return {
+              nationRoll: nationRoll,
+              aircraftRoll: aircraftRoll,
+              text: resultText,
+              debugText: debugText
+            };
           }
-          
-          const resultText = `${selectedNation.name}: 1 x {${table.flightSize}} ${aircraftType}, CAP`;
-          
-          // Build simple debug string
-          let debugText = '';
-          if (debugMode) {
-            const debugParts = [nationRollResult.debugEntry, aircraftRollResult.debugEntry];
-            if (subRollResult) debugParts.push(subRollResult.debugEntry);
-            debugText = debugParts.filter(Boolean).length > 0 ? `[${debugParts.filter(Boolean).join(' | ')}]` : '';
-          }
-          
-          return {
-            nationRoll: nationRoll,
-            aircraftRoll: aircraftRoll,
-            text: resultText,
-            debugText: debugText
-          };
         }
       } else if (tableId === 'I') {
         console.log('REACHED Table I conditional block!');
