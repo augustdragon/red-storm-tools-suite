@@ -2993,50 +2993,42 @@
         if (selectedNation) {
           // Handle Table H with multiple flights
           if (tableId === 'H') {
-            const results = [];
-            const debugParts = [nationRollResult.debugEntry];
+            // Roll for aircraft within that nation once for all flights
+            const aircraftRollResult = makeDebugRoll(10, 'Aircraft');
+            const aircraftRoll = aircraftRollResult.roll;
+            let aircraftType = null;
+            let subRollResult = null;
             
-            // Generate 3 flights for Table H
-            for (let flightNum = 1; flightNum <= table.flightCount; flightNum++) {
-              // Roll for aircraft within that nation for each flight
-              const aircraftRollResult = makeDebugRoll(10, `Flight ${flightNum} Aircraft`);
-              const aircraftRoll = aircraftRollResult.roll;
-              let aircraftType = null;
-              let subRollResult = null;
-              
-              // Find matching aircraft based on roll ranges
-              for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
-                const [min, max] = parseRange(range);
-                if (aircraftRoll >= min && aircraftRoll <= max) {
-                  aircraftType = aircraft;
-                  break;
-                }
+            // Find matching aircraft based on roll ranges
+            for (const [range, aircraft] of Object.entries(selectedNation.aircraft)) {
+              const [min, max] = parseRange(range);
+              if (aircraftRoll >= min && aircraftRoll <= max) {
+                aircraftType = aircraft;
+                break;
               }
-              
-              // Handle hidden sub-rolls for superscript references
-              if (aircraftType && aircraftType.includes('¹')) {
-                subRollResult = makeDebugRoll(10, `Flight ${flightNum} Sub-roll`);
-                if (aircraftType.includes('MiG-25PD/Su-27S¹')) {
-                  aircraftType = subRollResult.roll <= 5 ? 'MiG-25PD' : 'Su-27S';
-                }
-              }
-              
-              results.push(`1 x {${table.flightSize}} ${aircraftType}, CAP`);
-              debugParts.push(aircraftRollResult.debugEntry);
-              if (subRollResult) debugParts.push(subRollResult.debugEntry);
             }
             
-            const resultText = `${selectedNation.name}: ${results.join('; ')}`;
+            // Handle hidden sub-rolls for superscript references
+            if (aircraftType && aircraftType.includes('¹')) {
+              subRollResult = makeDebugRoll(10, 'Sub-roll');
+              if (aircraftType.includes('MiG-25PD/Su-27S¹')) {
+                aircraftType = subRollResult.roll <= 5 ? 'MiG-25PD' : 'Su-27S';
+              }
+            }
+            
+            const resultText = `${selectedNation.name}: ${table.flightCount} x {${table.flightSize}} ${aircraftType}, CAP`;
             
             // Build debug string
             let debugText = '';
             if (debugMode) {
+              const debugParts = [nationRollResult.debugEntry, aircraftRollResult.debugEntry];
+              if (subRollResult) debugParts.push(subRollResult.debugEntry);
               debugText = debugParts.filter(Boolean).length > 0 ? `[${debugParts.filter(Boolean).join(' | ')}]` : '';
             }
             
             return {
               nationRoll: nationRoll,
-              aircraftRoll: null, // Multiple aircraft rolls for Table H
+              aircraftRoll: aircraftRoll,
               text: resultText,
               debugText: debugText
             };
