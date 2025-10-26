@@ -4712,6 +4712,50 @@
     updateDateButtonStates(); // Set initial button states
   </script>
   
+  <script>
+    // Phase 2 Data Integration Bridge
+    // This function bridges the JSON data with existing oobTables usage
+    
+    function getTableDataSource() {
+      // Try to use JSON data first, fallback to embedded data
+      if (window.oobApp && window.oobApp.isDataLoaded) {
+        console.log('Using JSON data source');
+        return window.oobApp.getCombinedTables();
+      } else if (typeof oobTables !== 'undefined') {
+        console.log('Using embedded data source (fallback)');
+        return oobTables;
+      } else {
+        console.error('No data source available');
+        return {};
+      }
+    }
+    
+    // Test function to verify data extraction
+    function testDataExtraction() {
+      const dataSource = getTableDataSource();
+      console.log('=== Phase 2 Data Extraction Test ===');
+      console.log('Available tables:', Object.keys(dataSource));
+      
+      // Test extracted tables
+      const extractedTables = ['A', 'B', 'G', 'H'];
+      extractedTables.forEach(tableId => {
+        const table = dataSource[tableId];
+        if (table) {
+          console.log(`✅ Table ${tableId}: ${table.name}`);
+          console.log(`   Faction: ${table.faction}`);
+          console.log(`   Description: ${table.description}`);
+        } else {
+          console.log(`❌ Table ${tableId}: Not found`);
+        }
+      });
+    }
+    
+    // Auto-run test when page loads
+    window.addEventListener('load', () => {
+      setTimeout(testDataExtraction, 1000); // Allow time for async loading
+    });
+  </script>
+
   <!-- Placeholder module references for future refactoring -->
   <!-- These modules are currently empty placeholders and don't affect functionality -->
   <script src="js/utils.js"></script>

@@ -51,11 +51,15 @@ oob-generator/
 
 ## 🎯 Current Status
 
-**Phase 1: Structure Establishment (Current)**
+**Phase 2: Data Extraction (Current)**
 - ✅ Directory structure created
 - ✅ Placeholder files with documentation
 - ✅ README documenting purposes
-- ⏳ Logic still in index.html (no functionality changes)
+- ✅ Data extraction started (Tables A, B, G, H extracted)
+- ✅ JSON data files populated with real table data
+- ✅ Data loading mechanism implemented in app.js
+- ⏳ Remaining tables need extraction (C, D, E, F, I, J, K, L)
+- ⏳ Integration with existing index.html functions
 
 ## 🔄 Future Refactoring Phases
 

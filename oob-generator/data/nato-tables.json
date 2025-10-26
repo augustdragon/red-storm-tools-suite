@@ -1,59 +1,259 @@
 {
   "_comment": "NATO OOB Tables (A-F) - Red Storm Order of Battle Data",
-  "_note": "This file will contain all NATO table data extracted from index.html",
-  "_version": "1.0.0-placeholder",
+  "_version": "2.0.0-phase2-extracted",
+  "_extraction_date": "2025-10-26",
+  "_source": "Extracted from index.html oobTables object",
   
-  "tables": {
-    "A": {
-      "_description": "QRA Flight - Quick Reaction Alert flights on standby",
-      "_note": "Data will be extracted during refactoring phase"
-    },
-    "B": {
-      "_description": "CAP Flight - Combat Air Patrol flights in orbit",
-      "_note": "Data will be extracted during refactoring phase"
-    },
-    "C": {
-      "_description": "Bombing Raid - Package of CAP, SEAD, and Bombing flights",
-      "_note": "Data will be extracted during refactoring phase"
-    },
-    "D": {
-      "_description": "Deep Strike Raid - Comprehensive strike package",
-      "_note": "Data will be extracted during refactoring phase"
-    },
-    "E": {
-      "_description": "Combat Rescue - Nationality-based rescue missions",
-      "_note": "Data will be extracted during refactoring phase"
-    },
-    "F": {
-      "_description": "Special Missions - Fast FAC, Jamming, Recon",
-      "_note": "Data will be extracted during refactoring phase"
+  "A": {
+    "name": "NATO Table A - QRA Flight",
+    "faction": "NATO",
+    "description": "NATO QRA Flight - Quick Reaction Alert flights on standby at designated airbases",
+    "flightSize": 2,
+    "hasATAF": true,
+    "hasDate": true,
+    "variants": {
+      "2ATAF": {
+        "pre": {
+          "nations": {
+            "1-4": {
+              "name": "UK",
+              "aircraft": {
+                "1-6": "FGR2",
+                "7-10": "Harrier GR3"
+              }
+            },
+            "5-6": {
+              "name": "BE/NE",
+              "aircraft": {
+                "1-5": "F-16A(BE)",
+                "6-9": "F-16A(NE)",
+                "10": "NF-5A"
+              }
+            },
+            "7-10": {
+              "name": "FRG",
+              "aircraft": {
+                "1-10": "F-4F"
+              }
+            }
+          }
+        },
+        "post": {
+          "nations": {
+            "1-6": {
+              "name": "UK",
+              "aircraft": {
+                "1-6": "FGR2",
+                "7-10": "Harrier GR3"
+              }
+            },
+            "7": {
+              "name": "BE/NE",
+              "aircraft": {
+                "1-5": "F-16A(BE)",
+                "6-9": "F-16A(NE)",
+                "10": "NF-5A"
+              }
+            },
+            "8-10": {
+              "name": "FRG",
+              "aircraft": {
+                "1-10": "F-4F"
+              }
+            }
+          }
+        }
+      },
+      "4ATAF": {
+        "pre": {
+          "nations": {
+            "1-5": {
+              "name": "US",
+              "aircraft": {
+                "1-2": "F-4D",
+                "3-4": "F-4E",
+                "5-8": "F-16A",
+                "9-10": "F-16C"
+              }
+            },
+            "6-8": {
+              "name": "FRG",
+              "aircraft": {
+                "1-8": "F-4F",
+                "9-10": "F-104G"
+              }
+            },
+            "9-10": {
+              "name": "CAN",
+              "aircraft": {
+                "1-8": "CF-18A",
+                "9-10": "CF-5A"
+              }
+            }
+          }
+        },
+        "post": {
+          "nations": {
+            "1-7": {
+              "name": "US",
+              "aircraft": {
+                "1-2": "F-4D",
+                "3-4": "F-4E",
+                "5-8": "F-16A",
+                "9-10": "F-16C"
+              }
+            },
+            "8-9": {
+              "name": "FRG",
+              "aircraft": {
+                "1-8": "F-4F",
+                "9-10": "F-104G"
+              }
+            },
+            "10": {
+              "name": "CAN",
+              "aircraft": {
+                "1-8": "CF-18A",
+                "9-10": "CF-5A"
+              }
+            }
+          }
+        }
+      }
     }
   },
-  
-  "_structure_documentation": {
-    "table_properties": [
-      "name - Full table name",
-      "faction - NATO or WP",
-      "description - Table purpose and context",
-      "flightSize - Default aircraft per flight",
-      "hasATAF - Requires ATAF zone selection",
-      "hasDate - Date-dependent variants",
-      "hasTasking - Multiple tasking types",
-      "hasNationality - Nationality-based selection",
-      "hasMissionType - Mission type selection",
-      "nations - Nation roll ranges and aircraft",
-      "variants - Date/zone specific variants",
-      "taskings - Multiple mission taskings",
-      "ordnanceNote - Ordnance restrictions"
-    ]
-  },
-  
-  "_extraction_notes": [
-    "Extract from oobTables object in index.html",
-    "Preserve all roll ranges and aircraft types",
-    "Maintain nested structure for variants",
-    "Include all metadata and descriptions",
-    "Keep ordnance notes and restrictions",
-    "Document special roll mechanics"
-  ]
+  "B": {
+    "name": "NATO Table B - CAP Flight",
+    "faction": "NATO",
+    "hasATAF": true,
+    "hasDate": true,
+    "description": "NATO CAP Flight - Flights in the air at designated Orbit Points",
+    "result": "1 x {2} [CAP], CAP",
+    "zones": {
+      "2ATAF": {
+        "pre": {
+          "nations": {
+            "1-2": {
+              "name": "US",
+              "aircraft": {
+                "1-2": "F-15A",
+                "3-6": "F-15C",
+                "7-9": "F-4E",
+                "10": "F-4D"
+              }
+            },
+            "3-5": {
+              "name": "UK",
+              "aircraft": {
+                "1-7": "FGR2",
+                "8-10": "Tornado F2A"
+              }
+            },
+            "6-7": {
+              "name": "BE/NE",
+              "aircraft": {
+                "1-5": "F-16A(BE)",
+                "6-10": "F-16A(NE)"
+              }
+            },
+            "8-10": {
+              "name": "FRG",
+              "aircraft": {
+                "1-10": "F-4F"
+              }
+            }
+          }
+        },
+        "post": {
+          "nations": {
+            "1-4": {
+              "name": "US",
+              "aircraft": {
+                "1-2": "F-15A",
+                "3-6": "F-15C",
+                "7-9": "F-4E",
+                "10": "F-4D"
+              }
+            },
+            "5-6": {
+              "name": "UK",
+              "aircraft": {
+                "1-7": "FGR2",
+                "8-10": "Tornado F2A"
+              }
+            },
+            "7-8": {
+              "name": "BE/NE",
+              "aircraft": {
+                "1-5": "F-16A(BE)",
+                "6-10": "F-16A(NE)"
+              }
+            },
+            "9-10": {
+              "name": "FRG",
+              "aircraft": {
+                "1-10": "F-4F"
+              }
+            }
+          }
+        }
+      },
+      "4ATAF": {
+        "pre": {
+          "nations": {
+            "1-5": {
+              "name": "US",
+              "aircraft": {
+                "1-2": "F-15A",
+                "3-6": "F-15C",
+                "7-9": "F-4E",
+                "10": "F-4D"
+              }
+            },
+            "6-8": {
+              "name": "FRG",
+              "aircraft": {
+                "1-9": "F-4F",
+                "10": "F-104G"
+              }
+            },
+            "9-10": {
+              "name": "CAN",
+              "aircraft": {
+                "1-9": "CF-18A",
+                "10": "CF-5A"
+              }
+            }
+          }
+        },
+        "post": {
+          "nations": {
+            "1-7": {
+              "name": "US",
+              "aircraft": {
+                "1-2": "F-15A",
+                "3-6": "F-15C",
+                "7-9": "F-4E",
+                "10": "F-4D"
+              }
+            },
+            "8-9": {
+              "name": "FRG",
+              "aircraft": {
+                "1-9": "F-4F",
+                "10": "F-104G"
+              }
+            },
+            "10": {
+              "name": "CAN",
+              "aircraft": {
+                "1-9": "CF-18A",
+                "10": "CF-5A"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

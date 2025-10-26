@@ -1,67 +1,60 @@
 {
   "_comment": "Warsaw Pact OOB Tables (G-L) - Red Storm Order of Battle Data",
-  "_note": "This file will contain all Warsaw Pact table data extracted from index.html",
-  "_version": "1.0.0-placeholder",
+  "_version": "2.0.0-phase2-extracted",
+  "_extraction_date": "2025-10-26",
+  "_source": "Extracted from index.html oobTables object",
   
-  "tables": {
-    "G": {
-      "_description": "QRA Flights - Aircraft sitting alert at WP airfields",
-      "_note": "Data will be extracted during refactoring phase"
-    },
-    "H": {
-      "_description": "Fighter Sweep - Squadron-size groups for air superiority",
-      "_note": "Data will be extracted during refactoring phase"
-    },
-    "I": {
-      "_description": "Bombing Raid - Packages for air support to ground troops",
-      "_note": "Data will be extracted during refactoring phase"
-    },
-    "J": {
-      "_description": "Deep Strike Raid - Packages for deep penetration missions",
-      "_note": "Data will be extracted during refactoring phase"
-    },
-    "K": {
-      "_description": "Combat Rescue - Nationality-based rescue operations",
-      "_note": "Data will be extracted during refactoring phase"
-    },
-    "L": {
-      "_description": "Special Missions - Standoff Jamming and Tactical Recon",
-      "_note": "Data will be extracted during refactoring phase"
+  "G": {
+    "name": "WP Table G - QRA Flights",
+    "faction": "WP",
+    "hasDate": false,
+    "description": "WP QRA Flights - Aircraft sitting alert at WP airfields in East Germany",
+    "flightSize": 2,
+    "nations": {
+      "1-3": {
+        "name": "USSR",
+        "aircraft": {
+          "1-2": "MiG-21bis",
+          "3-4": "MiG-23M",
+          "5-6": "MiG-23ML",
+          "7-8": "MiG-29A",
+          "9-10": "MiG-25PD/Su-27S¹"
+        }
+      },
+      "4-10": {
+        "name": "GDR",
+        "aircraft": {
+          "1-6": "MiG-21bis",
+          "7-10": "MiG-23ML"
+        }
+      }
     }
   },
-  
-  "_structure_documentation": {
-    "table_properties": [
-      "name - Full table name",
-      "faction - NATO or WP",
-      "description - Table purpose and context",
-      "flightSize - Default aircraft per flight",
-      "flightCount - Number of flights generated",
-      "hasTasking - Multiple tasking types",
-      "hasNationality - Nationality-based selection",
-      "hasMissionType - Mission type selection",
-      "nations - Nation roll ranges and aircraft",
-      "nationalities - Nationality-specific data",
-      "taskings - Multiple mission taskings",
-      "missionTypes - Mission type variants",
-      "ordnanceNote - Ordnance restrictions"
-    ]
-  },
-  
-  "_special_mechanics": [
-    "Sub-rolls for certain aircraft (e.g., MiG-25PD/Su-27S)",
-    "Hidden roll ranges for special aircraft",
-    "Nationality determination rolls",
-    "Mission type selection logic",
-    "Different structures per nationality"
-  ],
-  
-  "_extraction_notes": [
-    "Extract from oobTables object in index.html",
-    "Preserve all roll ranges and aircraft types",
-    "Document sub-roll mechanics with superscripts",
-    "Maintain nationality-based structures",
-    "Include mission type variants",
-    "Keep ordnance notes and restrictions"
-  ]
+  "H": {
+    "name": "WP Table H - Fighter Sweep",
+    "faction": "WP",
+    "hasDate": false,
+    "flightSize": 4,
+    "flightCount": 3,
+    "description": "WP Fighter Sweep - Squadron-size groups of flights tasked with establishing air superiority",
+    "nations": {
+      "1-7": {
+        "name": "USSR",
+        "aircraft": {
+          "1-2": "MiG-21bis",
+          "3-4": "MiG-23M",
+          "5-6": "MiG-23MLA",
+          "7-9": "MiG-29A",
+          "10": "MiG-25PD/Su-27S¹"
+        }
+      },
+      "8-10": {
+        "name": "GDR",
+        "aircraft": {
+          "1-5": "MiG-21bis",
+          "6-10": "MiG-23ML"
+        }
+      }
+    }
+  }
 }
