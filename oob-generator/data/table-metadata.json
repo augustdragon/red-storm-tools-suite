@@ -1,0 +1,150 @@
+{
+  "_comment": "OOB Table Metadata - Properties and Descriptions",
+  "_note": "This file contains metadata about all OOB tables",
+  "_version": "1.0.0-placeholder",
+  
+  "table_categories": {
+    "NATO": {
+      "faction": "NATO",
+      "tables": ["A", "B", "C", "D", "E", "F"],
+      "color_scheme": {
+        "primary": "#1976d2",
+        "secondary": "#1565c0",
+        "background": "#e3f2fd",
+        "text": "#0d47a1"
+      }
+    },
+    "WP": {
+      "faction": "Warsaw Pact",
+      "tables": ["G", "H", "I", "J", "K", "L"],
+      "color_scheme": {
+        "primary": "#d32f2f",
+        "secondary": "#b71c1c",
+        "background": "#ffebee",
+        "text": "#b71c1c"
+      }
+    }
+  },
+  
+  "table_metadata": {
+    "A": {
+      "id": "A",
+      "faction": "NATO",
+      "type": "QRA",
+      "complexity": "medium",
+      "requires_date": true,
+      "requires_zone": true,
+      "default_flight_size": 2
+    },
+    "B": {
+      "id": "B",
+      "faction": "NATO",
+      "type": "CAP",
+      "complexity": "medium",
+      "requires_date": true,
+      "requires_zone": true,
+      "default_flight_size": 2
+    },
+    "C": {
+      "id": "C",
+      "faction": "NATO",
+      "type": "Strike Package",
+      "complexity": "high",
+      "requires_date": true,
+      "multiple_flights": true,
+      "has_taskings": true
+    },
+    "D": {
+      "id": "D",
+      "faction": "NATO",
+      "type": "Deep Strike",
+      "complexity": "high",
+      "multiple_flights": true,
+      "has_taskings": true
+    },
+    "E": {
+      "id": "E",
+      "faction": "NATO",
+      "type": "Rescue",
+      "complexity": "medium",
+      "requires_nationality": true,
+      "multiple_flights": true
+    },
+    "F": {
+      "id": "F",
+      "faction": "NATO",
+      "type": "Special Missions",
+      "complexity": "medium",
+      "requires_mission_type": true
+    },
+    "G": {
+      "id": "G",
+      "faction": "WP",
+      "type": "QRA",
+      "complexity": "simple",
+      "default_flight_size": 2
+    },
+    "H": {
+      "id": "H",
+      "faction": "WP",
+      "type": "Fighter Sweep",
+      "complexity": "simple",
+      "default_flight_size": 4,
+      "default_flight_count": 3
+    },
+    "I": {
+      "id": "I",
+      "faction": "WP",
+      "type": "Strike Package",
+      "complexity": "high",
+      "requires_nationality": true,
+      "multiple_flights": true,
+      "has_taskings": true
+    },
+    "J": {
+      "id": "J",
+      "faction": "WP",
+      "type": "Deep Strike",
+      "complexity": "high",
+      "multiple_flights": true,
+      "has_taskings": true
+    },
+    "K": {
+      "id": "K",
+      "faction": "WP",
+      "type": "Rescue",
+      "complexity": "medium",
+      "requires_nationality": true,
+      "multiple_flights": true
+    },
+    "L": {
+      "id": "L",
+      "faction": "WP",
+      "type": "Special Missions",
+      "complexity": "medium",
+      "requires_mission_type": true
+    }
+  },
+  
+  "mission_types": {
+    "QRA": "Quick Reaction Alert - Aircraft on standby",
+    "CAP": "Combat Air Patrol - Air superiority missions",
+    "Strike Package": "Coordinated multi-role strike missions",
+    "Deep Strike": "Long-range penetration missions",
+    "Rescue": "Combat Search and Rescue operations",
+    "Special Missions": "Specialized reconnaissance and support"
+  },
+  
+  "complexity_levels": {
+    "simple": "Single roll, straightforward lookup",
+    "medium": "Multiple rolls or variable selection required",
+    "high": "Complex multi-flight packages with taskings"
+  },
+  
+  "_usage_notes": [
+    "Use this metadata for UI rendering and validation",
+    "Complexity affects UI flow and help text",
+    "Color schemes ensure consistent faction styling",
+    "Metadata helps determine required UI controls"
+  ]
+}
