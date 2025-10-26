@@ -56,5 +56,152 @@
         }
       }
     }
+  },
+  "I": {
+    "name": "WP Table I - Bombing Raid",
+    "faction": "WP",
+    "hasTasking": true,
+    "hasNationality": true,
+    "hasDate": false,
+    "description": "WP Bombing Raid - Packages of flights assigned to provide air support to WP ground troops",
+    "ordnanceNote": "SEAD flights may always carry ARMs, if capable.",
+    "nationalities": {
+      "USSR": {
+        "name": "USSR Bombing Raid",
+        "taskings": {
+          "Close Escort": {
+            "flightSize": 4,
+            "flightCount": 3,
+            "description": "Close Escort",
+            "aircraft": {
+              "1": "MiG-21bis",
+              "2": "MiG-23M",
+              "3-4": "MiG-23MLA",
+              "5-7": "MiG-23MLD",
+              "8-10": "MiG-29A"
+            }
+          },
+          "SEAD": {
+            "flightSize": 4,
+            "flightCount": 2,
+            "description": "SEAD",
+            "aircraft": {
+              "1-2": "Su-17M4",
+              "3-4": "MiG-23²",
+              "5-6": "Su-24",
+              "7-8": "MiG-27M",
+              "9-10": "MiG-27K"
+            }
+          },
+          "Bombing": {
+            "flightSize": 4,
+            "flightCount": 5,
+            "description": "Bombing",
+            "aircraft": {
+              "1-2": "Su-17M4",
+              "3-4": "MiG-23²",
+              "5-6": "Su-25",
+              "7-8": "MiG-27M",
+              "9-10": "MiG-27K"
+            }
+          }
+        }
+      },
+      "GDR": {
+        "name": "GDR Bombing Raid",
+        "taskings": {
+          "Close Escort": {
+            "flightSize": 4,
+            "flightCount": 3,
+            "description": "Close Escort",
+            "aircraft": {
+              "1-5": "MiG-21MF",
+              "6": "MiG-21SPS",
+              "7-9": "MiG-21bis",
+              "10": "MiG-23MF/ML¹"
+            }
+          },
+          "SEAD": {
+            "flightSize": 4,
+            "flightCount": 2,
+            "description": "SEAD",
+            "aircraft": {
+              "1-4": "Su-22M4",
+              "5-7": "MiG-21MF",
+              "8-10": "MiG-23²"
+            }
+          },
+          "Bombing": {
+            "flightSize": 4,
+            "flightCount": 5,
+            "description": "Bombing",
+            "aircraft": {
+              "1-4": "Su-22M4",
+              "5-7": "MiG-21MF",
+              "8-10": "MiG-23BN"
+            }
+          }
+        }
+      }
+    }
+  },
+  "L": {
+    "name": "WP Table L - Special Missions",
+    "faction": "WP",
+    "hasMissionType": true,
+    "hasNationSelection": true,
+    "hasDate": false,
+    "description": "WP Special Missions - Specialized missions for small numbers of aircraft",
+    "missionTypes": {
+      "Standoff Jamming": {
+        "name": "Standoff Jamming",
+        "flightSize": 1,
+        "flightCount": 1,
+        "description": "Standoff Jamming flights may not carry any ordnance or air-to-air weapons",
+        "ordnanceNote": "Standoff Jamming flights may not carry any ordnance or air-to-air weapons.",
+        "nations": {
+          "1-5": {
+            "name": "USSR",
+            "aircraft": {
+              "1-5": "An-12PP",
+              "6-10": "Tu-16P"
+            }
+          },
+          "6-10": {
+            "name": "GDR",
+            "aircraft": {
+              "1-10": "An-26"
+            }
+          }
+        }
+      },
+      "Tactical Recon": {
+        "name": "Tactical Recon",
+        "flightSize": 2,
+        "flightCount": 1,
+        "description": "Tactical Reconnaissance",
+        "ordnanceNote": "Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.",
+        "requiresNationSelection": true,
+        "availableNations": ["USSR", "GDR"],
+        "nationData": {
+          "USSR": {
+            "name": "USSR",
+            "aircraft": {
+              "1-2": "MiG-21R",
+              "3-4": "Su-17M3R",
+              "5-7": "Su-24MR",
+              "8-10": "MiG-25RB"
+            }
+          },
+          "GDR": {
+            "name": "GDR",
+            "aircraft": {
+              "1-5": "MiG-21R",
+              "6-10": "Su-22M4R"
+            }
+          }
+        }
+      }
+    }
   }
 }

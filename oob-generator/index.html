@@ -4733,21 +4733,33 @@
     // Test function to verify data extraction
     function testDataExtraction() {
       const dataSource = getTableDataSource();
-      console.log('=== Phase 2 Data Extraction Test ===');
+      console.log('=== Phase 2 Data Extraction Test (Updated) ===');
       console.log('Available tables:', Object.keys(dataSource));
       
-      // Test extracted tables
-      const extractedTables = ['A', 'B', 'G', 'H'];
+      // Test extracted tables (Phase 2 Complete)
+      const extractedTables = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'L'];
+      console.log('Testing extracted tables...');
       extractedTables.forEach(tableId => {
         const table = dataSource[tableId];
         if (table) {
           console.log(`✅ Table ${tableId}: ${table.name}`);
-          console.log(`   Faction: ${table.faction}`);
-          console.log(`   Description: ${table.description}`);
+          console.log(`   Faction: ${table.faction}, Description: ${table.description.substring(0, 50)}...`);
         } else {
           console.log(`❌ Table ${tableId}: Not found`);
         }
       });
+      
+      // Check remaining embedded tables
+      const remainingTables = ['J', 'K'];
+      console.log('Remaining embedded tables...');
+      remainingTables.forEach(tableId => {
+        const table = dataSource[tableId];
+        if (table) {
+          console.log(`⚠️ Table ${tableId}: ${table.name} (still embedded)`);
+        }
+      });
+      
+      console.log('=== Phase 2 Extraction Status: 10/12 tables extracted ===');
     }
     
     // Auto-run test when page loads
