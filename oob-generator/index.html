@@ -7,31 +7,6 @@
   <!-- Updated: Table A implementation with nested roll system -->
   <link rel="stylesheet" href="../shared/red-storm.css">
   <link rel="stylesheet" href="css/oob-generator.css">
-  
-  <!-- Load modules first so they're available when main script runs -->
-  <script src="js/utils.js"></script>
-  <script src="js/dice-roller.js"></script>
-  <script src="js/state-manager.js"></script>
-  <script src="js/table-processor.js"></script>
-  <script src="js/ui-controller.js"></script>
-  <script src="js/print-generator.js"></script>
-  <script src="js/app.js"></script>
-  
-  <!-- Phase 5: Table Processor Classes -->
-  <script src="js/table-processors/BaseTableProcessor.js"></script>
-  <script src="js/table-processors/NATOTableA.js"></script>
-  <script src="js/table-processors/NATOTableB.js"></script>
-  <script src="js/table-processors/NATOTableC.js"></script>
-  <script src="js/table-processors/NATOTableD.js"></script>
-  <script src="js/table-processors/NATOTableE.js"></script>
-  <script src="js/table-processors/NATOTableF.js"></script>
-  <script src="js/table-processors/WPTableG.js"></script>
-  <script src="js/table-processors/WPTableH.js"></script>
-  <script src="js/table-processors/WPTableI.js"></script>
-  <script src="js/table-processors/WPTableJ.js"></script>
-  <script src="js/table-processors/WPTableK.js"></script>
-  <script src="js/table-processors/WPTableL.js"></script>
-  <script src="js/table-processors/TableProcessorFactory.js"></script>
 </head>
 <body>
   <div class="container">
@@ -1936,5 +1911,30 @@
       setTimeout(testDataExtraction, 1000); // Allow time for async loading
     });
   </script>
+  
+  <!-- Load modules after DOM is ready -->
+  <script src="js/utils.js"></script>
+  <script src="js/dice-roller.js"></script>
+  <script src="js/state-manager.js"></script>
+  <script src="js/table-processor.js"></script>
+  <script src="js/ui-controller.js"></script>
+  <script src="js/print-generator.js"></script>
+  <script src="js/app.js"></script>
+  
+  <!-- Phase 5: Table Processor Classes -->
+  <script src="js/table-processors/BaseTableProcessor.js"></script>
+  <script src="js/table-processors/NATOTableA.js"></script>
+  <script src="js/table-processors/NATOTableB.js"></script>
+  <script src="js/table-processors/NATOTableC.js"></script>
+  <script src="js/table-processors/NATOTableD.js"></script>
+  <script src="js/table-processors/NATOTableE.js"></script>
+  <script src="js/table-processors/NATOTableF.js"></script>
+  <script src="js/table-processors/WPTableG.js"></script>
+  <script src="js/table-processors/WPTableH.js"></script>
+  <script src="js/table-processors/WPTableI.js"></script>
+  <script src="js/table-processors/WPTableJ.js"></script>
+  <script src="js/table-processors/WPTableK.js"></script>
+  <script src="js/table-processors/WPTableL.js"></script>
+  <script src="js/table-processors/TableProcessorFactory.js"></script>
 </body>
 </html>
