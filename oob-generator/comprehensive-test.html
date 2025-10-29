@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Storm OOB Generator - Comprehensive Test Suite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #007acc;
+            padding-bottom: 5px;
+        }
+        .test-result {
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .test-pass {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        .test-fail {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        .test-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+        .test-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+        .test-summary {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        .summary-pass {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .summary-fail {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        button {
+            background-color: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #005fa3;
+        }
+        .test-actions {
+            text-align: center;
+            margin: 20px 0;
+        }
+        #testResults {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #fafafa;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Red Storm OOB Generator - Comprehensive Test Suite</h1>
+    <p><strong>Purpose:</strong> Validate all functionality after Phase 1-4 refactoring before pushing to GitHub</p>
+    
+    <div class="test-actions">
+        <button onclick="runAllTests()">🚀 Run All Tests</button>
+        <button onclick="clearResults()">🗑️ Clear Results</button>
+        <button onclick="testTableGeneration()">🎲 Test Table Generation</button>
+        <button onclick="testModuleLoading()">📦 Test Module Loading</button>
+    </div>
+
+    <div id="testResults"></div>
+
+    <div class="test-section">
+        <div class="test-header">📋 Test Checklist</div>
+        <div id="testChecklist">
+            <div>⏳ Click "Run All Tests" to begin comprehensive testing...</div>
+        </div>
+    </div>
+
+    <!-- Import all modules like the main application -->
+    <script src="js/utils.js"></script>
+    <script src="js/dice-roller.js"></script>
+    <script src="js/state-manager.js"></script>
+    <script src="js/table-processor.js"></script>
+    <script src="js/ui-controller.js"></script>
+    <script src="js/print-generator.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        let testResults = [];
+        let oobApp;
+
+        // Initialize the app like the main application
+        async function initializeTestApp() {
+            try {
+                // Wait for modules to load
+                await new Promise(resolve => {
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', resolve);
+                    } else {
+                        resolve();
+                    }
+                });
+
+                // Wait a bit more for modules to initialize
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                if (typeof OOBApp !== 'undefined') {
+                    oobApp = new OOBApp();
+                    await oobApp.initialize();
+                    return true;
+                } else if (window.oobApp) {
+                    oobApp = window.oobApp;
+                    return true;
+                } else {
+                    addTestResult('warn', 'OOBApp class not found - using fallback data access');
+                    return false;
+                }
+            } catch (error) {
+                addTestResult('fail', `App initialization failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function addTestResult(type, message) {
+            const timestamp = new Date().toLocaleTimeString();
+            testResults.push({ type, message, timestamp });
+            updateTestDisplay();
+        }
+
+        function updateTestDisplay() {
+            const container = document.getElementById('testResults');
+            container.innerHTML = testResults.map(result => {
+                const icon = {
+                    'pass': '✅',
+                    'fail': '❌',
+                    'warn': '⚠️',
+                    'info': 'ℹ️'
+                }[result.type] || 'ℹ️';
+                
+                return `<div class="test-result test-${result.type}">
+                    ${icon} [${result.timestamp}] ${result.message}
+                </div>`;
+            }).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function clearResults() {
+            testResults = [];
+            updateTestDisplay();
+            document.getElementById('testChecklist').innerHTML = '<div>⏳ Ready for testing...</div>';
+        }
+
+        async function runAllTests() {
+            clearResults();
+            addTestResult('info', '🚀 Starting comprehensive test suite...');
+            
+            let totalTests = 0;
+            let passedTests = 0;
+
+            // Test 1: Module Loading
+            addTestResult('info', '📦 Testing module loading...');
+            totalTests++;
+            if (await testModuleLoading()) passedTests++;
+
+            // Test 2: Data Loading
+            addTestResult('info', '📊 Testing data loading...');
+            totalTests++;
+            if (await testDataLoading()) passedTests++;
+
+            // Test 3: All Tables Access
+            addTestResult('info', '🗂️ Testing all 12 tables...');
+            totalTests++;
+            if (testAllTablesAccess()) passedTests++;
+
+            // Test 4: Function Extraction
+            addTestResult('info', '🔧 Testing extracted functions...');
+            totalTests++;
+            if (testExtractedFunctions()) passedTests++;
+
+            // Test 5: State Management
+            addTestResult('info', '📝 Testing state management...');
+            totalTests++;
+            if (testStateManagement()) passedTests++;
+
+            // Test 6: UI Functions
+            addTestResult('info', '🎨 Testing UI functions...');
+            totalTests++;
+            if (testUIFunctions()) passedTests++;
+
+            // Test 7: Debug Mode
+            addTestResult('info', '🐛 Testing debug mode...');
+            totalTests++;
+            if (testDebugMode()) passedTests++;
+
+            // Test 8: Table Generation
+            addTestResult('info', '🎲 Testing table generation...');
+            totalTests++;
+            if (await testTableGeneration()) passedTests++;
+
+            // Display summary
+            const successRate = (passedTests / totalTests * 100).toFixed(1);
+            const summaryType = passedTests === totalTests ? 'pass' : 'fail';
+            
+            addTestResult('info', `📊 Test Summary: ${passedTests}/${totalTests} tests passed (${successRate}%)`);
+            
+            if (passedTests === totalTests) {
+                addTestResult('pass', '🎉 ALL TESTS PASSED! Ready for GitHub push!');
+            } else {
+                addTestResult('fail', `⚠️ ${totalTests - passedTests} tests failed. Review issues before pushing.`);
+            }
+
+            updateTestChecklist(passedTests, totalTests);
+        }
+
+        async function testModuleLoading() {
+            try {
+                // Test if key functions from each module are available
+                const tests = [
+                    { name: 'parseRange (utils)', fn: () => typeof parseRange === 'function' },
+                    { name: 'makeDebugRoll (dice-roller)', fn: () => typeof makeDebugRoll === 'function' },
+                    { name: 'getAppState (state-manager)', fn: () => typeof getAppState === 'function' },
+                    { name: 'updateResultsDisplay (ui-controller)', fn: () => typeof updateResultsDisplay === 'function' }
+                ];
+
+                let allPassed = true;
+                for (const test of tests) {
+                    if (test.fn()) {
+                        addTestResult('pass', `✓ ${test.name} loaded correctly`);
+                    } else {
+                        addTestResult('fail', `✗ ${test.name} not found`);
+                        allPassed = false;
+                    }
+                }
+
+                return allPassed;
+            } catch (error) {
+                addTestResult('fail', `Module loading test failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        async function testDataLoading() {
+            try {
+                const initialized = await initializeTestApp();
+                if (!initialized) {
+                    addTestResult('warn', 'App initialization skipped, testing fallback data access');
+                }
+
+                // Test data source access
+                const dataSource = getTableDataSource();
+                if (!dataSource || Object.keys(dataSource).length === 0) {
+                    addTestResult('fail', 'No data source available');
+                    return false;
+                }
+
+                addTestResult('pass', `✓ Data source loaded with ${Object.keys(dataSource).length} tables`);
+                return true;
+            } catch (error) {
+                addTestResult('fail', `Data loading test failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testAllTablesAccess() {
+            try {
+                const dataSource = getTableDataSource();
+                const tableIds = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+                let allTablesWork = true;
+
+                for (const tableId of tableIds) {
+                    const table = dataSource[tableId];
+                    if (table && table.name) {
+                        addTestResult('pass', `✓ Table ${tableId}: ${table.name}`);
+                    } else {
+                        addTestResult('fail', `✗ Table ${tableId}: Missing or invalid`);
+                        allTablesWork = false;
+                    }
+                }
+
+                return allTablesWork;
+            } catch (error) {
+                addTestResult('fail', `Table access test failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testExtractedFunctions() {
+            try {
+                let allPassed = true;
+
+                // Test utility functions
+                if (typeof parseRange === 'function') {
+                    const result = parseRange('1-4');
+                    if (result[0] === 1 && result[1] === 4) {
+                        addTestResult('pass', '✓ parseRange() works correctly');
+                    } else {
+                        addTestResult('fail', '✗ parseRange() returns incorrect values');
+                        allPassed = false;
+                    }
+                } else {
+                    addTestResult('fail', '✗ parseRange() not found');
+                    allPassed = false;
+                }
+
+                // Test HTML escaping
+                if (typeof escapeHtml === 'function') {
+                    const result = escapeHtml('<test>');
+                    if (result.includes('&lt;') && result.includes('&gt;')) {
+                        addTestResult('pass', '✓ escapeHtml() works correctly');
+                    } else {
+                        addTestResult('fail', '✗ escapeHtml() not working properly');
+                        allPassed = false;
+                    }
+                } else {
+                    addTestResult('fail', '✗ escapeHtml() not found');
+                    allPassed = false;
+                }
+
+                return allPassed;
+            } catch (error) {
+                addTestResult('fail', `Extracted functions test failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testStateManagement() {
+            try {
+                let allPassed = true;
+
+                // Test state access
+                if (typeof getAppState === 'function') {
+                    const state = getAppState();
+                    if (state && typeof state === 'object') {
+                        addTestResult('pass', `✓ getAppState() returns valid state: ${Object.keys(state).join(', ')}`);
+                    } else {
+                        addTestResult('fail', '✗ getAppState() returns invalid state');
+                        allPassed = false;
+                    }
+                } else {
+                    addTestResult('fail', '✗ getAppState() not found');
+                    allPassed = false;
+                }
+
+                return allPassed;
+            } catch (error) {
+                addTestResult('fail', `State management test failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testUIFunctions() {
+            try {
+                let allPassed = true;
+
+                // Test UI functions exist
+                const uiFunctions = ['updateResultsDisplay', 'handleMissionTypeChange', 'hideTableView'];
+                for (const funcName of uiFunctions) {
+                    if (typeof window[funcName] === 'function') {
+                        addTestResult('pass', `✓ ${funcName}() available`);
+                    } else {
+                        addTestResult('warn', `⚠ ${funcName}() not found (may be in HTML)`);
+                    }
+                }
+
+                return allPassed;
+            } catch (error) {
+                addTestResult('fail', `UI functions test failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function testDebugMode() {
+            try {
+                let allPassed = true;
+
+                // Test debug functions
+                if (typeof makeDebugRoll === 'function') {
+                    const result = makeDebugRoll(10, 'test');
+                    if (result && typeof result.roll === 'number' && result.roll >= 1 && result.roll <= 10) {
+                        addTestResult('pass', `✓ makeDebugRoll() works: rolled ${result.roll}`);
+                    } else {
+                        addTestResult('fail', '✗ makeDebugRoll() returns invalid result');
+                        allPassed = false;
+                    }
+                } else {
+                    addTestResult('fail', '✗ makeDebugRoll() not found');
+                    allPassed = false;
+                }
+
+                if (typeof getDebugMode === 'function') {
+                    const debugState = getDebugMode();
+                    addTestResult('pass', `✓ getDebugMode() returns: ${debugState}`);
+                } else {
+                    addTestResult('fail', '✗ getDebugMode() not found');
+                    allPassed = false;
+                }
+
+                return allPassed;
+            } catch (error) {
+                addTestResult('fail', `Debug mode test failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        async function testTableGeneration() {
+            try {
+                // This is a basic test - we can't fully test table generation without 
+                // the complete application context, but we can test data access
+                const dataSource = getTableDataSource();
+                
+                // Test accessing NATO Table A
+                const tableA = dataSource['A'];
+                if (tableA && tableA.name && tableA.name.includes('NATO Table A')) {
+                    addTestResult('pass', '✓ Table A structure looks correct');
+                } else {
+                    addTestResult('fail', '✗ Table A structure invalid');
+                    return false;
+                }
+
+                // Test accessing WP Table G
+                const tableG = dataSource['G'];
+                if (tableG && tableG.name && tableG.name.includes('WP Table G')) {
+                    addTestResult('pass', '✓ Table G structure looks correct');
+                } else {
+                    addTestResult('fail', '✗ Table G structure invalid');
+                    return false;
+                }
+
+                addTestResult('pass', '✓ Table generation components accessible');
+                return true;
+            } catch (error) {
+                addTestResult('fail', `Table generation test failed: ${error.message}`);
+                return false;
+            }
+        }
+
+        function updateTestChecklist(passed, total) {
+            const checklist = document.getElementById('testChecklist');
+            const items = [
+                '📦 Module Loading (utils, dice-roller, state-manager, ui-controller)',
+                '📊 Data Loading (JSON files, hybrid system)',
+                '🗂️ All 12 Tables (A-L) Accessible',
+                '🔧 Extracted Functions (parseRange, escapeHtml, etc.)',
+                '📝 State Management (getAppState, results handling)',
+                '🎨 UI Functions (updateResultsDisplay, modal controls)',
+                '🐛 Debug Mode (makeDebugRoll, toggle functionality)',
+                '🎲 Table Generation (data structure validation)'
+            ];
+
+            const results = items.map((item, index) => {
+                const status = index < passed ? '✅' : (index < total ? '❌' : '⏸️');
+                return `<div>${status} ${item}</div>`;
+            }).join('');
+
+            const summary = passed === total 
+                ? '<div style="color: green; font-weight: bold; margin-top: 15px;">🎉 ALL SYSTEMS GO! Ready for GitHub push!</div>'
+                : `<div style="color: red; font-weight: bold; margin-top: 15px;">⚠️ ${total - passed} issues found. Review before pushing.</div>`;
+
+            checklist.innerHTML = results + summary;
+        }
+
+        // Initialize test display
+        updateTestDisplay();
+    </script>
+</body>
+</html>

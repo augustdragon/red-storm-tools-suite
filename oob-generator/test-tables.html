@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Red Storm Table Validator</title>
+  <link rel="stylesheet" href="../shared/red-storm.css">
+  <style>
+    body {
+      padding: 20px;
+      font-family: 'Courier New', monospace;
+      background-color: #1a1a1a;
+      color: #f4f4f4;
+    }
+    
+    .test-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background-color: #2a3a2a;
+      border-radius: 8px;
+    }
+    
+    .header h1 {
+      margin: 0 0 10px 0;
+      color: #b4c4b4;
+    }
+    
+    .controls {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #2a3a2a;
+      border-radius: 8px;
+    }
+    
+    .control-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    button {
+      padding: 10px 20px;
+      background-color: #4a5a4a;
+      color: #f4f4f4;
+      border: 1px solid #6a7a6a;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    button:hover {
+      background-color: #5a6a5a;
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .test-results {
+      margin-top: 20px;
+    }
+    
+    .table-test {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #2a3a2a;
+      border-radius: 8px;
+      border-left: 4px solid #666;
+    }
+    
+    .table-test.success {
+      border-left-color: #4a8a4a;
+      background-color: #1a2a1a;
+    }
+    
+    .table-test.error {
+      border-left-color: #8a4a4a;
+      background-color: #2a1a1a;
+    }
+    
+    .table-test.running {
+      border-left-color: #4a6a8a;
+      background-color: #1a2a3a;
+    }
+    
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .test-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    .test-status {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .status-pending {
+      background-color: #666;
+      color: #ccc;
+    }
+    
+    .status-running {
+      background-color: #4a6a8a;
+      color: #fff;
+    }
+    
+    .status-success {
+      background-color: #4a8a4a;
+      color: #fff;
+    }
+    
+    .status-error {
+      background-color: #8a4a4a;
+      color: #fff;
+    }
+    
+    .test-details {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #1a2a1a;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    
+    .test-result-text {
+      margin: 5px 0;
+      padding: 5px;
+      background-color: #0a1a0a;
+      border-radius: 3px;
+      font-family: monospace;
+      word-wrap: break-word;
+    }
+    
+    .error-message {
+      color: #ff6666;
+      margin: 5px 0;
+      padding: 5px;
+      background-color: #2a0a0a;
+      border-radius: 3px;
+    }
+    
+    .summary {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #2a3a2a;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .summary-stat {
+      display: inline-block;
+      margin: 0 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .stat-success { color: #6a9a6a; }
+    .stat-error { color: #9a6a6a; }
+    .stat-total { color: #b4c4b4; }
+    
+    pre {
+      margin: 5px 0;
+      padding: 10px;
+      background-color: #0a1a0a;
+      border-radius: 3px;
+      overflow-x: auto;
+      font-size: 11px;
+    }
+  </style>
+  
+  <!-- Load modules -->
+  <script src="js/utils.js"></script>
+  <script src="js/dice-roller.js"></script>
+  <script src="js/state-manager.js"></script>
+  <script src="js/table-processor.js"></script>
+  
+  <!-- Phase 5: Table Processor Classes -->
+  <script src="js/table-processors/BaseTableProcessor.js"></script>
+  <script src="js/table-processors/NATOTableA.js"></script>
+  <script src="js/table-processors/NATOTableB.js"></script>
+  <script src="js/table-processors/NATOTableC.js"></script>
+  <script src="js/table-processors/NATOTableD.js"></script>
+  <script src="js/table-processors/NATOTableE.js"></script>
+  <script src="js/table-processors/NATOTableF.js"></script>
+  <script src="js/table-processors/WPTableG.js"></script>
+  <script src="js/table-processors/WPTableH.js"></script>
+  <script src="js/table-processors/WPTableI.js"></script>
+  <script src="js/table-processors/WPTableJ.js"></script>
+  <script src="js/table-processors/WPTableK.js"></script>
+  <script src="js/table-processors/WPTableL.js"></script>
+  <script src="js/table-processors/TableProcessorFactory.js"></script>
+</head>
+<body>
+  <div class="test-container">
+    <div class="header">
+      <h1>🧪 Red Storm Table Validator</h1>
+      <p>Automated testing for all 12 OOB tables</p>
+    </div>
+    
+    <div class="controls">
+      <div class="control-group">
+        <button id="runAllBtn" onclick="runAllTests()">▶ Run All Tests</button>
+        <button id="runNatoBtn" onclick="runNatoTests()">Run NATO Tables (A-F)</button>
+        <button id="runWpBtn" onclick="runWpTests()">Run WP Tables (G-L)</button>
+        <button id="clearBtn" onclick="clearResults()">Clear Results</button>
+      </div>
+      <div class="control-group">
+        <label>
+          <input type="checkbox" id="debugMode" onchange="toggleDebugMode()"> Enable Debug Mode
+        </label>
+        <span style="margin-left: 20px; color: #888; font-size: 12px;">
+          Tests: <span id="testCount">0/12</span> | 
+          Success: <span id="successCount" style="color: #6a9a6a;">0</span> | 
+          Failed: <span id="failCount" style="color: #9a6a6a;">0</span>
+        </span>
+      </div>
+    </div>
+    
+    <div class="test-results" id="testResults"></div>
+    
+    <div class="summary" id="summary" style="display: none;">
+      <h2>Test Summary</h2>
+      <div class="summary-stat stat-total">
+        Total: <span id="summaryTotal">0</span>
+      </div>
+      <div class="summary-stat stat-success">
+        Passed: <span id="summarySuccess">0</span>
+      </div>
+      <div class="summary-stat stat-error">
+        Failed: <span id="summaryFailed">0</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Test configuration for each table
+    const tableTests = {
+      'A': {
+        name: 'NATO Table A - QRA Flight',
+        params: { atafZone: '2ATAF', scenarioDate: 'pre' },
+        variants: [
+          { atafZone: '2ATAF', scenarioDate: 'pre' },
+          { atafZone: '4ATAF', scenarioDate: 'post' }
+        ]
+      },
+      'B': {
+        name: 'NATO Table B - CAP Flight',
+        params: { atafZone: '2ATAF', scenarioDate: 'pre' },
+        variants: [
+          { atafZone: '2ATAF', scenarioDate: 'pre' },
+          { atafZone: '4ATAF', scenarioDate: 'post' }
+        ]
+      },
+      'C': {
+        name: 'NATO Table C - Bombing Raid',
+        params: { atafZone: null, scenarioDate: 'pre' },
+        variants: [
+          { atafZone: null, scenarioDate: 'pre' },
+          { atafZone: null, scenarioDate: 'post' }
+        ]
+      },
+      'D': {
+        name: 'NATO Table D - Deep Strike Raid',
+        params: { atafZone: null, scenarioDate: null },
+        variants: [
+          { atafZone: null, scenarioDate: null }
+        ]
+      },
+      'E': {
+        name: 'NATO Table E - Combat Rescue',
+        params: { nationality: 'US' },
+        variants: [
+          { nationality: 'US' },
+          { nationality: 'UK' },
+          { nationality: 'FRG' }
+        ]
+      },
+      'F': {
+        name: 'NATO Table F - Special Missions',
+        params: { missionType: 'Fast FAC' },
+        variants: [
+          { missionType: 'Fast FAC' }
+        ]
+      },
+      'G': {
+        name: 'WP Table G - QRA Flights',
+        params: {},
+        variants: [{}]
+      },
+      'H': {
+        name: 'WP Table H - Fighter Sweep',
+        params: {},
+        variants: [{}]
+      },
+      'I': {
+        name: 'WP Table I - Attack Raid',
+        params: {},
+        variants: [{}]
+      },
+      'J': {
+        name: 'WP Table J - Deep Strike Raid',
+        params: {},
+        variants: [{}]
+      },
+      'K': {
+        name: 'WP Table K - Combat Rescue',
+        params: { nationality: 'USSR' },
+        variants: [
+          { nationality: 'USSR' },
+          { nationality: 'GDR' }
+        ]
+      },
+      'L': {
+        name: 'WP Table L - Special Missions',
+        params: { missionType: 'Standoff Jamming' },
+        variants: [
+          { missionType: 'Standoff Jamming' },
+          { missionType: 'Tactical Recon', tacticalReconNation: 'USSR' }
+        ]
+      }
+    };
+    
+    let testResults = {};
+    let testCount = 0;
+    let successCount = 0;
+    let failCount = 0;
+    
+    function updateCounters() {
+      document.getElementById('testCount').textContent = `${testCount}/12`;
+      document.getElementById('successCount').textContent = successCount;
+      document.getElementById('failCount').textContent = failCount;
+    }
+    
+    function clearResults() {
+      document.getElementById('testResults').innerHTML = '';
+      document.getElementById('summary').style.display = 'none';
+      testResults = {};
+      testCount = 0;
+      successCount = 0;
+      failCount = 0;
+      updateCounters();
+    }
+    
+    function toggleDebugMode() {
+      const checkbox = document.getElementById('debugMode');
+      // Assuming debug mode toggle exists in dice-roller.js
+      if (typeof window.setDebugMode === 'function') {
+        window.setDebugMode(checkbox.checked);
+      }
+    }
+    
+    async function runAllTests() {
+      clearResults();
+      const tables = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+      
+      for (const tableId of tables) {
+        await testTable(tableId);
+        await sleep(100); // Small delay between tests
+      }
+      
+      showSummary();
+    }
+    
+    async function runNatoTests() {
+      clearResults();
+      const tables = ['A', 'B', 'C', 'D', 'E', 'F'];
+      
+      for (const tableId of tables) {
+        await testTable(tableId);
+        await sleep(100);
+      }
+      
+      showSummary();
+    }
+    
+    async function runWpTests() {
+      clearResults();
+      const tables = ['G', 'H', 'I', 'J', 'K', 'L'];
+      
+      for (const tableId of tables) {
+        await testTable(tableId);
+        await sleep(100);
+      }
+      
+      showSummary();
+    }
+    
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
+    async function testTable(tableId) {
+      const config = tableTests[tableId];
+      const resultDiv = createTestResultDiv(tableId, config.name);
+      document.getElementById('testResults').appendChild(resultDiv);
+      
+      updateTestStatus(tableId, 'running', 'RUNNING');
+      
+      try {
+        // Get the table processor factory
+        const factory = getTableProcessorFactory();
+        
+        // Test each variant
+        const variantResults = [];
+        for (let i = 0; i < config.variants.length; i++) {
+          const variant = config.variants[i];
+          const variantLabel = config.variants.length > 1 ? ` (variant ${i + 1})` : '';
+          
+          try {
+            console.log(`Testing ${tableId}${variantLabel}:`, variant);
+            
+            // Process the table
+            const result = factory.processTable(tableId, variant);
+            
+            // Validate result
+            if (!result) {
+              throw new Error('Result is null or undefined');
+            }
+            
+            if (!result.text) {
+              throw new Error('Result missing text property');
+            }
+            
+            if (result.text.includes('undefined') || result.text.includes('null')) {
+              throw new Error('Result contains undefined/null values');
+            }
+            
+            variantResults.push({
+              variant: variantLabel,
+              success: true,
+              result: result
+            });
+            
+          } catch (error) {
+            variantResults.push({
+              variant: variantLabel,
+              success: false,
+              error: error
+            });
+          }
+        }
+        
+        // Check if all variants succeeded
+        const allSuccess = variantResults.every(v => v.success);
+        
+        if (allSuccess) {
+          testResults[tableId] = { status: 'success', results: variantResults };
+          updateTestStatus(tableId, 'success', 'PASSED');
+          displayTestResults(tableId, variantResults);
+          successCount++;
+        } else {
+          testResults[tableId] = { status: 'error', results: variantResults };
+          updateTestStatus(tableId, 'error', 'FAILED');
+          displayTestResults(tableId, variantResults);
+          failCount++;
+        }
+        
+      } catch (error) {
+        console.error(`Error testing table ${tableId}:`, error);
+        testResults[tableId] = { status: 'error', error: error };
+        updateTestStatus(tableId, 'error', 'FAILED');
+        displayError(tableId, error);
+        failCount++;
+      }
+      
+      testCount++;
+      updateCounters();
+    }
+    
+    function createTestResultDiv(tableId, tableName) {
+      const div = document.createElement('div');
+      div.id = `test-${tableId}`;
+      div.className = 'table-test';
+      
+      div.innerHTML = `
+        <div class="test-header">
+          <div class="test-title">Table ${tableId}: ${tableName}</div>
+          <div class="test-status status-pending" id="status-${tableId}">PENDING</div>
+        </div>
+        <div class="test-details" id="details-${tableId}">
+          <p style="color: #888; font-style: italic;">Waiting to run...</p>
+        </div>
+      `;
+      
+      return div;
+    }
+    
+    function updateTestStatus(tableId, statusClass, statusText) {
+      const testDiv = document.getElementById(`test-${tableId}`);
+      testDiv.className = `table-test ${statusClass}`;
+      
+      const statusSpan = document.getElementById(`status-${tableId}`);
+      statusSpan.className = `test-status status-${statusClass}`;
+      statusSpan.textContent = statusText;
+    }
+    
+    function displayTestResults(tableId, variantResults) {
+      const detailsDiv = document.getElementById(`details-${tableId}`);
+      let html = '';
+      
+      // Count successes and failures
+      const successCount = variantResults.filter(v => v.success).length;
+      const failCount = variantResults.filter(v => !v.success).length;
+      
+      // Summary line
+      html += `<div style="margin-bottom: 10px; padding: 5px; background-color: #0a1a0a; border-radius: 3px;">`;
+      html += `<strong>Tested ${variantResults.length} variant(s):</strong> `;
+      html += `<span style="color: #6a9a6a;">${successCount} passed</span>`;
+      if (failCount > 0) {
+        html += `, <span style="color: #9a6a6a;">${failCount} failed</span>`;
+      }
+      html += `</div>`;
+      
+      for (const variant of variantResults) {
+        if (variant.success) {
+          html += `<div style="margin: 10px 0;">`;
+          if (variant.variant) {
+            html += `<strong style="color: #6a9a6a;">✓ PASSED${variant.variant}</strong><br>`;
+          } else {
+            html += `<strong style="color: #6a9a6a;">✓ PASSED</strong><br>`;
+          }
+          html += `<div class="test-result-text">${escapeHtml(variant.result.text)}</div>`;
+          if (variant.result.debugText) {
+            html += `<pre style="font-size: 10px; color: #888;">${escapeHtml(variant.result.debugText)}</pre>`;
+          }
+          html += `</div>`;
+        } else {
+          html += `<div style="margin: 10px 0;">`;
+          if (variant.variant) {
+            html += `<strong style="color: #9a6a6a;">✗ FAILED${variant.variant}</strong><br>`;
+          } else {
+            html += `<strong style="color: #9a6a6a;">✗ FAILED</strong><br>`;
+          }
+          html += `<div class="error-message">`;
+          html += `<strong>Error:</strong> ${escapeHtml(variant.error.message)}<br>`;
+          html += `<pre>${escapeHtml(variant.error.stack)}</pre>`;
+          html += `</div></div>`;
+        }
+      }
+      
+      detailsDiv.innerHTML = html;
+    }
+    
+    function displayError(tableId, error) {
+      const detailsDiv = document.getElementById(`details-${tableId}`);
+      detailsDiv.innerHTML = `
+        <div class="error-message">
+          <strong>Error:</strong> ${escapeHtml(error.message)}<br>
+          <pre>${escapeHtml(error.stack)}</pre>
+        </div>
+      `;
+    }
+    
+    function showSummary() {
+      const summaryDiv = document.getElementById('summary');
+      summaryDiv.style.display = 'block';
+      
+      document.getElementById('summaryTotal').textContent = testCount;
+      document.getElementById('summarySuccess').textContent = successCount;
+      document.getElementById('summaryFailed').textContent = failCount;
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // Auto-run on load (optional)
+    // window.addEventListener('load', () => {
+    //   setTimeout(runAllTests, 500);
+    // });
+  </script>
+</body>
+</html>

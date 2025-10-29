@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Hybrid Data System</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { margin: 5px 0; padding: 5px; border-radius: 3px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>Test Hybrid Data System</h1>
+    <p>Testing the hybrid JSON + embedded data loading system</p>
+    
+    <button onclick="testJSONLoading()">Test JSON Loading</button>
+    <button onclick="testFallbackSystem()">Test Fallback System</button>
+    <button onclick="testAllTables()">Test All Tables</button>
+    
+    <div id="initStatus"></div>
+    <div id="results"></div>
+
+    <!-- Load all modules in correct order -->
+    <script src="js/utils.js"></script>
+    <script src="js/dice-roller.js"></script>
+    <script src="js/state-manager.js"></script>
+    <script src="js/table-processor.js"></script>
+    <script src="js/ui-controller.js"></script>
+    <script src="js/print-generator.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        let app;
+        
+        function addResult(type, message) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+        
+        async function initializeApp() {
+            const status = document.getElementById('initStatus');
+            try {
+                status.innerHTML = '<div class="result info">⏳ Initializing app...</div>';
+                
+                // Wait for DOM and modules to load
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                if (typeof OOBApp !== 'undefined') {
+                    app = new OOBApp();
+                    await app.initialize();
+                    status.innerHTML = '<div class="result success">✅ App initialized successfully</div>';
+                } else if (window.oobApp) {
+                    app = window.oobApp;
+                    status.innerHTML = '<div class="result success">✅ Using global app instance</div>';
+                } else {
+                    status.innerHTML = '<div class="result info">⚠️ OOBApp not available, using fallback data access</div>';
+                }
+            } catch (error) {
+                status.innerHTML = '<div class="result error">❌ Error initializing app: ' + error.message + '</div>';
+            }
+        }
+        
+        async function testJSONLoading() {
+            document.getElementById('results').innerHTML = '';
+            addResult('info', '🧪 Testing JSON data loading...');
+            
+            try {
+                // Test direct fetch first
+                addResult('info', 'Testing direct fetch of NATO tables...');
+                const response = await fetch('data/nato-tables.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    addResult('success', `✅ Direct fetch successful: ${Object.keys(data).length} keys found`);
+                    if (data.A && data.A.name) {
+                        addResult('success', `✅ Table A found: ${data.A.name}`);
+                    }
+                } else {
+                    addResult('error', `❌ Direct fetch failed: ${response.status}`);
+                }
+                
+                // Test app initialization
+                await initializeApp();
+                
+                // Test if JSON data is available
+                if (window.oobTables && Object.keys(window.oobTables).length > 0) {
+                    addResult('success', `✅ JSON data loaded: ${Object.keys(window.oobTables).length} tables available`);
+                    
+                    // Test a few specific tables
+                    const testTables = ['A', 'G', 'J'];
+                    for (const tableId of testTables) {
+                        const table = window.oobTables[tableId];
+                        if (table && table.name) {
+                            addResult('success', `✅ Table ${tableId}: ${table.name}`);
+                        } else {
+                            addResult('error', `❌ Table ${tableId}: Not found or invalid`);
+                        }
+                    }
+                } else {
+                    addResult('error', '❌ JSON data not available in window.oobTables');
+                }
+            } catch (error) {
+                addResult('error', `❌ JSON loading test failed: ${error.message}`);
+            }
+        }
+        
+        async function testFallbackSystem() {
+            document.getElementById('results').innerHTML = '';
+            addResult('info', '🧪 Testing fallback system...');
+            
+            try {
+                // Test direct access to embedded data
+                const dataSource = getTableDataSource();
+                if (dataSource && Object.keys(dataSource).length > 0) {
+                    addResult('success', `✅ Fallback data available: ${Object.keys(dataSource).length} tables`);
+                    
+                    // Test specific tables
+                    const testTables = ['A', 'B', 'G', 'H'];
+                    for (const tableId of testTables) {
+                        const table = dataSource[tableId];
+                        if (table && table.name) {
+                            addResult('success', `✅ Fallback Table ${tableId}: ${table.name}`);
+                        } else {
+                            addResult('error', `❌ Fallback Table ${tableId}: Not accessible`);
+                        }
+                    }
+                } else {
+                    addResult('error', '❌ Fallback data not available');
+                }
+            } catch (error) {
+                addResult('error', `❌ Fallback test failed: ${error.message}`);
+            }
+        }
+        
+        async function testAllTables() {
+            document.getElementById('results').innerHTML = '';
+            addResult('info', '🧪 Testing all 12 tables...');
+            
+            try {
+                const dataSource = getTableDataSource();
+                const allTables = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+                let successCount = 0;
+                
+                for (const tableId of allTables) {
+                    const table = dataSource[tableId];
+                    if (table && table.name) {
+                        addResult('success', `✅ Table ${tableId}: ${table.name}`);
+                        successCount++;
+                    } else {
+                        addResult('error', `❌ Table ${tableId}: Missing or invalid`);
+                    }
+                }
+                
+                if (successCount === 12) {
+                    addResult('success', `🎉 All ${successCount}/12 tables loaded successfully!`);
+                } else {
+                    addResult('error', `⚠️ Only ${successCount}/12 tables loaded successfully`);
+                }
+            } catch (error) {
+                addResult('error', `❌ All tables test failed: ${error.message}`);
+            }
+        }
+        
+        // Auto-initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
+    
+    <script>
+        // Load the app and test the hybrid system
+        let oobApp;
+        
+        async function initializeApp() {
+            // Import the OOBApp class
+            const script = document.createElement('script');
+            script.src = 'js/app.js';
+            document.head.appendChild(script);
+            
+            script.onload = async function() {
+                try {
+                    oobApp = new OOBApp();
+                    await oobApp.initialize();
+                    
+                    // Test access to various tables
+                    testTableAccess();
+                } catch (error) {
+                    document.getElementById('results').innerHTML = `<p style="color: red;">Error initializing app: ${error.message}</p>`;
+                }
+            };
+        }
+        
+        function testTableAccess() {
+            const results = [];
+            
+            // Test all tables (should all load from JSON files now)
+            const allTables = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+            allTables.forEach(tableId => {
+                try {
+                    const table = window.oobTables[tableId];
+                    if (table && table.name) {
+                        results.push(`✅ Table ${tableId}: ${table.name} (Source: ${table._source || 'JSON'})`);
+                    } else {
+                        results.push(`❌ Table ${tableId}: Failed to load`);
+                    }
+                } catch (error) {
+                    results.push(`❌ Table ${tableId}: Error - ${error.message}`);
+                }
+            });
+            
+            // Display results
+            document.getElementById('results').innerHTML = `
+                <h2>Complete Data Extraction Test Results:</h2>
+                <ul>
+                    ${results.map(result => `<li>${result}</li>`).join('')}
+                </ul>
+                <p><strong>Total Tables Successfully Loaded:</strong> ${results.filter(r => r.includes('✅')).length}/12</p>
+                <p><strong>Status:</strong> ${results.filter(r => r.includes('✅')).length === 12 ? '🎉 ALL TABLES EXTRACTED TO JSON!' : '⚠️ Some tables missing'}</p>
+            `;
+        }
+        
+        // Initialize when page loads
+        initializeApp();
+    </script>
+</body>
+</html>

@@ -1,8 +1,10 @@
 {
   "_comment": "Warsaw Pact OOB Tables (G-L) - Red Storm Order of Battle Data",
-  "_version": "2.0.0-phase2-extracted",
+  "_version": "3.0.0-phase3-complete",
   "_extraction_date": "2025-10-26",
   "_source": "Extracted from index.html oobTables object",
+  "_tables_included": ["G", "H", "I", "J", "K", "L"],
+  "_extraction_status": "Complete - All WP tables extracted",
   
   "G": {
     "name": "WP Table G - QRA Flights",
@@ -142,6 +144,230 @@
             }
           }
         }
+      }
+    }
+  },
+  "J": {
+    "name": "WP Table J - Deep Strike Raid",
+    "faction": "WP",
+    "hasTasking": true,
+    "hasDate": false,
+    "description": "WP Deep Strike Raid - Packages of flights intended to go deep behind NATO lines",
+    "ordnanceNote": "All Bombing flights may carry any air-to-ground ordnance allowed for the specified aircraft type. Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.",
+    "taskings": {
+      "Escort Jamming": {
+        "flightSize": 1,
+        "flightCount": 3,
+        "description": "Escort Jamming",
+        "nations": {
+          "1-2": {
+            "name": "USSR",
+            "aircraft": {
+              "1-2": "Su-24MP",
+              "3-5": "MiG-25RB",
+              "6-8": "Yak-28PP",
+              "9-10": "Tu-22PP"
+            }
+          },
+          "3-5": {
+            "name": "USSR",
+            "aircraft": {
+              "1-5": "MiG-25RB",
+              "6-10": "Tu-22PP"
+            }
+          },
+          "6-8": {
+            "name": "USSR",
+            "aircraft": {
+              "1-4": "Su-24MP",
+              "5-8": "MiG-25RB",
+              "9-10": "Yak-28PP"
+            }
+          },
+          "9-10": {
+            "name": "GDR",
+            "aircraft": {
+              "1-10": "MiG-21PF"
+            }
+          }
+        }
+      },
+      "Chaff Laying": {
+        "flightSize": 1,
+        "flightCount": 3,
+        "description": "Chaff Laying",
+        "nations": {
+          "1-5": {
+            "name": "USSR",
+            "aircraft": {
+              "1-5": "MiG-21bis",
+              "6-10": "MiG-23M"
+            }
+          },
+          "6-8": {
+            "name": "USSR",
+            "aircraft": {
+              "1-4": "Yak-28R",
+              "5-8": "MiG-25RB",
+              "9-10": "Su-24MR"
+            }
+          },
+          "9-10": {
+            "name": "GDR",
+            "aircraft": {
+              "1-10": "MiG-21PF"
+            }
+          }
+        }
+      },
+      "Close Escort": {
+        "flightSize": 4,
+        "flightCount": 4,
+        "description": "Close Escort",
+        "nations": {
+          "1-3": {
+            "name": "USSR",
+            "aircraft": {
+              "1-3": "MiG-23MLA",
+              "4-7": "MiG-23MLD",
+              "8-10": "Su-27S"
+            }
+          },
+          "4-7": {
+            "name": "USSR",
+            "aircraft": {
+              "1-4": "MiG-23ML",
+              "5-7": "MiG-29A",
+              "8-10": "Su-27S"
+            }
+          },
+          "8-10": {
+            "name": "GDR",
+            "aircraft": {
+              "1-10": "MiG-23ML"
+            }
+          }
+        }
+      },
+      "Deep Bombing": {
+        "flightSize": 4,
+        "flightCount": 6,
+        "description": "Deep Bombing",
+        "nations": {
+          "1-4": {
+            "name": "USSR",
+            "aircraft": {
+              "1-4": "Su-24M",
+              "5-8": "Su-24M4",
+              "9-10": "MiG-27K"
+            }
+          },
+          "5-8": {
+            "name": "USSR",
+            "aircraft": {
+              "1-10": "Tu-22M"
+            }
+          },
+          "9-10": {
+            "name": "GDR",
+            "aircraft": {
+              "1-10": "Su-22M4"
+            }
+          }
+        }
+      },
+      "Recon": {
+        "flightSize": 1,
+        "flightCount": 2,
+        "description": "Reconnaissance",
+        "nations": {
+          "1-5": {
+            "name": "USSR",
+            "aircraft": {
+              "1-5": "Su-17M4R",
+              "6-10": "MiG-25RB"
+            }
+          },
+          "6-7": {
+            "name": "USSR",
+            "aircraft": {
+              "1-7": "Yak-28R",
+              "8-10": "Su-24MR"
+            }
+          },
+          "8-9": {
+            "name": "USSR",
+            "aircraft": {
+              "1-5": "MiG-21R",
+              "6-10": "MiG-25RB"
+            }
+          },
+          "10": {
+            "name": "GDR",
+            "aircraft": {
+              "1-10": "MiG-21R"
+            }
+          }
+        }
+      }
+    }
+  },
+  "K": {
+    "name": "WP Table K - Combat Rescue",
+    "faction": "WP",
+    "hasNationality": true,
+    "hasDate": false,
+    "description": "WP Combat Rescue - Size of air battle and high number of losses would limit ability to conduct rescue",
+    "ordnanceNote": "All flights tasked with Rescue Support may carry any ordnance allowed for the specified aircraft type.",
+    "nationalities": {
+      "USSR": {
+        "name": "USSR Combat Rescue Raid",
+        "flights": [
+          {
+            "type": "Rescue Support",
+            "flightSize": 2,
+            "flightCount": 2,
+            "description": "Rescue Support",
+            "aircraft": {
+              "1-5": "Su-25",
+              "6-8": "Su-17M4",
+              "9-10": "MiG-21bis"
+            }
+          },
+          {
+            "type": "CSAR",
+            "flightSize": 1,
+            "flightCount": 2,
+            "description": "Combat Search and Rescue",
+            "aircraft": {
+              "1-10": "Mi-8"
+            }
+          }
+        ]
+      },
+      "GDR": {
+        "name": "GDR Combat Rescue Raid",
+        "flights": [
+          {
+            "type": "Rescue Support",
+            "flightSize": 2,
+            "flightCount": 2,
+            "description": "Rescue Support",
+            "aircraft": {
+              "1-5": "MiG-21bis",
+              "6-10": "MiG-23BN"
+            }
+          },
+          {
+            "type": "CSAR",
+            "flightSize": 1,
+            "flightCount": 2,
+            "description": "Combat Search and Rescue",
+            "aircraft": {
+              "1-10": "Mi-8"
+            }
+          }
+        ]
       }
     }
   },

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Function Diagnostic Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .pass { background-color: #d4edda; color: #155724; }
+        .fail { background-color: #f8d7da; color: #721c24; }
+        button { margin: 5px; padding: 8px 16px; }
+    </style>
+</head>
+<body>
+    <h1>Function Diagnostic Test</h1>
+    <p>Testing if onclick functions are globally available</p>
+    
+    <div>
+        <button onclick="testToggleDebugMode()">Test toggleDebugMode()</button>
+        <button onclick="testSetScenarioDate()">Test setScenarioDate()</button>
+        <button onclick="testSelectTable()">Test selectTable()</button>
+        <button onclick="testGetTableDataSource()">Test getTableDataSource()</button>
+    </div>
+    
+    <div id="results"></div>
+
+    <!-- Load all modules -->
+    <script src="js/utils.js"></script>
+    <script src="js/dice-roller.js"></script>
+    <script src="js/state-manager.js"></script>
+    <script src="js/table-processor.js"></script>
+    <script src="js/ui-controller.js"></script>
+    <script src="js/print-generator.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        function addResult(type, message) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+
+        function testToggleDebugMode() {
+            try {
+                if (typeof toggleDebugMode === 'function') {
+                    addResult('pass', '✅ toggleDebugMode is available as function');
+                    // Try calling it
+                    toggleDebugMode();
+                    addResult('pass', '✅ toggleDebugMode executed successfully');
+                } else if (typeof window.toggleDebugMode === 'function') {
+                    addResult('pass', '✅ toggleDebugMode is available on window');
+                    window.toggleDebugMode();
+                    addResult('pass', '✅ window.toggleDebugMode executed successfully');
+                } else {
+                    addResult('fail', '❌ toggleDebugMode not found');
+                }
+            } catch (error) {
+                addResult('fail', `❌ toggleDebugMode error: ${error.message}`);
+            }
+        }
+
+        function testSetScenarioDate() {
+            try {
+                if (typeof setScenarioDate === 'function') {
+                    addResult('pass', '✅ setScenarioDate is available as function');
+                    setScenarioDate('pre');
+                    addResult('pass', '✅ setScenarioDate executed successfully');
+                } else if (typeof window.setScenarioDate === 'function') {
+                    addResult('pass', '✅ setScenarioDate is available on window');
+                    window.setScenarioDate('pre');
+                    addResult('pass', '✅ window.setScenarioDate executed successfully');
+                } else {
+                    addResult('fail', '❌ setScenarioDate not found');
+                }
+            } catch (error) {
+                addResult('fail', `❌ setScenarioDate error: ${error.message}`);
+            }
+        }
+
+        function testSelectTable() {
+            try {
+                if (typeof selectTable === 'function') {
+                    addResult('pass', '✅ selectTable is available as function');
+                    selectTable('A', 'NATO');
+                    addResult('pass', '✅ selectTable executed successfully');
+                } else if (typeof window.selectTable === 'function') {
+                    addResult('pass', '✅ selectTable is available on window');
+                    window.selectTable('A', 'NATO');
+                    addResult('pass', '✅ window.selectTable executed successfully');
+                } else {
+                    addResult('fail', '❌ selectTable not found');
+                }
+            } catch (error) {
+                addResult('fail', `❌ selectTable error: ${error.message}`);
+            }
+        }
+
+        function testGetTableDataSource() {
+            try {
+                if (typeof getTableDataSource === 'function') {
+                    addResult('pass', '✅ getTableDataSource is available as function');
+                    const data = getTableDataSource();
+                    addResult('pass', `✅ getTableDataSource returned ${Object.keys(data).length} tables`);
+                } else if (typeof window.getTableDataSource === 'function') {
+                    addResult('pass', '✅ getTableDataSource is available on window');
+                    const data = window.getTableDataSource();
+                    addResult('pass', `✅ window.getTableDataSource returned ${Object.keys(data).length} tables`);
+                } else {
+                    addResult('fail', '❌ getTableDataSource not found');
+                }
+            } catch (error) {
+                addResult('fail', `❌ getTableDataSource error: ${error.message}`);
+            }
+        }
+
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                addResult('pass', '🔍 Running automatic function availability tests...');
+                
+                // Test all key functions
+                const functionsToTest = [
+                    'toggleDebugMode', 'setScenarioDate', 'selectTable', 
+                    'getTableDataSource', 'parseRange', 'escapeHtml',
+                    'makeDebugRoll', 'getDebugMode', 'hideTableView',
+                    'handleMissionTypeChange', 'closeModalOnOverlayClick'
+                ];
+
+                functionsToTest.forEach(funcName => {
+                    if (typeof window[funcName] === 'function') {
+                        addResult('pass', `✅ ${funcName} found on window`);
+                    } else if (typeof eval(funcName) === 'function') {
+                        addResult('pass', `✅ ${funcName} found globally`);
+                    } else {
+                        addResult('fail', `❌ ${funcName} NOT FOUND`);
+                    }
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>

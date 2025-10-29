@@ -43,30 +43,43 @@ class OOBApp {
   async loadTableData() {
     console.log('OOB Generator: Loading table data from JSON files...');
     
-    const [natoResponse, wpResponse, metadataResponse] = await Promise.all([
-      fetch('./data/nato-tables.json'),
-      fetch('./data/wp-tables.json'), 
-      fetch('./data/table-metadata.json')
-    ]);
+    try {
+      const [natoResponse, wpResponse, metadataResponse] = await Promise.all([
+        fetch('data/nato-tables.json'),
+        fetch('data/wp-tables.json'), 
+        fetch('data/table-metadata.json')
+      ]);
 
-    if (!natoResponse.ok || !wpResponse.ok || !metadataResponse.ok) {
-      throw new Error('Failed to load one or more data files');
+      if (!natoResponse.ok || !wpResponse.ok || !metadataResponse.ok) {
+        throw new Error(`Failed to load data files - NATO: ${natoResponse.status}, WP: ${wpResponse.status}, Metadata: ${metadataResponse.status}`);
+      }
+
+      this.natoTables = await natoResponse.json();
+      this.wpTables = await wpResponse.json();
+      this.tableMetadata = await metadataResponse.json();
+      
+      this.isDataLoaded = true;
+      console.log('OOB Generator: Table data loaded successfully');
+      console.log('NATO tables:', Object.keys(this.natoTables));
+      console.log('WP tables:', Object.keys(this.wpTables));
+    } catch (error) {
+      console.error('Failed to load JSON data:', error);
+      this.isDataLoaded = false;
+      throw error;
     }
-
-    this.natoTables = await natoResponse.json();
-    this.wpTables = await wpResponse.json();
-    this.tableMetadata = await metadataResponse.json();
-    
-    this.isDataLoaded = true;
-    console.log('OOB Generator: Table data loaded successfully');
   }
 
   setupDataBridge() {
     // Create global oobTables object to maintain compatibility
     // with existing code in index.html
     if (this.isDataLoaded && typeof window !== 'undefined') {
-      window.oobTablesFromJSON = this.getCombinedTables();
-      console.log('OOB Generator: Data bridge established');
+      const jsonTables = this.getCombinedTables();
+      
+      // Make JSON data available globally
+      window.oobTables = jsonTables;
+      
+      console.log('OOB Generator: Data bridge established - JSON data now globally available');
+      console.log('Tables loaded:', Object.keys(jsonTables));
     }
   }
 
@@ -98,6 +111,9 @@ if (typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', async () => {
     oobApp = new OOBApp();
     await oobApp.initialize();
+    
+    // Make app globally available
+    window.oobApp = oobApp;
   });
 }
 
