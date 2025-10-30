@@ -42,8 +42,8 @@ jobs:
           # Copy the chit pull app to the chit-pull subdirectory
           cp chit-pull/index.html dist/chit-pull/index.html
           
-          # Copy the OOB generator to the oob-generator subdirectory
-          cp oob-generator/index.html dist/oob-generator/index.html
+          # Copy the OOB generator with all its files
+          cp -r oob-generator dist/
           
           # Copy the test harness to the testharness subdirectory
           cp testharness/index.html dist/testharness/index.html
