@@ -24,10 +24,24 @@ class OOBApp {
     this.wpTables = null;
     this.tableMetadata = null;
     this.isDataLoaded = false;
+    // Detect base path for GitHub Pages
+    this.basePath = this.getBasePath();
+  }
+
+  getBasePath() {
+    // Get the directory of the current page
+    const path = window.location.pathname;
+    if (path.includes('/oob-generator/')) {
+      // If we're in the oob-generator directory, use relative paths
+      return './';
+    }
+    // Fallback to relative path
+    return './';
   }
 
   async initialize() {
     console.log('OOB Generator: Initializing...');
+    console.log('Base path:', this.basePath);
     
     try {
       await this.loadTableData();
@@ -45,9 +59,9 @@ class OOBApp {
     
     try {
       const [natoResponse, wpResponse, metadataResponse] = await Promise.all([
-        fetch('data/nato-tables.json'),
-        fetch('data/wp-tables.json'), 
-        fetch('data/table-metadata.json')
+        fetch(this.basePath + 'data/nato-tables.json'),
+        fetch(this.basePath + 'data/wp-tables.json'), 
+        fetch(this.basePath + 'data/table-metadata.json')
       ]);
 
       if (!natoResponse.ok || !wpResponse.ok || !metadataResponse.ok) {
