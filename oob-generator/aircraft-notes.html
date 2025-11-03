@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aircraft Notes Reference - Red Storm</title>
+  <link rel="stylesheet" href="../shared/red-storm.css">
+  <style>
+    /* Override body to match OOB generator */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background-color: #2d3d2d;
+    }
+
+    /* Custom styles for notes table */
+    .notes-table {
+      width: 100%;
+      background-color: #344034;
+      border-radius: 5px;
+      overflow: hidden;
+      border-collapse: collapse;
+    }
+
+    .notes-table thead {
+      background-color: #3f4f3f;
+    }
+
+    .notes-table th {
+      color: #e8f0e8;
+      padding: 10px;
+      text-align: left;
+      font-weight: bold;
+      font-size: 16px;
+      border-bottom: 2px solid #2d3a2d;
+    }
+
+    .notes-table th:first-child {
+      width: 50px;
+      text-align: center;
+    }
+
+    .notes-table tbody tr {
+      border-bottom: 1px solid #2d3a2d;
+    }
+
+    .notes-table tbody tr:nth-child(even) {
+      background-color: #3d4f3d;
+    }
+
+    .notes-table tbody tr:hover {
+      background-color: #4a5a4a;
+    }
+
+    .notes-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .notes-table td {
+      color: #d8e4d8;
+      padding: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .note-code-cell {
+      text-align: center;
+      font-weight: bold;
+      font-size: 17px;
+      color: #e8f0e8;
+    }
+
+    .note-description-cell {
+      color: #c8d8c8;
+    }
+
+    /* Override header to match OOB generator */
+    .header {
+      margin-bottom: 20px;
+    }
+
+    .header .title {
+      font-size: 32px;
+      letter-spacing: 0;
+      margin-bottom: 5px;
+      color: #ffffff;
+    }
+
+    .header .subtitle {
+      font-size: 16px;
+      letter-spacing: 0;
+      font-style: italic;
+      opacity: 0.9;
+      color: #ffffff;
+    }
+
+    /* Form controls container - two-column grid spanning full width */
+    .section {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      margin: 0 0 30px 0;
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 15px;
+    }
+
+    .controls-section {
+      background-color: #3a4a3a;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #4a5a4a;
+    }
+
+    .controls-title {
+      color: #d4e4d4;
+      padding: 0 0 8px 0;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #4a5a4a;
+    }
+
+    .nation-select,
+    .search-box {
+      width: 100%;
+      padding: 10px 12px;
+      background-color: #2d3a2d;
+      color: #d4e4d4;
+      border: 2px solid #4a5a4a;
+      border-radius: 6px;
+      font-size: 15px;
+      transition: all 0.3s;
+      box-sizing: border-box;
+    }
+
+    .nation-select {
+      cursor: pointer;
+    }
+
+    .nation-select:focus,
+    .search-box:focus {
+      outline: none;
+      border-color: #7a8a7a;
+      background-color: #3a4a3a;
+    }
+
+    .search-box::placeholder {
+      color: #6a7a6a;
+    }
+
+    @media print {
+      .back-link,
+      .section:first-of-type {
+        display: none;
+      }
+
+      .notes-table {
+        page-break-inside: avoid;
+      }
+
+      .notes-table tbody tr {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="title">Red Storm</div>
+      <div class="subtitle">Aircraft Notes Reference</div>
+    </div>
+
+    <a href="../index.html" class="back-link">← Back to Red Storm Tools Suite</a>
+
+    <div class="section">
+      <div class="controls-section">
+        <div class="controls-title">Select Nation</div>
+        <select id="nationSelect" class="nation-select">
+          <option value="USAF">USAF - United States Air Force</option>
+          <option value="UK">UK - Royal Air Force</option>
+          <option value="FRG">FRG - West German Air Force</option>
+          <option value="BE/CA/NE">Belgium / Canada / Netherlands</option>
+          <option value="USSR">USSR - Soviet Air Force</option>
+          <option value="GDR">GDR - East German Air Force</option>
+        </select>
+      </div>
+
+      <div class="controls-section">
+        <div class="controls-title">Search Notes</div>
+        <input type="text" id="searchBox" class="search-box" placeholder="Search by note code or text...">
+      </div>
+    </div>
+
+    <div id="notesSection">
+      <!-- Notes table will be inserted here -->
+    </div>
+  </div>
+
+  <script>
+    // Notes database
+    const notesData = {
+      'USAF': [
+        { code: 'A', desc: 'AIM-9 and/or AIM-7 depletions are (6) if tasked with Bombing or SEAD.' },
+        { code: 'B', desc: 'Automatic BVR engagement success. May attempt to engage two different enemy flights in BVR combat [11.44] in same Movement Phase.' },
+        { code: 'C', desc: 'Use lower bomb point load for Deep Strike Raids.' },
+        { code: 'D', desc: 'AN/ASX-1 TISEO sensor. Automatic visual ID at end of Detection Phase of one detected enemy flight in forward arc, line of sight, and same altitude at 1-8 hex range.' },
+        { code: 'E', desc: 'Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32].' },
+        { code: 'F', desc: 'May Spot Jam [19.34] two radars at the same time.' },
+        { code: 'G', desc: 'May enter Defensive Wheel formation [7.1].' },
+        { code: 'H', desc: 'Only load allowed is LGB(1). Internal bomb bay, use clean ratings while laden.' },
+        { code: 'I', desc: 'GBU-15(V)B glide bomb. May use EOGB day or night.' },
+        { code: 'J', desc: 'Roll to determine AIM-9 model for each flight: 1-4 AIM-9L, 5+ AIM-9M. Roll to determine AIM-7 model for each flight: 1-6 AIM-7F, 7+ AIM-7M.' },
+        { code: 'K', desc: 'Synthetic Aperture Radar (SAR) recon capability [24.2].' },
+        { code: 'L', desc: 'May carry Shrike or HARM, not both. If loaded with Shrikes, aircraft may still carry a normal bomb point load as well.' },
+        { code: 'M', desc: 'AGM-65D Maverick IR Missile. May use EOGM day or night.' },
+        { code: 'N', desc: 'Only Level Bombing and Radar Bombing profiles allowed.' },
+        { code: 'O', desc: 'Non-Cooperative Target Recognition. Automatic visual ID at end of Detection Phase of one detected enemy flight in forward arc, same altitude, and 1-16 hex range.' },
+        { code: 'P', desc: 'Multirole aircraft [8.37].' },
+        { code: 'Q', desc: 'Zoom Climb [6.33] not allowed.' },
+        { code: 'R', desc: 'Laser Spot Tracker. LGB only allowed vs targets within 2 hexes of NATO Armor or Mech unit.' },
+        { code: 'S', desc: 'SUU-23 Gun Pod. Roll for each flight: 1-5 add 20mm (4), 6+ no effect.' }
+      ],
+      'UK': [
+        { code: 'A', desc: 'AIM-9 not allowed if tasked with Bombing, SEAD, or Rescue Support.' },
+        { code: 'B', desc: 'May substitute Rocket Pods for bombs.' },
+        { code: 'C', desc: 'Internal bay. May only carry regular bombs in bay. Use clean ratings while laden.' },
+        { code: 'D', desc: '80+U-23 Gun. Roll for each flight: 1-3 Normal, 4-10 Reduce to {12}, 8+ - -2.' },
+        { code: 'E', desc: 'May do Max Turns as Free Turns [6.32].' },
+        { code: 'F', desc: 'LGB only allowed using laser designation [17.68] by another flight.' },
+        { code: 'G', desc: 'May Spot Jam [19.34] one radar.' },
+        { code: 'H', desc: 'Use lower bomb point load for Deep Strike Raids.' },
+        { code: 'I', desc: 'May enter Defensive Wheel formation [7.1].' },
+        { code: 'J', desc: 'AN/AWQ-23E Pave Spike Pod. May laser designate [17.69] for other flights.' },
+        { code: 'K', desc: 'May only do photo recon runs [24.1] at Deck altitude. Side Looking Camera [24.1] not allowed.' },
+        { code: 'L', desc: 'Inertial navigation/attack system. May use Toss Bombing [17.34] profile without Radar capability.' },
+        { code: 'M', desc: 'Roll to determine radar capability for each flight: 1-3 Normal, 4-10 Reduce to {12}, 8+ - -2.' },
+        { code: 'N', desc: 'If tasked with Recon, no AIM-9.' },
+        { code: 'O', desc: 'Zoom Climb [6.33] not allowed.' }
+      ],
+      'FRG': [
+        { code: 'A', desc: 'AIM-9 depletion is {6} if tasked with Bombing, SEAD, or Rescue Support.' },
+        { code: 'B', desc: 'May substitute Rocket Pods [17.63] for bombs.' },
+        { code: 'C', desc: 'May enter Defensive Wheel formation [7.1].' },
+        { code: 'D', desc: 'May Spot Jam [19.34] one radar.' },
+        { code: 'E', desc: 'Use lower bomb point load for Deep Strike Raids.' },
+        { code: 'F', desc: 'Synthetic Aperture Radar (SAR) recon capability [24.2].' },
+        { code: 'G', desc: 'AIM-9 not allowed if tasked with Bombing, SEAD, or Rescue Support.' },
+        { code: 'H', desc: 'Multirole aircraft [8.37].' },
+        { code: 'I', desc: 'Zoom Climb [6.33] not allowed.' }
+      ],
+      'BE/CA/NE': [
+        { code: 'A', desc: 'AIM-9 depletion number is {6} if tasked with Bombing or SEAD.' },
+        { code: 'B', desc: 'May substitute Rocket Pods [17.63] for bombs.' },
+        { code: 'C', desc: 'Use lower bomb point load for Deep Strike Raids.' },
+        { code: 'D', desc: 'No AIM-9 if tasked with Bombing.' },
+        { code: 'E', desc: 'Multirole aircraft [8.37].' }
+      ],
+      'USSR': [
+        { code: 'A', desc: 'No IRM/R-IIM if tasked with Bombing, SEAD, Rescue Support, or Chaff Laying.' },
+        { code: 'B', desc: 'If tasked with Bombing or SEAD, Jam rating is 2h.' },
+        { code: 'C', desc: 'Soviet Doctrine rule [11.32] does not apply.' },
+        { code: 'D', desc: 'Roll to determine IRM load for each flight. 1-4 R-60, 5-f0 R-60M.' },
+        { code: 'E', desc: 'Internal Chaff Dispenser. May carry Chaff [17.68] and use clean ratings.' },
+        { code: 'F', desc: 'May enter Defensive Wheel formation [7.1].' },
+        { code: 'G', desc: 'May carry AS-6(2) or Kh-28(2), not both.' },
+        { code: 'H', desc: 'Roll to determine IRM load for each flight. 1-5 R-60M, 6-f0 R-73.' },
+        { code: 'I', desc: 'Use lower bomb point load for Deep Strike Raids.' },
+        { code: 'J', desc: 'May Spot Jam [19.34] two radars at same time.' },
+        { code: 'K', desc: 'May Spot Jam [19.34] one radar.' },
+        { code: 'L', desc: 'Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32]. May not carry CBU or Anti-Runway ordnance.' },
+        { code: 'M', desc: 'Synthetic Aperture Radar (SAR) recon capability [24.2].' },
+        { code: 'N', desc: 'Kh-25MP, Kh-28M, or Kh-58 only allowed if tasked with SEAD.' },
+        { code: 'O', desc: 'May piece Standoff Jamming arc in forward or rear arcs if tasked with Escort Jamming [19.32].' },
+        { code: 'P', desc: 'Bomb load NA if tasked with Recon.' },
+        { code: 'Q', desc: 'Multirole aircraft [8.37].' },
+        { code: 'R', desc: 'May carry Chaff [17.68] if tasked with Chaff Laying or Escort Jamming [19.32].' },
+        { code: 'S', desc: 'May swap regular bombs for KMGU [17.68].' },
+        { code: 'T', desc: 'May only piece Standoff Jamming arc in forward or rear arcs, not beam arcs.' },
+        { code: 'U', desc: 'No R-27 if tasked with Bombing, SEAD, or Rescue Support.' },
+        { code: 'V', desc: 'May swap regular bombs for BETAB-500 Anti-Runway Bombs [17.04].' },
+        { code: 'W', desc: 'Zoom Climb [6.33] not allowed.' }
+      ],
+      'GDR': [
+        { code: 'A', desc: 'No IRM / RHM if tasked with Bombing, SEAD, or Chaff Laying.' },
+        { code: 'B', desc: 'May swap regular bombs for KMGU [17.66].' },
+        { code: 'C', desc: 'Roll to determine IKN load for each flight: 1-5 R-60, 6-10 R-60M.' },
+        { code: 'D', desc: 'Use lower bomb point load for Deep Strike Raids.' },
+        { code: 'E', desc: 'Only Bombs, AT CBU, or Rockets allowed.' },
+        { code: 'F', desc: 'Roll for 23mm Gun {4} Pod for each flight: 1-6 Pod, 7-10 No Pod.' },
+        { code: 'G', desc: 'May enter Defensive Wheel formation [7.1].' },
+        { code: 'H', desc: 'May carry Chaff [17.68] if tasked with Chaff Laying.' },
+        { code: 'I', desc: 'If tasked with Bombing or SEAD, Jam rating is 2n.' },
+        { code: 'J', desc: 'Multirole aircraft [8.37].' }
+      ]
+    };
+
+    const nationSelect = document.getElementById('nationSelect');
+    const searchBox = document.getElementById('searchBox');
+    const notesSection = document.getElementById('notesSection');
+
+    let currentNation = 'USAF';
+    let searchTerm = '';
+
+    function renderNotes() {
+      const notes = notesData[currentNation] || [];
+      const filtered = notes.filter(note => {
+        if (!searchTerm) return true;
+        const search = searchTerm.toLowerCase();
+        return note.code.toLowerCase().includes(search) || 
+               note.desc.toLowerCase().includes(search);
+      });
+
+      const html = `
+        <table class="notes-table">
+          <thead>
+            <tr>
+              <th>Note</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered.map(note => `
+              <tr>
+                <td class="note-code-cell">${note.code}</td>
+                <td class="note-description-cell">${note.desc}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      notesSection.innerHTML = html;
+    }
+
+    nationSelect.addEventListener('change', (e) => {
+      currentNation = e.target.value;
+      renderNotes();
+    });
+
+    searchBox.addEventListener('input', (e) => {
+      searchTerm = e.target.value;
+      renderNotes();
+    });
+
+    // Initial render
+    renderNotes();
+  </script>
+</body>
+</html>

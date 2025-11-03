@@ -619,6 +619,10 @@ body {
   font-weight: bold;
 }
 
+.back-link:visited {
+  color: #8db4e2;
+}
+
 .back-link:hover {
   color: #a4c4f2;
 }

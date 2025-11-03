@@ -170,6 +170,10 @@
       <div class="section results-section" id="resultsSection" style="display: none;">
         <div class="results-header">
           <div class="section-title">Generated Results</div>
+          <select id="flightSheetStyle" style="padding: 10px 15px; background-color: #2d3a2d; color: #d4e4d4; border: 2px solid #4a5a4a; border-radius: 6px; font-size: 14px; margin-right: 10px; cursor: pointer;">
+            <option value="current">Current Flight Sheet</option>
+            <option value="compact">Compact Flight Sheet (New)</option>
+          </select>
           <button class="action-button" onclick="generatePrintableSheet()" style="background-color: #5a6a5a; margin-right: 10px;">📄 Print Flight Sheet</button>
           <button class="action-button clear-results" onclick="clearAllResults()">Clear All</button>
         </div>
@@ -1285,6 +1289,15 @@
         return;
       }
 
+      // Check which flight sheet style to use
+      const selectedStyle = document.getElementById('flightSheetStyle').value;
+      if (selectedStyle === 'compact') {
+        generateCompactFlightSheet();
+        return;
+      }
+
+      // Otherwise use the current/legacy flight sheet generation below
+
       // Create a new window for printing
       const printWindow = window.open('', '_blank');
       
@@ -1598,6 +1611,19 @@
     // Write the print window content
     printWindow.document.write(htmlContent);
     printWindow.document.close();
+    }
+
+    // Generate Compact Flight Sheet (New Designer Style)
+    function generateCompactFlightSheet() {
+      alert('Compact flight sheet generation is in development. This will use the new designer layout from flight-sheet-designer.html.');
+      // TODO: Implement compact flight sheet generation
+      // This will use the card layout from flight-sheet-designer.html
+      // Features to include:
+      // - Roundel images per flight
+      // - Compact fuel circles (2 rows instead of grid)
+      // - Side-by-side aircraft cards in horizontal layout
+      // - Weapon loadout sections integrated into aircraft cards
+      // - All flight metadata in header (callsign, counter, aggression)
     }
 
     function getMaxFlightSize(results) {
