@@ -1,197 +1,113 @@
-# Compact Flight Sheet Implementation
+# Flight Sheet Designer Integration with OOB Generator
 
 ## Overview
-Implemented compact flight sheet generation in the OOB Generator using the designer layout from flight-sheet-designer.html.
+Integrate the detailed flight-sheet-designer.html layout into the OOB Generator's "Compact" flight sheet output.
 
 ## Implementation Date
 December 2024
 
-## Features Implemented
+## Current Status
+⚠️ WORK IN PROGRESS - Initial implementation used wrong layout. Need to use actual designer format.
 
-### 1. Async Data Loading
-- Loads aircraft-nato.json, aircraft-wp.json, weapons.json, and aircraft-note-rules.json
-- Uses Promise.all for parallel loading
-- Error handling with user-friendly alerts
+## Correct Designer Layout
 
-### 2. Flight Card Generation
-- **generateCompactFlightSheet()**: Main function that loads data and opens print window
-- **generateCompactFlightCard()**: Parses OOB result and generates cards for each flight
-- **generateSingleCompactCard()**: Creates individual flight card HTML with designer layout
-- **applyNoteRules()**: Applies aircraft note modifications based on tasking
-- **generateCompactSheetHTML()**: Wraps flight cards in complete HTML document
+The flight-sheet-designer.html uses this detailed format:
 
-### 3. Result Parsing
-Parses OOB generator results format:
-- `"FRG: 1 x {2} F-4F, CAP"` → Extracts nation (FRG), multiplier (1), size (2), aircraft (F-4F), tasking (CAP)
-- `"USSR: 4 x {2} MiG-29, SWEEP"` → Handles Warsaw Pact format
-- Supports multi-flight results (e.g., "4 x {2}" generates 4 separate cards)
+### Flight Card Structure
+1. **Roundel Header** - Nation-specific roundel image
+2. **Flight Header Grid** - 5 columns: Roundel | Aircraft | Callsign | Counter | Aggression
+3. **Tasking/Fuel/Notes Row** - 3 columns with fuel circles
+4. **Weapons Row** - Gun, IRM, RHM with modifiers | Crew & Runway info
+5. **Equipment Rows** - AAM, Ordnance, Bomb, Sight details
+6. **Systems Row** - Radar, RWR, Jam ratings
+7. **Capabilities Row** - Night, TFR, etc.
+8. **Speed Table** - Clean/Laden speeds across altitude bands (VH, H, M, L/D)
+9. **Aircraft Grid** - Individual aircraft boxes with damage tracking and ordnance
 
-### 4. Aircraft Data Integration
-- Looks up aircraft in NATO/WP databases by name
-- Extracts weapon loadouts (Gun, IRM, RHM)
-- Applies aircraft notes from database
-- Handles missing data gracefully with defaults
+### Key Features from Designer
+- Compact 7pt font sizing for dense information
+- Speed tables with Clean vs Laden columns
+- Full radar/RWR/jam system display
+- Capabilities list (Night, TFR, Radar, etc.)
+- Ordnance details per aircraft
+- Damage tracking (Damaged, Crippled, Destroyed checkboxes)
+- Fuel circles in 2 rows based on aircraft fuel capacity
 
-### 5. Note Rules Application
-Implements rule types:
-- **weaponModification**: Adjusts AAM depletion (e.g., -1 to IRM/RHM)
-- **weaponRestriction**: Removes specific weapons
-- **capabilityModification**: Modifies capabilities like jam rating
-- **Conditional logic**: Rules apply based on tasking (e.g., "!SEAD" means NOT SEAD)
+## Required Changes
 
-### 6. Flight Card Layout
-Uses designer layout with:
-- Roundel header (nation-specific image)
-- Flight header (aircraft type, callsign, counter, aggression)
-- Three-column row (Tasking, Notes, Fuel with 18 circles in 2 rows)
-- Aircraft cards (silhouette, health checkboxes, weapon brackets, ordnance area)
-- Responsive grid layout for multiple aircraft
+### 1. Copy Designer CSS
+Need to copy ALL CSS from flight-sheet-designer.html lines 100-500:
+- `.flight-card` with proper borders
+- `.speed-table` with clean/laden columns
+- `.aircraft-grid` for 1-4 aircraft layout
+- `.damage-boxes` with checkboxes
+- All field styling (7pt fonts, borders, padding)
 
-### 7. Print Support
-- Opens in new window for printing
-- Page-break-inside: avoid for clean printing
-- Print button at bottom
-- Timestamp and suite branding
+### 2. Rewrite Card Generation
+Replace `generateSingleDesignerCard()` to match `createFlightCard()` from designer:
+- Use exact same HTML structure
+- Include all equipment rows (ordnance, radar, capabilities)
+- Generate speed tables from aircraft data
+- Create aircraft grid with damage checkboxes
 
-## Data Structure
+### 3. Add Aircraft Data Conversion
+Copy `convertAircraftData()` function from designer (lines 800-900):
+- Converts JSON format to designer display format
+- Extracts speeds for each altitude band
+- Builds weapon display strings ("+3 {2}" format)
+- Handles radar modifiers
 
-### OOB Result Object
-```javascript
-{
-  id: <number>,
-  table: "A-L",
-  faction: "NATO" | "WP",
-  tableName: "NATO Table A - Fighter/Bomber",
-  result: "FRG: 1 x {2} F-4F, CAP",
-  nationName: "FRG",
-  nationRoll: <number>,
-  aircraftRoll: <number>,
-  atafZone: "North" | "Central" | "South",
-  scenarioDate: "pre" | "post",
-  debugText: "...",
-  timestamp: <number>
-}
-```
+### 4. Apply Note Rules to Designer Format
+Modify `applyDesignerNoteRules()` to work with converted data:
+- Apply to gun/irm/rhm strings ("+3 {2}" format)
+- Modify jam ratings
+- Remove weapons based on rules
 
-### Aircraft Data Object (after note rules)
-```javascript
-{
-  name: "F-4F",
-  notes: "A,C,L",
-  gun: 1,
-  irm: 4,
-  rhm: 4,
-  // ... other stats
-  // Modified by note rules based on tasking
-}
-```
+## Files to Reference
 
-## Usage
+### Source (Designer)
+- `flight-sheet-designer.html` lines 100-500: CSS
+- `flight-sheet-designer.html` lines 800-900: convertAircraftData()
+- `flight-sheet-designer.html` lines 1000-1350: createFlightCard()
 
-1. Generate flights using OOB generator (any table)
-2. Select "Compact" from flight sheet style dropdown
-3. Click "Generate Printable Sheet" button
-4. New window opens with compact flight cards
-5. Review and click "Print Flight Sheets"
+### Target (OOB Generator)
+- `oob-generator/index.html` lines 1617-2300: Compact flight sheet functions
 
-## Integration Points
+## Implementation Steps
 
-- **State Manager**: Uses `getAppState()` to access results array
-- **Aircraft Databases**: Loads from `data/aircraft-nato.json` and `data/aircraft-wp.json`
-- **Weapons Database**: Loads from `data/weapons.json`
-- **Note Rules**: Loads from `data/aircraft-note-rules.json`
-- **Designer Layout**: Replicates CSS and HTML from `flight-sheet-designer.html`
+1. ✅ Load aircraft databases (aircraft-nato.json, aircraft-wp.json)
+2. ✅ Parse OOB results to extract flight data
+3. ⏳ Convert aircraft JSON to designer format
+4. ⏳ Generate designer-style HTML with all sections
+5. ⏳ Apply note rules to designer format data
+6. ⏳ Copy designer CSS for print styling
+7. ⏳ Test with real OOB generation
 
-## Future Enhancements
+## Next Actions
 
-### Phase 1 (Optional)
-- [ ] Add weapon detail lookup (show weapon names, not just brackets)
-- [ ] Include ordnance loads based on tasking
-- [ ] Visual indicators for which notes are active
-- [ ] Print-optimized page breaks for multiple flights
+1. Copy `convertAircraftData()` from designer
+2. Rewrite `generateSingleDesignerCard()` to match designer HTML exactly
+3. Copy designer CSS into `generateDesignerSheetHTML()`
+4. Test with F-16C, F-4F, MiG-29 (aircraft with full data)
+5. Verify speed tables display correctly
+6. Commit working version
 
-### Phase 2 (Advanced)
-- [ ] Custom flight sheet builder (drag-drop fields)
-- [ ] Export to PDF directly
-- [ ] Save/load flight sheet configurations
-- [ ] Batch processing for entire OOB
+## Notes
 
-## Testing Checklist
-
-- [x] Syntax validation (no errors)
-- [ ] Generate NATO flights (various tables)
-- [ ] Generate WP flights (various tables)
-- [ ] Test with 1-ship, 2-ship, 4-ship flights
-- [ ] Verify note rules apply correctly
-- [ ] Test with aircraft having notes (F-16C, F-4F, MiG-29)
-- [ ] Verify multi-flight results ("4 x {2}")
-- [ ] Print preview in browser
-- [ ] Cross-browser compatibility
-
-## Files Modified
-
-- `oob-generator/index.html`: Added generateCompactFlightSheet() and helper functions (~500 lines)
-
-## Files Dependencies
-
-- `oob-generator/data/aircraft-nato.json`
-- `oob-generator/data/aircraft-wp.json`
-- `oob-generator/data/weapons.json`
-- `oob-generator/data/aircraft-note-rules.json`
-- `oob-generator/assets/roundels/*.png`
-
-## Technical Notes
-
-### Async Pattern
-```javascript
-async function generateCompactFlightSheet() {
-  const [data1, data2, ...] = await Promise.all([
-    fetch('data1.json').then(r => r.json()),
-    fetch('data2.json').then(r => r.json()),
-  ]);
-  // Process...
-}
-```
-
-### Deep Copy for Rule Application
-```javascript
-const modifiedData = JSON.parse(JSON.stringify(aircraftData));
-// Prevents modifying original database
-```
-
-### Conditional Rule Matching
-```javascript
-if (rule.condition.startsWith('!')) {
-  applies = !tasking.includes(rule.condition.substring(1));
-} else {
-  applies = tasking.includes(rule.condition);
-}
-```
-
-## Known Limitations
-
-1. Aircraft lookup uses name matching (may fail for variants)
-2. Ordnance area is placeholder (not populated yet)
-3. Aircraft silhouettes are text placeholders (no images)
-4. Assumes result format from OOB generator (no validation)
-5. Note rules only apply to specific rule types (not all edge cases)
+- Designer uses 2-column grid for flight cards (side-by-side)
+- Speed tables show Clean vs Laden when aircraft has both
+- Ordnance area is per-aircraft, not per-flight
+- Fuel circles calculated from aircraft.fuel value
+- Roundel images from `assets/` directory (USAF.jpg, UK.jpg, etc.)
 
 ## Success Criteria
 
-✅ Loads OOB results from state manager
-✅ Parses flight data from result text
-✅ Looks up aircraft in databases
-✅ Applies note rules based on tasking
-✅ Generates designer-style flight cards
-✅ Opens printable sheet in new window
-✅ No syntax errors or console warnings
-
-## Next Steps
-
-1. Test with real OOB generation
-2. Verify note rules apply correctly
-3. Add ordnance population logic
-4. Consider aircraft silhouette images
-5. Commit and push to GitHub
-6. Deploy to GitHub Pages
-7. Update documentation
+✅ Loads and parses OOB results
+✅ Finds aircraft in databases
+⏳ Displays full speed tables (Clean/Laden)
+⏳ Shows all equipment (radar, RWR, jam, capabilities)
+⏳ Individual aircraft boxes with damage tracking
+⏳ Proper 7pt font sizing throughout
+⏳ Matches designer layout exactly
+⏳ Applies note rules correctly
+⏳ Prints cleanly on letter-size paper

@@ -1625,10 +1625,9 @@
       
       // Load required data files
       try {
-        const [aircraftNATO, aircraftWP, weaponsData, noteRulesData] = await Promise.all([
+        const [aircraftNATO, aircraftWP, noteRulesData] = await Promise.all([
           fetch('data/aircraft-nato.json').then(r => r.json()),
           fetch('data/aircraft-wp.json').then(r => r.json()),
-          fetch('data/weapons.json').then(r => r.json()),
           fetch('data/aircraft-note-rules.json').then(r => r.json())
         ]);
         
@@ -1639,14 +1638,14 @@
           return;
         }
         
-        // Generate HTML for all flights
+        // Generate HTML for all flights using designer layout
         let flightCardsHTML = '';
         for (const flight of results) {
-          flightCardsHTML += generateCompactFlightCard(flight, aircraftNATO, aircraftWP, weaponsData, noteRulesData);
+          flightCardsHTML += await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData);
         }
         
-        // Write complete HTML document
-        printWindow.document.write(generateCompactSheetHTML(flightCardsHTML));
+        // Write complete HTML document with designer styles
+        printWindow.document.write(generateDesignerSheetHTML(flightCardsHTML));
         printWindow.document.close();
         
       } catch (error) {
@@ -1962,15 +1961,14 @@
     }
     
     /**
-     * Generate a single compact flight card from OOB result
+     * Generate a single flight card using the designer layout
      * @param {object} flight - Flight result object from OOB generator
      * @param {object} aircraftNATO - NATO aircraft database
      * @param {object} aircraftWP - WP aircraft database
-     * @param {object} weaponsData - Weapons database
      * @param {object} noteRulesData - Aircraft note rules database
-     * @returns {string} HTML for flight card
+     * @returns {string} HTML for flight card with designer layout
      */
-    function generateCompactFlightCard(flight, aircraftNATO, aircraftWP, weaponsData, noteRulesData) {
+    async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData) {
       // Parse result text to extract flight info
       const resultText = flight.result || '';
       const faction = flight.faction || 'NATO';
@@ -2017,35 +2015,38 @@
       
       // Get aircraft data from appropriate database
       const aircraftDB = faction === 'NATO' ? aircraftNATO : aircraftWP;
-      let aircraftData = null;
+      let rawAircraftData = null;
       
       // Search for aircraft in database (try exact match first, then partial)
       if (aircraftDB.aircraft) {
-        aircraftData = aircraftDB.aircraft.find(a => a.name === aircraftType);
-        if (!aircraftData) {
-          // Try partial match
-          aircraftData = aircraftDB.aircraft.find(a => 
+        rawAircraftData = aircraftDB.aircraft.find(a => a.name === aircraftType);
+        if (!rawAircraftData) {
+          // Try partial match (longer keys first to avoid F-4 matching before F-4F)
+          const sortedAircraft = aircraftDB.aircraft.sort((a, b) => b.name.length - a.name.length);
+          rawAircraftData = sortedAircraft.find(a => 
             aircraftType.includes(a.name) || a.name.includes(aircraftType)
           );
         }
       }
       
+      // Convert to designer format
+      let aircraftData = rawAircraftData ? convertAircraftData(rawAircraftData, nationCode) : null;
+      
       // Apply note rules if aircraft data found
       if (aircraftData && noteRulesData && nationCode) {
-        aircraftData = applyNoteRules(aircraftData, tasking, noteRulesData, nationCode);
+        aircraftData = applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode);
       }
       
       // Generate cards for each flight in the result (e.g., "4 x {2}" = 4 flights)
       let allCardsHTML = '';
       for (let flightNum = 0; flightNum < numFlights; flightNum++) {
-        allCardsHTML += generateSingleCompactCard(
+        allCardsHTML += generateSingleDesignerCard(
           aircraftType,
           aircraftData,
           flightSize,
           nationCode,
           tasking,
-          faction,
-          weaponsData
+          faction
         );
       }
       

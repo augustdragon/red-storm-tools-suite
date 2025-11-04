@@ -18,19 +18,12 @@
     
     .controls {
       display: flex;
-      flex-direction: column;
-      gap: 15px;
+      gap: 10px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
       padding: 15px;
       background-color: #3a4a3a;
       border-radius: 8px;
-    }
-    
-    .controls-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
     }
     
     .controls button {
@@ -56,18 +49,6 @@
       cursor: pointer;
       font-size: 14px;
       min-width: 200px;
-    }
-    
-    #nationSelector {
-      width: 250px;
-    }
-    
-    #aircraftSelector {
-      width: 400px;
-    }
-    
-    #flightSizeSelector {
-      width: 150px;
     }
     
     .controls select:hover {
@@ -110,11 +91,6 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 8px;
       margin-bottom: 12px;
-      min-height: 200px;
-    }
-    
-    .flight-grid > p {
-      grid-column: 1 / -1;
     }
     
     .flight-card {
@@ -122,6 +98,7 @@
       padding: 6px;
       page-break-inside: avoid;
       background: white;
+      max-width: 450px;
       color: black;
       display: flex;
       flex-direction: column;
@@ -142,7 +119,7 @@
     }
     
     .roundel-box-header {
-      border: none;
+      border: 1px solid #666;
       padding: 2px;
       display: flex;
       align-items: center;
@@ -322,13 +299,6 @@
       grid-template-columns: 0.7fr 0.9fr 0.8fr;
       gap: 4px;
       margin-bottom: 5px;
-      align-items: stretch;
-    }
-    
-    .tasking-fuel-row .field {
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
     }
     
     .fuel-box {
@@ -581,10 +551,6 @@
         display: none;
       }
       
-      .back-link {
-        display: none;
-      }
-      
       .preview-frame {
         padding: 0;
         box-shadow: none;
@@ -594,56 +560,52 @@
 </head>
 <body>
   <div class="designer-container">
-    
-    
     <div class="header">
-      <h1>Flight Sheet Designer</h1>
+      <h1>🎨 Flight Sheet Designer</h1>
       <p>Design and test alternative flight sheet layouts</p>
     </div>
-    <a href="../index.html" class="back-link">← Back to Red Storm Tools Suite</a>
+    
     <div class="controls">
-      <div class="controls-row">
-        <label>
-          Nation:
-          <select id="nationSelector">
-            <option value="">-- All Nations --</option>
-            <option value="US">United States (USAF)</option>
-            <option value="UK">United Kingdom (RAF)</option>
-            <option value="FRG">West Germany (Luftwaffe)</option>
-            <option value="Belgium">Belgium</option>
-            <option value="Canada">Canada</option>
-            <option value="Netherlands">Netherlands</option>
-            <option value="USSR">Soviet Union (VVS)</option>
-            <option value="GDR">East Germany (LSK)</option>
-          </select>
-        </label>
-        <label>
-          Aircraft:
-          <select id="aircraftSelector">
-            <option value="">-- Select Aircraft --</option>
-          </select>
-        </label>
-        <label>
-          Flight Size:
-          <select id="flightSizeSelector">
-            <option value="1">1-ship</option>
-            <option value="2">2-ship</option>
-            <option value="4">4-ship</option>
-          </select>
-        </label>
-      </div>
-      <div class="controls-row">
-        <button onclick="window.print()">🖨️ Print Preview</button>
-        <button onclick="clearPreview()">🗑️ Clear</button>
-        <button onclick="exportDesign()">💾 Export HTML</button>
-      </div>
+      <label>
+        Nation:
+        <select id="nationSelector">
+          <option value="">-- All Nations --</option>
+          <option value="US">United States (USAF)</option>
+          <option value="UK">United Kingdom (RAF)</option>
+          <option value="FRG">West Germany (Luftwaffe)</option>
+          <option value="Belgium">Belgium</option>
+          <option value="Canada">Canada</option>
+          <option value="Netherlands">Netherlands</option>
+          <option value="USSR">Soviet Union (VVS)</option>
+          <option value="GDR">East Germany (LSK)</option>
+        </select>
+      </label>
+      <label>
+        Aircraft:
+        <select id="aircraftSelector">
+          <option value="">-- Select Aircraft --</option>
+        </select>
+      </label>
+      <label>
+        Flight Size:
+        <select id="flightSizeSelector">
+          <option value="1">1-ship</option>
+          <option value="2">2-ship</option>
+          <option value="4">4-ship</option>
+        </select>
+      </label>
+      <button onclick="generateTestFlight()">🎯 Generate Flight</button>
+      <button onclick="loadSampleData()">📄 Load Sample Flights</button>
+      <button onclick="window.print()">🖨️ Print Preview</button>
+      <button onclick="clearPreview()">🗑️ Clear</button>
+      <button onclick="exportDesign()">💾 Export HTML</button>
     </div>
     
     <div class="preview-frame" id="previewFrame">
       <div class="page-title">Red Storm - Flight Sheet (Sample)</div>
       <div class="flight-grid" id="flightGrid">
-        <p style="color: #999; text-align: center; padding: 40px; grid-column: 1 / -1;">
-          Select a nation, aircraft, and flight size to create a sample flight card
+        <p style="color: #999; text-align: center; padding: 40px;">
+          Click "Load Sample Flights" to preview the flight sheet design
         </p>
       </div>
     </div>
@@ -653,22 +615,19 @@
     // Global data stores
     let aircraftDatabase = {};
     let weaponsDatabase = {};
-    let noteRulesDatabase = {};
     
     // Load JSON databases
     async function loadDatabases() {
       try {
-        const [aircraftNatoResponse, aircraftWpResponse, weaponsResponse, noteRulesResponse] = await Promise.all([
+        const [aircraftNatoResponse, aircraftWpResponse, weaponsResponse] = await Promise.all([
           fetch('data/aircraft-nato.json'),
           fetch('data/aircraft-wp.json'),
-          fetch('data/weapons.json'),
-          fetch('data/aircraft-note-rules.json')
+          fetch('data/weapons.json')
         ]);
         
         const aircraftNato = await aircraftNatoResponse.json();
         const aircraftWp = await aircraftWpResponse.json();
         weaponsDatabase = await weaponsResponse.json();
-        noteRulesDatabase = await noteRulesResponse.json();
         
         // Merge NATO and WP databases
         aircraftDatabase = { ...aircraftNato, ...aircraftWp };
@@ -680,7 +639,6 @@
         delete aircraftDatabase._description;
         
         console.log('Databases loaded:', Object.keys(aircraftDatabase).length, 'aircraft');
-        console.log('Note rules loaded for:', Object.keys(noteRulesDatabase).join(', '));
         return true;
       } catch (error) {
         console.error('Error loading databases:', error);
@@ -726,96 +684,6 @@
         option.textContent = `${aircraft.name} ${nationLabel}`;
         selector.appendChild(option);
       });
-    }
-    
-    // Aircraft Note Rules Engine
-    function applyNoteRules(aircraftData, tasking = 'CAP') {
-      if (!aircraftData.notes || !noteRulesDatabase) {
-        return aircraftData; // No notes or rules to apply
-      }
-      
-      // Create a copy of aircraft data to modify
-      const modifiedData = JSON.parse(JSON.stringify(aircraftData));
-      
-      // Determine nation for rule lookup
-      let nation = aircraftData.nation || 'US';
-      
-      // Handle Belgium/Canada/Netherlands
-      if (['Belgium', 'Canada', 'Netherlands'].includes(nation)) {
-        nation = 'BE/CA/NE';
-      }
-      
-      // Parse notes (e.g., "A, C, L, M, P" -> ['A', 'C', 'L', 'M', 'P'])
-      const notesList = aircraftData.notes.split(',').map(n => n.trim());
-      
-      // Get rules for this nation
-      const nationRules = noteRulesDatabase[nation] || {};
-      
-      // Apply each applicable rule
-      notesList.forEach(noteCode => {
-        const rule = nationRules[noteCode];
-        if (!rule) return; // No rule defined for this note
-        
-        // Check if conditions are met
-        if (rule.conditions) {
-          if (rule.conditions.tasking) {
-            // Check if current tasking matches any condition
-            const taskingMatch = rule.conditions.tasking.some(t => {
-              if (t.startsWith('!')) {
-                // Negative condition (e.g., "!SEAD" means NOT SEAD)
-                return tasking !== t.substring(1);
-              }
-              return tasking === t;
-            });
-            
-            if (!taskingMatch) return; // Conditions not met, skip this rule
-          }
-        }
-        
-        // Apply effects based on rule type
-        const effects = rule.effects;
-        
-        // Weapon modification (depletion changes)
-        if (effects.aamDepletion !== undefined) {
-          modifiedData._noteEffects = modifiedData._noteEffects || {};
-          modifiedData._noteEffects.aamDepletion = effects.aamDepletion;
-        }
-        
-        // Weapon restrictions (remove weapons)
-        if (effects.removeWeapon) {
-          modifiedData._noteEffects = modifiedData._noteEffects || {};
-          modifiedData._noteEffects.removedWeapons = modifiedData._noteEffects.removedWeapons || [];
-          modifiedData._noteEffects.removedWeapons.push(effects.removeWeapon);
-        }
-        
-        if (effects.removeWeapons) {
-          modifiedData._noteEffects = modifiedData._noteEffects || {};
-          modifiedData._noteEffects.removedWeapons = modifiedData._noteEffects.removedWeapons || [];
-          modifiedData._noteEffects.removedWeapons.push(...effects.removeWeapons);
-        }
-        
-        // Bomb load modifications
-        if (effects.bombLoadModifier) {
-          modifiedData._noteEffects = modifiedData._noteEffects || {};
-          modifiedData._noteEffects.bombLoadModifier = effects.bombLoadModifier;
-        }
-        
-        // Capability modifications (jam rating, etc.)
-        if (effects.jamRating) {
-          modifiedData._noteEffects = modifiedData._noteEffects || {};
-          modifiedData._noteEffects.jamRating = effects.jamRating;
-        }
-        
-        // Store which notes were applied for display
-        modifiedData._appliedNotes = modifiedData._appliedNotes || [];
-        modifiedData._appliedNotes.push({
-          code: noteCode,
-          description: rule.description,
-          type: rule.type
-        });
-      });
-      
-      return modifiedData;
     }
     
     // Generate test flight based on dropdown selections
@@ -989,7 +857,56 @@
     }
     
     // Sample flight data for testing
-    // Sample flights removed - users generate their own test flights
+    const sampleFlights = [
+      {
+        id: 1,
+        table: 'A',
+        faction: 'NATO',
+        tableName: 'NATO Table A - QRA Flight',
+        result: 'US: 1 x {4} F-15C Eagle, CAP',
+        debugText: '[Nation: 3 | Aircraft: 7]',
+        timestamp: Date.now(),
+        aircraft: 'F-15C',
+        crew: 1,
+        fuel: 8
+      },
+      {
+        id: 2,
+        table: 'A',
+        faction: 'NATO',
+        tableName: 'NATO Table A - QRA Flight',
+        result: 'US: 1 x {2} F-16C Fighting Falcon, CAP',
+        debugText: '[Nation: 3 | Aircraft: 8]',
+        timestamp: Date.now(),
+        aircraft: 'F-16C',
+        crew: 1,
+        fuel: 6
+      },
+      {
+        id: 3,
+        table: 'B',
+        faction: 'NATO',
+        tableName: 'NATO Table B - Strike Package',
+        result: 'US: 1 x {4} F-16A Fighting Falcon, Strike',
+        debugText: '[Nation: 3 | Aircraft: 8]',
+        timestamp: Date.now(),
+        aircraft: 'F-16A',
+        crew: 1,
+        fuel: 6
+      },
+      {
+        id: 4,
+        table: 'C',
+        faction: 'NATO',
+        tableName: 'NATO Table C - Heavy Strike',
+        result: 'US: 1 x {2} F-4E Phantom II, Strike',
+        debugText: '[Nation: 2 | Aircraft: 5]',
+        timestamp: Date.now(),
+        aircraft: 'F-4E',
+        crew: 2,
+        fuel: 10
+      }
+    ];
     
     // F-15C aircraft data
     const f15cData = {
@@ -1053,7 +970,20 @@
       radarModifier: '14+ : -1'
     };
     
-    // Function removed - users generate custom flights instead of loading samples
+    async function loadSampleData() {
+      // Load databases if not already loaded
+      if (Object.keys(aircraftDatabase).length === 0) {
+        await loadDatabases();
+        populateAircraftDropdown();
+      }
+      
+      const grid = document.getElementById('flightGrid');
+      grid.innerHTML = '';
+      
+      sampleFlights.forEach(flight => {
+        grid.appendChild(createFlightCard(flight));
+      });
+    }
     
     function createFlightCard(flight) {
       const card = document.createElement('div');
@@ -1312,7 +1242,7 @@
     function clearPreview() {
       document.getElementById('flightGrid').innerHTML = `
         <p style="color: #999; text-align: center; padding: 40px;">
-          Select a nation, aircraft, and flight size, then click "Generate Flight" to create a sample flight card
+          Click "Load Sample Flights" to preview the flight sheet design
         </p>
       `;
     }
@@ -1344,11 +1274,11 @@ ${previewFrame.innerHTML}
       alert('Design exported! You can open the file to see the standalone version.');
     }
     
-    // Auto-load databases on page load
+    // Auto-load databases and sample data on page load
     window.addEventListener('load', async () => {
       await loadDatabases();
       populateAircraftDropdown();
-      // Sample data auto-load removed - users generate custom flights
+      setTimeout(loadSampleData, 500);
       
       // Add event listeners to dropdowns for automatic generation
       document.getElementById('nationSelector').addEventListener('change', () => {
