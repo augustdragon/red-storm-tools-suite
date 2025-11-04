@@ -11,7 +11,7 @@
     "Torn IDS": "Tornado IDS",
     "Tornado GR1": "Tornado GR.1",
     "Tornado GR1A": "Tornado GR.1A",
-    "F-4²": "F-4D",
+    "_comment_variants": "Superscripted aircraft (F-4², MiG-23²) should be resolved by OOB processor via sub-roll, not by name mapping",
     "F-16A(BE)": "F-16A",
     "F-16A(NE)": "F-16A",
     "F-16C(R)": "F-16C",
