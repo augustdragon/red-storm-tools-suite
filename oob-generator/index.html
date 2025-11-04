@@ -2002,6 +2002,30 @@
       const resultText = flight.result || '';
       const faction = flight.faction || 'NATO';
       
+      // Check if this is a multi-flight result (contains <br> or semicolons)
+      // Table C (Bombing Raid) produces results like "4 x {2} US F-15C, CAP<br>1 x {2} US A-7D, SEAD<br>..."
+      if (resultText.includes('<br>') || resultText.includes(';')) {
+        console.log('Multi-flight result detected, splitting...');
+        // Split by <br> or semicolon and generate separate cards for each flight
+        const separator = resultText.includes('<br>') ? '<br>' : ';';
+        const flightParts = resultText.split(separator).map(part => part.trim()).filter(part => part.length > 0);
+        console.log(`Split into ${flightParts.length} individual flights:`, flightParts);
+        
+        let allCards = '';
+        for (const flightPart of flightParts) {
+          // Create a temporary flight object for each part
+          const tempFlight = {
+            ...flight,
+            result: flightPart
+          };
+          // Recursively call this function to generate card for single flight
+          allCards += await generateDesignerFlightCard(tempFlight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData);
+        }
+        
+        return allCards;
+      }
+      
+      // Single flight processing below
       // Extract aircraft type, flight size, tasking from result text
       // Format: "FRG: 1 x {2} F-4F, CAP" or "USSR: 4 x {2} MiG-29, SWEEP"
       let aircraftType = 'Unknown';
