@@ -1625,10 +1625,11 @@
       
       // Load required data files
       try {
-        const [aircraftNATO, aircraftWP, noteRulesData] = await Promise.all([
+        const [aircraftNATO, aircraftWP, noteRulesData, weaponsData] = await Promise.all([
           fetch('data/aircraft-nato.json').then(r => r.json()),
           fetch('data/aircraft-wp.json').then(r => r.json()),
-          fetch('data/aircraft-note-rules.json').then(r => r.json())
+          fetch('data/aircraft-note-rules.json').then(r => r.json()),
+          fetch('data/weapons.json').then(r => r.json())
         ]);
         
         // Create print window
@@ -1641,7 +1642,7 @@
         // Generate HTML for all flights using designer layout
         let flightCardsHTML = '';
         for (const flight of results) {
-          flightCardsHTML += await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData);
+          flightCardsHTML += await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData);
         }
         
         // Write complete HTML document with designer styles
@@ -1968,7 +1969,7 @@
      * @param {object} noteRulesData - Aircraft note rules database
      * @returns {string} HTML for flight card with designer layout
      */
-    async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData) {
+    async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData) {
       // Parse result text to extract flight info
       const resultText = flight.result || '';
       const faction = flight.faction || 'NATO';
@@ -2017,20 +2018,25 @@
       const aircraftDB = faction === 'NATO' ? aircraftNATO : aircraftWP;
       let rawAircraftData = null;
       
-      // Search for aircraft in database (try exact match first, then partial)
-      if (aircraftDB.aircraft) {
-        rawAircraftData = aircraftDB.aircraft.find(a => a.name === aircraftType);
-        if (!rawAircraftData) {
-          // Try partial match (longer keys first to avoid F-4 matching before F-4F)
-          const sortedAircraft = aircraftDB.aircraft.sort((a, b) => b.name.length - a.name.length);
-          rawAircraftData = sortedAircraft.find(a => 
-            aircraftType.includes(a.name) || a.name.includes(aircraftType)
-          );
+      // Search for aircraft in database (aircraft are keys in the JSON object)
+      // Try exact match first
+      if (aircraftDB[aircraftType]) {
+        rawAircraftData = aircraftDB[aircraftType];
+      } else {
+        // Try partial match (longer keys first to avoid F-4 matching before F-4F)
+        const aircraftKeys = Object.keys(aircraftDB).filter(k => !k.startsWith('_')); // Filter out metadata
+        const sortedKeys = aircraftKeys.sort((a, b) => b.length - a.length);
+        
+        for (const key of sortedKeys) {
+          if (aircraftType.includes(key) || key.includes(aircraftType)) {
+            rawAircraftData = aircraftDB[key];
+            break;
+          }
         }
       }
       
       // Convert to designer format
-      let aircraftData = rawAircraftData ? convertAircraftData(rawAircraftData, nationCode) : null;
+      let aircraftData = rawAircraftData ? convertAircraftData(rawAircraftData, nationCode, weaponsData) : null;
       
       // Apply note rules if aircraft data found
       if (aircraftData && noteRulesData && nationCode) {
@@ -2057,9 +2063,10 @@
      * Convert JSON aircraft data to designer display format
      * @param {object} jsonData - Raw aircraft JSON from database
      * @param {string} nationCode - Nation code for display
+     * @param {object} weaponsData - Weapons database for lookups
      * @returns {object} Designer-formatted aircraft data
      */
-    function convertAircraftData(jsonData, nationCode) {
+    function convertAircraftData(jsonData, nationCode, weaponsData) {
       if (!jsonData) return null;
       
       // Helper function to extract speed for a specific altitude band
@@ -2069,26 +2076,49 @@
         return values[index] || 'N/A';
       }
       
+      // Helper function to look up weapon rating
+      function getWeaponRating(weaponName, weaponType) {
+        if (!weaponName || !weaponsData) return 3; // Default rating
+        
+        // Search in appropriate weapon category
+        if (weaponType === 'gun' && weaponsData.guns) {
+          const weapon = weaponsData.guns[weaponName];
+          return weapon ? weapon.stdRtg : 3;
+        } else if (weaponsData.missiles) {
+          const weapon = weaponsData.missiles[weaponName];
+          if (weapon) {
+            return {
+              std: weapon.stdRtg,
+              bvr: weapon.bvrRtg !== null ? weapon.bvrRtg : weapon.stdRtg
+            };
+          }
+        }
+        return weaponType === 'gun' ? 3 : { std: 3, bvr: 1 };
+      }
+      
       // Build weapon display strings from JSON format
       let gunDisplay = '';
       if (jsonData.weapons && jsonData.weapons.gun && jsonData.weapons.gunAmmo) {
-        // Format: "+3 {2}" - rating and ammo count
-        const rating = jsonData.weapons.gunRating || 3;
+        // Look up gun rating from weapons database
+        const rating = getWeaponRating(jsonData.weapons.gun, 'gun');
         gunDisplay = `+${rating} {${jsonData.weapons.gunAmmo}}`;
       }
       
       let irmDisplay = '';
       if (jsonData.weapons && jsonData.weapons.irm && jsonData.weapons.irmAmmo) {
-        // Format: "+3/+1 {3}" - std rating / bvr rating {ammo}
-        const stdRtg = jsonData.weapons.irmStdRating || 3;
-        const bvrRtg = jsonData.weapons.irmBvrRating !== undefined ? jsonData.weapons.irmBvrRating : 1;
+        // Look up IRM ratings from weapons database
+        const ratings = getWeaponRating(jsonData.weapons.irm, 'irm');
+        const stdRtg = ratings.std || 3;
+        const bvrRtg = ratings.bvr !== undefined ? ratings.bvr : 1;
         irmDisplay = `+${stdRtg}/${bvrRtg >= 0 ? '+' : ''}${bvrRtg} {${jsonData.weapons.irmAmmo}}`;
       }
       
       let rhmDisplay = '';
       if (jsonData.weapons && jsonData.weapons.rhm && jsonData.weapons.rhmAmmo) {
-        const stdRtg = jsonData.weapons.rhmStdRating || 3;
-        const bvrRtg = jsonData.weapons.rhmBvrRating !== undefined ? jsonData.weapons.rhmBvrRating : 2;
+        // Look up RHM ratings from weapons database
+        const ratings = getWeaponRating(jsonData.weapons.rhm, 'rhm');
+        const stdRtg = ratings.std || 3;
+        const bvrRtg = ratings.bvr !== undefined ? ratings.bvr : 2;
         rhmDisplay = `+${stdRtg}/${bvrRtg >= 0 ? '+' : ''}${bvrRtg} {${jsonData.weapons.rhmAmmo}}`;
       }
       
@@ -2527,7 +2557,6 @@
       color: black;
       display: flex;
       flex-direction: column;
-      margin-bottom: 12px;
     }
     
     .flight-info-section {
