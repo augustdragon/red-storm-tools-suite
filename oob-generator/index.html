@@ -1962,6 +1962,20 @@
     }
     
     /**
+     * Apply aircraft note rules to modify aircraft data based on tasking
+     * @param {object} aircraftData - Converted aircraft data
+     * @param {string} tasking - Mission tasking (CAP, SEAD, etc.)
+     * @param {object} noteRulesData - Aircraft note rules database
+     * @param {string} nationCode - Nation code
+     * @returns {object} Modified aircraft data
+     */
+    function applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode) {
+      // Stub implementation - return data unchanged for now
+      // TODO: Implement note rules logic (weapon modifications, capability changes, etc.)
+      return aircraftData;
+    }
+    
+    /**
      * Generate a single flight card using the designer layout
      * @param {object} flight - Flight result object from OOB generator
      * @param {object} aircraftNATO - NATO aircraft database
