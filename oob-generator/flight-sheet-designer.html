@@ -1516,11 +1516,26 @@ ${previewFrame.innerHTML}
       // Generate HTML for all queued flights
       const printWindow = window.open('', '_blank');
       
+      // Create flight cards HTML
       let allFlightsHTML = '';
       for (const item of flightQueue) {
         const aircraftData = aircraftDatabase[item.aircraftKey];
         if (aircraftData) {
-          allFlightsHTML += generateFlightCard(aircraftData, item.nation, item.flightSize);
+          // Create a flight object similar to OOB generator format
+          const flightObj = {
+            id: item.id,
+            table: 'Manual',
+            faction: 'NATO', // Could be extended to track faction in queue
+            tableName: 'Manual Flight',
+            result: `${item.nation}: 1 x {${item.flightSize}} ${aircraftData.name || item.aircraftKey}, CAP`,
+            debugText: '[Manual Flight]',
+            timestamp: item.timestamp,
+            aircraft: item.aircraftKey
+          };
+          
+          // Use createFlightCard to generate the card element
+          const cardElement = createFlightCard(flightObj);
+          allFlightsHTML += cardElement.outerHTML;
         }
       }
       
