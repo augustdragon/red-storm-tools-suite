@@ -1642,9 +1642,22 @@
         
         // Generate HTML for all flights using designer layout
         let flightCardsHTML = '';
+        console.log(`Generating ${results.length} flight cards...`);
         for (const flight of results) {
-          flightCardsHTML += await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData);
+          console.log('Processing flight:', flight.result || flight.text);
+          try {
+            const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData);
+            if (cardHTML && cardHTML.trim()) {
+              flightCardsHTML += cardHTML;
+              console.log('✓ Generated card for:', (flight.result || flight.text).substring(0, 50));
+            } else {
+              console.warn('⚠ Empty card generated for:', flight.result || flight.text);
+            }
+          } catch (error) {
+            console.error('✗ Error generating card for:', flight.result || flight.text, error);
+          }
         }
+        console.log(`Total cards generated: ${flightCardsHTML.length > 0 ? 'Success' : 'None'}`);
         
         // Write complete HTML document with designer styles
         printWindow.document.write(generateDesignerSheetHTML(flightCardsHTML));
@@ -2023,6 +2036,21 @@
         }
       }
       
+      // Handle variant aircraft with nation in parentheses (e.g., F-16A(BE), F-16A(NE))
+      const variantNationMatch = aircraftType.match(/^(.+?)\((BE|NE)\)$/);
+      if (variantNationMatch) {
+        const baseAircraft = variantNationMatch[1];
+        const variantNation = variantNationMatch[2];
+        // Map variant codes to standard nation codes
+        if (variantNation === 'BE') {
+          nationCode = 'BEL';
+        } else if (variantNation === 'NE') {
+          nationCode = 'HOL';
+        }
+        // Keep full variant name for mapping lookup
+        console.log(`Detected variant aircraft: ${aircraftType} -> nation: ${nationCode}, base: ${baseAircraft}`);
+      }
+      
       // Extract tasking (after comma)
       const taskingMatch = resultText.match(/,\s*([^<(]+)/);
       if (taskingMatch) {
@@ -2269,7 +2297,9 @@
         'US': 'USAF.jpg',
         'UK': 'UK.jpg',
         'FRG': 'FRG.jpg',
+        'BEL': 'Belgium.jpg',
         'Belgium': 'Belgium.jpg',
+        'HOL': 'Netherlands.jpg',
         'Netherlands': 'Netherlands.jpg',
         'Canada': 'Canada.png',
         'USSR': 'USSR.jpg',
