@@ -1,0 +1,24 @@
+{
+  "_comment": "Aircraft name mapping from OOB tables to aircraft database keys",
+  "_description": "Maps abbreviated or variant names from OOB generation to full aircraft database keys",
+  "_version": "1.0.0",
+  "_created": "2025-11-03",
+  
+  "NATO": {
+    "FGR2": "Phantom FGR.2",
+    "Torn GR1": "Tornado GR.1",
+    "Torn GR1A": "Tornado GR.1A",
+    "Torn IDS": "Tornado IDS",
+    "Tornado GR1": "Tornado GR.1",
+    "Tornado GR1A": "Tornado GR.1A",
+    "F-4²": "F-4D",
+    "F-16A(BE)": "F-16A",
+    "F-16A(NE)": "F-16A",
+    "F-16C(R)": "F-16C",
+    "NF-5A": "F-5A Freedom Fighter"
+  },
+  
+  "WP": {
+    "_comment": "Warsaw Pact aircraft name mappings - to be populated as needed"
+  }
+}

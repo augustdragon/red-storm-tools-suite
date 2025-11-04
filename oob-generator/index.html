@@ -1625,11 +1625,12 @@
       
       // Load required data files
       try {
-        const [aircraftNATO, aircraftWP, noteRulesData, weaponsData] = await Promise.all([
+        const [aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData] = await Promise.all([
           fetch('data/aircraft-nato.json').then(r => r.json()),
           fetch('data/aircraft-wp.json').then(r => r.json()),
           fetch('data/aircraft-note-rules.json').then(r => r.json()),
-          fetch('data/weapons.json').then(r => r.json())
+          fetch('data/weapons.json').then(r => r.json()),
+          fetch('data/aircraft-name-mapping.json').then(r => r.json())
         ]);
         
         // Create print window
@@ -1642,7 +1643,7 @@
         // Generate HTML for all flights using designer layout
         let flightCardsHTML = '';
         for (const flight of results) {
-          flightCardsHTML += await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData);
+          flightCardsHTML += await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData);
         }
         
         // Write complete HTML document with designer styles
@@ -1983,7 +1984,7 @@
      * @param {object} noteRulesData - Aircraft note rules database
      * @returns {string} HTML for flight card with designer layout
      */
-    async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData) {
+    async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData) {
       // Parse result text to extract flight info
       const resultText = flight.result || '';
       const faction = flight.faction || 'NATO';
@@ -2028,6 +2029,14 @@
         tasking = taskingMatch[1].trim();
       }
       
+      // Apply name mapping if available (handles abbreviations and variants)
+      const factionKey = faction === 'NATO' ? 'NATO' : 'WP';
+      if (nameMappingData && nameMappingData[factionKey] && nameMappingData[factionKey][aircraftType]) {
+        const mappedName = nameMappingData[factionKey][aircraftType];
+        console.log(`Mapped "${aircraftType}" to "${mappedName}" via lookup table`);
+        aircraftType = mappedName;
+      }
+      
       // Get aircraft data from appropriate database
       const aircraftDB = faction === 'NATO' ? aircraftNATO : aircraftWP;
       let rawAircraftData = null;
@@ -2037,16 +2046,29 @@
       if (aircraftDB[aircraftType]) {
         rawAircraftData = aircraftDB[aircraftType];
       } else {
-        // Try partial match (longer keys first to avoid F-4 matching before F-4F)
+        // Try partial match with improved logic
+        // Sort keys by length (longest first) to prefer more specific matches
         const aircraftKeys = Object.keys(aircraftDB)
           .filter(key => !key.startsWith('_')) // Skip metadata keys
           .sort((a, b) => b.length - a.length); // Longest first
         
+        // Normalize search term for better matching
+        const normalizedSearch = aircraftType.replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
+        
         for (const key of aircraftKeys) {
-          if (aircraftType.includes(key) || key.includes(aircraftType)) {
+          const normalizedKey = key.replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
+          
+          // Check if normalized forms match (handles "FGR2" vs "Phantom FGR.2")
+          if (normalizedKey.includes(normalizedSearch) || normalizedSearch.includes(normalizedKey)) {
             rawAircraftData = aircraftDB[key];
+            console.log(`Matched "${aircraftType}" to database key "${key}"`);
             break;
           }
+        }
+        
+        // If still no match, log error for debugging
+        if (!rawAircraftData) {
+          console.error(`Aircraft not found: "${aircraftType}" in ${faction} database`);
         }
       }
       
