@@ -2914,6 +2914,10 @@
         page-break-inside: avoid;
         margin-bottom: 10px;
       }
+      
+      .no-print {
+        display: none !important;
+      }
     }
   </style>
 </head>
@@ -2922,7 +2926,7 @@
   <div class="flight-grid">
     ${flightCardsHTML}
   </div>
-  <div style="text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 12px;">
+  <div class="no-print" style="text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 12px;">
     <p>Red Storm Tools Suite - Flight Sheets</p>
     <p>Generated: ${new Date().toLocaleString()}</p>
     <button onclick="window.print()" style="margin-top: 10px; padding: 8px 20px; font-size: 14px; cursor: pointer;">Print Flight Sheets</button>
