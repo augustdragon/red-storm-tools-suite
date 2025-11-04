@@ -1614,16 +1614,45 @@
     }
 
     // Generate Compact Flight Sheet (New Designer Style)
-    function generateCompactFlightSheet() {
-      alert('Compact flight sheet generation is in development. This will use the new designer layout from flight-sheet-designer.html.');
-      // TODO: Implement compact flight sheet generation
-      // This will use the card layout from flight-sheet-designer.html
-      // Features to include:
-      // - Roundel images per flight
-      // - Compact fuel circles (2 rows instead of grid)
-      // - Side-by-side aircraft cards in horizontal layout
-      // - Weapon loadout sections integrated into aircraft cards
-      // - All flight metadata in header (callsign, counter, aggression)
+    async function generateCompactFlightSheet() {
+      const state = getAppState();
+      const results = state.results;
+      
+      if (results.length === 0) {
+        alert('No flights to generate. Please generate some flights first.');
+        return;
+      }
+      
+      // Load required data files
+      try {
+        const [aircraftNATO, aircraftWP, weaponsData, noteRulesData] = await Promise.all([
+          fetch('data/aircraft-nato.json').then(r => r.json()),
+          fetch('data/aircraft-wp.json').then(r => r.json()),
+          fetch('data/weapons.json').then(r => r.json()),
+          fetch('data/aircraft-note-rules.json').then(r => r.json())
+        ]);
+        
+        // Create print window
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+          alert('Please allow pop-ups to generate flight sheets');
+          return;
+        }
+        
+        // Generate HTML for all flights
+        let flightCardsHTML = '';
+        for (const flight of results) {
+          flightCardsHTML += generateCompactFlightCard(flight, aircraftNATO, aircraftWP, weaponsData, noteRulesData);
+        }
+        
+        // Write complete HTML document
+        printWindow.document.write(generateCompactSheetHTML(flightCardsHTML));
+        printWindow.document.close();
+        
+      } catch (error) {
+        console.error('Error loading data:', error);
+        alert('Failed to load aircraft/weapons data. Check console for details.');
+      }
     }
 
     function getMaxFlightSize(results) {
@@ -1930,6 +1959,598 @@
       });
       
       console.log('=== Phase 2 Extraction Status: 12/12 tables extracted ===');
+    }
+    
+    /**
+     * Generate a single compact flight card from OOB result
+     * @param {object} flight - Flight result object from OOB generator
+     * @param {object} aircraftNATO - NATO aircraft database
+     * @param {object} aircraftWP - WP aircraft database
+     * @param {object} weaponsData - Weapons database
+     * @param {object} noteRulesData - Aircraft note rules database
+     * @returns {string} HTML for flight card
+     */
+    function generateCompactFlightCard(flight, aircraftNATO, aircraftWP, weaponsData, noteRulesData) {
+      // Parse result text to extract flight info
+      const resultText = flight.result || '';
+      const faction = flight.faction || 'NATO';
+      
+      // Extract aircraft type, flight size, tasking from result text
+      // Format: "FRG: 1 x {2} F-4F, CAP" or "USSR: 4 x {2} MiG-29, SWEEP"
+      let aircraftType = 'Unknown';
+      let flightSize = 2;
+      let numFlights = 1;
+      let nationCode = '';
+      let tasking = '';
+      
+      // Extract flight multiplier and size from "4 x {2}" pattern
+      const flightSizeMatch = resultText.match(/(\d+)\s*x\s*\{(\d+)\}/);
+      if (flightSizeMatch) {
+        numFlights = parseInt(flightSizeMatch[1]);
+        flightSize = parseInt(flightSizeMatch[2]);
+      }
+      
+      // Extract aircraft type (everything after } up to comma)
+      const aircraftMatch = resultText.match(/\}\s*([^,<]+)/);
+      if (aircraftMatch) {
+        aircraftType = aircraftMatch[1].trim();
+      }
+      
+      // Extract nation from result or aircraft string
+      const nationMatch = resultText.match(/^([A-Z]{2,4}):/);
+      if (nationMatch) {
+        nationCode = nationMatch[1];
+      } else {
+        // Check if nation is in aircraft string
+        const nationInAircraft = aircraftType.match(/^(US|UK|FRG|CAN|HOL|BEL|USSR|DDR|POL|CZE)\s+(.+)/);
+        if (nationInAircraft) {
+          nationCode = nationInAircraft[1];
+          aircraftType = nationInAircraft[2];
+        }
+      }
+      
+      // Extract tasking (after comma)
+      const taskingMatch = resultText.match(/,\s*([^<(]+)/);
+      if (taskingMatch) {
+        tasking = taskingMatch[1].trim();
+      }
+      
+      // Get aircraft data from appropriate database
+      const aircraftDB = faction === 'NATO' ? aircraftNATO : aircraftWP;
+      let aircraftData = null;
+      
+      // Search for aircraft in database (try exact match first, then partial)
+      if (aircraftDB.aircraft) {
+        aircraftData = aircraftDB.aircraft.find(a => a.name === aircraftType);
+        if (!aircraftData) {
+          // Try partial match
+          aircraftData = aircraftDB.aircraft.find(a => 
+            aircraftType.includes(a.name) || a.name.includes(aircraftType)
+          );
+        }
+      }
+      
+      // Apply note rules if aircraft data found
+      if (aircraftData && noteRulesData && nationCode) {
+        aircraftData = applyNoteRules(aircraftData, tasking, noteRulesData, nationCode);
+      }
+      
+      // Generate cards for each flight in the result (e.g., "4 x {2}" = 4 flights)
+      let allCardsHTML = '';
+      for (let flightNum = 0; flightNum < numFlights; flightNum++) {
+        allCardsHTML += generateSingleCompactCard(
+          aircraftType,
+          aircraftData,
+          flightSize,
+          nationCode,
+          tasking,
+          faction,
+          weaponsData
+        );
+      }
+      
+      return allCardsHTML;
+    }
+    
+    /**
+     * Generate a single compact flight card with designer layout
+     * @param {string} aircraftType - Aircraft name
+     * @param {object} aircraftData - Aircraft data with stats and weapons
+     * @param {number} flightSize - Number of aircraft in flight
+     * @param {string} nationCode - Nation code (FRG, USSR, etc.)
+     * @param {string} tasking - Mission tasking
+     * @param {string} faction - NATO or WP
+     * @param {object} weaponsData - Weapons database
+     * @returns {string} HTML for single flight card
+     */
+    function generateSingleCompactCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction, weaponsData) {
+      const aircraftDisplay = nationCode ? `${aircraftType} (${nationCode})` : aircraftType;
+      
+      // Get roundel image path
+      const roundelPath = nationCode ? `assets/roundels/${nationCode.toLowerCase()}.png` : '';
+      
+      let html = `
+    <div class="flight-card">
+      <!-- Roundel Box Header -->
+      <div class="roundel-box-header">
+        ${roundelPath ? `<img src="${roundelPath}" alt="${nationCode}" class="roundel-image" onerror="this.style.display='none'">` : ''}
+      </div>
+      
+      <!-- Header: Aircraft Type, Callsign, Counter, Aggression -->
+      <div class="flight-header">
+        <div class="field">
+          <div class="field-value">${escapeHtml(aircraftDisplay)}</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Callsign</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Counter</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Aggression</div>
+        </div>
+      </div>
+      
+      <!-- Tasking, Notes, and Fuel Row -->
+      <div class="tasking-fuel-row">
+        <div class="field tasking-field">
+          <div class="field-label">Tasking</div>
+          <div class="field-value">${escapeHtml(tasking)}</div>
+        </div>
+        <div class="field notes-field">
+          <div class="field-label">Notes</div>
+          <div class="field-value">${aircraftData && aircraftData.notes ? escapeHtml(aircraftData.notes) : ''}</div>
+        </div>
+        <div class="field fuel-field">
+          <div class="fuel-section">
+            <div class="fuel-label">Fuel:</div>
+            <div class="fuel-grid">`;
+      
+      // Generate 18 fuel circles (2 rows of 9)
+      for (let i = 0; i < 18; i++) {
+        html += `              <div class="fuel-box"></div>\n`;
+      }
+      
+      html += `
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Aircraft Section -->
+      <div class="aircraft-section">`;
+      
+      // Generate individual aircraft cards
+      for (let i = 0; i < flightSize; i++) {
+        html += `
+        <div class="aircraft-card">
+          <div class="aircraft-row">
+            <div class="aircraft-left">
+              <div class="aircraft-silhouette">
+                ${faction === 'NATO' ? 'NATO' : 'WP'}
+              </div>
+              <div class="health-checkboxes">
+                <div class="checkbox"><span class="checkbox-box"></span><span>Da</span></div>
+                <div class="checkbox"><span class="checkbox-box"></span><span>Cr</span></div>
+                <div class="checkbox"><span class="checkbox-box"></span><span>☠</span></div>
+              </div>
+            </div>
+            <div class="aircraft-weapons">`;
+        
+        // Add air-to-air weapons from aircraft data
+        if (aircraftData) {
+          const gun = aircraftData.gun || 0;
+          const irm = aircraftData.irm || 0;
+          const rhm = aircraftData.rhm || 0;
+          
+          html += `
+              <div class="weapon-field">
+                <span class="weapon-label">Gun</span>
+                <span class="weapon-brackets">`;
+          for (let j = 0; j < gun; j++) {
+            html += `<span class="weapon-bracket">{</span>`;
+          }
+          for (let j = 0; j < gun; j++) {
+            html += `<span class="weapon-bracket">}</span>`;
+          }
+          html += `</span>
+              </div>
+              <div class="weapon-field">
+                <span class="weapon-label">IRM</span>
+                <span class="weapon-brackets">`;
+          for (let j = 0; j < irm; j++) {
+            html += `<span class="weapon-bracket">{</span>`;
+          }
+          for (let j = 0; j < irm; j++) {
+            html += `<span class="weapon-bracket">}</span>`;
+          }
+          html += `</span>
+              </div>
+              <div class="weapon-field">
+                <span class="weapon-label">RHM</span>
+                <span class="weapon-brackets">`;
+          for (let j = 0; j < rhm; j++) {
+            html += `<span class="weapon-bracket">{</span>`;
+          }
+          for (let j = 0; j < rhm; j++) {
+            html += `<span class="weapon-bracket">}</span>`;
+          }
+          html += `</span>
+              </div>`;
+        } else {
+          // Default placeholders if no aircraft data
+          html += `
+              <div class="weapon-field">
+                <span class="weapon-label">Gun</span>
+                <span class="weapon-brackets"><span class="weapon-bracket">{</span><span class="weapon-bracket">}</span></span>
+              </div>
+              <div class="weapon-field">
+                <span class="weapon-label">IRM</span>
+                <span class="weapon-brackets"><span class="weapon-bracket">{</span><span class="weapon-bracket">}</span></span>
+              </div>
+              <div class="weapon-field">
+                <span class="weapon-label">RHM</span>
+                <span class="weapon-brackets"><span class="weapon-bracket">{</span><span class="weapon-bracket">}</span></span>
+              </div>`;
+        }
+        
+        html += `
+            </div>
+          </div>
+          <div class="ordnance-area">
+            <div class="ordnance-label">Ordnance</div>
+            <div class="ordnance-content"></div>
+          </div>
+        </div>`;
+      }
+      
+      html += `
+      </div>
+    </div>`;
+      
+      return html;
+    }
+    
+    /**
+     * Apply aircraft note rules to modify aircraft data
+     * @param {object} aircraftData - Original aircraft data
+     * @param {string} tasking - Mission tasking
+     * @param {object} noteRulesData - Note rules database
+     * @param {string} nationCode - Nation code
+     * @returns {object} Modified aircraft data
+     */
+    function applyNoteRules(aircraftData, tasking, noteRulesData, nationCode) {
+      if (!aircraftData.notes || !noteRulesData) return aircraftData;
+      
+      // Create a deep copy to avoid modifying original
+      const modifiedData = JSON.parse(JSON.stringify(aircraftData));
+      
+      // Get rules for this nation
+      const nationRules = noteRulesData[nationCode];
+      if (!nationRules) return modifiedData;
+      
+      // Parse notes string into array (e.g., "A,C,L,M,P" -> ["A","C","L","M","P"])
+      const noteIds = aircraftData.notes.split(',').map(n => n.trim());
+      
+      // Apply each note's rules
+      for (const noteId of noteIds) {
+        const rule = nationRules.find(r => r.id === noteId);
+        if (!rule) continue;
+        
+        // Check if rule applies to this tasking
+        let applies = true;
+        if (rule.condition) {
+          if (rule.condition.startsWith('!')) {
+            // Negative condition (e.g., "!SEAD" means applies when NOT SEAD)
+            const excludedTasking = rule.condition.substring(1);
+            applies = !tasking.toUpperCase().includes(excludedTasking.toUpperCase());
+          } else {
+            // Positive condition (must match tasking)
+            applies = tasking.toUpperCase().includes(rule.condition.toUpperCase());
+          }
+        }
+        
+        if (!applies) continue;
+        
+        // Apply rule effects based on type
+        switch (rule.type) {
+          case 'weaponModification':
+            if (rule.effect.aamDepletion) {
+              const change = rule.effect.aamDepletion;
+              if (change < 0) {
+                // Reduce weapons
+                modifiedData.irm = Math.max(0, (modifiedData.irm || 0) + change);
+                modifiedData.rhm = Math.max(0, (modifiedData.rhm || 0) + change);
+              }
+            }
+            break;
+            
+          case 'weaponRestriction':
+            if (rule.effect.removeWeapon) {
+              const weaponToRemove = rule.effect.removeWeapon.toLowerCase();
+              if (weaponToRemove.includes('irm')) modifiedData.irm = 0;
+              if (weaponToRemove.includes('rhm')) modifiedData.rhm = 0;
+              if (weaponToRemove.includes('gun')) modifiedData.gun = 0;
+            }
+            if (rule.effect.removeWeapons) {
+              rule.effect.removeWeapons.forEach(weapon => {
+                const w = weapon.toLowerCase();
+                if (w.includes('irm')) modifiedData.irm = 0;
+                if (w.includes('rhm')) modifiedData.rhm = 0;
+                if (w.includes('gun')) modifiedData.gun = 0;
+              });
+            }
+            break;
+            
+          case 'capabilityModification':
+            if (rule.effect.jamRating !== undefined) {
+              modifiedData.jamRating = rule.effect.jamRating;
+            }
+            break;
+        }
+      }
+      
+      return modifiedData;
+    }
+    
+    /**
+     * Generate complete HTML document for compact flight sheets
+     * @param {string} flightCardsHTML - HTML for all flight cards
+     * @returns {string} Complete HTML document
+     */
+    function generateCompactSheetHTML(flightCardsHTML) {
+      return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Red Storm - Flight Sheets</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    
+    .flight-card {
+      background: white;
+      border: 2px solid #333;
+      margin-bottom: 20px;
+      page-break-inside: avoid;
+      width: 100%;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .roundel-box-header {
+      background: #2d3d2d;
+      padding: 10px;
+      text-align: center;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .roundel-image {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
+    }
+    
+    .flight-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      border-bottom: 1px solid #333;
+    }
+    
+    .flight-header .field {
+      border-right: 1px solid #333;
+      padding: 8px;
+    }
+    
+    .flight-header .field:last-child {
+      border-right: none;
+    }
+    
+    .tasking-fuel-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 2fr;
+      border-bottom: 1px solid #333;
+      align-items: stretch;
+    }
+    
+    .tasking-fuel-row .field {
+      border-right: 1px solid #333;
+      padding: 8px;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .tasking-fuel-row .field:last-child {
+      border-right: none;
+    }
+    
+    .field-label {
+      font-weight: bold;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    
+    .field-value {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    
+    .fuel-section {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .fuel-label {
+      font-weight: bold;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+    
+    .fuel-grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 3px;
+      flex: 1;
+    }
+    
+    .fuel-box {
+      border: 1px solid #333;
+      border-radius: 50%;
+      aspect-ratio: 1;
+      background: white;
+    }
+    
+    .aircraft-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px;
+    }
+    
+    .aircraft-card {
+      flex: 1;
+      min-width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 8px;
+      background: #fafafa;
+    }
+    
+    .aircraft-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .aircraft-left {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    
+    .aircraft-silhouette {
+      width: 60px;
+      height: 50px;
+      border: 1px dashed #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #999;
+      background: #f9f9f9;
+    }
+    
+    .health-checkboxes {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+    }
+    
+    .checkbox-box {
+      width: 14px;
+      height: 14px;
+      border: 1px solid #333;
+      display: inline-block;
+      background: white;
+    }
+    
+    .aircraft-weapons {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .weapon-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+    }
+    
+    .weapon-label {
+      font-weight: bold;
+      min-width: 35px;
+    }
+    
+    .weapon-brackets {
+      display: flex;
+      gap: 2px;
+    }
+    
+    .weapon-bracket {
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    .ordnance-area {
+      border-top: 1px solid #ddd;
+      padding-top: 6px;
+      margin-top: 6px;
+    }
+    
+    .ordnance-label {
+      font-weight: bold;
+      font-size: 11px;
+      margin-bottom: 4px;
+      color: #666;
+    }
+    
+    .ordnance-content {
+      min-height: 30px;
+      border: 1px dashed #ddd;
+      background: white;
+      padding: 4px;
+      font-size: 10px;
+    }
+    
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      
+      .flight-card {
+        page-break-inside: avoid;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center; margin-bottom: 20px; font-size: 24px;">Red Storm - Flight Sheets</h1>
+  ${flightCardsHTML}
+  <div style="text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 12px;">
+    <p>Red Storm Tools Suite - Flight Sheets</p>
+    <p>Generated: ${new Date().toLocaleString()}</p>
+    <button onclick="window.print()" style="margin-top: 10px; padding: 8px 20px; font-size: 14px; cursor: pointer;">Print Flight Sheets</button>
+  </div>
+</body>
+</html>`;
     }
     
     // Auto-run test when page loads
