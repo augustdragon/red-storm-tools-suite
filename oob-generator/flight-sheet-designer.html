@@ -47,6 +47,22 @@
       background-color: #5a6a5a;
     }
     
+    .controls button.add-to-queue {
+      background-color: #4a7a4a;
+    }
+    
+    .controls button.add-to-queue:hover {
+      background-color: #5a8a5a;
+    }
+    
+    .controls button.print-queue {
+      background-color: #5a5a7a;
+    }
+    
+    .controls button.print-queue:hover {
+      background-color: #6a6a8a;
+    }
+    
     .controls select {
       padding: 10px 15px;
       background-color: #2d3a2d;
@@ -87,6 +103,67 @@
       padding: 40px;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    
+    .queue-panel {
+      background-color: #2d3a2d;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .queue-header {
+      color: #d4e4d4;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .queue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .queue-item {
+      background-color: #3a4a3a;
+      padding: 10px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #d4e4d4;
+      font-size: 13px;
+    }
+    
+    .queue-item-info {
+      flex: 1;
+    }
+    
+    .queue-item button {
+      padding: 5px 12px;
+      background-color: #7a4a4a;
+      color: #f4f4f4;
+      border: 1px solid #8a5a5a;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    .queue-item button:hover {
+      background-color: #8a5a5a;
+    }
+    
+    .queue-empty {
+      color: #999;
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
     }
     
     /* Print Preview Styles */
@@ -597,8 +674,8 @@
     
     
     <div class="header">
-      <h1>Flight Sheet Designer</h1>
-      <p>Design and test alternative flight sheet layouts</p>
+      <h1>Flight Sheet Generator</h1>
+      <p>Generate and print individual flight sheets</p>
     </div>
     <a href="../index.html" class="back-link">← Back to Red Storm Tools Suite</a>
     <div class="controls">
@@ -633,9 +710,21 @@
         </label>
       </div>
       <div class="controls-row">
-        <button onclick="window.print()">🖨️ Print Preview</button>
-        <button onclick="clearPreview()">🗑️ Clear</button>
+        <button class="add-to-queue" onclick="addToQueue()">➕ Add to Queue</button>
+        <button class="print-queue" onclick="printQueue()">🖨️ Print All Flights</button>
+        <button onclick="window.print()">�️ Print Preview (Current)</button>
+        <button onclick="clearPreview()">🗑️ Clear Preview</button>
         <button onclick="exportDesign()">💾 Export HTML</button>
+      </div>
+    </div>
+    
+    <div class="queue-panel">
+      <div class="queue-header">
+        <span>Flight Queue (<span id="queueCount">0</span>)</span>
+        <button onclick="clearQueue()" style="padding: 5px 12px; background-color: #7a4a4a; color: #f4f4f4; border: 1px solid #8a5a5a; border-radius: 3px; cursor: pointer; font-size: 12px;">Clear All</button>
+      </div>
+      <div class="queue-list" id="queueList">
+        <div class="queue-empty">No flights in queue. Configure a flight above and click "Add to Queue".</div>
       </div>
     </div>
     
@@ -654,6 +743,8 @@
     let aircraftDatabase = {};
     let weaponsDatabase = {};
     let noteRulesDatabase = {};
+    let flightQueue = [];
+    let queueIdCounter = 1;
     
     // Load JSON databases
     async function loadDatabases() {
@@ -1342,6 +1433,128 @@ ${previewFrame.innerHTML}
       URL.revokeObjectURL(url);
       
       alert('Design exported! You can open the file to see the standalone version.');
+    }
+    
+    // Queue Management Functions
+    function addToQueue() {
+      const nationSelect = document.getElementById('nationSelector');
+      const aircraftSelect = document.getElementById('aircraftSelector');
+      const flightSizeSelect = document.getElementById('flightSizeSelector');
+      
+      const nation = nationSelect.value;
+      const aircraftKey = aircraftSelect.value;
+      const flightSize = parseInt(flightSizeSelect.value);
+      
+      if (!nation || !aircraftKey) {
+        alert('Please select a nation and aircraft first.');
+        return;
+      }
+      
+      const aircraftData = aircraftDatabase[aircraftKey];
+      if (!aircraftData) {
+        alert('Aircraft data not found.');
+        return;
+      }
+      
+      // Create queue item
+      const queueItem = {
+        id: queueIdCounter++,
+        nation: nation,
+        aircraftKey: aircraftKey,
+        aircraftName: aircraftData.model || aircraftKey,
+        flightSize: flightSize,
+        timestamp: new Date().getTime()
+      };
+      
+      flightQueue.push(queueItem);
+      updateQueueDisplay();
+      
+      console.log('Added to queue:', queueItem);
+    }
+    
+    function removeFromQueue(itemId) {
+      flightQueue = flightQueue.filter(item => item.id !== itemId);
+      updateQueueDisplay();
+    }
+    
+    function clearQueue() {
+      if (flightQueue.length === 0) return;
+      
+      if (confirm(`Clear all ${flightQueue.length} flights from queue?`)) {
+        flightQueue = [];
+        updateQueueDisplay();
+      }
+    }
+    
+    function updateQueueDisplay() {
+      const queueList = document.getElementById('queueList');
+      const queueCount = document.getElementById('queueCount');
+      
+      queueCount.textContent = flightQueue.length;
+      
+      if (flightQueue.length === 0) {
+        queueList.innerHTML = '<div class="queue-empty">No flights in queue. Configure a flight above and click "Add to Queue".</div>';
+        return;
+      }
+      
+      queueList.innerHTML = flightQueue.map(item => `
+        <div class="queue-item">
+          <div class="queue-item-info">
+            <strong>${item.aircraftName}</strong> (${item.nation}) - ${item.flightSize}-ship
+          </div>
+          <button onclick="removeFromQueue(${item.id})">Remove</button>
+        </div>
+      `).join('');
+    }
+    
+    function printQueue() {
+      if (flightQueue.length === 0) {
+        alert('No flights in queue. Add some flights first!');
+        return;
+      }
+      
+      // Generate HTML for all queued flights
+      const printWindow = window.open('', '_blank');
+      
+      let allFlightsHTML = '';
+      for (const item of flightQueue) {
+        const aircraftData = aircraftDatabase[item.aircraftKey];
+        if (aircraftData) {
+          allFlightsHTML += generateFlightCard(aircraftData, item.nation, item.flightSize);
+        }
+      }
+      
+      const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <base href="https://augustdragon.github.io/red-storm-tools-suite/">
+  <title>Red Storm - Flight Sheets</title>
+  <style>
+${document.querySelector('style').textContent}
+  
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+  </style>
+</head>
+<body>
+  <div class="page-title">Red Storm - Flight Sheets</div>
+  <div class="flight-grid">
+    ${allFlightsHTML}
+  </div>
+  <div class="no-print" style="text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 12px;">
+    <p>Red Storm Tools Suite - Flight Sheets</p>
+    <p>Generated: ${new Date().toLocaleString()}</p>
+    <button onclick="window.print()" style="margin-top: 10px; padding: 8px 20px; font-size: 14px; cursor: pointer;">Print Flight Sheets</button>
+  </div>
+</body>
+</html>`;
+      
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
     }
     
     // Auto-load databases on page load
