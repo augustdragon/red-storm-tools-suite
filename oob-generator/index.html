@@ -172,7 +172,7 @@
           <div class="section-title">Generated Results</div>
           <select id="flightSheetStyle" style="padding: 10px 15px; background-color: #2d3a2d; color: #d4e4d4; border: 2px solid #4a5a4a; border-radius: 6px; font-size: 14px; margin-right: 10px; cursor: pointer;">
             <option value="current">Current Flight Sheet</option>
-            <option value="compact">Compact Flight Sheet (New)</option>
+            <option value="compact">Detailed Flight Sheet</option>
           </select>
           <button class="action-button" onclick="generatePrintableSheet()" style="background-color: #5a6a5a; margin-right: 10px;">📄 Print Flight Sheet</button>
           <button class="action-button clear-results" onclick="clearAllResults()">Clear All</button>
@@ -1292,7 +1292,7 @@
       // Check which flight sheet style to use
       const selectedStyle = document.getElementById('flightSheetStyle').value;
       if (selectedStyle === 'compact') {
-        generateCompactFlightSheet();
+        generateDetailedFlightSheet();
         return;
       }
 
@@ -1613,8 +1613,8 @@
     printWindow.document.close();
     }
 
-    // Generate Compact Flight Sheet (New Designer Style)
-    async function generateCompactFlightSheet() {
+    // Generate Detailed Flight Sheet (Designer Style)
+    async function generateDetailedFlightSheet() {
       const state = getAppState();
       const results = state.results;
       
