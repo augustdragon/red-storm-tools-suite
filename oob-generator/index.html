@@ -2054,161 +2054,338 @@
     }
     
     /**
-     * Generate a single compact flight card with designer layout
+     * Convert JSON aircraft data to designer display format
+     * @param {object} jsonData - Raw aircraft JSON from database
+     * @param {string} nationCode - Nation code for display
+     * @returns {object} Designer-formatted aircraft data
+     */
+    function convertAircraftData(jsonData, nationCode) {
+      if (!jsonData) return null;
+      
+      // Helper function to extract speed for a specific altitude band
+      function extractSpeedForBand(speedString, index) {
+        if (!speedString || speedString === 'N/A') return 'N/A';
+        const values = speedString.split('/');
+        return values[index] || 'N/A';
+      }
+      
+      // Build weapon display strings from JSON format
+      let gunDisplay = '';
+      if (jsonData.weapons && jsonData.weapons.gun && jsonData.weapons.gunAmmo) {
+        // Format: "+3 {2}" - rating and ammo count
+        const rating = jsonData.weapons.gunRating || 3;
+        gunDisplay = `+${rating} {${jsonData.weapons.gunAmmo}}`;
+      }
+      
+      let irmDisplay = '';
+      if (jsonData.weapons && jsonData.weapons.irm && jsonData.weapons.irmAmmo) {
+        // Format: "+3/+1 {3}" - std rating / bvr rating {ammo}
+        const stdRtg = jsonData.weapons.irmStdRating || 3;
+        const bvrRtg = jsonData.weapons.irmBvrRating !== undefined ? jsonData.weapons.irmBvrRating : 1;
+        irmDisplay = `+${stdRtg}/${bvrRtg >= 0 ? '+' : ''}${bvrRtg} {${jsonData.weapons.irmAmmo}}`;
+      }
+      
+      let rhmDisplay = '';
+      if (jsonData.weapons && jsonData.weapons.rhm && jsonData.weapons.rhmAmmo) {
+        const stdRtg = jsonData.weapons.rhmStdRating || 3;
+        const bvrRtg = jsonData.weapons.rhmBvrRating !== undefined ? jsonData.weapons.rhmBvrRating : 2;
+        rhmDisplay = `+${stdRtg}/${bvrRtg >= 0 ? '+' : ''}${bvrRtg} {${jsonData.weapons.rhmAmmo}}`;
+      }
+      
+      // Build radar display
+      let radarDisplay = null;
+      let radarModifier = null;
+      if (jsonData.radar && jsonData.radar.name) {
+        radarDisplay = jsonData.radar.name;
+        if (jsonData.radar.type) radarDisplay += ` ${jsonData.radar.type}`;
+        if (jsonData.radar.range) radarDisplay += ` [${jsonData.radar.range}]`;
+        if (jsonData.radar.modifier) radarModifier = jsonData.radar.modifier;
+      }
+      
+      // RWR and Jam - filter out dash-only values
+      const rwrDisplay = (jsonData.rwr && jsonData.rwr !== '-' && jsonData.rwr !== '-/-') ? jsonData.rwr : null;
+      const jamDisplay = (jsonData.jam && jsonData.jam !== '-' && jsonData.jam !== '-/-') ? jsonData.jam : null;
+      
+      // Build ordnance string
+      const ordnanceStr = jsonData.ordnance && jsonData.ordnance.length > 0
+        ? jsonData.ordnance.map(o => o.quantity ? `${o.type}(${o.quantity})` : o.type).join(', ')
+        : '';
+      
+      // Build capabilities string
+      const capabilitiesStr = jsonData.capabilities && jsonData.capabilities.length > 0
+        ? jsonData.capabilities.join(', ')
+        : '';
+      
+      // Extract speeds for each altitude band
+      const speeds = {};
+      if (jsonData.speeds && jsonData.speeds.clean) {
+        const altitudeBands = ['VH', 'H', 'M', 'L/D'];
+        const indices = { 'VH': 3, 'H': 2, 'M': 1, 'L/D': 0 };
+        
+        altitudeBands.forEach(band => {
+          const idx = indices[band];
+          speeds[band] = {
+            combat: extractSpeedForBand(jsonData.speeds.clean.combat, idx),
+            dash: extractSpeedForBand(jsonData.speeds.clean.dash, idx),
+            maneuver: extractSpeedForBand(jsonData.speeds.clean.maneuver, idx)
+          };
+        });
+      }
+      
+      // Extract laden speeds if present
+      let speedsLaden = null;
+      if (jsonData.speeds && jsonData.speeds.laden) {
+        speedsLaden = {};
+        const altitudeBands = ['VH', 'H', 'M', 'L/D'];
+        const indices = { 'VH': 3, 'H': 2, 'M': 1, 'L/D': 0 };
+        
+        altitudeBands.forEach(band => {
+          const idx = indices[band];
+          speedsLaden[band] = {
+            combat: extractSpeedForBand(jsonData.speeds.laden.combat, idx),
+            dash: extractSpeedForBand(jsonData.speeds.laden.dash, idx),
+            maneuver: extractSpeedForBand(jsonData.speeds.laden.maneuver, idx)
+          };
+        });
+      }
+      
+      return {
+        model: jsonData.name || jsonData.model,
+        nation: nationCode || jsonData.nation,
+        crew: jsonData.crew,
+        rwy: jsonData.runway || jsonData.rwy,
+        fuel: jsonData.fuel,
+        notes: jsonData.notes,
+        gun: gunDisplay,
+        irm: irmDisplay,
+        rhm: rhmDisplay,
+        rwr: rwrDisplay,
+        jam: jamDisplay,
+        ordnance: ordnanceStr,
+        aam: jsonData.aam,
+        bomb: jsonData.bomb,
+        sight: jsonData.sight,
+        capabilities: capabilitiesStr,
+        speeds: speeds,
+        speedsClean: speeds,
+        speedsLaden: speedsLaden,
+        hasCleanLaden: speedsLaden !== null,
+        radar: radarDisplay,
+        radarModifier: radarModifier
+      };
+    }
+    
+    /**
+     * Generate a single flight card using exact designer layout
      * @param {string} aircraftType - Aircraft name
-     * @param {object} aircraftData - Aircraft data with stats and weapons
+     * @param {object} aircraftData - Designer-formatted aircraft data
      * @param {number} flightSize - Number of aircraft in flight
      * @param {string} nationCode - Nation code (FRG, USSR, etc.)
      * @param {string} tasking - Mission tasking
      * @param {string} faction - NATO or WP
-     * @param {object} weaponsData - Weapons database
      * @returns {string} HTML for single flight card
      */
-    function generateSingleCompactCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction, weaponsData) {
-      const aircraftDisplay = nationCode ? `${aircraftType} (${nationCode})` : aircraftType;
+    function generateSingleDesignerCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction) {
+      // Use default data if aircraft not found
+      if (!aircraftData) {
+        aircraftData = {
+          model: aircraftType,
+          crew: '?',
+          rwy: '?',
+          fuel: 18,
+          notes: '',
+          gun: '',
+          irm: '',
+          rhm: '',
+          speeds: {}
+        };
+      }
       
-      // Get roundel image path
-      const roundelPath = nationCode ? `assets/roundels/${nationCode.toLowerCase()}.png` : '';
+      // Determine roundel image
+      const roundelMap = {
+        'US': 'USAF.jpg',
+        'UK': 'UK.jpg',
+        'FRG': 'FRG.jpg',
+        'Belgium': 'Belgium.jpg',
+        'Netherlands': 'Netherlands.jpg',
+        'Canada': 'Canada.png',
+        'USSR': 'USSR.jpg',
+        'GDR': 'GDR.jpg'
+      };
+      const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
       
       let html = `
     <div class="flight-card">
-      <!-- Roundel Box Header -->
-      <div class="roundel-box-header">
-        ${roundelPath ? `<img src="${roundelPath}" alt="${nationCode}" class="roundel-image" onerror="this.style.display='none'">` : ''}
-      </div>
-      
-      <!-- Header: Aircraft Type, Callsign, Counter, Aggression -->
-      <div class="flight-header">
-        <div class="field">
-          <div class="field-value">${escapeHtml(aircraftDisplay)}</div>
-        </div>
-        <div class="field">
-          <div class="field-label">Callsign</div>
-        </div>
-        <div class="field">
-          <div class="field-label">Counter</div>
-        </div>
-        <div class="field">
-          <div class="field-label">Aggression</div>
-        </div>
-      </div>
-      
-      <!-- Tasking, Notes, and Fuel Row -->
-      <div class="tasking-fuel-row">
-        <div class="field tasking-field">
-          <div class="field-label">Tasking</div>
-          <div class="field-value">${escapeHtml(tasking)}</div>
-        </div>
-        <div class="field notes-field">
-          <div class="field-label">Notes</div>
-          <div class="field-value">${aircraftData && aircraftData.notes ? escapeHtml(aircraftData.notes) : ''}</div>
-        </div>
-        <div class="field fuel-field">
-          <div class="fuel-section">
-            <div class="fuel-label">Fuel:</div>
-            <div class="fuel-grid">`;
-      
-      // Generate 18 fuel circles (2 rows of 9)
-      for (let i = 0; i < 18; i++) {
-        html += `              <div class="fuel-box"></div>\n`;
-      }
-      
-      html += `
-            </div>
+      <!-- Flight-level information -->
+      <div class="flight-info-section">
+        <div class="flight-header">
+          <div class="roundel-box-header">
+            <img src="../assets/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
+          </div>
+          <div class="field">
+            <div class="field-label">Aircraft</div>
+            <div class="field-value">${aircraftData.model || aircraftType}</div>
+          </div>
+          <div class="field">
+            <div class="field-label">Callsign</div>
+            <div class="field-value"></div>
+          </div>
+          <div class="field">
+            <div class="field-label">Counter</div>
+            <div class="field-value"></div>
+          </div>
+          <div class="field">
+            <div class="field-label">Aggr.</div>
+            <div class="field-value"></div>
           </div>
         </div>
-      </div>
-      
-      <!-- Aircraft Section -->
-      <div class="aircraft-section">`;
-      
-      // Generate individual aircraft cards
-      for (let i = 0; i < flightSize; i++) {
-        html += `
-        <div class="aircraft-card">
-          <div class="aircraft-row">
-            <div class="aircraft-left">
-              <div class="aircraft-silhouette">
-                ${faction === 'NATO' ? 'NATO' : 'WP'}
-              </div>
-              <div class="health-checkboxes">
-                <div class="checkbox"><span class="checkbox-box"></span><span>Da</span></div>
-                <div class="checkbox"><span class="checkbox-box"></span><span>Cr</span></div>
-                <div class="checkbox"><span class="checkbox-box"></span><span>☠</span></div>
-              </div>
-            </div>
-            <div class="aircraft-weapons">`;
         
-        // Add air-to-air weapons from aircraft data
-        if (aircraftData) {
-          const gun = aircraftData.gun || 0;
-          const irm = aircraftData.irm || 0;
-          const rhm = aircraftData.rhm || 0;
-          
-          html += `
-              <div class="weapon-field">
-                <span class="weapon-label">Gun</span>
-                <span class="weapon-brackets">`;
-          for (let j = 0; j < gun; j++) {
-            html += `<span class="weapon-bracket">{</span>`;
-          }
-          for (let j = 0; j < gun; j++) {
-            html += `<span class="weapon-bracket">}</span>`;
-          }
-          html += `</span>
+        <div class="tasking-fuel-row">
+          <div class="field">
+            <div class="field-label">Tasking</div>
+            <div class="field-value">${tasking}</div>
+          </div>
+          <div class="fuel-box">
+            <div class="fuel-label-value">
+              <span class="field-label">Fuel</span>
+              <span class="fuel-value">${aircraftData.fuel || 18}</span>
+            </div>
+            <div class="fuel-circles-container">
+              ${typeof aircraftData.fuel === 'number' ? `
+              <div class="fuel-circles-row">
+                ${Array(Math.ceil(aircraftData.fuel / 2)).fill(0).map(() => 
+                  `<div class="fuel-circle"></div>`
+                ).join('')}
               </div>
-              <div class="weapon-field">
-                <span class="weapon-label">IRM</span>
-                <span class="weapon-brackets">`;
-          for (let j = 0; j < irm; j++) {
-            html += `<span class="weapon-bracket">{</span>`;
-          }
-          for (let j = 0; j < irm; j++) {
-            html += `<span class="weapon-bracket">}</span>`;
-          }
-          html += `</span>
+              <div class="fuel-circles-row">
+                ${Array(Math.floor(aircraftData.fuel / 2)).fill(0).map(() => 
+                  `<div class="fuel-circle"></div>`
+                ).join('')}
               </div>
-              <div class="weapon-field">
-                <span class="weapon-label">RHM</span>
-                <span class="weapon-brackets">`;
-          for (let j = 0; j < rhm; j++) {
-            html += `<span class="weapon-bracket">{</span>`;
-          }
-          for (let j = 0; j < rhm; j++) {
-            html += `<span class="weapon-bracket">}</span>`;
-          }
-          html += `</span>
-              </div>`;
-        } else {
-          // Default placeholders if no aircraft data
-          html += `
-              <div class="weapon-field">
-                <span class="weapon-label">Gun</span>
-                <span class="weapon-brackets"><span class="weapon-bracket">{</span><span class="weapon-bracket">}</span></span>
-              </div>
-              <div class="weapon-field">
-                <span class="weapon-label">IRM</span>
-                <span class="weapon-brackets"><span class="weapon-bracket">{</span><span class="weapon-bracket">}</span></span>
-              </div>
-              <div class="weapon-field">
-                <span class="weapon-label">RHM</span>
-                <span class="weapon-brackets"><span class="weapon-bracket">{</span><span class="weapon-bracket">}</span></span>
-              </div>`;
-        }
-        
-        html += `
+              ` : ''}
             </div>
           </div>
-          <div class="ordnance-area">
-            <div class="ordnance-label">Ordnance</div>
-            <div class="ordnance-content"></div>
+          <div class="field">
+            <div class="field-label">Notes</div>
+            <div class="field-value">${aircraftData.notes || ''}</div>
           </div>
-        </div>`;
-      }
-      
-      html += `
+        </div>
+        
+        <div class="flight-weapons-row">
+          <div class="weapons-display">
+            ${aircraftData.gun ? `<div class="weapon-item">
+              <span class="weapon-label">Gun:</span>
+              <span>${aircraftData.gun}</span>
+            </div>` : ''}
+            ${aircraftData.irm ? `<div class="weapon-item">
+              <span class="weapon-label">IRM:</span>
+              <span>${aircraftData.irm}</span>
+            </div>` : ''}
+            ${aircraftData.rhm ? `<div class="weapon-item">
+              <span class="weapon-label">RHM:</span>
+              <span>${aircraftData.rhm}</span>
+            </div>` : ''}
+          </div>
+          ${aircraftData.crew || aircraftData.rwy ? `<div style="display: flex; gap: 10px; font-size: 7pt;">
+            ${aircraftData.crew ? `<div><strong>Crew:</strong> ${aircraftData.crew}</div>` : ''}
+            ${aircraftData.rwy ? `<div><strong>Rwy:</strong> ${aircraftData.rwy}</div>` : ''}
+          </div>` : ''}
+        </div>
+        
+        ${aircraftData.ordnance || aircraftData.aam || aircraftData.bomb || (aircraftData.sight && aircraftData.sight !== '-') ? `<div style="padding: 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 4px;">
+          ${aircraftData.aam ? `<strong>AAM:</strong> ${aircraftData.aam}` : ''}${(aircraftData.aam && aircraftData.ordnance) ? ' | ' : ''}${aircraftData.ordnance ? `<strong>Ordnance:</strong> ${aircraftData.ordnance}` : ''}${((aircraftData.aam || aircraftData.ordnance) && aircraftData.bomb) ? ' | ' : ''}${aircraftData.bomb ? `<strong>Bomb:</strong> ${aircraftData.bomb}` : ''}${((aircraftData.aam || aircraftData.ordnance || aircraftData.bomb) && aircraftData.sight && aircraftData.sight !== '-') ? ' | ' : ''}${aircraftData.sight && aircraftData.sight !== '-' ? `<strong>Sight:</strong> ${aircraftData.sight}` : ''}
+        </div>` : ''}
+        
+        ${aircraftData.radar || aircraftData.rwr || aircraftData.jam ? `<div style="padding: 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 4px;">
+          ${aircraftData.radar ? `<strong>Radar:</strong> ${aircraftData.radar} ${aircraftData.radarModifier || ''}` : ''}
+          ${aircraftData.radar && aircraftData.rwr ? ' | ' : ''}
+          ${aircraftData.rwr ? `<strong>RWR:</strong> ${aircraftData.rwr}` : ''}
+          ${(aircraftData.radar || aircraftData.rwr) && aircraftData.jam ? ' | ' : ''}
+          ${aircraftData.jam ? `<strong>Jam:</strong> ${aircraftData.jam}` : ''}
+        </div>` : ''}
+        
+        ${aircraftData.capabilities ? `<div style="padding: 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 4px;">
+          <strong>Capabilities:</strong> ${aircraftData.capabilities}
+        </div>` : ''}
+        
+        ${aircraftData.hasCleanLaden ? `
+        <table class="speed-table">
+          <tr>
+            <th rowspan="2">Alt</th>
+            <th colspan="3">Clean</th>
+            <th colspan="3">Laden</th>
+          </tr>
+          <tr>
+            <th>C</th>
+            <th>D</th>
+            <th>M</th>
+            <th>C</th>
+            <th>D</th>
+            <th>M</th>
+          </tr>
+          ${Object.keys(aircraftData.speedsClean).map(alt => `
+            <tr>
+              <td><strong>${alt}</strong></td>
+              <td>${aircraftData.speedsClean[alt].combat}</td>
+              <td>${aircraftData.speedsClean[alt].dash}</td>
+              <td>${aircraftData.speedsClean[alt].maneuver}</td>
+              <td>${aircraftData.speedsLaden[alt].combat}</td>
+              <td>${aircraftData.speedsLaden[alt].dash}</td>
+              <td>${aircraftData.speedsLaden[alt].maneuver}</td>
+            </tr>
+          `).join('')}
+        </table>
+        ` : aircraftData.speeds && Object.keys(aircraftData.speeds).length > 0 ? `
+        <table class="speed-table">
+          <tr>
+            <th>Alt</th>
+            <th>C</th>
+            <th>D</th>
+            <th>M</th>
+          </tr>
+          ${Object.entries(aircraftData.speeds).map(([alt, speeds]) => `
+            <tr>
+              <td><strong>${alt}</strong></td>
+              <td>${speeds.combat}</td>
+              <td>${speeds.dash}</td>
+              <td>${speeds.maneuver}</td>
+            </tr>
+          `).join('')}
+        </table>
+        ` : ''}
       </div>
-    </div>`;
+      
+      <!-- Individual aircraft boxes -->
+      <div class="aircraft-grid">
+        ${Array(parseInt(flightSize)).fill(0).map((_, i) => `
+          <div class="aircraft-box">
+            <div class="aircraft-header">
+              <div class="aircraft-number">${i + 1}</div>
+              <div class="damage-boxes">
+                <div class="damage-column">
+                  <div class="damage-row">
+                    <div class="damage-label">Damaged</div>
+                    <div class="damage-checkbox"></div>
+                  </div>
+                  <div class="damage-row">
+                    <div class="damage-label">Crippled</div>
+                    <div class="damage-checkbox"></div>
+                  </div>
+                  <div class="damage-row">
+                    <div class="damage-label">Destroyed</div>
+                    <div class="damage-checkbox"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ordnance-area-small">
+              <div class="ordnance-label-small">Ordnance</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+      `;
       
       return html;
     }
@@ -2296,11 +2473,11 @@
     }
     
     /**
-     * Generate complete HTML document for compact flight sheets
+     * Generate complete HTML document with designer styles for flight sheets
      * @param {string} flightCardsHTML - HTML for all flight cards
      * @returns {string} Complete HTML document
      */
-    function generateCompactSheetHTML(flightCardsHTML) {
+    function generateDesignerSheetHTML(flightCardsHTML) {
       return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2320,213 +2497,286 @@
       background: #f5f5f5;
     }
     
-    .flight-card {
-      background: white;
-      border: 2px solid #333;
-      margin-bottom: 20px;
-      page-break-inside: avoid;
-      width: 100%;
-      max-width: 1000px;
-      margin-left: auto;
-      margin-right: auto;
+    @page {
+      size: letter;
+      margin: 0.5in;
     }
     
-    .roundel-box-header {
-      background: #2d3d2d;
-      padding: 10px;
+    .page-title {
       text-align: center;
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 14pt;
+      font-weight: bold;
+      margin-bottom: 12px;
+      border-bottom: 2px solid black;
+      padding-bottom: 3px;
+      color: black;
     }
     
-    .roundel-image {
-      height: 50px;
-      width: auto;
-      object-fit: contain;
+    .flight-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    
+    .flight-card {
+      border: 2px solid black;
+      padding: 6px;
+      page-break-inside: avoid;
+      background: white;
+      color: black;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 12px;
+    }
+    
+    .flight-info-section {
+      border-bottom: 2px solid black;
+      padding-bottom: 4px;
+      margin-bottom: 4px;
     }
     
     .flight-header {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      border-bottom: 1px solid #333;
-    }
-    
-    .flight-header .field {
-      border-right: 1px solid #333;
-      padding: 8px;
-    }
-    
-    .flight-header .field:last-child {
-      border-right: none;
-    }
-    
-    .tasking-fuel-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 2fr;
-      border-bottom: 1px solid #333;
+      grid-template-columns: 50px auto 1.2fr 50px 0.8fr;
+      gap: 4px;
+      margin-bottom: 4px;
       align-items: stretch;
     }
     
-    .tasking-fuel-row .field {
-      border-right: 1px solid #333;
-      padding: 8px;
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .tasking-fuel-row .field:last-child {
-      border-right: none;
-    }
-    
-    .field-label {
-      font-weight: bold;
-      font-size: 12px;
-      color: #666;
-      margin-bottom: 4px;
-    }
-    
-    .field-value {
-      font-size: 14px;
-      font-weight: bold;
-    }
-    
-    .fuel-section {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-    
-    .fuel-label {
-      font-weight: bold;
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-    
-    .fuel-grid {
-      display: grid;
-      grid-template-columns: repeat(9, 1fr);
-      gap: 3px;
-      flex: 1;
-    }
-    
-    .fuel-box {
-      border: 1px solid #333;
-      border-radius: 50%;
-      aspect-ratio: 1;
-      background: white;
-    }
-    
-    .aircraft-section {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 10px;
-    }
-    
-    .aircraft-card {
-      flex: 1;
-      min-width: 200px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 8px;
-      background: #fafafa;
-    }
-    
-    .aircraft-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-    
-    .aircraft-left {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    
-    .aircraft-silhouette {
-      width: 60px;
-      height: 50px;
-      border: 1px dashed #ccc;
+    .roundel-box-header {
+      border: none;
+      padding: 2px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
-      color: #999;
-      background: #f9f9f9;
-    }
-    
-    .health-checkboxes {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    
-    .checkbox {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-    }
-    
-    .checkbox-box {
-      width: 14px;
-      height: 14px;
-      border: 1px solid #333;
-      display: inline-block;
       background: white;
+      min-height: 18px;
+      max-height: 28px;
     }
     
-    .aircraft-weapons {
+    .roundel-box-header img {
+      max-width: 100%;
+      height: 28px;
+      width: auto;
+      object-fit: contain;
+    }
+    
+    .flight-weapons-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      padding: 3px;
+      background: #f5f5f5;
+    }
+    
+    .weapons-display {
+      display: flex;
+      gap: 15px;
+      font-size: 7pt;
+    }
+    
+    .weapon-item {
+      display: flex;
+      gap: 3px;
+    }
+    
+    .weapon-item .weapon-label {
+      font-weight: bold;
+    }
+    
+    .aircraft-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3px;
+    }
+    
+    .aircraft-box {
+      border: 1px solid #666;
+      padding: 3px;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      min-height: 120px;
+      position: relative;
+    }
+    
+    .aircraft-header {
+      display: flex;
+      flex-direction: row;
+      gap: 3px;
+      margin-bottom: 3px;
+      width: 100%;
+    }
+    
+    .aircraft-number {
+      border: 1px solid #666;
+      width: 16px;
+      height: 16px;
+      background: white;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7pt;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
+    .damage-boxes {
+      display: flex;
+      flex-direction: row;
+      gap: 2px;
+    }
+    
+    .damage-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    
+    .damage-row {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+    
+    .damage-label {
+      border: 1px solid #666;
+      padding: 1px 3px;
+      height: 16px;
+      font-size: 6pt;
+      background: white;
+      display: flex;
+      align-items: center;
+      min-width: 50px;
+      box-sizing: border-box;
+    }
+    
+    .damage-checkbox {
+      border: 1px solid #666;
+      width: 16px;
+      height: 16px;
+      background: white;
+      box-sizing: border-box;
+    }
+    
+    .ordnance-area-small {
+      border: none;
+      border-top: 1px solid #666;
+      padding: 4px 0;
+      padding-top: 6px;
+      min-height: 60px;
+      width: 100%;
+      background: white;
+      flex: 1;
+    }
+    
+    .ordnance-label-small {
+      font-size: 7pt;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .fuel-box {
+      border: 1px solid #666;
+      padding: 2px 4px;
+      display: flex;
+      align-items: center;
       gap: 4px;
     }
     
-    .weapon-field {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-    }
-    
-    .weapon-label {
-      font-weight: bold;
-      min-width: 35px;
-    }
-    
-    .weapon-brackets {
+    .fuel-circles-row {
       display: flex;
       gap: 2px;
     }
     
-    .weapon-bracket {
-      font-weight: bold;
-      font-size: 14px;
-    }
-    
-    .ordnance-area {
-      border-top: 1px solid #ddd;
-      padding-top: 6px;
-      margin-top: 6px;
-    }
-    
-    .ordnance-label {
-      font-weight: bold;
-      font-size: 11px;
-      margin-bottom: 4px;
-      color: #666;
-    }
-    
-    .ordnance-content {
-      min-height: 30px;
-      border: 1px dashed #ddd;
+    .fuel-circle {
+      width: 10px;
+      height: 10px;
+      border: 1px solid #666;
+      border-radius: 50%;
       background: white;
-      padding: 4px;
-      font-size: 10px;
+    }
+    
+    .field {
+      border: 1px solid #666;
+      padding: 2px 4px;
+      min-height: 18px;
+      max-height: 28px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    
+    .field-label {
+      font-size: 7pt;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .field-value {
+      font-weight: bold;
+      font-size: 7pt;
+    }
+    
+    .tasking-fuel-row {
+      display: grid;
+      grid-template-columns: 0.7fr 0.9fr 0.8fr;
+      gap: 4px;
+      margin-bottom: 5px;
+      align-items: stretch;
+    }
+    
+    .tasking-fuel-row .field {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+    
+    .fuel-label-value {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      font-size: 7pt;
+      white-space: nowrap;
+    }
+    
+    .fuel-label-value .field-label {
+      margin: 0;
+    }
+    
+    .fuel-label-value .fuel-value {
+      font-weight: bold;
+      font-size: 7pt;
+    }
+    
+    .fuel-circles-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+    
+    .speed-table {
+      border: 1px solid #666;
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 6pt;
+      margin-top: 2px;
+    }
+    
+    .speed-table th,
+    .speed-table td {
+      border: 1px solid #666;
+      padding: 1px 2px;
+      text-align: center;
+    }
+    
+    .speed-table th {
+      background: #e0e0e0;
+      font-weight: bold;
     }
     
     @media print {
