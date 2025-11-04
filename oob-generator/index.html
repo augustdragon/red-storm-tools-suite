@@ -2097,14 +2097,22 @@
         // If still no match, log error for debugging
         if (!rawAircraftData) {
           console.error(`Aircraft not found: "${aircraftType}" in ${faction} database`);
+          console.error(`Result text: "${resultText}"`);
+          console.error(`Available aircraft keys:`, Object.keys(aircraftDB).filter(k => !k.startsWith('_')).slice(0, 10));
         }
       }
       
-      // Convert to designer format
-      let aircraftData = rawAircraftData ? convertAircraftData(rawAircraftData, nationCode, weaponsData) : null;
+      // If aircraft not found, return empty string
+      if (!rawAircraftData) {
+        console.warn(`Skipping flight card generation - aircraft "${aircraftType}" not found`);
+        return '';
+      }
       
-      // Apply note rules if aircraft data found
-      if (aircraftData && noteRulesData && nationCode) {
+      // Convert to designer format
+      let aircraftData = convertAircraftData(rawAircraftData, nationCode, weaponsData);
+      
+      // Apply note rules if available
+      if (noteRulesData && nationCode) {
         aircraftData = applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode);
       }
       
