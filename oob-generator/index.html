@@ -1649,26 +1649,24 @@
         
         // Generate HTML for all flights using designer layout
         let flightCardsHTML = '';
-        let lastFaction = null;
-        let isFirstWPFlight = false;
         console.log(`Generating flight cards for ${sortedResults.length} results...`);
-        for (const flight of sortedResults) {
+        for (let i = 0; i < sortedResults.length; i++) {
+          const flight = sortedResults[i];
+          const nextFlight = i < sortedResults.length - 1 ? sortedResults[i + 1] : null;
+          
           console.log('Processing flight:', flight.result || flight.text);
           
-          // Mark first WP flight for page break
-          if (lastFaction === 'NATO' && flight.faction === 'WP') {
-            isFirstWPFlight = true;
-            console.log('→ Marking first WP flight for page break');
-          } else {
-            isFirstWPFlight = false;
-          }
-          lastFaction = flight.faction;
+          // Check if this is the last NATO flight before WP flights start
+          const isLastNATOFlight = flight.faction === 'NATO' && nextFlight && nextFlight.faction === 'WP';
           
           try {
-            const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, isFirstWPFlight);
+            const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, isLastNATOFlight);
             if (cardHTML && cardHTML.trim()) {
               flightCardsHTML += cardHTML;
               console.log('✓ Generated card for:', (flight.result || flight.text).substring(0, 50));
+              if (isLastNATOFlight) {
+                console.log('→ Applied page-break-after to last NATO flight');
+              }
             } else {
               console.warn('⚠ Empty card generated for:', flight.result || flight.text);
             }
@@ -2016,10 +2014,10 @@
      * @param {object} noteRulesData - Aircraft note rules database
      * @param {object} weaponsData - Weapons database
      * @param {object} nameMappingData - Aircraft name mapping database
-     * @param {boolean} isFirstWPFlight - Whether this is the first WP flight (for page break)
+     * @param {boolean} isLastNATOFlight - Whether this is the last NATO flight before WP (for page break)
      * @returns {string} HTML for flight card with designer layout
      */
-    async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, isFirstWPFlight = false) {
+    async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, isLastNATOFlight = false) {
       // Parse result text to extract flight info
       const resultText = flight.result || '';
       const faction = flight.faction || 'NATO';
@@ -2042,8 +2040,9 @@
             result: flightPart
           };
           // Recursively call this function to generate card for single flight
-          // Only the first card gets the page break
-          const applyPageBreakToThisFlight = isFirstWPFlight && i === 0;
+          // Only the last card of multi-flight NATO results gets the page break
+          const isLastCard = i === flightParts.length - 1;
+          const applyPageBreakToThisFlight = isLastNATOFlight && isLastCard;
           allCards += await generateDesignerFlightCard(tempFlight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, applyPageBreakToThisFlight);
         }
         
@@ -2168,8 +2167,9 @@
       // Generate cards for each flight in the result (e.g., "4 x {2}" = 4 flights)
       let allCardsHTML = '';
       for (let flightNum = 0; flightNum < numFlights; flightNum++) {
-        // Only apply page break to the very first card of the first WP flight
-        const applyPageBreak = isFirstWPFlight && flightNum === 0;
+        // Only apply page break to the very last card of the last NATO flight
+        const isLastCard = flightNum === numFlights - 1;
+        const applyPageBreak = isLastNATOFlight && isLastCard;
         allCardsHTML += generateSingleDesignerCard(
           aircraftType,
           aircraftData,
@@ -2368,8 +2368,8 @@
       };
       const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
       
-      // Add page break style if this is the first WP flight
-      const pageBreakStyle = applyPageBreak ? ' style="page-break-before: always;"' : '';
+      // Add page break style if this is the last NATO flight (breaks after, not before)
+      const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always;"' : '';
       
       let html = `
     <div class="flight-card"${pageBreakStyle}>
