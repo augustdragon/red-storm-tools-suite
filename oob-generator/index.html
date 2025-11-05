@@ -2093,6 +2093,9 @@
       // Roll for AIM-9: 1-4 = AIM-9L (Std 3, BVR 0), 5-10 = AIM-9M (Std 3, BVR 1)
       // Roll for AIM-7: 1-6 = AIM-7F (Std 3, BVR 1), 7-10 = AIM-7M (Std 3, BVR 2)
       if (nationCode === 'US' && notes.includes('J')) {
+        let aim9Type = '';
+        let aim7Type = '';
+        
         // Roll for AIM-9 type if aircraft has IRM
         if (modifiedData.irm) {
           const aim9Roll = Math.floor(Math.random() * 10) + 1;
@@ -2103,9 +2106,11 @@
           if (aim9Roll <= 4) {
             // AIM-9L: Std 3, BVR 0
             modifiedData.irm = `+3/+0 {${irmDepletion}}`;
+            aim9Type = 'AIM-9L';
           } else {
             // AIM-9M: Std 3, BVR 1
             modifiedData.irm = `+3/+1 {${irmDepletion}}`;
+            aim9Type = 'AIM-9M';
           }
         }
         
@@ -2119,10 +2124,21 @@
           if (aim7Roll <= 6) {
             // AIM-7F: Std 3, BVR 1
             modifiedData.rhm = `+3/+1 {${rhmDepletion}}`;
+            aim7Type = 'AIM-7F';
           } else {
             // AIM-7M: Std 3, BVR 2
             modifiedData.rhm = `+3/+2 {${rhmDepletion}}`;
+            aim7Type = 'AIM-7M';
           }
+        }
+        
+        // Update AAM field with specific missile types rolled
+        if (aim9Type && aim7Type) {
+          modifiedData.aam = `${aim9Type}, ${aim7Type}`;
+        } else if (aim9Type) {
+          modifiedData.aam = aim9Type;
+        } else if (aim7Type) {
+          modifiedData.aam = aim7Type;
         }
       }
       
