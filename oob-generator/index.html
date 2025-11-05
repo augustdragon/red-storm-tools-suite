@@ -1649,9 +1649,18 @@
         
         // Generate HTML for all flights using designer layout
         let flightCardsHTML = '';
+        let lastFaction = null;
         console.log(`Generating flight cards for ${sortedResults.length} results...`);
         for (const flight of sortedResults) {
           console.log('Processing flight:', flight.result || flight.text);
+          
+          // Add page break before first WP flight
+          if (lastFaction === 'NATO' && flight.faction === 'WP') {
+            flightCardsHTML += '<div style="page-break-before: always;"></div>';
+            console.log('→ Inserted page break before WP flights');
+          }
+          lastFaction = flight.faction;
+          
           try {
             const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData);
             if (cardHTML && cardHTML.trim()) {
