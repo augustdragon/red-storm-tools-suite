@@ -516,8 +516,8 @@
     "weapons": {
       "gun": "20mm M39",
       "gunDepletion": 2,
-      "irm": null,
-      "irmDepletion": null,
+      "irm": "AIM-9J",
+      "irmDepletion": 6,
       "rhm": null,
       "rhmDepletion": null
     },
@@ -543,7 +543,7 @@
       { "type": "LGB", "quantity": 1 }
     ],
     "capabilities": ["Radar", "Night"],
-    "aam": "AIM-9J (6)"
+    "aam": "AIM-9J"
   },
   
   "A-10A": {
@@ -584,7 +584,7 @@
       { "type": "LGB", "quantity": 1 }
     ],
     "capabilities": [],
-    "aam": "AIM-9L (6)"
+    "aam": "AIM-9L"
   },
   
   "B-52G": {
