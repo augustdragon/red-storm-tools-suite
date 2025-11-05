@@ -2071,6 +2071,61 @@
         modifiedData.specialRules.push('May Spot Jam [19.34] two radars at the same time.');
       }
       
+      // US Note G: Defensive Wheel formation
+      // Only applies to US aircraft
+      if (nationCode === 'US' && notes.includes('G')) {
+        modifiedData.specialRules.push('May enter Defensive Wheel formation [7.1].');
+      }
+      
+      // US Note H: LGB only, internal bay
+      // Only applies to US aircraft (F-117A)
+      if (nationCode === 'US' && notes.includes('H')) {
+        modifiedData.specialRules.push('Only load allowed is LGB(1). Internal bomb bay, use clean ratings while laden.');
+      }
+      
+      // US Note I: GBU-15 glide bomb
+      // Only applies to US aircraft
+      if (nationCode === 'US' && notes.includes('I')) {
+        modifiedData.specialRules.push('GBU-15(V)B glide bomb. May use EOGB day or night.');
+      }
+      
+      // US Note J: Variable missile types - requires per-flight dice rolls
+      // Roll for AIM-9: 1-4 = AIM-9L (Std 3, BVR 0), 5-10 = AIM-9M (Std 3, BVR 1)
+      // Roll for AIM-7: 1-6 = AIM-7F (Std 3, BVR 1), 7-10 = AIM-7M (Std 3, BVR 2)
+      if (nationCode === 'US' && notes.includes('J')) {
+        // Roll for AIM-9 type if aircraft has IRM
+        if (modifiedData.irm) {
+          const aim9Roll = Math.floor(Math.random() * 10) + 1;
+          // Extract depletion number from current IRM string (e.g., "+3/+1 {3}" -> "3")
+          const irmDepletionMatch = modifiedData.irm.match(/\{(\d+)\}/);
+          const irmDepletion = irmDepletionMatch ? irmDepletionMatch[1] : '3';
+          
+          if (aim9Roll <= 4) {
+            // AIM-9L: Std 3, BVR 0
+            modifiedData.irm = `+3/+0 {${irmDepletion}}`;
+          } else {
+            // AIM-9M: Std 3, BVR 1
+            modifiedData.irm = `+3/+1 {${irmDepletion}}`;
+          }
+        }
+        
+        // Roll for AIM-7 type if aircraft has RHM
+        if (modifiedData.rhm) {
+          const aim7Roll = Math.floor(Math.random() * 10) + 1;
+          // Extract depletion number from current RHM string
+          const rhmDepletionMatch = modifiedData.rhm.match(/\{(\d+)\}/);
+          const rhmDepletion = rhmDepletionMatch ? rhmDepletionMatch[1] : '3';
+          
+          if (aim7Roll <= 6) {
+            // AIM-7F: Std 3, BVR 1
+            modifiedData.rhm = `+3/+1 {${rhmDepletion}}`;
+          } else {
+            // AIM-7M: Std 3, BVR 2
+            modifiedData.rhm = `+3/+2 {${rhmDepletion}}`;
+          }
+        }
+      }
+      
       return modifiedData;
     }
     
@@ -2519,7 +2574,7 @@
         </div>
         
         ${aircraftData.ordnance || aircraftData.aam || aircraftData.bomb || (aircraftData.sight && aircraftData.sight !== '-') ? `<div style="padding: 2px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 2px; line-height: 1.1;">
-          ${aircraftData.aam ? `<strong>AAM:</strong> ${aircraftData.aam}` : ''}${(aircraftData.aam && aircraftData.ordnance) ? ' | ' : ''}${aircraftData.ordnance ? `<strong>Ordnance:</strong> ${aircraftData.ordnance}` : ''}${((aircraftData.aam || aircraftData.ordnance) && aircraftData.bomb) ? ' | ' : ''}${aircraftData.bomb ? `<strong>Bomb:</strong> ${aircraftData.bomb}` : ''}${((aircraftData.aam || aircraftData.ordnance || aircraftData.bomb) && aircraftData.sight && aircraftData.sight !== '-') ? ' | ' : ''}${aircraftData.sight && aircraftData.sight !== '-' ? `<strong>Sight:</strong> ${aircraftData.sight}` : ''}
+          ${aircraftData.aam ? `<strong>AAM:</strong> ${aircraftData.aam}` : ''}${(aircraftData.aam && aircraftData.ordnance && tasking !== 'CAP') ? ' | ' : ''}${aircraftData.ordnance && tasking !== 'CAP' ? `<strong>Ordnance:</strong> ${aircraftData.ordnance}` : ''}${((aircraftData.aam || aircraftData.ordnance) && aircraftData.bomb && tasking !== 'CAP') ? ' | ' : ''}${aircraftData.bomb && tasking !== 'CAP' ? `<strong>Bomb:</strong> ${aircraftData.bomb}` : ''}${((aircraftData.aam || aircraftData.ordnance || aircraftData.bomb) && aircraftData.sight && aircraftData.sight !== '-' && tasking !== 'CAP') ? ' | ' : ''}${aircraftData.sight && aircraftData.sight !== '-' && tasking !== 'CAP' ? `<strong>Sight:</strong> ${aircraftData.sight}` : ''}
         </div>` : ''}
         
         ${aircraftData.radar || aircraftData.rwr || aircraftData.jam ? `<div style="padding: 2px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 2px; line-height: 1.1;">
