@@ -2618,54 +2618,54 @@
     
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
+      padding: 10px;
       background: #f5f5f5;
     }
     
     @page {
       size: letter;
-      margin: 0.5in;
+      margin: 0.3in;
     }
     
     .page-title {
       text-align: center;
-      font-size: 14pt;
+      font-size: 12pt;
       font-weight: bold;
-      margin-bottom: 12px;
+      margin-bottom: 6px;
       border-bottom: 2px solid black;
-      padding-bottom: 3px;
+      padding-bottom: 2px;
       color: black;
     }
     
     .flight-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 6px;
+      margin-bottom: 6px;
     }
     
     .flight-card {
       border: 2px solid black;
-      padding: 6px;
+      padding: 4px;
       page-break-inside: avoid;
       background: white;
       color: black;
       display: flex;
       flex-direction: column;
-      margin-bottom: 12px;
+      margin-bottom: 6px;
     }
     
     .flight-info-section {
       border-bottom: 2px solid black;
-      padding-bottom: 4px;
-      margin-bottom: 4px;
+      padding-bottom: 3px;
+      margin-bottom: 3px;
     }
     
     .flight-header {
       display: grid;
       grid-template-columns: 50px auto 1.2fr 50px 0.8fr;
-      gap: 4px;
-      margin-bottom: 4px;
+      gap: 3px;
+      margin-bottom: 3px;
       align-items: stretch;
     }
     
@@ -2691,8 +2691,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 4px;
-      padding: 3px;
+      margin-bottom: 3px;
+      padding: 2px;
       background: #f5f5f5;
     }
     
@@ -2848,8 +2848,8 @@
     .tasking-fuel-row {
       display: grid;
       grid-template-columns: 0.7fr 0.9fr 0.8fr;
-      gap: 4px;
-      margin-bottom: 5px;
+      gap: 3px;
+      margin-bottom: 3px;
       align-items: stretch;
     }
     
@@ -2912,7 +2912,7 @@
       
       .flight-card {
         page-break-inside: avoid;
-        margin-bottom: 10px;
+        margin-bottom: 6px;
       }
       
       .no-print {
@@ -2922,7 +2922,7 @@
   </style>
 </head>
 <body>
-  <h1 style="text-align: center; margin-bottom: 20px; font-size: 14pt;">Red Storm - Flight Sheets</h1>
+  <h1 style="text-align: center; margin-bottom: 10px; font-size: 12pt;">Red Storm - Flight Sheets</h1>
   <div class="flight-grid">
     ${flightCardsHTML}
   </div>
