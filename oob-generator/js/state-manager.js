@@ -323,6 +323,13 @@ function cancelSelection() {
  */
 function cancelVariableSelection() {
   initializeParameterSelections();
+  
+  // Hide roll sections with null checks
+  const rollInputSection = document.getElementById('rollInputSection');
+  const variableSelectionSection = document.getElementById('variableSelectionSection');
+  
+  if (rollInputSection) rollInputSection.classList.remove('active');
+  if (variableSelectionSection) variableSelectionSection.classList.remove('active');
 }
 
 /**

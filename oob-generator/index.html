@@ -1998,9 +1998,10 @@
      * @param {string} tasking - Mission tasking (CAP, SEAD, etc.)
      * @param {object} noteRulesData - Aircraft note rules database
      * @param {string} nationCode - Nation code
+     * @param {string} sourceTable - Source OOB table ID (A-L)
      * @returns {object} Modified aircraft data
      */
-    function applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode) {
+    function applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode, sourceTable) {
       // Early return if no note rules data or no notes on aircraft
       if (!noteRulesData || !aircraftData.notes) {
         return aircraftData;
@@ -2037,6 +2038,19 @@
       // Only applies to US aircraft (F-15 family)
       if (nationCode === 'US' && notes.includes('B')) {
         modifiedData.specialRules.push('Auto BVR/2 targets [11.44]');
+      }
+      
+      // US Note C: Reduced bomb load for Deep Strike Raid (Table D)
+      // Only applies to US aircraft when generated from Table D
+      if (nationCode === 'US' && notes.includes('C') && sourceTable === 'D') {
+        // Modify bomb field to show only the lower value from "X/Y" format
+        if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+          const bombParts = modifiedData.bomb.split('/');
+          if (bombParts.length === 2) {
+            // Take the second (lower) value
+            modifiedData.bomb = bombParts[1].trim();
+          }
+        }
       }
       
       return modifiedData;
@@ -2197,7 +2211,8 @@
       
       // Apply note rules if available
       if (noteRulesData && nationCode) {
-        aircraftData = applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode);
+        const sourceTable = flight.table || '';
+        aircraftData = applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode, sourceTable);
       }
       
       // Generate cards for each flight in the result (e.g., "4 x {2}" = 4 flights)
@@ -2489,10 +2504,6 @@
           ${aircraftData.aam ? `<strong>AAM:</strong> ${aircraftData.aam}` : ''}${(aircraftData.aam && aircraftData.ordnance) ? ' | ' : ''}${aircraftData.ordnance ? `<strong>Ordnance:</strong> ${aircraftData.ordnance}` : ''}${((aircraftData.aam || aircraftData.ordnance) && aircraftData.bomb) ? ' | ' : ''}${aircraftData.bomb ? `<strong>Bomb:</strong> ${aircraftData.bomb}` : ''}${((aircraftData.aam || aircraftData.ordnance || aircraftData.bomb) && aircraftData.sight && aircraftData.sight !== '-') ? ' | ' : ''}${aircraftData.sight && aircraftData.sight !== '-' ? `<strong>Sight:</strong> ${aircraftData.sight}` : ''}
         </div>` : ''}
         
-        ${aircraftData.specialRules && aircraftData.specialRules.length > 0 ? `<div style="padding: 2px 3px; background: #ffffcc; font-size: 7pt; margin-bottom: 2px; line-height: 1.1; border: 1px solid #ffcc00;">
-          <strong>Special Rules:</strong> ${aircraftData.specialRules.join('; ')}
-        </div>` : ''}
-        
         ${aircraftData.radar || aircraftData.rwr || aircraftData.jam ? `<div style="padding: 2px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 2px; line-height: 1.1;">
           ${aircraftData.radar ? `<strong>Radar:</strong> ${aircraftData.radar} ${aircraftData.radarModifier || ''}` : ''}
           ${aircraftData.radar && aircraftData.rwr ? ' | ' : ''}
@@ -2501,8 +2512,8 @@
           ${aircraftData.jam ? `<strong>Jam:</strong> ${aircraftData.jam}` : ''}
         </div>` : ''}
         
-        ${aircraftData.capabilities ? `<div style="padding: 2px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 2px; line-height: 1.1;">
-          <strong>Capabilities:</strong> ${aircraftData.capabilities}
+        ${aircraftData.capabilities || (aircraftData.specialRules && aircraftData.specialRules.length > 0) ? `<div style="padding: 2px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 2px; line-height: 1.1;">
+          ${aircraftData.capabilities ? `<strong>Capabilities:</strong> ${aircraftData.capabilities}` : ''}${aircraftData.capabilities && aircraftData.specialRules && aircraftData.specialRules.length > 0 ? ' | ' : ''}${aircraftData.specialRules && aircraftData.specialRules.length > 0 ? aircraftData.specialRules.join('; ') : ''}
         </div>` : ''}
         
         ${aircraftData.hasCleanLaden ? `
