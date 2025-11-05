@@ -1650,19 +1650,22 @@
         // Generate HTML for all flights using designer layout
         let flightCardsHTML = '';
         let lastFaction = null;
+        let isFirstWPFlight = false;
         console.log(`Generating flight cards for ${sortedResults.length} results...`);
         for (const flight of sortedResults) {
           console.log('Processing flight:', flight.result || flight.text);
           
-          // Add page break before first WP flight
+          // Mark first WP flight for page break
           if (lastFaction === 'NATO' && flight.faction === 'WP') {
-            flightCardsHTML += '<div style="page-break-before: always;"></div>';
-            console.log('→ Inserted page break before WP flights');
+            isFirstWPFlight = true;
+            console.log('→ Marking first WP flight for page break');
+          } else {
+            isFirstWPFlight = false;
           }
           lastFaction = flight.faction;
           
           try {
-            const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData);
+            const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, isFirstWPFlight);
             if (cardHTML && cardHTML.trim()) {
               flightCardsHTML += cardHTML;
               console.log('✓ Generated card for:', (flight.result || flight.text).substring(0, 50));
@@ -2011,9 +2014,12 @@
      * @param {object} aircraftNATO - NATO aircraft database
      * @param {object} aircraftWP - WP aircraft database
      * @param {object} noteRulesData - Aircraft note rules database
+     * @param {object} weaponsData - Weapons database
+     * @param {object} nameMappingData - Aircraft name mapping database
+     * @param {boolean} isFirstWPFlight - Whether this is the first WP flight (for page break)
      * @returns {string} HTML for flight card with designer layout
      */
-    async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData) {
+    async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, isFirstWPFlight = false) {
       // Parse result text to extract flight info
       const resultText = flight.result || '';
       const faction = flight.faction || 'NATO';
@@ -2028,14 +2034,17 @@
         console.log(`Split into ${flightParts.length} individual flights:`, flightParts);
         
         let allCards = '';
-        for (const flightPart of flightParts) {
+        for (let i = 0; i < flightParts.length; i++) {
+          const flightPart = flightParts[i];
           // Create a temporary flight object for each part
           const tempFlight = {
             ...flight,
             result: flightPart
           };
           // Recursively call this function to generate card for single flight
-          allCards += await generateDesignerFlightCard(tempFlight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData);
+          // Only the first card gets the page break
+          const applyPageBreakToThisFlight = isFirstWPFlight && i === 0;
+          allCards += await generateDesignerFlightCard(tempFlight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, applyPageBreakToThisFlight);
         }
         
         return allCards;
@@ -2159,13 +2168,16 @@
       // Generate cards for each flight in the result (e.g., "4 x {2}" = 4 flights)
       let allCardsHTML = '';
       for (let flightNum = 0; flightNum < numFlights; flightNum++) {
+        // Only apply page break to the very first card of the first WP flight
+        const applyPageBreak = isFirstWPFlight && flightNum === 0;
         allCardsHTML += generateSingleDesignerCard(
           aircraftType,
           aircraftData,
           flightSize,
           nationCode,
           tasking,
-          faction
+          faction,
+          applyPageBreak
         );
       }
       
@@ -2322,9 +2334,10 @@
      * @param {string} nationCode - Nation code (FRG, USSR, etc.)
      * @param {string} tasking - Mission tasking
      * @param {string} faction - NATO or WP
+     * @param {boolean} applyPageBreak - Whether to apply page-break-before to this card
      * @returns {string} HTML for single flight card
      */
-    function generateSingleDesignerCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction) {
+    function generateSingleDesignerCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction, applyPageBreak = false) {
       // Use default data if aircraft not found
       if (!aircraftData) {
         aircraftData = {
@@ -2355,8 +2368,11 @@
       };
       const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
       
+      // Add page break style if this is the first WP flight
+      const pageBreakStyle = applyPageBreak ? ' style="page-break-before: always;"' : '';
+      
       let html = `
-    <div class="flight-card">
+    <div class="flight-card"${pageBreakStyle}>
       <!-- Flight-level information -->
       <div class="flight-info-section">
         <div class="flight-header">
