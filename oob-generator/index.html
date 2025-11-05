@@ -2221,26 +2221,26 @@
       
       // Build weapon display strings from JSON format
       let gunDisplay = '';
-      if (jsonData.weapons && jsonData.weapons.gun && jsonData.weapons.gunAmmo) {
+      if (jsonData.weapons && jsonData.weapons.gun && jsonData.weapons.gunDepletion) {
         // Look up gun rating from weapons database
         const { stdRtg } = getWeaponRatings(jsonData.weapons.gun, 'Gun');
-        gunDisplay = `+${stdRtg} {${jsonData.weapons.gunAmmo}}`;
+        gunDisplay = `+${stdRtg} {${jsonData.weapons.gunDepletion}}`;
       }
       
       let irmDisplay = '';
-      if (jsonData.weapons && jsonData.weapons.irm && jsonData.weapons.irmAmmo) {
+      if (jsonData.weapons && jsonData.weapons.irm && jsonData.weapons.irmDepletion) {
         // Look up IRM ratings from weapons database
         const { stdRtg, bvrRtg } = getWeaponRatings(jsonData.weapons.irm, 'IRM');
         const bvrStr = bvrRtg !== null ? `/${bvrRtg >= 0 ? '+' : ''}${bvrRtg}` : '';
-        irmDisplay = `+${stdRtg}${bvrStr} {${jsonData.weapons.irmAmmo}}`;
+        irmDisplay = `+${stdRtg}${bvrStr} {${jsonData.weapons.irmDepletion}}`;
       }
       
       let rhmDisplay = '';
-      if (jsonData.weapons && jsonData.weapons.rhm && jsonData.weapons.rhmAmmo) {
+      if (jsonData.weapons && jsonData.weapons.rhm && jsonData.weapons.rhmDepletion) {
         // Look up RHM ratings from weapons database
         const { stdRtg, bvrRtg } = getWeaponRatings(jsonData.weapons.rhm, 'RHM');
         const bvrStr = bvrRtg !== null ? `/${bvrRtg >= 0 ? '+' : ''}${bvrRtg}` : '';
-        rhmDisplay = `+${stdRtg}${bvrStr} {${jsonData.weapons.rhmAmmo}}`;
+        rhmDisplay = `+${stdRtg}${bvrStr} {${jsonData.weapons.rhmDepletion}}`;
       }
       
       // Build radar display

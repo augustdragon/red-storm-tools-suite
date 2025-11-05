@@ -14,11 +14,11 @@
     "notes": "A, E, F, H, J",
     "weapons": {
       "gun": "23mm Gun Pod",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-13M",
-      "irmAmmo": 6,
+      "irmDepletion": 6,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "1",
     "sight": "+0",
@@ -59,11 +59,11 @@
     "notes": "J",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": null,
     "sight": null,
@@ -98,11 +98,11 @@
     "notes": "A, E, H, J",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-13M",
-      "irmAmmo": 3,
+      "irmDepletion": 3,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "1",
     "sight": "+0",
@@ -143,11 +143,11 @@
     "notes": "A, E, I, J",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-60",
-      "irmAmmo": 6,
+      "irmDepletion": 6,
       "rhm": "R-3R",
-      "rhmAmmo": 6
+      "rhmDepletion": 6
     },
     "bomb": "1",
     "sight": "+0",
@@ -188,11 +188,11 @@
     "notes": "A, D, E, J",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-60",
-      "irmAmmo": 6,
+      "irmDepletion": 6,
       "rhm": "R-23",
-      "rhmAmmo": 6
+      "rhmDepletion": 6
     },
     "bomb": "2/1",
     "sight": "+0",
@@ -231,11 +231,11 @@
     "notes": "A, C, D, E, J",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-60",
-      "irmAmmo": 6,
+      "irmDepletion": 6,
       "rhm": "R-24",
-      "rhmAmmo": 6
+      "rhmDepletion": 6
     },
     "bomb": "2/1",
     "sight": "+0",
@@ -274,11 +274,11 @@
     "notes": "D",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "3/2",
     "sight": "+1",
@@ -314,11 +314,11 @@
     "notes": "B, D, G",
     "weapons": {
       "gun": "30mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-60",
-      "irmAmmo": 8,
+      "irmDepletion": 8,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "3/2",
     "sight": "+1",
@@ -354,11 +354,11 @@
     "notes": null,
     "weapons": {
       "gun": null,
-      "gunAmmo": null,
+      "gunDepletion": null,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": null,
     "sight": null,
@@ -394,11 +394,11 @@
     "notes": "A, B, Q, R",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-60",
-      "irmAmmo": 6,
+      "irmDepletion": 6,
       "rhm": "R-3R",
-      "rhmAmmo": 6
+      "rhmDepletion": 6
     },
     "bomb": "1",
     "sight": "+0",
@@ -439,11 +439,11 @@
     "notes": "A, I, Q, R, V",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-60",
-      "irmAmmo": 6,
+      "irmDepletion": 6,
       "rhm": "R-23",
-      "rhmAmmo": 6
+      "rhmDepletion": 6
     },
     "bomb": "2/1",
     "sight": "+0",
@@ -484,11 +484,11 @@
     "notes": "A, D, I, Q, V",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-60M",
-      "irmAmmo": 3,
+      "irmDepletion": 3,
       "rhm": "R-24",
-      "rhmAmmo": 6
+      "rhmDepletion": 6
     },
     "bomb": "2/1",
     "sight": "+0",
@@ -529,11 +529,11 @@
     "notes": "A, B, H, I, Q, V",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-60M/R-73",
-      "irmAmmo": 3,
+      "irmDepletion": 3,
       "rhm": "R-24",
-      "rhmAmmo": 6
+      "rhmDepletion": 6
     },
     "bomb": "2/1",
     "sight": "+0",
@@ -574,11 +574,11 @@
     "notes": "I, M, P",
     "weapons": {
       "gun": null,
-      "gunAmmo": null,
+      "gunDepletion": null,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "2/1",
     "sight": "+0",
@@ -612,11 +612,11 @@
     "notes": null,
     "weapons": {
       "gun": null,
-      "gunAmmo": null,
+      "gunDepletion": null,
       "irm": "R-60",
-      "irmAmmo": 3,
+      "irmDepletion": 3,
       "rhm": "R-40",
-      "rhmAmmo": 6
+      "rhmDepletion": 6
     },
     "bomb": null,
     "sight": null,
@@ -651,11 +651,11 @@
     "notes": "K, N, O, T",
     "weapons": {
       "gun": null,
-      "gunAmmo": null,
+      "gunDepletion": null,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "2",
     "sight": "+0",
@@ -696,11 +696,11 @@
     "notes": "I, N, S, V",
     "weapons": {
       "gun": "30mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "3/2",
     "sight": "+1",
@@ -737,11 +737,11 @@
     "notes": "I, N, S, V",
     "weapons": {
       "gun": "30mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "3/2",
     "sight": "+2",
@@ -779,11 +779,11 @@
     "notes": "C, Q, U",
     "weapons": {
       "gun": "30mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-73",
-      "irmAmmo": 3,
+      "irmDepletion": 3,
       "rhm": "R-27",
-      "rhmAmmo": 6
+      "rhmDepletion": 6
     },
     "bomb": null,
     "sight": null,
@@ -822,11 +822,11 @@
     "notes": "F, M",
     "weapons": {
       "gun": null,
-      "gunAmmo": null,
+      "gunDepletion": null,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": null,
     "sight": null,
@@ -856,11 +856,11 @@
     "notes": "F, I, N, S",
     "weapons": {
       "gun": "30mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-60",
-      "irmAmmo": 6,
+      "irmDepletion": 6,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "3/2",
     "sight": "+1",
@@ -897,11 +897,11 @@
     "notes": "I, N, S, V",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 3,
+      "gunDepletion": 3,
       "irm": "R-60",
-      "irmAmmo": 8,
+      "irmDepletion": 8,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "5/3",
     "sight": "+2",
@@ -938,11 +938,11 @@
     "notes": "I, N, S, V",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 3,
+      "gunDepletion": 3,
       "irm": "R-60",
-      "irmAmmo": 8,
+      "irmDepletion": 8,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "5/3",
     "sight": "+3",
@@ -982,11 +982,11 @@
     "notes": "M",
     "weapons": {
       "gun": null,
-      "gunAmmo": null,
+      "gunDepletion": null,
       "irm": "R-60M",
-      "irmAmmo": 8,
+      "irmDepletion": 8,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": null,
     "sight": null,
@@ -1016,11 +1016,11 @@
     "notes": "J, R",
     "weapons": {
       "gun": "23mm",
-      "gunAmmo": 3,
+      "gunDepletion": 3,
       "irm": "R-60M",
-      "irmAmmo": 8,
+      "irmDepletion": 8,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": null,
     "sight": null,
@@ -1056,11 +1056,11 @@
     "notes": "F, S, V, W",
     "weapons": {
       "gun": "30mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-60M",
-      "irmAmmo": 8,
+      "irmDepletion": 8,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "3",
     "sight": "+1",
@@ -1096,11 +1096,11 @@
     "notes": "C, Q",
     "weapons": {
       "gun": "30mm",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": "R-73",
-      "irmAmmo": 8,
+      "irmDepletion": 8,
       "rhm": "R-27",
-      "rhmAmmo": 6
+      "rhmDepletion": 6
     },
     "bomb": null,
     "sight": null,
@@ -1139,11 +1139,11 @@
     "notes": "K, R, T",
     "weapons": {
       "gun": null,
-      "gunAmmo": null,
+      "gunDepletion": null,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": null,
     "sight": null,
@@ -1175,11 +1175,11 @@
     "notes": "J, L, W",
     "weapons": {
       "gun": "Rear Gun",
-      "gunAmmo": 2,
+      "gunDepletion": 2,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": null,
     "sight": null,
@@ -1209,11 +1209,11 @@
     "notes": "L, W",
     "weapons": {
       "gun": "Rear Gun",
-      "gunAmmo": 2,
+      "gunDepletion": 2,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": null,
     "sight": null,
@@ -1243,11 +1243,11 @@
     "notes": "G, L, W",
     "weapons": {
       "gun": "Rear Gun",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "9",
     "sight": "+1",
@@ -1284,11 +1284,11 @@
     "notes": "K, L, T, W",
     "weapons": {
       "gun": "Rear Gun",
-      "gunAmmo": 4,
+      "gunDepletion": 4,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": null,
     "sight": null,
@@ -1318,11 +1318,11 @@
     "notes": "L, W",
     "weapons": {
       "gun": "Rear Gun",
-      "gunAmmo": 3,
+      "gunDepletion": 3,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "8",
     "sight": "+1",
@@ -1356,11 +1356,11 @@
     "notes": "E, K, L, T, W",
     "weapons": {
       "gun": "Rear Gun",
-      "gunAmmo": 3,
+      "gunDepletion": 3,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": null,
     "sight": null,
@@ -1392,11 +1392,11 @@
     "notes": null,
     "weapons": {
       "gun": null,
-      "gunAmmo": null,
+      "gunDepletion": null,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": "2",
     "sight": "+0",
@@ -1426,11 +1426,11 @@
     "notes": null,
     "weapons": {
       "gun": null,
-      "gunAmmo": null,
+      "gunDepletion": null,
       "irm": null,
-      "irmAmmo": null,
+      "irmDepletion": null,
       "rhm": null,
-      "rhmAmmo": null
+      "rhmDepletion": null
     },
     "bomb": null,
     "sight": null,
@@ -1450,3 +1450,4 @@
     "aam": null
   }
 }
+
