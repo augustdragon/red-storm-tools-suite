@@ -92,8 +92,20 @@
       "name": "AIM-9J/P",
       "nation": "US",
       "class": "IRM",
-      "stdRtg": 2,
-      "bvrRtg": "N/A",
+      "stdRtg": 0,
+      "bvrRtg": null,
+      "bvrRanges": {
+        "forward": { "min": 1, "max": 1 },
+        "beam": { "min": 1, "max": 1 },
+        "rear": { "min": 1, "max": 1 }
+      }
+    },
+    "AIM-9J": {
+      "name": "AIM-9J",
+      "nation": "US",
+      "class": "IRM",
+      "stdRtg": 0,
+      "bvrRtg": null,
       "bvrRanges": {
         "forward": { "min": 1, "max": 1 },
         "beam": { "min": 1, "max": 1 },

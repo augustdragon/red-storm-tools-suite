@@ -2430,7 +2430,7 @@
       if (jsonData.weapons && jsonData.weapons.irm && jsonData.weapons.irmDepletion) {
         // Look up IRM ratings from weapons database
         const { stdRtg, bvrRtg } = getWeaponRatings(jsonData.weapons.irm, 'IRM');
-        const bvrStr = bvrRtg !== null ? `/${bvrRtg >= 0 ? '+' : ''}${bvrRtg}` : '';
+        const bvrStr = bvrRtg !== null ? `/${bvrRtg >= 0 ? '+' : ''}${bvrRtg}` : '/NA';
         irmDisplay = `+${stdRtg}${bvrStr} {${jsonData.weapons.irmDepletion}}`;
       }
       
