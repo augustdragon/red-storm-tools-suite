@@ -2001,8 +2001,30 @@
      * @returns {object} Modified aircraft data
      */
     function applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode) {
-      // Stub implementation - return data unchanged for now
-      // TODO: Implement note rules logic (weapon modifications, capability changes, etc.)
+      // Early return if no note rules data or no notes on aircraft
+      if (!noteRulesData || !aircraftData.notes) {
+        return aircraftData;
+      }
+      
+      // Parse aircraft notes into array (e.g., "A, B, C, E" -> ["A", "B", "C", "E"])
+      const notes = aircraftData.notes.split(',').map(n => n.trim());
+      
+      // US Note A: AIM-9 and/or AIM-7 depletions are (6) if tasked with Bombing or SEAD
+      // Only applies to US aircraft
+      if (nationCode === 'US' && notes.includes('A') && (tasking === 'Bombing' || tasking === 'SEAD')) {
+        // Modify IRM (AIM-9) depletion to 6 if present
+        if (aircraftData.irm) {
+          // Pattern: "+X/+Y {depletionValue}" or "+X {depletionValue}"
+          aircraftData.irm = aircraftData.irm.replace(/\{\d+\}/, '{6}');
+        }
+        
+        // Modify RHM (AIM-7) depletion to 6 if present
+        if (aircraftData.rhm) {
+          // Pattern: "+X/+Y {depletionValue}" or "+X {depletionValue}"
+          aircraftData.rhm = aircraftData.rhm.replace(/\{\d+\}/, '{6}');
+        }
+      }
+      
       return aircraftData;
     }
     
