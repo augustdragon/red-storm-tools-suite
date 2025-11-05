@@ -94,9 +94,9 @@ class NATOTableD extends BaseTableProcessor {
     
     // Handle special split aircraft types for SEAD
     if (tasking === 'SEAD' && nationResult.nationName === 'US' && aircraftResult.aircraftType === 'F-4G/F-4E') {
-      resultText = `2 x {${flightSize}} ${nationResult.nationName} F-4G, 2 x {${flightSize}} ${nationResult.nationName} F-4E, ${tasking}`;
+      resultText = `2 x {${flightSize}} ${nationResult.nationName} F-4G, ${tasking}<br>2 x {${flightSize}} ${nationResult.nationName} F-4E, ${tasking}`;
     } else if (tasking === 'SEAD' && nationResult.nationName === 'US' && aircraftResult.aircraftType === 'F-4G/F-16C') {
-      resultText = `2 x {${flightSize}} ${nationResult.nationName} F-4G, 2 x {${flightSize}} ${nationResult.nationName} F-16C, ${tasking}`;
+      resultText = `2 x {${flightSize}} ${nationResult.nationName} F-4G, ${tasking}<br>2 x {${flightSize}} ${nationResult.nationName} F-16C, ${tasking}`;
     } else {
       // Standard result
       resultText = `${flightCount} x {${flightSize}} ${nationResult.nationName} ${aircraftResult.aircraftType}, ${tasking}`;

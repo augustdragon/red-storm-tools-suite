@@ -2053,6 +2053,24 @@
         }
       }
       
+      // US Note D: AN/ASX-1 TISEO system - auto visual ID
+      // Only applies to US aircraft (F-4E with TISEO)
+      if (nationCode === 'US' && notes.includes('D')) {
+        modifiedData.specialRules.push('AN/ASX-1 TISEO. Auto visual ID. See note D.');
+      }
+      
+      // US Note E: Large aircraft - special rules for size and SAM defense
+      // Only applies to US aircraft (F-111 family)
+      if (nationCode === 'US' && notes.includes('E')) {
+        modifiedData.specialRules.push('Large aircraft [19.22], [6.40]; poor SAM defense [15.32].');
+      }
+      
+      // US Note F: Spot jam capability
+      // Only applies to US aircraft (EF-111A, etc.)
+      if (nationCode === 'US' && notes.includes('F')) {
+        modifiedData.specialRules.push('May Spot Jam [19.34] two radars at the same time.');
+      }
+      
       return modifiedData;
     }
     
