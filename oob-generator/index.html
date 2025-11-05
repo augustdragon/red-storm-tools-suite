@@ -2006,6 +2006,14 @@
         return aircraftData;
       }
       
+      // Create a shallow copy to avoid modifying the original object
+      const modifiedData = { ...aircraftData };
+      
+      // Initialize special rules array if not present
+      if (!modifiedData.specialRules) {
+        modifiedData.specialRules = [];
+      }
+      
       // Parse aircraft notes into array (e.g., "A, B, C, E" -> ["A", "B", "C", "E"])
       const notes = aircraftData.notes.split(',').map(n => n.trim());
       
@@ -2013,19 +2021,25 @@
       // Only applies to US aircraft
       if (nationCode === 'US' && notes.includes('A') && (tasking === 'Bombing' || tasking === 'SEAD')) {
         // Modify IRM (AIM-9) depletion to 6 if present
-        if (aircraftData.irm) {
+        if (modifiedData.irm) {
           // Pattern: "+X/+Y {depletionValue}" or "+X {depletionValue}"
-          aircraftData.irm = aircraftData.irm.replace(/\{\d+\}/, '{6}');
+          modifiedData.irm = modifiedData.irm.replace(/\{\d+\}/, '{6}');
         }
         
         // Modify RHM (AIM-7) depletion to 6 if present
-        if (aircraftData.rhm) {
+        if (modifiedData.rhm) {
           // Pattern: "+X/+Y {depletionValue}" or "+X {depletionValue}"
-          aircraftData.rhm = aircraftData.rhm.replace(/\{\d+\}/, '{6}');
+          modifiedData.rhm = modifiedData.rhm.replace(/\{\d+\}/, '{6}');
         }
       }
       
-      return aircraftData;
+      // US Note B: F-15 special radar capability - auto BVR/2 targets
+      // Only applies to US aircraft (F-15 family)
+      if (nationCode === 'US' && notes.includes('B')) {
+        modifiedData.specialRules.push('Auto BVR/2 targets [11.44]');
+      }
+      
+      return modifiedData;
     }
     
     /**
@@ -2473,6 +2487,10 @@
         
         ${aircraftData.ordnance || aircraftData.aam || aircraftData.bomb || (aircraftData.sight && aircraftData.sight !== '-') ? `<div style="padding: 2px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 2px; line-height: 1.1;">
           ${aircraftData.aam ? `<strong>AAM:</strong> ${aircraftData.aam}` : ''}${(aircraftData.aam && aircraftData.ordnance) ? ' | ' : ''}${aircraftData.ordnance ? `<strong>Ordnance:</strong> ${aircraftData.ordnance}` : ''}${((aircraftData.aam || aircraftData.ordnance) && aircraftData.bomb) ? ' | ' : ''}${aircraftData.bomb ? `<strong>Bomb:</strong> ${aircraftData.bomb}` : ''}${((aircraftData.aam || aircraftData.ordnance || aircraftData.bomb) && aircraftData.sight && aircraftData.sight !== '-') ? ' | ' : ''}${aircraftData.sight && aircraftData.sight !== '-' ? `<strong>Sight:</strong> ${aircraftData.sight}` : ''}
+        </div>` : ''}
+        
+        ${aircraftData.specialRules && aircraftData.specialRules.length > 0 ? `<div style="padding: 2px 3px; background: #ffffcc; font-size: 7pt; margin-bottom: 2px; line-height: 1.1; border: 1px solid #ffcc00;">
+          <strong>Special Rules:</strong> ${aircraftData.specialRules.join('; ')}
         </div>` : ''}
         
         ${aircraftData.radar || aircraftData.rwr || aircraftData.jam ? `<div style="padding: 2px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 2px; line-height: 1.1;">

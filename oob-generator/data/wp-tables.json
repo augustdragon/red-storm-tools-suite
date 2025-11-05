@@ -63,7 +63,6 @@
     "name": "WP Table I - Bombing Raid",
     "faction": "WP",
     "hasTasking": true,
-    "hasNationality": true,
     "hasDate": false,
     "description": "WP Bombing Raid - Packages of flights assigned to provide air support to WP ground troops",
     "ordnanceNote": "SEAD flights may always carry ARMs, if capable.",
