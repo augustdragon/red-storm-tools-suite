@@ -2084,8 +2084,8 @@
       }
       
       // US Note I: GBU-15 glide bomb
-      // Only applies to US aircraft
-      if (nationCode === 'US' && notes.includes('I')) {
+      // Only applies to US aircraft, not relevant for CAP flights (ground attack system)
+      if (nationCode === 'US' && notes.includes('I') && tasking !== 'CAP') {
         modifiedData.specialRules.push('GBU-15(V)B glide bomb. May use EOGB day or night.');
       }
       
@@ -2140,6 +2140,65 @@
         } else if (aim7Type) {
           modifiedData.aam = aim7Type;
         }
+      }
+      
+      // US Note K: SAR recon capability
+      // Only applies to US aircraft
+      if (nationCode === 'US' && notes.includes('K')) {
+        modifiedData.specialRules.push('Synthetic Aperture Radar (SAR) recon capability [24.2].');
+      }
+      
+      // US Note L: Shrike or HARM selection
+      // Only applies to US aircraft
+      if (nationCode === 'US' && notes.includes('L')) {
+        modifiedData.specialRules.push('Shrike or HARM; if Shrikes, also normal bomb point load.');
+      }
+      
+      // US Note M: AGM-65D Maverick
+      // Only applies to US aircraft
+      if (nationCode === 'US' && notes.includes('M')) {
+        modifiedData.specialRules.push('AGM-65D Maverick IR Missile. May use EOGM day or night.');
+      }
+      
+      // US Note N: Bombing profile restrictions
+      // Only applies to US aircraft
+      if (nationCode === 'US' && notes.includes('N')) {
+        modifiedData.specialRules.push('Only Level Bombing and Radar Bombing profiles allowed.');
+      }
+      
+      // US Note O: NCTR capability
+      // Only applies to US aircraft
+      if (nationCode === 'US' && notes.includes('O')) {
+        modifiedData.specialRules.push('NCTR: Auto visual ID. See note O.');
+      }
+      
+      // US Note P: Multirole aircraft
+      // Only applies to US aircraft
+      if (nationCode === 'US' && notes.includes('P')) {
+        modifiedData.specialRules.push('Multirole aircraft [8.37].');
+      }
+      
+      // US Note Q: Zoom climb restriction
+      // Only applies to US aircraft
+      if (nationCode === 'US' && notes.includes('Q')) {
+        modifiedData.specialRules.push('Zoom Climb [6.33] not allowed.');
+      }
+      
+      // US Note R: Laser Spot Tracker
+      // Only applies to US aircraft
+      if (nationCode === 'US' && notes.includes('R')) {
+        modifiedData.specialRules.push('LGB only within 2 hexes of NATO armor/mech.');
+      }
+      
+      // US Note S: SUU-23 Gun Pod - roll per flight
+      // Roll 1-5: Add 20mm gun with +2 {4}, 6-10: No gun
+      if (nationCode === 'US' && notes.includes('S')) {
+        const gunPodRoll = Math.floor(Math.random() * 10) + 1;
+        if (gunPodRoll <= 5) {
+          // Add gun value if roll is 1-5
+          modifiedData.gun = '+2 {4}';
+        }
+        // Note: If roll is 6-10, no gun is added (aircraft may have only IRM/RHM)
       }
       
       return modifiedData;
