@@ -2149,14 +2149,14 @@
       }
       
       // US Note L: Shrike or HARM selection
-      // Only applies to US aircraft
-      if (nationCode === 'US' && notes.includes('L')) {
+      // Only applies to US aircraft, not relevant for CAP flights (SEAD weapons)
+      if (nationCode === 'US' && notes.includes('L') && tasking !== 'CAP') {
         modifiedData.specialRules.push('Shrike or HARM; if Shrikes, also normal bomb point load.');
       }
       
       // US Note M: AGM-65D Maverick
-      // Only applies to US aircraft
-      if (nationCode === 'US' && notes.includes('M')) {
+      // Only applies to US aircraft, not relevant for CAP flights (air-to-ground missile)
+      if (nationCode === 'US' && notes.includes('M') && tasking !== 'CAP') {
         modifiedData.specialRules.push('AGM-65D Maverick IR Missile. May use EOGM day or night.');
       }
       
