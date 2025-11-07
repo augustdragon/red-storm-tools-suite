@@ -248,10 +248,10 @@
           }
         }
       },
-      "Deep Bombing": {
+      "Bombing": {
         "flightSize": 4,
         "flightCount": 6,
-        "description": "Deep Bombing",
+        "description": "Bombing",
         "nations": {
           "1-4": {
             "name": "USSR",
