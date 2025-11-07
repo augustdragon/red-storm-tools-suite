@@ -51,13 +51,24 @@
   },
   
   "WP": {
-    "_comment": "Warsaw Pact aircraft name mappings",
+    "_comment": "Warsaw Pact aircraft name mappings - check nation-specific first, then common",
+    
+    "USSR": {
+      "_comment": "USSR-specific mappings",
+      "MiG-21bis": "MiG-21bisN"
+    },
+    
+    "GDR": {
+      "_comment": "GDR-specific mappings",
+      "MiG-21bis": "MiG-21bisL"
+    },
+    
+    "_comment_common": "Common WP aircraft mappings (used if no nation-specific mapping found)",
     
     "An-12": "An-12",
     "Mi-24D": "Mi-24D Hind D",
     "Mi-24V": "Mi-24V Hind E",
     "Mi-8": "Mi-8 Hip",
-    "MiG-21bis": "MiG-21bisN",
     "MiG-21M": "MiG-21M Fishbed J",
     "MiG-21MF": "MiG-21MF Fishbed J",
     "MiG-21SPS Fishbed F": "MiG-21SPS Fishbed F",
@@ -77,6 +88,7 @@
     "Su-17M3": "Su-17M3 Fitter H",
     "Su-17M4": "Su-17M4 Fitter K",
     "Su-22": "Su-22 Fitter J",
+    "Su-22M4": "Su-22M4 Fitter K",
     "Su-24M": "Su-24M Fencer D",
     "Su-24M4": "Su-24M Fencer D",
     "Su-24MP": "Su-24MP",

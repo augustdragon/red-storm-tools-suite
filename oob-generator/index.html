@@ -2620,12 +2620,19 @@
         }
       }
       
-      // GDR Note D: Use lower bomb load for Deep Strike Raids (Table I)
-      // Only applies when tasking is "Deep Strike Raid", not all Table I missions
-      if (nationCode === 'GDR' && notes.includes('D') && tasking === 'Deep Strike Raid' && isAirToGroundCapable) {
+      // GDR Note D: Dual bomb loads for mission range
+      // Use lower bomb load (second value) for Deep Strike Raids only
+      // Use higher bomb load (first value) for all other missions
+      if (nationCode === 'GDR' && notes.includes('D') && isAirToGroundCapable) {
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
-          modifiedData.bomb = bombParts[1].trim();
+          if (tasking === 'Deep Strike Raid') {
+            // Deep Strike Raid: use lower bomb load (longer range)
+            modifiedData.bomb = bombParts[1].trim();
+          } else {
+            // All other missions: use higher bomb load (shorter range)
+            modifiedData.bomb = bombParts[0].trim();
+          }
         }
       }
       
@@ -2834,10 +2841,26 @@
       
       // Apply name mapping if available (handles abbreviations and variants)
       const factionKey = faction === 'NATO' ? 'NATO' : 'WP';
-      if (nameMappingData && nameMappingData[factionKey] && nameMappingData[factionKey][aircraftType]) {
-        const mappedName = nameMappingData[factionKey][aircraftType];
-        console.log(`Mapped "${aircraftType}" to "${mappedName}" via lookup table`);
-        aircraftType = mappedName;
+      if (nameMappingData && nameMappingData[factionKey]) {
+        let mappedName = null;
+        
+        // For WP, check nation-specific mappings first (e.g., USSR vs GDR variants)
+        if (factionKey === 'WP' && nationCode && nameMappingData[factionKey][nationCode]) {
+          mappedName = nameMappingData[factionKey][nationCode][aircraftType];
+          if (mappedName) {
+            console.log(`Mapped "${aircraftType}" to "${mappedName}" via ${nationCode}-specific lookup`);
+          }
+        }
+        
+        // Fall back to faction-level mapping if no nation-specific mapping found
+        if (!mappedName && nameMappingData[factionKey][aircraftType]) {
+          mappedName = nameMappingData[factionKey][aircraftType];
+          console.log(`Mapped "${aircraftType}" to "${mappedName}" via faction-level lookup`);
+        }
+        
+        if (mappedName) {
+          aircraftType = mappedName;
+        }
       }
       
       // Get aircraft data from appropriate database
