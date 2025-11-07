@@ -3016,7 +3016,6 @@
         speeds: speeds,
         speedsClean: speeds,
         speedsLaden: speedsLaden,
-        hasCleanLaden: speedsLaden !== null,
         radar: radarDisplay,
         radarModifier: radarModifier
       };
@@ -3049,6 +3048,12 @@
           speeds: {}
         };
       }
+      
+      // Determine if laden values should be shown (after notes have been applied)
+      // Only show laden if aircraft has speedsLaden data AND has air-to-ground ordnance
+      const hasAirToGroundOrdnance = (aircraftData.ordnance && aircraftData.ordnance.length > 0) || 
+                                     (aircraftData.bomb && aircraftData.bomb !== '-');
+      const showLaden = aircraftData.speedsLaden && hasAirToGroundOrdnance;
       
       // Determine roundel image
       const roundelMap = {
@@ -3162,7 +3167,7 @@
           ${aircraftData.capabilities ? `<strong>Capabilities:</strong> ${aircraftData.capabilities}` : ''}${aircraftData.capabilities && aircraftData.specialRules && aircraftData.specialRules.length > 0 ? ' | ' : ''}${aircraftData.specialRules && aircraftData.specialRules.length > 0 ? `<strong>Notes:</strong> ${aircraftData.specialRules.join('; ')}` : ''}
         </div>` : ''}
         
-        ${aircraftData.hasCleanLaden ? `
+        ${showLaden ? `
         <table class="speed-table">
           <tr>
             <th rowspan="2">Alt</th>
