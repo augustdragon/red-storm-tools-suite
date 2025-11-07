@@ -2805,7 +2805,16 @@
             <th>D</th>
             <th>M</th>
           </tr>
-          ${Object.keys(aircraftData.speedsClean).map(alt => `
+          ${Object.keys(aircraftData.speedsClean).filter(alt => {
+            // Skip VH row if all values are "-"
+            if (alt === 'VH') {
+              const cleanValues = aircraftData.speedsClean[alt];
+              const ladenValues = aircraftData.speedsLaden[alt];
+              return !(cleanValues.combat === '-' && cleanValues.dash === '-' && cleanValues.maneuver === '-' &&
+                       ladenValues.combat === '-' && ladenValues.dash === '-' && ladenValues.maneuver === '-');
+            }
+            return true;
+          }).map(alt => `
             <tr>
               <td><strong>${alt}</strong></td>
               <td>${aircraftData.speedsClean[alt].combat}</td>
@@ -2825,7 +2834,13 @@
             <th>D</th>
             <th>M</th>
           </tr>
-          ${Object.entries(aircraftData.speeds).map(([alt, speeds]) => `
+          ${Object.entries(aircraftData.speeds).filter(([alt, speeds]) => {
+            // Skip VH row if all values are "-"
+            if (alt === 'VH') {
+              return !(speeds.combat === '-' && speeds.dash === '-' && speeds.maneuver === '-');
+            }
+            return true;
+          }).map(([alt, speeds]) => `
             <tr>
               <td><strong>${alt}</strong></td>
               <td>${speeds.combat}</td>
