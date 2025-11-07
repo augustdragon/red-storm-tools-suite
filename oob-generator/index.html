@@ -2353,8 +2353,9 @@
         modifiedData.specialRules.push('May Spot Jam [19.34] one radar.');
       }
       
-      // FRG Note E: Use lower bomb load for Deep Strike Raids
-      if (nationCode === 'FRG' && notes.includes('E') && tasking !== 'CAP') {
+      // FRG Note E: Use lower bomb load for Deep Strike Raids (Table D)
+      // Only applies when generated from Table D
+      if (nationCode === 'FRG' && notes.includes('E') && sourceTable === 'D') {
         // Modify bomb value to use lower value if in format like "6/4"
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
