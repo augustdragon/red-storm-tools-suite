@@ -2472,12 +2472,19 @@
         modifiedData.irm = `${rolledIRM} {${irmDepletion}}`;
       }
       
-      // USSR Note I: Use lower bomb load for Deep Strike Raids (Table I)
-      // Only applies when tasking is "Deep Strike Raid", not all Table I missions
-      if (nationCode === 'USSR' && notes.includes('I') && tasking === 'Deep Strike Raid' && isAirToGroundCapable) {
+      // USSR Note I: Dual bomb loads for mission range
+      // Use lower bomb load (second value) for Deep Strike Raids only
+      // Use higher bomb load (first value) for all other missions
+      if (nationCode === 'USSR' && notes.includes('I') && isAirToGroundCapable) {
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
-          modifiedData.bomb = bombParts[1].trim();
+          if (tasking === 'Deep Strike Raid') {
+            // Deep Strike Raid: use lower bomb load (longer range)
+            modifiedData.bomb = bombParts[1].trim();
+          } else {
+            // All other missions: use higher bomb load (shorter range)
+            modifiedData.bomb = bombParts[0].trim();
+          }
         }
       }
       
