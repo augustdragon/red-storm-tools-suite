@@ -2016,6 +2016,10 @@
         modifiedData.specialRules = [];
       }
       
+      // Define taskings with no air-to-ground capability
+      const airToGroundNoneTasks = ['CAP', 'Close Escort', 'Recon', 'Escort Jamming', 'Standoff Jamming', 'CSAR', 'Transport', 'Laser Designation', 'Chaff Laying', 'Fast FAC'];
+      const isAirToGroundCapable = !airToGroundNoneTasks.includes(tasking) || (modifiedData.bomb && modifiedData.bomb !== '-');
+      
       // Parse aircraft notes into array (e.g., "A, B, C, E" -> ["A", "B", "C", "E"])
       const notes = aircraftData.notes.split(',').map(n => n.trim());
       
@@ -2043,7 +2047,7 @@
       
       // US Note C: Reduced bomb load for Deep Strike Raid (Table D)
       // Only applies to US aircraft when generated from Table D
-      if (nationCode === 'US' && notes.includes('C') && sourceTable === 'D') {
+      if (nationCode === 'US' && notes.includes('C') && sourceTable === 'D' && isAirToGroundCapable) {
         // Modify bomb field to show only the lower value from "X/Y" format
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
@@ -2079,14 +2083,14 @@
       }
       
       // US Note H: LGB only, internal bay
-      // Only applies to US aircraft (F-117A)
-      if (nationCode === 'US' && notes.includes('H')) {
+      // Only applies to US aircraft (F-117A) and ground attack capable
+      if (nationCode === 'US' && notes.includes('H') && isAirToGroundCapable) {
         modifiedData.specialRules.push('Only load allowed is LGB(1). Internal bomb bay, use clean ratings while laden.');
       }
       
       // US Note I: GBU-15 glide bomb
-      // Only applies to US aircraft, not relevant for CAP flights (ground attack system)
-      if (nationCode === 'US' && notes.includes('I') && tasking !== 'CAP') {
+      // Only applies to US aircraft, not relevant for non-ground attack (ground attack system)
+      if (nationCode === 'US' && notes.includes('I') && isAirToGroundCapable) {
         modifiedData.specialRules.push('GBU-15(V)B glide bomb. May use EOGB day or night.');
       }
       
@@ -2150,20 +2154,20 @@
       }
       
       // US Note L: Shrike or HARM selection
-      // Only applies to US aircraft, not relevant for CAP flights (SEAD weapons)
-      if (nationCode === 'US' && notes.includes('L') && tasking !== 'CAP') {
+      // Only applies to US aircraft, not relevant for non-ground attack (SEAD weapons)
+      if (nationCode === 'US' && notes.includes('L') && isAirToGroundCapable) {
         modifiedData.specialRules.push('Shrike or HARM; if Shrikes, also normal bomb point load.');
       }
       
       // US Note M: AGM-65D Maverick
-      // Only applies to US aircraft, not relevant for CAP flights (air-to-ground missile)
-      if (nationCode === 'US' && notes.includes('M') && tasking !== 'CAP') {
+      // Only applies to US aircraft, not relevant for non-ground attack (air-to-ground missile)
+      if (nationCode === 'US' && notes.includes('M') && isAirToGroundCapable) {
         modifiedData.specialRules.push('AGM-65D Maverick IR Missile. May use EOGM day or night.');
       }
       
       // US Note N: Bombing profile restrictions
-      // Only applies to US aircraft
-      if (nationCode === 'US' && notes.includes('N')) {
+      // Only applies to US aircraft with ground attack capability
+      if (nationCode === 'US' && notes.includes('N') && isAirToGroundCapable) {
         modifiedData.specialRules.push('Only Level Bombing and Radar Bombing profiles allowed.');
       }
       
@@ -2186,8 +2190,8 @@
       }
       
       // US Note R: Laser Spot Tracker
-      // Only applies to US aircraft
-      if (nationCode === 'US' && notes.includes('R')) {
+      // Only applies to US aircraft with ground attack capability
+      if (nationCode === 'US' && notes.includes('R') && isAirToGroundCapable) {
         modifiedData.specialRules.push('LGB only within 2 hexes of NATO armor/mech.');
       }
       
@@ -2215,14 +2219,14 @@
       }
       
       // UK Note B: Rocket pods option
-      // Only applies to UK aircraft, not relevant for CAP
-      if (nationCode === 'UK' && notes.includes('B') && tasking !== 'CAP') {
+      // Only applies to UK aircraft with ground attack capability
+      if (nationCode === 'UK' && notes.includes('B') && isAirToGroundCapable) {
         modifiedData.specialRules.push('May substitute Rocket Pods for bombs.');
       }
       
       // UK Note C: Internal bay
-      // Only applies to UK aircraft, not relevant for CAP
-      if (nationCode === 'UK' && notes.includes('C') && tasking !== 'CAP') {
+      // Only applies to UK aircraft with ground attack capability
+      if (nationCode === 'UK' && notes.includes('C') && isAirToGroundCapable) {
         modifiedData.specialRules.push('Internal bay. May only carry regular bombs in bay. Use clean ratings while laden.');
       }
       
@@ -2245,8 +2249,8 @@
       }
       
       // UK Note F: LGB requires external designation
-      // Only applies to UK aircraft, not relevant for CAP
-      if (nationCode === 'UK' && notes.includes('F') && tasking !== 'CAP') {
+      // Only applies to UK aircraft with ground attack capability
+      if (nationCode === 'UK' && notes.includes('F') && isAirToGroundCapable) {
         modifiedData.specialRules.push('LGB only allowed using laser designation [17.68] by another flight.');
       }
       
@@ -2258,7 +2262,7 @@
       
       // UK Note H: Lower bomb load for Deep Strike (same as US Note C)
       // Reduce bomb load for Table D - use lower value from "X/Y" format
-      if (nationCode === 'UK' && notes.includes('H') && sourceTable === 'D') {
+      if (nationCode === 'UK' && notes.includes('H') && sourceTable === 'D' && isAirToGroundCapable) {
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
           if (bombParts.length === 2) {
@@ -2275,8 +2279,8 @@
       }
       
       // UK Note J: Pave Spike laser designator
-      // Only applies to UK aircraft, not relevant for CAP
-      if (nationCode === 'UK' && notes.includes('J') && tasking !== 'CAP') {
+      // Only applies to UK aircraft with ground attack capability
+      if (nationCode === 'UK' && notes.includes('J') && isAirToGroundCapable) {
         modifiedData.specialRules.push('AN/AWQ-23E Pave Spike Pod. May laser designate [17.69] for other flights.');
       }
       
@@ -2287,8 +2291,8 @@
       }
       
       // UK Note L: Inertial nav/attack system
-      // Only applies to UK aircraft, not relevant for CAP
-      if (nationCode === 'UK' && notes.includes('L') && tasking !== 'CAP') {
+      // Only applies to UK aircraft with ground attack capability
+      if (nationCode === 'UK' && notes.includes('L') && isAirToGroundCapable) {
         modifiedData.specialRules.push('Inertial navigation/attack system. May use Toss Bombing [17.34] profile without Radar capability.');
       }
       
@@ -2334,7 +2338,7 @@
       }
       
       // FRG Note B: May substitute Rocket Pods for bombs
-      if (nationCode === 'FRG' && notes.includes('B') && tasking !== 'CAP') {
+      if (nationCode === 'FRG' && notes.includes('B') && isAirToGroundCapable) {
         modifiedData.specialRules.push('May substitute Rocket Pods [17.63] for bombs.');
       }
       
@@ -2350,7 +2354,7 @@
       
       // FRG Note E: Use lower bomb load for Deep Strike Raids (Table D)
       // Only applies when generated from Table D
-      if (nationCode === 'FRG' && notes.includes('E') && sourceTable === 'D') {
+      if (nationCode === 'FRG' && notes.includes('E') && sourceTable === 'D' && isAirToGroundCapable) {
         // Modify bomb value to use lower value if in format like "6/4"
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
@@ -2434,7 +2438,7 @@
       }
       
       // USSR Note G: AS-6 or Kh-28 options
-      if (nationCode === 'USSR' && notes.includes('G') && tasking !== 'CAP') {
+      if (nationCode === 'USSR' && notes.includes('G') && isAirToGroundCapable) {
         modifiedData.specialRules.push('May carry AS-6(2) or Kh-28(2), not both.');
       }
       
@@ -2458,7 +2462,7 @@
       }
       
       // USSR Note I: Use lower bomb load for Deep Strike Raids (Table I)
-      if (nationCode === 'USSR' && notes.includes('I') && sourceTable === 'I') {
+      if (nationCode === 'USSR' && notes.includes('I') && sourceTable === 'I' && isAirToGroundCapable) {
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
           modifiedData.bomb = bombParts[1].trim();
@@ -2476,7 +2480,7 @@
       }
       
       // USSR Note L: Large Aircraft restrictions
-      if (nationCode === 'USSR' && notes.includes('L') && tasking !== 'CAP') {
+      if (nationCode === 'USSR' && notes.includes('L') && isAirToGroundCapable) {
         modifiedData.specialRules.push('Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32]. May not carry CBU or Anti-Runway ordnance.');
       }
       
@@ -2521,7 +2525,7 @@
       }
       
       // USSR Note S: May swap bombs for KMGU
-      if (nationCode === 'USSR' && notes.includes('S') && tasking !== 'CAP') {
+      if (nationCode === 'USSR' && notes.includes('S') && isAirToGroundCapable) {
         modifiedData.specialRules.push('May swap regular bombs for KMGU [17.66].');
       }
       
@@ -2541,7 +2545,7 @@
       }
       
       // USSR Note V: May swap bombs for BETAB-500
-      if (nationCode === 'USSR' && notes.includes('V') && tasking !== 'CAP') {
+      if (nationCode === 'USSR' && notes.includes('V') && isAirToGroundCapable) {
         modifiedData.specialRules.push('May swap regular bombs for BETAB-500 Anti-Runway Bombs [17.04].');
       }
       
@@ -2563,7 +2567,7 @@
       }
       
       // GDR Note B: May swap bombs for KMGU
-      if (nationCode === 'GDR' && notes.includes('B') && tasking !== 'CAP') {
+      if (nationCode === 'GDR' && notes.includes('B') && isAirToGroundCapable) {
         modifiedData.specialRules.push('May swap regular bombs for KMGU [17.66].');
       }
       
@@ -2587,7 +2591,7 @@
       }
       
       // GDR Note D: Use lower bomb load for Deep Strike Raids (Table I)
-      if (nationCode === 'GDR' && notes.includes('D') && sourceTable === 'I') {
+      if (nationCode === 'GDR' && notes.includes('D') && sourceTable === 'I' && isAirToGroundCapable) {
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
           modifiedData.bomb = bombParts[1].trim();
@@ -2595,7 +2599,7 @@
       }
       
       // GDR Note E: Only Bombs, AT CBU, or Rockets allowed
-      if (nationCode === 'GDR' && notes.includes('E') && tasking !== 'CAP') {
+      if (nationCode === 'GDR' && notes.includes('E') && isAirToGroundCapable) {
         modifiedData.specialRules.push('Only Bombs, AT CBU, or Rockets allowed.');
       }
       
@@ -2653,12 +2657,12 @@
       }
       
       // BE/CA/NE Note B: May substitute Rocket Pods for bombs
-      if (isBECANE && notes.includes('B') && tasking !== 'CAP') {
+      if (isBECANE && notes.includes('B') && isAirToGroundCapable) {
         modifiedData.specialRules.push('May substitute Rocket Pods [17.63] for bombs.');
       }
       
       // BE/CA/NE Note C: Use lower bomb load for Deep Strike Raids (Table D)
-      if (isBECANE && notes.includes('C') && sourceTable === 'D') {
+      if (isBECANE && notes.includes('C') && sourceTable === 'D' && isAirToGroundCapable) {
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
           modifiedData.bomb = bombParts[1].trim();
