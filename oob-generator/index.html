@@ -2251,12 +2251,13 @@
       }
       
       // UK Note H: Lower bomb load for Deep Strike (same as US Note C)
-      // Reduce bomb load for Table D from 6/4 to 4
-      if (nationCode === 'UK' && notes.includes('H')) {
-        if (sourceTable === 'D' && modifiedData.bomb) {
-          const bombMatch = modifiedData.bomb.match(/^(\d+)\/(\d+)$/);
-          if (bombMatch) {
-            modifiedData.bomb = '4';
+      // Reduce bomb load for Table D - use lower value from "X/Y" format
+      if (nationCode === 'UK' && notes.includes('H') && sourceTable === 'D') {
+        if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+          const bombParts = modifiedData.bomb.split('/');
+          if (bombParts.length === 2) {
+            // Take the second (lower) value
+            modifiedData.bomb = bombParts[1].trim();
           }
         }
       }
