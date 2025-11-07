@@ -2293,7 +2293,7 @@
       }
       
       // UK Note M: Variable radar capability - roll per flight
-      // Roll 1-3: Normal, 4-7: Reduce range to [12], 8-10: Reduce range to [12] and add modifier "8+: -2"
+      // Roll 1-3: Normal (no change), 4-10: Reduce range to [12] and set modifier "8+: -2"
       if (nationCode === 'UK' && notes.includes('M')) {
         const radarRoll = Math.floor(Math.random() * 10) + 1;
         if (radarRoll >= 4 && modifiedData.radar) {
@@ -2301,14 +2301,9 @@
           const radarMatch = modifiedData.radar.match(/^(.+?)\s*\[(\d+)\](.*)$/);
           if (radarMatch) {
             const radarBase = radarMatch[1]; // e.g., "APQ-109 No LD"
-            if (radarRoll <= 7) {
-              // Roll 4-7: Just reduce range to [12]
-              modifiedData.radar = `${radarBase} [12]`;
-            } else {
-              // Roll 8-10: Reduce range to [12] and set modifier to "8+: -2"
-              modifiedData.radar = `${radarBase} [12]`;
-              modifiedData.radarModifier = '8+: -2';
-            }
+            // Roll 4-10: Reduce range to [12] and set modifier
+            modifiedData.radar = `${radarBase} [12]`;
+            modifiedData.radarModifier = '8+: -2';
           }
         }
       }
