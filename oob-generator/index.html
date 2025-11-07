@@ -1346,7 +1346,7 @@
     
     .flight-card {
       border: 2px solid black;
-      padding: 6px;
+      padding: 4px;
       page-break-inside: avoid;
       background: white;
       max-width: 450px;
@@ -1355,16 +1355,16 @@
     .flight-header {
       display: grid;
       grid-template-columns: 2fr 1.5fr 1fr 1fr;
-      gap: 4px;
-      margin-bottom: 4px;
-      padding-bottom: 3px;
+      gap: 3px;
+      margin-bottom: 3px;
+      padding-bottom: 2px;
       border-bottom: 1px solid black;
     }
     
     .field {
       border: 1px solid #666;
-      padding: 3px 5px;
-      min-height: 22px;
+      padding: 2px 4px;
+      min-height: 20px;
     }
     
     .field-label {
@@ -1381,8 +1381,8 @@
     .tasking-fuel-row {
       display: grid;
       grid-template-columns: 1.2fr 0.6fr 2fr;
-      gap: 4px;
-      margin-bottom: 5px;
+      gap: 3px;
+      margin-bottom: 3px;
     }
     
     .weapon-field {
@@ -1414,8 +1414,8 @@
     .aircraft-section {
       display: grid;
       grid-template-columns: repeat(${getMaxFlightSize(results)}, 1fr);
-      gap: 4px;
-      margin-bottom: 4px;
+      gap: 3px;
+      margin-bottom: 3px;
     }
     
     .aircraft-card {
@@ -2648,11 +2648,11 @@
           </div>` : ''}
         </div>
         
-        ${aircraftData.ordnance || aircraftData.aam || aircraftData.bomb || (aircraftData.sight && aircraftData.sight !== '-') ? `<div style="padding: 2px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 2px; line-height: 1.1;">
+        ${aircraftData.ordnance || aircraftData.aam || aircraftData.bomb || (aircraftData.sight && aircraftData.sight !== '-') ? `<div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px; line-height: 1.05;">
           ${aircraftData.aam ? `<strong>AAM:</strong> ${aircraftData.aam}` : ''}${(aircraftData.aam && aircraftData.ordnance && tasking !== 'CAP') ? ' | ' : ''}${aircraftData.ordnance && tasking !== 'CAP' ? `<strong>Ordnance:</strong> ${aircraftData.ordnance}` : ''}${((aircraftData.aam || aircraftData.ordnance) && aircraftData.bomb && tasking !== 'CAP') ? ' | ' : ''}${aircraftData.bomb && tasking !== 'CAP' ? `<strong>Bomb:</strong> ${aircraftData.bomb}` : ''}${((aircraftData.aam || aircraftData.ordnance || aircraftData.bomb) && aircraftData.sight && aircraftData.sight !== '-' && tasking !== 'CAP') ? ' | ' : ''}${aircraftData.sight && aircraftData.sight !== '-' && tasking !== 'CAP' ? `<strong>Sight:</strong> ${aircraftData.sight}` : ''}
         </div>` : ''}
         
-        ${aircraftData.radar || aircraftData.rwr || aircraftData.jam ? `<div style="padding: 2px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 2px; line-height: 1.1;">
+        ${aircraftData.radar || aircraftData.rwr || aircraftData.jam ? `<div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px; line-height: 1.05;">
           ${aircraftData.radar ? `<strong>Radar:</strong> ${aircraftData.radar} ${aircraftData.radarModifier || ''}` : ''}
           ${aircraftData.radar && aircraftData.rwr ? ' | ' : ''}
           ${aircraftData.rwr ? `<strong>RWR:</strong> ${aircraftData.rwr}` : ''}
@@ -2660,7 +2660,7 @@
           ${aircraftData.jam ? `<strong>Jam:</strong> ${aircraftData.jam}` : ''}
         </div>` : ''}
         
-        ${aircraftData.capabilities || (aircraftData.specialRules && aircraftData.specialRules.length > 0) ? `<div style="padding: 2px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 2px; line-height: 1.1;">
+        ${aircraftData.capabilities || (aircraftData.specialRules && aircraftData.specialRules.length > 0) ? `<div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px; line-height: 1.05;">
           ${aircraftData.capabilities ? `<strong>Capabilities:</strong> ${aircraftData.capabilities}` : ''}${aircraftData.capabilities && aircraftData.specialRules && aircraftData.specialRules.length > 0 ? ' | ' : ''}${aircraftData.specialRules && aircraftData.specialRules.length > 0 ? `<strong>Notes:</strong> ${aircraftData.specialRules.join('; ')}` : ''}
         </div>` : ''}
         
