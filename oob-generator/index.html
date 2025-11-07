@@ -2327,6 +2327,63 @@
         modifiedData.specialRules.push('Zoom Climb [6.33] not allowed.');
       }
       
+      // ===========================
+      // FRG NOTES (A-I)
+      // ===========================
+      
+      // FRG Note A: AIM-9 depletion {6} for Bombing/SEAD/Rescue Support
+      if (nationCode === 'FRG' && notes.includes('A')) {
+        if (tasking === 'Bombing' || tasking === 'SEAD' || tasking === 'Rescue Support') {
+          modifiedData.irmDepletion = 6;
+        }
+      }
+      
+      // FRG Note B: May substitute Rocket Pods for bombs
+      if (nationCode === 'FRG' && notes.includes('B') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('May substitute Rocket Pods [17.63] for bombs.');
+      }
+      
+      // FRG Note C: May enter Defensive Wheel
+      if (nationCode === 'FRG' && notes.includes('C')) {
+        modifiedData.specialRules.push('May enter Defensive Wheel formation [7.1].');
+      }
+      
+      // FRG Note D: May Spot Jam one radar
+      if (nationCode === 'FRG' && notes.includes('D')) {
+        modifiedData.specialRules.push('May Spot Jam [19.34] one radar.');
+      }
+      
+      // FRG Note E: Use lower bomb load for Deep Strike Raids
+      if (nationCode === 'FRG' && notes.includes('E') && tasking !== 'CAP') {
+        // Modify bomb value to use lower value if in format like "6/4"
+        if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+          const bombParts = modifiedData.bomb.split('/');
+          modifiedData.bomb = bombParts[1].trim();
+        }
+      }
+      
+      // FRG Note F: Synthetic Aperture Radar (SAR) recon capability
+      if (nationCode === 'FRG' && notes.includes('F')) {
+        modifiedData.specialRules.push('Synthetic Aperture Radar (SAR) recon capability [24.2].');
+      }
+      
+      // FRG Note G: No AIM-9 for Bombing/SEAD/Rescue Support
+      if (nationCode === 'FRG' && notes.includes('G')) {
+        if (tasking === 'Bombing' || tasking === 'SEAD' || tasking === 'Rescue Support') {
+          modifiedData.irm = null;
+        }
+      }
+      
+      // FRG Note H: Multirole aircraft
+      if (nationCode === 'FRG' && notes.includes('H')) {
+        modifiedData.specialRules.push('Multirole aircraft [8.37].');
+      }
+      
+      // FRG Note I: Zoom Climb not allowed
+      if (nationCode === 'FRG' && notes.includes('I')) {
+        modifiedData.specialRules.push('Zoom Climb [6.33] not allowed.');
+      }
+      
       return modifiedData;
     }
     
