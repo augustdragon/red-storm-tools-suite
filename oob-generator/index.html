@@ -2201,6 +2201,125 @@
         // Note: If roll is 6-10, no gun is added (aircraft may have only IRM/RHM)
       }
       
+      // ===== UK NOTES =====
+      
+      // UK Note A: No AIM-9 for certain taskings
+      // Remove IRM if tasked with Bombing, SEAD, or Rescue Support
+      if (nationCode === 'UK' && notes.includes('A')) {
+        if (tasking === 'Bombing' || tasking === 'SEAD' || tasking === 'Rescue Support') {
+          modifiedData.irm = null;
+        }
+      }
+      
+      // UK Note B: Rocket pods option
+      // Only applies to UK aircraft, not relevant for CAP
+      if (nationCode === 'UK' && notes.includes('B') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('May substitute Rocket Pods for bombs.');
+      }
+      
+      // UK Note C: Internal bay
+      // Only applies to UK aircraft, not relevant for CAP
+      if (nationCode === 'UK' && notes.includes('C') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('Internal bay. May only carry regular bombs in bay. Use clean ratings while laden.');
+      }
+      
+      // UK Note D: Gun pod - roll per flight (identical to US Note S)
+      // Roll 1-5: Add 20mm gun with +2 {4}, 6-10: No gun
+      if (nationCode === 'UK' && notes.includes('D')) {
+        const gunPodRoll = Math.floor(Math.random() * 10) + 1;
+        if (gunPodRoll <= 5) {
+          modifiedData.gun = '+2 {4}';
+        }
+      }
+      
+      // UK Note E: Max turns as free turns
+      // Only applies to UK aircraft
+      if (nationCode === 'UK' && notes.includes('E')) {
+        modifiedData.specialRules.push('May do Max Turns as Free Turns [6.32].');
+      }
+      
+      // UK Note F: LGB requires external designation
+      // Only applies to UK aircraft, not relevant for CAP
+      if (nationCode === 'UK' && notes.includes('F') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('LGB only allowed using laser designation [17.68] by another flight.');
+      }
+      
+      // UK Note G: Spot jam capability
+      // Only applies to UK aircraft
+      if (nationCode === 'UK' && notes.includes('G')) {
+        modifiedData.specialRules.push('May Spot Jam [19.34] one radar.');
+      }
+      
+      // UK Note H: Lower bomb load for Deep Strike (same as US Note C)
+      // Reduce bomb load for Table D from 6/4 to 4
+      if (nationCode === 'UK' && notes.includes('H')) {
+        if (sourceTable === 'D' && modifiedData.bomb) {
+          const bombMatch = modifiedData.bomb.match(/^(\d+)\/(\d+)$/);
+          if (bombMatch) {
+            modifiedData.bomb = '4';
+          }
+        }
+      }
+      
+      // UK Note I: Defensive Wheel formation
+      // Only applies to UK aircraft
+      if (nationCode === 'UK' && notes.includes('I')) {
+        modifiedData.specialRules.push('May enter Defensive Wheel formation [7.1].');
+      }
+      
+      // UK Note J: Pave Spike laser designator
+      // Only applies to UK aircraft, not relevant for CAP
+      if (nationCode === 'UK' && notes.includes('J') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('AN/AWQ-23E Pave Spike Pod. May laser designate [17.69] for other flights.');
+      }
+      
+      // UK Note K: Photo recon restrictions
+      // Only display for Recon tasking
+      if (nationCode === 'UK' && notes.includes('K') && tasking === 'Recon') {
+        modifiedData.specialRules.push('May only do photo recon runs [24.1] at Deck altitude. Side Looking Camera [24.1] not allowed.');
+      }
+      
+      // UK Note L: Inertial nav/attack system
+      // Only applies to UK aircraft, not relevant for CAP
+      if (nationCode === 'UK' && notes.includes('L') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('Inertial navigation/attack system. May use Toss Bombing [17.34] profile without Radar capability.');
+      }
+      
+      // UK Note M: Variable radar capability - roll per flight
+      // Roll 1-3: Normal, 4-7: Reduce range to [12], 8-10: Reduce range to [12] and add modifier "8+: -2"
+      if (nationCode === 'UK' && notes.includes('M')) {
+        const radarRoll = Math.floor(Math.random() * 10) + 1;
+        if (radarRoll >= 4 && modifiedData.radar) {
+          // Extract radar name and type from current string (e.g., "APQ-109 No LD [12]")
+          const radarMatch = modifiedData.radar.match(/^(.+?)\s*\[(\d+)\](.*)$/);
+          if (radarMatch) {
+            const radarBase = radarMatch[1]; // e.g., "APQ-109 No LD"
+            if (radarRoll <= 7) {
+              // Roll 4-7: Just reduce range to [12]
+              modifiedData.radar = `${radarBase} [12]`;
+            } else {
+              // Roll 8-10: Reduce range to [12] and set modifier to "8+: -2"
+              modifiedData.radar = `${radarBase} [12]`;
+              modifiedData.radarModifier = '8+: -2';
+            }
+          }
+        }
+      }
+      
+      // UK Note N: No AIM-9 for Recon
+      // Remove IRM if tasked with Recon
+      if (nationCode === 'UK' && notes.includes('N')) {
+        if (tasking === 'Recon') {
+          modifiedData.irm = null;
+        }
+      }
+      
+      // UK Note O: Zoom climb restriction
+      // Only applies to UK aircraft
+      if (nationCode === 'UK' && notes.includes('O')) {
+        modifiedData.specialRules.push('Zoom Climb [6.33] not allowed.');
+      }
+      
       return modifiedData;
     }
     
