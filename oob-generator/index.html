@@ -2948,7 +2948,11 @@
             </div>
             <div class="ordnance-area-small">
               <div class="ordnance-label-small">Ordnance</div>
-              ${rolledOrdnance ? `<div style="font-size: 7pt; padding: 2px; text-align: center; line-height: 1.1;">${rolledOrdnance}</div>` : ''}
+              ${rolledOrdnance ? (() => {
+                // Split by '+' and create separate lines for each ordnance item
+                const items = rolledOrdnance.split('+').filter(item => item.trim().length > 0);
+                return items.map(item => `<div style="font-size: 6pt; padding: 1px 3px; text-align: left; line-height: 1.1;">${item.trim()}</div>`).join('');
+              })() : ''}
             </div>
           </div>
         `).join('')}
