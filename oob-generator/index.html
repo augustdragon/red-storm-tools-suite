@@ -2638,6 +2638,45 @@
         modifiedData.specialRules.push('Multirole aircraft [8.37].');
       }
       
+      // ===========================
+      // BE/CA/NE NOTES (A-E)
+      // Belgium (BEL), Canada (CAN), Netherlands (HOL)
+      // ===========================
+      
+      const isBECANE = ['BEL', 'CAN', 'HOL'].includes(nationCode);
+      
+      // BE/CA/NE Note A: AIM-9 depletion {6} for Bombing/SEAD
+      if (isBECANE && notes.includes('A')) {
+        if (tasking === 'Bombing' || tasking === 'SEAD') {
+          modifiedData.irmDepletion = 6;
+        }
+      }
+      
+      // BE/CA/NE Note B: May substitute Rocket Pods for bombs
+      if (isBECANE && notes.includes('B') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('May substitute Rocket Pods [17.63] for bombs.');
+      }
+      
+      // BE/CA/NE Note C: Use lower bomb load for Deep Strike Raids (Table D)
+      if (isBECANE && notes.includes('C') && sourceTable === 'D') {
+        if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+          const bombParts = modifiedData.bomb.split('/');
+          modifiedData.bomb = bombParts[1].trim();
+        }
+      }
+      
+      // BE/CA/NE Note D: No AIM-9 for Bombing
+      if (isBECANE && notes.includes('D')) {
+        if (tasking === 'Bombing') {
+          modifiedData.irm = null;
+        }
+      }
+      
+      // BE/CA/NE Note E: Multirole aircraft
+      if (isBECANE && notes.includes('E')) {
+        modifiedData.specialRules.push('Multirole aircraft [8.37].');
+      }
+      
       return modifiedData;
     }
     
