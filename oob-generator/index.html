@@ -2476,10 +2476,26 @@
         console.log(`Detected variant aircraft: ${aircraftType} -> nation: ${nationCode}, base: ${baseAircraft}`);
       }
       
-      // Extract tasking (after comma)
+      // Extract tasking (after comma, before ordnance parentheses)
       const taskingMatch = resultText.match(/,\s*([^<(]+)/);
       if (taskingMatch) {
         tasking = taskingMatch[1].trim();
+      }
+      
+      // Extract ordnance if present (text in parentheses)
+      let rolledOrdnance = '';
+      const ordnanceMatch = resultText.match(/\(([^)]+)\)/);
+      if (ordnanceMatch) {
+        const fullOrdnance = ordnanceMatch[1].trim();
+        // Extract only the additions after "Bombs/CBU/Rockets"
+        if (fullOrdnance.includes('+')) {
+          // Remove the base "Bombs/CBU/Rockets" part and keep only additions
+          const parts = fullOrdnance.split('+');
+          if (parts.length > 1) {
+            // Join all parts after the first one with '+'
+            rolledOrdnance = '+' + parts.slice(1).map(p => p.trim()).join('+');
+          }
+        }
       }
       
       // Apply name mapping if available (handles abbreviations and variants)
@@ -2555,7 +2571,8 @@
           nationCode,
           tasking,
           faction,
-          applyPageBreak
+          applyPageBreak,
+          rolledOrdnance
         );
       }
       
@@ -2713,9 +2730,10 @@
      * @param {string} tasking - Mission tasking
      * @param {string} faction - NATO or WP
      * @param {boolean} applyPageBreak - Whether to apply page-break-before to this card
+     * @param {string} rolledOrdnance - Ordnance additions from table roll (e.g., "+EOGM+ARM")
      * @returns {string} HTML for single flight card
      */
-    function generateSingleDesignerCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction, applyPageBreak = false) {
+    function generateSingleDesignerCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction, applyPageBreak = false, rolledOrdnance = '') {
       // Use default data if aircraft not found
       if (!aircraftData) {
         aircraftData = {
@@ -2930,6 +2948,7 @@
             </div>
             <div class="ordnance-area-small">
               <div class="ordnance-label-small">Ordnance</div>
+              ${rolledOrdnance ? `<div style="font-size: 7pt; padding: 2px; text-align: center; line-height: 1.1;">${rolledOrdnance}</div>` : ''}
             </div>
           </div>
         `).join('')}
