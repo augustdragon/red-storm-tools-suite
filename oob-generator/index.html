@@ -2473,7 +2473,8 @@
       }
       
       // USSR Note I: Use lower bomb load for Deep Strike Raids (Table I)
-      if (nationCode === 'USSR' && notes.includes('I') && sourceTable === 'I' && isAirToGroundCapable) {
+      // Only applies when tasking is "Deep Strike Raid", not all Table I missions
+      if (nationCode === 'USSR' && notes.includes('I') && tasking === 'Deep Strike Raid' && isAirToGroundCapable) {
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
           modifiedData.bomb = bombParts[1].trim();
@@ -2613,7 +2614,8 @@
       }
       
       // GDR Note D: Use lower bomb load for Deep Strike Raids (Table I)
-      if (nationCode === 'GDR' && notes.includes('D') && sourceTable === 'I' && isAirToGroundCapable) {
+      // Only applies when tasking is "Deep Strike Raid", not all Table I missions
+      if (nationCode === 'GDR' && notes.includes('D') && tasking === 'Deep Strike Raid' && isAirToGroundCapable) {
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
           modifiedData.bomb = bombParts[1].trim();
