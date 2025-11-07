@@ -2178,8 +2178,8 @@
       }
       
       // US Note P: Multirole aircraft
-      // Only applies to US aircraft
-      if (nationCode === 'US' && notes.includes('P')) {
+      // Only applies to US aircraft tasked with SEAD or Chaff Laying per [8.37]
+      if (nationCode === 'US' && notes.includes('P') && (tasking === 'SEAD' || tasking === 'Chaff Laying')) {
         modifiedData.specialRules.push('Multirole aircraft [8.37].');
       }
       
@@ -2375,7 +2375,8 @@
       }
       
       // FRG Note H: Multirole aircraft
-      if (nationCode === 'FRG' && notes.includes('H')) {
+      // Only show for SEAD or Chaff Laying per [8.37]
+      if (nationCode === 'FRG' && notes.includes('H') && (tasking === 'SEAD' || tasking === 'Chaff Laying')) {
         modifiedData.specialRules.push('Multirole aircraft [8.37].');
       }
       
@@ -2513,7 +2514,8 @@
       }
       
       // USSR Note Q: Multirole aircraft
-      if (nationCode === 'USSR' && notes.includes('Q')) {
+      // Only show for SEAD or Chaff Laying per [8.37]
+      if (nationCode === 'USSR' && notes.includes('Q') && (tasking === 'SEAD' || tasking === 'Chaff Laying')) {
         modifiedData.specialRules.push('Multirole aircraft [8.37].');
       }
       
@@ -2638,7 +2640,8 @@
       }
       
       // GDR Note J: Multirole aircraft
-      if (nationCode === 'GDR' && notes.includes('J')) {
+      // Only show for SEAD or Chaff Laying per [8.37]
+      if (nationCode === 'GDR' && notes.includes('J') && (tasking === 'SEAD' || tasking === 'Chaff Laying')) {
         modifiedData.specialRules.push('Multirole aircraft [8.37].');
       }
       
@@ -2677,7 +2680,8 @@
       }
       
       // BE/CA/NE Note E: Multirole aircraft
-      if (isBECANE && notes.includes('E')) {
+      // Only show for SEAD or Chaff Laying per [8.37]
+      if (isBECANE && notes.includes('E') && (tasking === 'SEAD' || tasking === 'Chaff Laying')) {
         modifiedData.specialRules.push('Multirole aircraft [8.37].');
       }
       
