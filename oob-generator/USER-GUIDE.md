@@ -33,9 +33,10 @@ The generator displays these additions in each aircraft's **Ordnance box** (e.g.
 ### Step 3: Aircraft Data Lookup
 
 The generator looks up the selected aircraft in the appropriate database (NATO or Warsaw Pact) to retrieve:
-- Performance data (speeds at different altitudes)
-- Weapons loadout (guns, missiles)
-- Electronic warfare systems (RWR, Jamming)
+- Performance data (speed/altitude)
+- Weapons loadout
+- Radar information
+- EW ratings (RWR, Jamming)
 - Crew size and runway requirements
 - Special capabilities and notes
 
@@ -43,7 +44,7 @@ The generator looks up the selected aircraft in the appropriate database (NATO o
 
 Many aircraft have **note codes** (letters A-Z) that modify their characteristics based on mission tasking or require dice rolls. The generator automatically applies these notes:
 
-#### Data-Modifying Notes (Applied Automatically)
+#### Nation and aircraft-specific notes
 
 These notes change the aircraft's stats without player input:
 
@@ -96,8 +97,6 @@ Ground attack-specific notes are automatically hidden for CAP (Combat Air Patrol
 
 **Benefit**: Saves vertical space on flight sheets, allowing them to fit better in the 2x3 grid layout. This is especially important for aircraft with longer capability descriptions or multiple special notes.
 
-**Example**: Most fighters, ground attack aircraft, and bombers will display only H/M/L/D altitude bands.
-
 ### BVR Rating Display
 
 Missiles are displayed in the format: **+X/+Y** or **+X/NA**
@@ -107,9 +106,9 @@ Missiles are displayed in the format: **+X/+Y** or **+X/NA**
 - **NA**: Missile has no BVR capability (e.g., early AIM-9 variants)
 
 **Examples:**
-- AIM-9J: +0/NA (no dogfight bonus, no BVR capability)
-- AIM-9L: +3/+0 (good dogfight rating, can engage at BVR but no modifier)
-- AIM-7F: +3/+1 (excellent missile with BVR bonus)
+- AIM-9J: +0/NA 
+- AIM-9L: +3/+0 
+- AIM-7F: +3/+1 
 
 ### Weapons Database Integration
 
@@ -130,34 +129,33 @@ Aircraft with only one speed profile display a **single table** for simplicity.
 
 ### Header Section
 - **Aircraft Type**: Model and nation
-- **Callsign/Counter/Aggression**: Fill in during game setup
+- **Callsign/Counter/Aggression**: Complete during game setup
 - **Tasking**: Mission type (auto-filled from table roll)
-- **Fuel**: 18 boxes to track fuel consumption
+- **Fuel**: Aircraft-specific quantity
 
 ### Stats Section
-- **Gun/IRM/RHM/AAM/Ordnance/Bomb/Sight**: Weapons and sensors
+- **Gun/IRM/RHM/AAM/Ordnance/Bomb/Sight**: Weapons and ordnance data from ADC
 - **Crew/Rwy**: Crew size and runway requirements
-- **RWR/Jam/Radar**: Electronic warfare systems
+- **RWR/Jam/Radar**: EW and Radar data
 - **Capabilities**: Special abilities and note reminders
 
 ### Speed Table
 - **Alt**: Altitude band (VH/H/M/L/D)
 - **C/D/M**: Combat/Dash/Maneuver speeds
-- Omits VH row if aircraft can't reach that altitude
+- Omits VH row if no value for that altitude
 
 ### Individual Aircraft Boxes
 
 Each aircraft in the flight has:
 - **Number**: Position in formation
 - **Damage Status**: Checkboxes for Damaged/Crippled/Destroyed
-- **Ordnance Box**: Lists additional ordnance options from bombing table rolls
+- **Ordnance Box**: Lists additional ordnance options from table rolls
 
 ## Tips for Use
 
 ### Printing Recommendations
 - **Flight sheets** are optimized for 2x3 grid printing (6 flights per page)
 - Print at actual size (100% scale) for best results
-- Consider printing on cardstock for durability
 
 ### Multiple Flights
 When a table result produces multiple flights (e.g., "4 x {2}"), the generator automatically creates separate cards for each flight. You don't need to manually duplicate anything.
@@ -165,41 +163,7 @@ When a table result produces multiple flights (e.g., "4 x {2}"), the generator a
 ### Note Interpretation
 - **Bold rule references** in notes (e.g., [7.1], [19.34]) point to specific rules in the Red Storm rulebook
 - Notes marked with dice rolls have already been resolved - the printed values reflect the roll results
-- Display notes remind you of special rules but don't change the printed statistics
-
-### Digital vs Physical Play
-The generator works for both:
-- **Digital**: Use the generated sheets on screen/tablet
-- **Physical**: Print sheets and mark fuel/damage during play
-- **Hybrid**: Print reference cards, track state digitally
-
-## Nation-Specific Notes
-
-### US Air Force (19 notes: A-S)
-Extensive notes covering Wild Weasel operations, advanced missiles, specialized pods, and multi-role capabilities.
-
-### UK Royal Air Force (15 notes: A-O)
-Focus on specialized weapons (JP233, Skyflash), internal bays, laser designation, and reconnaissance restrictions.
-
-### FRG Luftwaffe (9 notes: A-I)
-Notes for multirole operations, munitions dispensers (MW-1), and operational restrictions.
-
-### BE/CA/NE (Belgium/Canada/Netherlands) (5 notes: A-E)
-Shared note system for smaller NATO air forces with simplified rule set.
-
-### USSR Air Forces (23 notes: A-W)
-Most extensive note set covering Soviet doctrine, missile variety, large aircraft, and specialized systems.
-
-### GDR Luftstreitkräfte (10 notes: A-J)
-East German air force notes focusing on Soviet equipment variants.
-
-## Future Enhancements
-
-Planned improvements to the OOB generator:
-- **Modular note system**: Refactor notes into separate JavaScript module for easier maintenance
-- **Custom OOB tables**: Allow users to create and save custom probability tables
-- **Campaign tracking**: Save and reload OOB results across multiple game sessions
-- **Export options**: Additional formats (PDF, CSV) for different workflows
+- Display notes remind you of special rules to reduce lookups on aid cards
 
 ## Questions or Issues?
 

@@ -2951,7 +2951,7 @@
               ${rolledOrdnance ? (() => {
                 // Split by '+' and create separate lines for each ordnance item
                 const items = rolledOrdnance.split('+').filter(item => item.trim().length > 0);
-                return items.map(item => `<div style="font-size: 6pt; padding: 1px 3px; text-align: left; line-height: 1.1;">${item.trim()}</div>`).join('');
+                return items.map(item => `<div style="font-size: 6pt; padding: 1px 3px; text-align: left; line-height: 1.1;">+${item.trim()}</div>`).join('');
               })() : ''}
             </div>
           </div>
