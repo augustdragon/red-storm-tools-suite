@@ -2413,19 +2413,29 @@
       // Only if Note A hasn't removed IRM already
       if (nationCode === 'USSR' && notes.includes('D') && modifiedData.irm) {
         const irmRoll = Math.floor(Math.random() * 10) + 1;
-        let rolledIRM;
-        let irmDepletion;
         
+        // Extract depletion value from existing IRM field (e.g., "+3/+0 {3}" -> "3")
+        const depletionMatch = modifiedData.irm.match(/\{(\d+)\}/);
+        const irmDepletion = depletionMatch ? depletionMatch[1] : '3';
+        
+        // Extract rating from existing IRM field (e.g., "+3/+0 {3}" -> "+3/+0")
+        const ratingMatch = modifiedData.irm.match(/^([^\{]+)/);
+        const irmRating = ratingMatch ? ratingMatch[1].trim() : modifiedData.irm;
+        
+        let rolledIRM;
         if (irmRoll <= 4) {
-          rolledIRM = 'R-60 (AA-8A)';
-          irmDepletion = modifiedData.irmDepletion; // Keep original depletion
+          rolledIRM = 'R-60';
         } else {
-          rolledIRM = 'R-60M (AA-8B)';
-          irmDepletion = modifiedData.irmDepletion; // Keep original depletion
+          rolledIRM = 'R-60M';
         }
         
         // Update IRM field with specific missile type
-        modifiedData.irm = `${rolledIRM} {${irmDepletion}}`;
+        modifiedData.irm = `${irmRating} {${irmDepletion}}`;
+        
+        // Update AAM field to show only the rolled missile
+        if (modifiedData.aam) {
+          modifiedData.aam = modifiedData.aam.replace(/R-60\/60M/g, rolledIRM);
+        }
       }
       
       // USSR Note E: Internal Chaff Dispenser

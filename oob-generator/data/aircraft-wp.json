@@ -221,49 +221,6 @@
     "aam": "R-60, R-23"
   },
   
-  "MiG-23ML": {
-    "name": "MiG-23ML Flogger G",
-    "model": "MiG-23ML Flogger G",
-    "nation": "GDR",
-    "crew": 1,
-    "rwy": 2,
-    "fuel": 7,
-    "notes": "A, C, D, E, J",
-    "weapons": {
-      "gun": "23mm",
-      "gunDepletion": 4,
-      "irm": "R-60",
-      "irmDepletion": 6,
-      "rhm": "R-24",
-      "rhmDepletion": 6
-    },
-    "bomb": "2/1",
-    "sight": "+0",
-    "rwr": "B",
-    "jam": null,
-    "radar": {
-      "name": "S-23ML",
-      "type": "LD [TD]",
-      "range": 11,
-      "modifier": "7+: -2"
-    },
-    "speeds": {
-      "clean": {
-        "combat": "4/4/5/-",
-        "dash": "5/6/8/-",
-        "maneuver": "4/5/6/-"
-      },
-      "laden": {
-        "combat": "3/3/4/-",
-        "dash": "4/5/5/-",
-        "maneuver": "2/3/3/-"
-      }
-    },
-    "ordnance": [],
-    "capabilities": ["Night(Ltd)", "IRST"],
-    "aam": "R-60/60M, R-24"
-  },
-  
   "MiG-23BN": {
     "name": "MiG-23BN Flogger H",
     "model": "MiG-23BN Flogger H",
