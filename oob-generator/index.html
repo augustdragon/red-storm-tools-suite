@@ -3054,10 +3054,11 @@
       }
       
       // Determine if laden values should be shown (after notes have been applied)
-      // Only show laden if aircraft has speedsLaden data AND has air-to-ground ordnance
+      // Only show laden if: 1) aircraft has speedsLaden data, 2) has air-to-ground ordnance, AND 3) tasking allows air-to-ground
+      const airToGroundNoneTasks = ['CAP', 'Close Escort', 'Recon', 'Escort Jamming', 'Standoff Jamming', 'CSAR', 'Transport', 'Laser Designation', 'Chaff Laying', 'Fast FAC'];
       const hasAirToGroundOrdnance = (aircraftData.ordnance && aircraftData.ordnance.length > 0) || 
                                      (aircraftData.bomb && aircraftData.bomb !== '-');
-      const showLaden = aircraftData.speedsLaden && hasAirToGroundOrdnance;
+      const showLaden = aircraftData.speedsLaden && hasAirToGroundOrdnance && !airToGroundNoneTasks.includes(tasking);
       
       // Determine roundel image
       const roundelMap = {
