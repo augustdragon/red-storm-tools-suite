@@ -2018,7 +2018,7 @@
       
       // Define taskings with no air-to-ground capability
       const airToGroundNoneTasks = ['CAP', 'Close Escort', 'Recon', 'Escort Jamming', 'Standoff Jamming', 'CSAR', 'Transport', 'Laser Designation', 'Chaff Laying', 'Fast FAC'];
-      const isAirToGroundCapable = !airToGroundNoneTasks.includes(tasking) || (modifiedData.bomb && modifiedData.bomb !== '-');
+      const isAirToGroundCapable = !airToGroundNoneTasks.includes(tasking) && (modifiedData.bomb && modifiedData.bomb !== '-');
       
       // Parse aircraft notes into array (e.g., "A, B, C, E" -> ["A", "B", "C", "E"])
       const notes = aircraftData.notes.split(',').map(n => n.trim());
