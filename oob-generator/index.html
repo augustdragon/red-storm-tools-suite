@@ -2380,6 +2380,264 @@
         modifiedData.specialRules.push('Zoom Climb [6.33] not allowed.');
       }
       
+      // ===========================
+      // USSR NOTES (A-W)
+      // ===========================
+      
+      // USSR Note A: No IRM/RHM for Bombing/SEAD/Rescue Support/Chaff Laying
+      if (nationCode === 'USSR' && notes.includes('A')) {
+        if (tasking === 'Bombing' || tasking === 'SEAD' || tasking === 'Rescue Support' || tasking === 'Chaff Laying') {
+          modifiedData.irm = null;
+          modifiedData.rhm = null;
+        }
+      }
+      
+      // USSR Note B: Jam rating 2n for Bombing/SEAD
+      if (nationCode === 'USSR' && notes.includes('B')) {
+        if (tasking === 'Bombing' || tasking === 'SEAD') {
+          modifiedData.jam = '2n';
+        }
+      }
+      
+      // USSR Note C: Soviet Doctrine does not apply
+      if (nationCode === 'USSR' && notes.includes('C')) {
+        modifiedData.specialRules.push('Soviet Doctrine rule [11.32] does not apply.');
+      }
+      
+      // USSR Note D: Roll for IRM load (R-60 vs R-60M)
+      // Only if Note A hasn't removed IRM already
+      if (nationCode === 'USSR' && notes.includes('D') && modifiedData.irm) {
+        const irmRoll = Math.floor(Math.random() * 10) + 1;
+        let rolledIRM;
+        let irmDepletion;
+        
+        if (irmRoll <= 4) {
+          rolledIRM = 'R-60 (AA-8A)';
+          irmDepletion = modifiedData.irmDepletion; // Keep original depletion
+        } else {
+          rolledIRM = 'R-60M (AA-8B)';
+          irmDepletion = modifiedData.irmDepletion; // Keep original depletion
+        }
+        
+        // Update IRM field with specific missile type
+        modifiedData.irm = `${rolledIRM} {${irmDepletion}}`;
+      }
+      
+      // USSR Note E: Internal Chaff Dispenser
+      if (nationCode === 'USSR' && notes.includes('E')) {
+        modifiedData.specialRules.push('Internal Chaff Dispenser. May carry Chaff [17.68] and use clean ratings.');
+      }
+      
+      // USSR Note F: May enter Defensive Wheel
+      if (nationCode === 'USSR' && notes.includes('F')) {
+        modifiedData.specialRules.push('May enter Defensive Wheel formation [7.1].');
+      }
+      
+      // USSR Note G: AS-6 or Kh-28 options
+      if (nationCode === 'USSR' && notes.includes('G') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('May carry AS-6(2) or Kh-28(2), not both.');
+      }
+      
+      // USSR Note H: Roll for IRM load (R-60M vs R-73)
+      // Only if Note A hasn't removed IRM already
+      if (nationCode === 'USSR' && notes.includes('H') && modifiedData.irm) {
+        const irmRoll = Math.floor(Math.random() * 10) + 1;
+        let rolledIRM;
+        let irmDepletion;
+        
+        if (irmRoll <= 5) {
+          rolledIRM = 'R-60M (AA-8B)';
+          irmDepletion = modifiedData.irmDepletion;
+        } else {
+          rolledIRM = 'R-73 (AA-11)';
+          irmDepletion = modifiedData.irmDepletion;
+        }
+        
+        // Update IRM field with specific missile type
+        modifiedData.irm = `${rolledIRM} {${irmDepletion}}`;
+      }
+      
+      // USSR Note I: Use lower bomb load for Deep Strike Raids (Table I)
+      if (nationCode === 'USSR' && notes.includes('I') && sourceTable === 'I') {
+        if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+          const bombParts = modifiedData.bomb.split('/');
+          modifiedData.bomb = bombParts[1].trim();
+        }
+      }
+      
+      // USSR Note J: May Spot Jam two radars
+      if (nationCode === 'USSR' && notes.includes('J')) {
+        modifiedData.specialRules.push('May Spot Jam [19.34] two radars at same time.');
+      }
+      
+      // USSR Note K: May Spot Jam one radar
+      if (nationCode === 'USSR' && notes.includes('K')) {
+        modifiedData.specialRules.push('May Spot Jam [19.34] one radar.');
+      }
+      
+      // USSR Note L: Large Aircraft restrictions
+      if (nationCode === 'USSR' && notes.includes('L') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32]. May not carry CBU or Anti-Runway ordnance.');
+      }
+      
+      // USSR Note M: SAR recon capability
+      if (nationCode === 'USSR' && notes.includes('M')) {
+        modifiedData.specialRules.push('Synthetic Aperture Radar (SAR) recon capability [24.2].');
+      }
+      
+      // USSR Note N: SEAD missiles only for SEAD missions
+      if (nationCode === 'USSR' && notes.includes('N')) {
+        if (tasking !== 'SEAD' && modifiedData.ordnance) {
+          // Remove Kh-25MP, Kh-28M, or Kh-58 if not SEAD
+          const seadMissiles = ['Kh-25MP', 'Kh-28M', 'Kh-58'];
+          let ordnanceParts = modifiedData.ordnance.split(',').map(o => o.trim());
+          ordnanceParts = ordnanceParts.filter(ord => !seadMissiles.some(m => ord.includes(m)));
+          modifiedData.ordnance = ordnanceParts.join(', ');
+        }
+      }
+      
+      // USSR Note O: Standoff Jamming arc restrictions (Escort Jamming only)
+      if (nationCode === 'USSR' && notes.includes('O') && tasking === 'Escort Jamming') {
+        modifiedData.specialRules.push('May pierce Standoff Jamming arc in forward or rear arcs if tasked with Escort Jamming [19.32].');
+      }
+      
+      // USSR Note P: No bomb load for Recon
+      if (nationCode === 'USSR' && notes.includes('P')) {
+        if (tasking === 'Recon') {
+          modifiedData.bomb = null;
+        }
+      }
+      
+      // USSR Note Q: Multirole aircraft
+      if (nationCode === 'USSR' && notes.includes('Q')) {
+        modifiedData.specialRules.push('Multirole aircraft [8.37].');
+      }
+      
+      // USSR Note R: May carry Chaff for specific missions
+      if (nationCode === 'USSR' && notes.includes('R')) {
+        if (tasking === 'Chaff Laying' || tasking === 'Escort Jamming') {
+          modifiedData.specialRules.push('May carry Chaff [17.68] if tasked with Chaff Laying or Escort Jamming [19.32].');
+        }
+      }
+      
+      // USSR Note S: May swap bombs for KMGU
+      if (nationCode === 'USSR' && notes.includes('S') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('May swap regular bombs for KMGU [17.66].');
+      }
+      
+      // USSR Note T: Standoff Jamming arc forward/rear only
+      if (nationCode === 'USSR' && notes.includes('T')) {
+        modifiedData.specialRules.push('May only pierce Standoff Jamming arc in forward or rear arcs, not beam arcs.');
+      }
+      
+      // USSR Note U: No R-27 for Bombing/SEAD/Rescue Support
+      if (nationCode === 'USSR' && notes.includes('U')) {
+        if (tasking === 'Bombing' || tasking === 'SEAD' || tasking === 'Rescue Support') {
+          // Remove R-27 from RHM field if present
+          if (modifiedData.rhm && modifiedData.rhm.includes('R-27')) {
+            modifiedData.rhm = null;
+          }
+        }
+      }
+      
+      // USSR Note V: May swap bombs for BETAB-500
+      if (nationCode === 'USSR' && notes.includes('V') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('May swap regular bombs for BETAB-500 Anti-Runway Bombs [17.04].');
+      }
+      
+      // USSR Note W: Zoom Climb not allowed
+      if (nationCode === 'USSR' && notes.includes('W')) {
+        modifiedData.specialRules.push('Zoom Climb [6.33] not allowed.');
+      }
+      
+      // ===========================
+      // GDR NOTES (A-J)
+      // ===========================
+      
+      // GDR Note A: No IRM/RHM for Bombing/SEAD/Chaff Laying
+      if (nationCode === 'GDR' && notes.includes('A')) {
+        if (tasking === 'Bombing' || tasking === 'SEAD' || tasking === 'Chaff Laying') {
+          modifiedData.irm = null;
+          modifiedData.rhm = null;
+        }
+      }
+      
+      // GDR Note B: May swap bombs for KMGU
+      if (nationCode === 'GDR' && notes.includes('B') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('May swap regular bombs for KMGU [17.66].');
+      }
+      
+      // GDR Note C: Roll for IRM load (R-60 vs R-60M)
+      // Only if Note A hasn't removed IRM already
+      if (nationCode === 'GDR' && notes.includes('C') && modifiedData.irm) {
+        const irmRoll = Math.floor(Math.random() * 10) + 1;
+        let rolledIRM;
+        let irmDepletion;
+        
+        if (irmRoll <= 5) {
+          rolledIRM = 'R-60 (AA-8A)';
+          irmDepletion = modifiedData.irmDepletion;
+        } else {
+          rolledIRM = 'R-60M (AA-8B)';
+          irmDepletion = modifiedData.irmDepletion;
+        }
+        
+        // Update IRM field with specific missile type
+        modifiedData.irm = `${rolledIRM} {${irmDepletion}}`;
+      }
+      
+      // GDR Note D: Use lower bomb load for Deep Strike Raids (Table I)
+      if (nationCode === 'GDR' && notes.includes('D') && sourceTable === 'I') {
+        if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+          const bombParts = modifiedData.bomb.split('/');
+          modifiedData.bomb = bombParts[1].trim();
+        }
+      }
+      
+      // GDR Note E: Only Bombs, AT CBU, or Rockets allowed
+      if (nationCode === 'GDR' && notes.includes('E') && tasking !== 'CAP') {
+        modifiedData.specialRules.push('Only Bombs, AT CBU, or Rockets allowed.');
+      }
+      
+      // GDR Note F: Roll for 23mm Gun Pod
+      if (nationCode === 'GDR' && notes.includes('F')) {
+        const gunRoll = Math.floor(Math.random() * 10) + 1;
+        if (gunRoll <= 6) {
+          // Add 23mm Gun Pod with {4} depletion
+          const gunPod = weaponsData.guns['23mm Gun Pod'];
+          const gunRating = gunPod ? gunPod.stdRtg : 2;
+          
+          // If aircraft already has a gun, append the pod; otherwise create new gun field
+          if (modifiedData.gun) {
+            modifiedData.gun += `, 23mm Gun Pod +${gunRating} {4}`;
+          } else {
+            modifiedData.gun = `23mm Gun Pod +${gunRating} {4}`;
+          }
+        }
+      }
+      
+      // GDR Note G: May enter Defensive Wheel
+      if (nationCode === 'GDR' && notes.includes('G')) {
+        modifiedData.specialRules.push('May enter Defensive Wheel formation [7.1].');
+      }
+      
+      // GDR Note H: May carry Chaff for Chaff Laying
+      if (nationCode === 'GDR' && notes.includes('H') && tasking === 'Chaff Laying') {
+        modifiedData.specialRules.push('May carry Chaff [17.68] if tasked with Chaff Laying.');
+      }
+      
+      // GDR Note I: Jam rating 2n for Bombing/SEAD
+      if (nationCode === 'GDR' && notes.includes('I')) {
+        if (tasking === 'Bombing' || tasking === 'SEAD') {
+          modifiedData.jam = '2n';
+        }
+      }
+      
+      // GDR Note J: Multirole aircraft
+      if (nationCode === 'GDR' && notes.includes('J')) {
+        modifiedData.specialRules.push('Multirole aircraft [8.37].');
+      }
+      
       return modifiedData;
     }
     
