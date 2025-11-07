@@ -1999,9 +1999,10 @@
      * @param {object} noteRulesData - Aircraft note rules database
      * @param {string} nationCode - Nation code
      * @param {string} sourceTable - Source OOB table ID (A-L)
+     * @param {object} weaponsData - Weapons database for lookups
      * @returns {object} Modified aircraft data
      */
-    function applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode, sourceTable) {
+    function applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode, sourceTable, weaponsData) {
       // Early return if no note rules data or no notes on aircraft
       if (!noteRulesData || !aircraftData.notes) {
         return aircraftData;
@@ -2191,12 +2192,14 @@
       }
       
       // US Note S: SUU-23 Gun Pod - roll per flight
-      // Roll 1-5: Add 20mm gun with +2 {4}, 6-10: No gun
+      // Roll 1-5: Add SUU-23 gun pod with rating from weapons database, 6-10: No gun
       if (nationCode === 'US' && notes.includes('S')) {
         const gunPodRoll = Math.floor(Math.random() * 10) + 1;
         if (gunPodRoll <= 5) {
-          // Add gun value if roll is 1-5
-          modifiedData.gun = '+2 {4}';
+          // Look up SUU-23 rating from weapons database
+          const suu23 = weaponsData && weaponsData.guns && weaponsData.guns['SUU-23'];
+          const gunRating = suu23 ? suu23.stdRtg : 2; // Default to 2 if not found
+          modifiedData.gun = `+${gunRating} {4}`;
         }
         // Note: If roll is 6-10, no gun is added (aircraft may have only IRM/RHM)
       }
@@ -2224,11 +2227,14 @@
       }
       
       // UK Note D: Gun pod - roll per flight (identical to US Note S)
-      // Roll 1-5: Add 20mm gun with +2 {4}, 6-10: No gun
+      // Roll 1-5: Add SUU-23 gun pod with rating from weapons database, 6-10: No gun
       if (nationCode === 'UK' && notes.includes('D')) {
         const gunPodRoll = Math.floor(Math.random() * 10) + 1;
         if (gunPodRoll <= 5) {
-          modifiedData.gun = '+2 {4}';
+          // Look up SUU-23 rating from weapons database
+          const suu23 = weaponsData && weaponsData.guns && weaponsData.guns['SUU-23'];
+          const gunRating = suu23 ? suu23.stdRtg : 2; // Default to 2 if not found
+          modifiedData.gun = `+${gunRating} {4}`;
         }
       }
       
@@ -2480,7 +2486,7 @@
       // Apply note rules if available
       if (noteRulesData && nationCode) {
         const sourceTable = flight.table || '';
-        aircraftData = applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode, sourceTable);
+        aircraftData = applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode, sourceTable, weaponsData);
       }
       
       // Generate cards for each flight in the result (e.g., "4 x {2}" = 4 flights)

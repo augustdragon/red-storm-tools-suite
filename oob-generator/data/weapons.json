@@ -5,6 +5,15 @@
   "_description": "Complete weapons specifications including guns and missiles with BVR capabilities. Depletion values are stored per aircraft, not here.",
   
   "guns": {
+    "SUU-23": {
+      "name": "SUU-23",
+      "nation": "US/UK",
+      "class": "Gun",
+      "stdRtg": 2,
+      "bvrRtg": null,
+      "bvrRanges": null,
+      "comment": "20mm gun pod"
+    },
     "20mm M39": {
       "name": "20mm M39",
       "nation": "US",
