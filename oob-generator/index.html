@@ -2759,6 +2759,8 @@
             ...flight,
             result: flightPart
           };
+          // Debug: Check if nationality is being copied
+          console.log(`Split flight ${i}: nationality="${tempFlight.nationality}", original nationality="${flight.nationality}"`);
           // Recursively call this function to generate card for single flight
           // Only the last card of multi-flight NATO results gets the page break
           const isLastCard = i === flightParts.length - 1;
@@ -3151,6 +3153,10 @@
         'USSR': 'USSR.jpg',
         'GDR': 'GDR.jpg'
       };
+      // Debug: Log roundel selection for CSAR
+      if (tasking === 'CSAR') {
+        console.log(`CSAR Roundel Debug: nationCode="${nationCode}", aircraftData.nation="${aircraftData.nation}", aircraft="${aircraftType}"`);
+      }
       const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
       
       // Add page break style if this is the last NATO flight (breaks after, not before)
