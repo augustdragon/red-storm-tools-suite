@@ -1648,22 +1648,38 @@
         }
         
         // Generate HTML for all flights using designer layout
+        // Separate CSAR flights from regular flights
+        const regularFlights = [];
+        const csarFlights = [];
+        
+        for (const flight of sortedResults) {
+          // Check if this is a CSAR flight by looking at the tasking
+          if (flight.tasking === 'CSAR') {
+            csarFlights.push(flight);
+          } else {
+            regularFlights.push(flight);
+          }
+        }
+        
+        console.log(`Generating flight cards: ${regularFlights.length} regular, ${csarFlights.length} CSAR`);
+        
         let flightCardsHTML = '';
-        console.log(`Generating flight cards for ${sortedResults.length} results...`);
-        for (let i = 0; i < sortedResults.length; i++) {
-          const flight = sortedResults[i];
-          const nextFlight = i < sortedResults.length - 1 ? sortedResults[i + 1] : null;
+        
+        // Process regular flights first
+        for (let i = 0; i < regularFlights.length; i++) {
+          const flight = regularFlights[i];
+          const nextFlight = i < regularFlights.length - 1 ? regularFlights[i + 1] : null;
           
-          console.log('Processing flight:', flight.result || flight.text);
+          console.log('Processing regular flight:', flight.result || flight.text);
           
-          // Check if this is the last NATO flight before WP flights start
+          // Check if this is the last NATO flight before WP flights start (within regular flights)
           const isLastNATOFlight = flight.faction === 'NATO' && nextFlight && nextFlight.faction === 'WP';
           
           try {
             const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, isLastNATOFlight);
             if (cardHTML && cardHTML.trim()) {
               flightCardsHTML += cardHTML;
-              console.log('✓ Generated card for:', (flight.result || flight.text).substring(0, 50));
+              console.log('✓ Generated regular card for:', (flight.result || flight.text).substring(0, 50));
               if (isLastNATOFlight) {
                 console.log('→ Applied page-break-after to last NATO flight');
               }
@@ -1674,6 +1690,31 @@
             console.error('✗ Error generating card for:', flight.result || flight.text, error);
           }
         }
+        
+        // Add a section break if there are CSAR flights
+        if (csarFlights.length > 0 && regularFlights.length > 0) {
+          flightCardsHTML += '<div style="clear: both; page-break-after: avoid; margin-top: 10px; border-top: 2px dashed #666; padding-top: 10px;"></div>';
+        }
+        
+        // Process CSAR flights at the end
+        for (let i = 0; i < csarFlights.length; i++) {
+          const flight = csarFlights[i];
+          
+          console.log('Processing CSAR flight:', flight.result || flight.text);
+          
+          try {
+            const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
+            if (cardHTML && cardHTML.trim()) {
+              flightCardsHTML += cardHTML;
+              console.log('✓ Generated CSAR card for:', (flight.result || flight.text).substring(0, 50));
+            } else {
+              console.warn('⚠ Empty card generated for:', flight.result || flight.text);
+            }
+          } catch (error) {
+            console.error('✗ Error generating CSAR card for:', flight.result || flight.text, error);
+          }
+        }
+        
         console.log(`Total cards generated: ${flightCardsHTML.length > 0 ? 'Success' : 'None'}`);
         
         // Write complete HTML document with designer styles
@@ -2216,16 +2257,32 @@
         // Only apply page break to the very last card of the last NATO flight
         const isLastCard = flightNum === numFlights - 1;
         const applyPageBreak = isLastNATOFlight && isLastCard;
-        allCardsHTML += generateSingleDesignerCard(
-          aircraftType,
-          aircraftData,
-          flightSize,
-          nationCode,
-          tasking,
-          faction,
-          applyPageBreak,
-          rolledOrdnance
-        );
+        
+        // Check if this is a CSAR helicopter - route to compact card generator
+        const isCSAR = aircraftData.capabilities && aircraftData.capabilities.includes('CSAR');
+        
+        if (isCSAR) {
+          allCardsHTML += generateCompactCSARCard(
+            aircraftType,
+            aircraftData,
+            flightSize,
+            nationCode,
+            tasking,
+            faction,
+            applyPageBreak
+          );
+        } else {
+          allCardsHTML += generateSingleDesignerCard(
+            aircraftType,
+            aircraftData,
+            flightSize,
+            nationCode,
+            tasking,
+            faction,
+            applyPageBreak,
+            rolledOrdnance
+          );
+        }
       }
       
       return allCardsHTML;
@@ -2644,6 +2701,96 @@
     }
     
     /**
+     * Generate a compact half-width card for CSAR helicopters
+     * @param {string} aircraftType - Aircraft model name
+     * @param {object} aircraftData - Aircraft data from database
+     * @param {number} flightSize - Number of aircraft in flight (1-4)
+     * @param {string} nationCode - Nation code for roundel
+     * @param {string} tasking - Mission tasking (should be 'CSAR')
+     * @param {string} faction - NATO or WP
+     * @param {boolean} applyPageBreak - Whether to apply page break after this card
+     * @returns {string} HTML for compact CSAR card
+     */
+    function generateCompactCSARCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction, applyPageBreak = false) {
+      // Use default data if aircraft not found
+      if (!aircraftData) {
+        aircraftData = {
+          model: aircraftType,
+          capabilities: 'CSAR'
+        };
+      }
+      
+      // Determine roundel image
+      const roundelMap = {
+        'US': 'USAF.jpg',
+        'UK': 'UK.jpg',
+        'FRG': 'FRG.jpg',
+        'BEL': 'Belgium.jpg',
+        'Belgium': 'Belgium.jpg',
+        'HOL': 'Netherlands.jpg',
+        'Netherlands': 'Netherlands.jpg',
+        'Canada': 'Canada.png',
+        'USSR': 'USSR.jpg',
+        'GDR': 'GDR.jpg'
+      };
+      const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
+      
+      // Add page break style if needed
+      const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always;"' : '';
+      
+      let html = `
+    <div class="compact-csar-card"${pageBreakStyle}>
+      <!-- Compact CSAR header -->
+      <div class="compact-csar-header">
+        <div class="roundel-box-compact">
+          <img src="../assets/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
+        </div>
+        <div class="field">
+          <div class="field-label">Aircraft</div>
+          <div class="field-value">${aircraftData.model || aircraftType}</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Callsign</div>
+          <div class="field-value"></div>
+        </div>
+      </div>
+      
+      <div class="compact-csar-info">
+        <div class="field">
+          <div class="field-label">Tasking</div>
+          <div class="field-value">${tasking}</div>
+        </div>
+        ${aircraftData.capabilities ? `<div class="field">
+          <div class="field-label">Capabilities</div>
+          <div class="field-value">${aircraftData.capabilities}</div>
+        </div>` : ''}
+      </div>
+      
+      <!-- Compact aircraft boxes with damage underneath -->
+      <div class="compact-aircraft-grid">
+        ${Array(flightSize).fill(0).map((_, i) => `
+          <div class="compact-aircraft-box">
+            <div class="aircraft-number-compact">${i + 1}</div>
+            <div class="compact-damage-checks">
+              <div class="compact-damage-item">
+                <span class="compact-damage-label">Damaged</span>
+                <div class="damage-checkbox-compact"></div>
+              </div>
+              <div class="compact-damage-item">
+                <span class="compact-damage-label">Shot down</span>
+                <div class="damage-checkbox-compact"></div>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+      `;
+      
+      return html;
+    }
+    
+    /**
      * Apply aircraft note rules to modify aircraft data
      * @param {object} aircraftData - Original aircraft data
      * @param {string} tasking - Mission tasking
@@ -2781,6 +2928,115 @@
       display: flex;
       flex-direction: column;
       margin-bottom: 5px;
+    }
+    
+    /* Compact CSAR Card Styles - Half Width */
+    .compact-csar-card {
+      border: 2px solid black;
+      padding: 4px;
+      page-break-inside: avoid;
+      background: white;
+      color: black;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 5px;
+      width: 48%; /* Half width to fit 4 per row with some gap */
+      display: inline-block;
+      vertical-align: top;
+      margin-right: 1%;
+    }
+    
+    .compact-csar-card:nth-child(4n) {
+      margin-right: 0;
+    }
+    
+    .compact-csar-header {
+      display: grid;
+      grid-template-columns: 50px 1fr 1fr;
+      gap: 3px;
+      margin-bottom: 3px;
+      align-items: stretch;
+    }
+    
+    .roundel-box-compact {
+      border: none;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      min-height: 18px;
+      max-height: 28px;
+    }
+    
+    .roundel-box-compact img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    
+    .compact-csar-info {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 3px;
+      border-bottom: 1px solid #666;
+      padding-bottom: 3px;
+    }
+    
+    .compact-csar-info .field {
+      flex: 1;
+    }
+    
+    .compact-aircraft-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      padding: 2px 0;
+    }
+    
+    .compact-aircraft-box {
+      border: 1px solid #666;
+      padding: 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    
+    .aircraft-number-compact {
+      font-size: 12pt;
+      font-weight: bold;
+      text-align: center;
+      padding: 2px 0;
+    }
+    
+    .compact-damage-checks {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 100%;
+    }
+    
+    .compact-damage-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2px;
+    }
+    
+    .compact-damage-label {
+      font-size: 5pt;
+      line-height: 1;
+    }
+    
+    .damage-checkbox-compact {
+      min-width: 8px;
+      min-height: 8px;
+      width: 8px;
+      height: 8px;
+      border: 1px solid #666;
+      background: white;
+      flex-shrink: 0;
     }
     
     .flight-info-section {
