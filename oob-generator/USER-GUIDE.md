@@ -197,6 +197,23 @@ Each aircraft in the flight has:
 - **Damage Status**: Checkboxes for Damaged/Crippled/Destroyed
 - **Ordnance Box**: Lists additional ordnance options from table rolls
 
+### CSAR Flight Card Layout
+
+**Combat Search and Rescue (CSAR)** flights receive a special compact card design optimized for their simplified requirements:
+
+- **Compact Size**: CSAR cards are quarter-size (50% width × 50% height of regular cards)
+- **4 Cards Per Row**: Four CSAR cards fit across the page width
+- **Simplified Information**: Only displays roundel, aircraft type, callsign, tasking, and aircraft damage status
+- **No Unnecessary Fields**: Omits fuel, counter, aggression, capabilities, notes, and ordnance boxes since CSAR helicopters don't need these for gameplay
+
+**CSAR Flight Sorting**:
+When multiple flights are generated, they are automatically organized for easy reference:
+1. **Regular flights appear first** (by faction: NATO, then Warsaw Pact)
+2. **CSAR flights appear after regular flights** (also grouped by faction)
+3. **Page breaks** separate NATO flights from Warsaw Pact flights
+
+This grouping makes it easy to track your combat flights separately from your rescue helicopters during gameplay.
+
 ## Tips for Use
 
 ### Printing Recommendations
