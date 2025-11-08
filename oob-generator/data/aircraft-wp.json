@@ -1451,7 +1451,7 @@
   },
   
   "Mi-8": {
-    "name": "Mi-8 CSAR Helicopter",
+    "name": "Mi-8",
     "model": "Mi-8",
     "nation": "USSR",
     "crew": 0,

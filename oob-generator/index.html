@@ -3196,7 +3196,7 @@
           </div>
           ${aircraftData.capabilities && aircraftData.capabilities.includes('CSAR') ? `
           <div class="field">
-            <div class="field-label">Counter</div>
+            <div class="field-label">Fuel</div>
             <div class="field-value"></div>
           </div>
           ` : `
@@ -3334,6 +3334,16 @@
               <div class="aircraft-number">${i + 1}</div>
               <div class="damage-boxes">
                 <div class="damage-column">
+                  ${aircraftData.capabilities && aircraftData.capabilities.includes('CSAR') ? `
+                  <div class="damage-row">
+                    <div class="damage-label">Damaged</div>
+                    <div class="damage-checkbox"></div>
+                  </div>
+                  <div class="damage-row">
+                    <div class="damage-label">Shot down</div>
+                    <div class="damage-checkbox"></div>
+                  </div>
+                  ` : `
                   <div class="damage-row">
                     <div class="damage-label">Damaged</div>
                     <div class="damage-checkbox"></div>
@@ -3346,6 +3356,7 @@
                     <div class="damage-label">Destroyed</div>
                     <div class="damage-checkbox"></div>
                   </div>
+                  `}
                 </div>
               </div>
             </div>

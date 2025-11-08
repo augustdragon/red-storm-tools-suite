@@ -1576,7 +1576,7 @@
   },
   
   "H-53": {
-    "name": "H-53 CSAR Helicopter",
+    "name": "H-53",
     "model": "H-53",
     "nation": "US",
     "crew": 0,
@@ -1591,7 +1591,7 @@
   },
   
   "Puma": {
-    "name": "Puma CSAR Helicopter",
+    "name": "Puma",
     "model": "Puma",
     "nation": "UK",
     "crew": 0,
@@ -1606,7 +1606,7 @@
   },
   
   "CH-53": {
-    "name": "CH-53 CSAR Helicopter",
+    "name": "CH-53",
     "model": "CH-53",
     "nation": "FRG",
     "crew": 0,
