@@ -170,12 +170,10 @@
       <div class="section results-section" id="resultsSection" style="display: none;">
         <div class="results-header">
           <div class="section-title">Generated Results</div>
-          <select id="flightSheetStyle" style="padding: 10px 15px; background-color: #2d3a2d; color: #d4e4d4; border: 2px solid #4a5a4a; border-radius: 6px; font-size: 14px; margin-right: 10px; cursor: pointer;">
-            <option value="detailed">Detailed Flight Sheet</option>
-            <option value="compact">Compact Flight Sheet</option>
-          </select>
-          <button class="action-button" onclick="generatePrintableSheet()" style="background-color: #5a6a5a; margin-right: 10px;">📄 Print Flight Sheet</button>
-          <button class="action-button clear-results" onclick="clearAllResults()">Clear All</button>
+          <div style="display: flex; gap: 10px;">
+            <button class="action-button" onclick="generatePrintableSheet()" style="background-color: #5a6a5a;">📄 Print Flight Sheet</button>
+            <button class="action-button clear-results" onclick="clearAllResults()">Clear All</button>
+          </div>
         </div>
         
         <div class="results-list" id="resultsList">
@@ -1289,14 +1287,9 @@
         return;
       }
 
-      // Check which flight sheet style to use
-      const selectedStyle = document.getElementById('flightSheetStyle').value;
-      if (selectedStyle === 'detailed') {
-        generateDetailedFlightSheet();
-        return;
-      }
-
-      // Otherwise use the current/legacy flight sheet generation below
+      // Always use detailed flight sheet
+      generateDetailedFlightSheet();
+    }
 
       // Create a new window for printing
       const printWindow = window.open('', '_blank');
