@@ -38,6 +38,9 @@ jobs:
           mkdir -p dist/oob-generator
           mkdir -p dist/shared
           
+          # Copy the .nojekyll file to disable Jekyll processing
+          cp .nojekyll dist/.nojekyll
+          
           # Copy the chit pull app with all its files
           cp -r chit-pull dist/
           
