@@ -2739,7 +2739,7 @@
      */
     async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, isLastNATOFlight = false) {
       // Parse result text to extract flight info
-      const resultText = flight.result || '';
+      const resultText = flight.result || flight.text || '';
       const faction = flight.faction || 'NATO';
       
       // Check if this is a multi-flight result (contains <br> or semicolons)
