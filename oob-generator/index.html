@@ -3024,7 +3024,8 @@
       page-break-inside: avoid;
       background: white;
       color: black;
-      display: block; /* Changed from inline-block since we're using grid */
+      display: flex; /* Use flex to allow aircraft grid to grow */
+      flex-direction: column;
       width: 100%; /* Fill grid cell */
       height: 125pt; /* Half height of regular card (250pt / 2) */
       box-sizing: border-box;
@@ -3084,6 +3085,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 1px;
       padding: 0;
+      flex: 1; /* Grow to fill remaining space in CSAR card */
     }
     
     .compact-aircraft-box {
@@ -3093,6 +3095,7 @@
       flex-direction: column;
       align-items: center;
       gap: 1px;
+      height: 100%; /* Fill grid cell height */
     }
     
     .aircraft-number-compact {
@@ -3108,6 +3111,9 @@
       display: flex;
       flex-direction: column;
       gap: 1px;
+      flex: 1; /* Grow to fill remaining space in aircraft box */
+      justify-content: center; /* Center vertically in available space */
+    }
       width: 100%;
     }
     
@@ -3119,8 +3125,11 @@
     }
     
     .compact-damage-label {
-      font-size: 4pt;
-      line-height: 1;
+      font-size: 6pt; /* Increased from 4pt to 6pt for better readability */
+      line-height: 1.1;
+      text-align: left;
+      white-space: normal; /* Allow wrapping for "Shot down" */
+      word-wrap: break-word;
     }
     
     .damage-checkbox-compact {
