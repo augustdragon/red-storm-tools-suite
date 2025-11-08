@@ -3011,10 +3011,10 @@
     
     /* Compact CSAR Card Styles - Quarter size (50% width × 50% height, 4 per row matching 2 regular cards) */
     .csar-container {
-      font-size: 0; /* Remove whitespace between inline-block elements */
-      line-height: 0;
-      display: block;
-      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3px;
+      margin-bottom: 3px;
     }
     
     .compact-csar-card {
@@ -3023,23 +3023,12 @@
       page-break-inside: avoid;
       background: white;
       color: black;
-      display: inline-block;
-      margin-bottom: 3px;
-      margin-right: 3px;
-      width: calc(50% - 4px); /* Half width of regular card, accounting for margin */
+      display: block; /* Changed from inline-block since we're using grid */
+      width: 100%; /* Fill grid cell */
       height: 125pt; /* Half height of regular card (250pt / 2) */
-      vertical-align: top;
       box-sizing: border-box;
       font-size: 7pt; /* Reset font size for content */
       line-height: normal; /* Reset line height for content */
-    }
-    
-    .compact-csar-card:nth-child(2n) {
-      margin-right: 0; /* Remove right margin on every 2nd card */
-    }
-    
-    .compact-csar-card:nth-child(4n+1) {
-      clear: left; /* Start new row every 4 cards */
     }
     
     .compact-csar-header {
