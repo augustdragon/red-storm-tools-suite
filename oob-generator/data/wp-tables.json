@@ -160,28 +160,13 @@
         "flightCount": 3,
         "description": "Escort Jamming",
         "nations": {
-          "1-2": {
+          "1-10": {
             "name": "USSR",
             "aircraft": {
               "1-2": "Su-24MP",
               "3-5": "MiG-25BM",
               "6-8": "Yak-28PP",
               "9-10": "Tu-22PD"
-            }
-          },
-          "3-5": {
-            "name": "USSR",
-            "aircraft": {
-              "1-5": "MiG-25BM",
-              "6-10": "Tu-22PD"
-            }
-          },
-          "6-10": {
-            "name": "USSR",
-            "aircraft": {
-              "1-4": "Su-24MP",
-              "5-8": "MiG-25BM",
-              "9-10": "Yak-28PP"
             }
           }
         }
@@ -191,19 +176,11 @@
         "flightCount": 3,
         "description": "Chaff Laying",
         "nations": {
-          "1-5": {
+          "1-10": {
             "name": "USSR",
             "aircraft": {
               "1-5": "MiG-21bis",
               "6-10": "MiG-23M"
-            }
-          },
-          "6-10": {
-            "name": "USSR",
-            "aircraft": {
-              "1-4": "MiG-21R",
-              "5-8": "MiG-25RB",
-              "9-10": "Su-24MR"
             }
           }
         }
@@ -213,19 +190,11 @@
         "flightCount": 4,
         "description": "Close Escort",
         "nations": {
-          "1-3": {
+          "1-10": {
             "name": "USSR",
             "aircraft": {
               "1-3": "MiG-23MLA",
               "4-7": "MiG-23MLD",
-              "8-10": "Su-27S"
-            }
-          },
-          "4-10": {
-            "name": "USSR",
-            "aircraft": {
-              "1-4": "MiG-23ML",
-              "5-7": "MiG-29A",
               "8-10": "Su-27S"
             }
           }
@@ -236,18 +205,12 @@
         "flightCount": 6,
         "description": "Bombing",
         "nations": {
-          "1-4": {
+          "1-10": {
             "name": "USSR",
             "aircraft": {
               "1-4": "Su-24M",
               "5-8": "Su-24M4",
               "9-10": "MiG-27K"
-            }
-          },
-          "5-10": {
-            "name": "USSR",
-            "aircraft": {
-              "1-10": "Tu-22KPD"
             }
           }
         }
@@ -257,24 +220,10 @@
         "flightCount": 2,
         "description": "Reconnaissance",
         "nations": {
-          "1-5": {
+          "1-10": {
             "name": "USSR",
             "aircraft": {
               "1-5": "Su-24MR",
-              "6-10": "MiG-25RB"
-            }
-          },
-          "6-7": {
-            "name": "USSR",
-            "aircraft": {
-              "1-7": "MiG-21R",
-              "8-10": "Su-24MR"
-            }
-          },
-          "8-10": {
-            "name": "USSR",
-            "aircraft": {
-              "1-5": "MiG-21R",
               "6-10": "MiG-25RB"
             }
           }
@@ -353,7 +302,7 @@
         "name": "Standoff Jamming",
         "flightSize": 1,
         "flightCount": 1,
-        "description": "Standoff Jamming flights may not carry any ordnance or air-to-air weapons",
+        "description": "Standoff Jamming",
         "ordnanceNote": "Standoff Jamming flights may not carry any ordnance or air-to-air weapons.",
         "nations": {
           "1-5": {
