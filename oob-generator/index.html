@@ -1655,7 +1655,11 @@
         const wpCSAR = [];
         
         for (const flight of sortedResults) {
-          const isCSAR = flight.tasking === 'CSAR';
+          // Extract tasking from result text to determine if CSAR
+          const resultText = flight.result || flight.text || '';
+          const taskingMatch = resultText.match(/,\s*([^,<]+?)$/);
+          const tasking = taskingMatch ? taskingMatch[1].trim() : '';
+          const isCSAR = tasking === 'CSAR';
           
           if (flight.faction === 'NATO') {
             if (isCSAR) {
