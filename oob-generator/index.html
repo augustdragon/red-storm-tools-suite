@@ -1648,13 +1648,41 @@
         }
         
         // Generate HTML for all flights using designer layout
-        // Separate NATO and WP flights, then separate CSAR from regular within each faction
+        // First, split any multi-flight results into individual flight objects
+        const allIndividualFlights = [];
+        
+        for (const flight of sortedResults) {
+          const resultText = flight.result || flight.text || '';
+          
+          // Check if this is a multi-flight result (contains <br>)
+          if (resultText.includes('<br>') || resultText.includes(';')) {
+            console.log('Multi-flight result detected, splitting before grouping...');
+            const separator = resultText.includes('<br>') ? '<br>' : ';';
+            const flightParts = resultText.split(separator).map(part => part.trim()).filter(part => part.length > 0);
+            
+            // Create separate flight objects for each part
+            for (const flightPart of flightParts) {
+              allIndividualFlights.push({
+                ...flight,
+                result: flightPart,
+                text: flightPart
+              });
+            }
+          } else {
+            // Single flight, add as-is
+            allIndividualFlights.push(flight);
+          }
+        }
+        
+        console.log(`Split ${sortedResults.length} results into ${allIndividualFlights.length} individual flights`);
+        
+        // Now separate NATO and WP flights, then separate CSAR from regular within each faction
         const natoRegular = [];
         const natoCSAR = [];
         const wpRegular = [];
         const wpCSAR = [];
         
-        for (const flight of sortedResults) {
+        for (const flight of allIndividualFlights) {
           // Extract tasking from result text to determine if CSAR
           const resultText = flight.result || flight.text || '';
           const taskingMatch = resultText.match(/,\s*([^,<]+?)$/);
