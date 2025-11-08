@@ -2760,10 +2760,6 @@
           <div class="field-label">Tasking</div>
           <div class="field-value">${tasking}</div>
         </div>
-        ${aircraftData.capabilities ? `<div class="field">
-          <div class="field-label">Capabilities</div>
-          <div class="field-value">${aircraftData.capabilities}</div>
-        </div>` : ''}
       </div>
       
       <!-- Compact aircraft boxes with damage underneath -->
@@ -2937,13 +2933,12 @@
       page-break-inside: avoid;
       background: white;
       color: black;
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 5px;
-      width: 48%; /* Half width to fit 4 per row with some gap */
       display: inline-block;
+      flex-direction: column;
+      margin-bottom: 2px;
+      margin-right: 2px;
+      width: 24%; /* Quarter width to fit 4 per row */
       vertical-align: top;
-      margin-right: 1%;
     }
     
     .compact-csar-card:nth-child(4n) {
@@ -2990,24 +2985,26 @@
     .compact-aircraft-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 2px;
-      padding: 2px 0;
+      gap: 1px;
+      padding: 0;
     }
     
     .compact-aircraft-box {
       border: 1px solid #666;
-      padding: 3px;
+      padding: 2px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
     }
     
     .aircraft-number-compact {
-      font-size: 12pt;
+      font-size: 9pt;
       font-weight: bold;
       text-align: center;
-      padding: 2px 0;
+      padding: 2px 4px;
+      border: 1px solid #666;
+      min-width: 20px;
     }
     
     .compact-damage-checks {
