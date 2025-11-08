@@ -2809,6 +2809,8 @@
       if (!nationCode && flight.nationality) {
         nationCode = flight.nationality;
         console.log(`Using nationality "${nationCode}" from table result for "${aircraftType}"`);
+      } else if (!nationCode) {
+        console.log(`No nationality found in flight object for "${aircraftType}"`, flight);
       }
       
       // If still no nation code, try to infer from aircraft database as last resort
@@ -3185,6 +3187,12 @@
             <div class="field-label">Tasking</div>
             <div class="field-value">${tasking}</div>
           </div>
+          ${aircraftData.capabilities && aircraftData.capabilities.includes('CSAR') ? `
+          <div class="field">
+            <div class="field-label">Counter</div>
+            <div class="field-value"></div>
+          </div>
+          ` : `
           <div class="fuel-box">
             <div class="fuel-label-value">
               <span class="field-label">Fuel</span>
@@ -3205,6 +3213,7 @@
               ` : ''}
             </div>
           </div>
+          `}
           <div class="field">
             <div class="field-label">Notes</div>
             <div class="field-value">${aircraftData.notes || ''}</div>
