@@ -2473,15 +2473,12 @@
       }
       
       // USSR Note I: Dual bomb loads for mission range
-      // Use lower bomb load (second value) for Deep Strike Raids:
-      //   - Tasking is "Deep Strike Raid", OR
-      //   - Bombing/SEAD missions from Table J (Deep Strike Raid package)
+      // Use lower bomb load (second value) for Bombing/SEAD missions from Table J (Deep Strike Raid package)
       // Use higher bomb load (first value) for all other missions
       if (nationCode === 'USSR' && notes.includes('I') && isAirToGroundCapable) {
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
-          const isDeepStrike = tasking === 'Deep Strike Raid' || 
-                               (sourceTable === 'J' && (tasking === 'Bombing' || tasking === 'SEAD'));
+          const isDeepStrike = sourceTable === 'J' && (tasking === 'Bombing' || tasking === 'SEAD');
           if (isDeepStrike) {
             // Deep Strike: use lower bomb load (longer range)
             modifiedData.bomb = bombParts[1].trim();
@@ -2625,15 +2622,12 @@
       }
       
       // GDR Note D: Dual bomb loads for mission range
-      // Use lower bomb load (second value) for Deep Strike Raids:
-      //   - Tasking is "Deep Strike Raid", OR
-      //   - Bombing/SEAD missions from Table J (Deep Strike Raid package)
+      // Use lower bomb load (second value) for Bombing/SEAD missions from Table J (Deep Strike Raid package)
       // Use higher bomb load (first value) for all other missions
       if (nationCode === 'GDR' && notes.includes('D') && isAirToGroundCapable) {
         if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
           const bombParts = modifiedData.bomb.split('/');
-          const isDeepStrike = tasking === 'Deep Strike Raid' || 
-                               (sourceTable === 'J' && (tasking === 'Bombing' || tasking === 'SEAD'));
+          const isDeepStrike = sourceTable === 'J' && (tasking === 'Bombing' || tasking === 'SEAD');
           if (isDeepStrike) {
             // Deep Strike: use lower bomb load (longer range)
             modifiedData.bomb = bombParts[1].trim();
