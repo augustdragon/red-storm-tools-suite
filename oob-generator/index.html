@@ -2804,6 +2804,21 @@
         }
       }
       
+      // If still no nation code, try to infer from aircraft database
+      // This handles helicopters and other aircraft without nation prefixes
+      if (!nationCode && aircraftType) {
+        // Check both databases to find which one contains this aircraft
+        if (aircraftNATO[aircraftType]) {
+          // Found in NATO database, use the aircraft's nation
+          nationCode = aircraftNATO[aircraftType].nation || '';
+          console.log(`Inferred nation "${nationCode}" for "${aircraftType}" from NATO database`);
+        } else if (aircraftWP[aircraftType]) {
+          // Found in WP database, use the aircraft's nation
+          nationCode = aircraftWP[aircraftType].nation || '';
+          console.log(`Inferred nation "${nationCode}" for "${aircraftType}" from WP database`);
+        }
+      }
+      
       // Handle variant aircraft with nation in parentheses (e.g., F-16A(BE), F-16A(NE))
       const variantNationMatch = aircraftType.match(/^(.+?)\((BE|NE)\)$/);
       if (variantNationMatch) {
