@@ -151,6 +151,7 @@
     "faction": "WP",
     "hasTasking": true,
     "hasDate": false,
+    "nationality": "USSR Only",
     "description": "WP Deep Strike Raid - Packages of flights intended to go deep behind NATO lines",
     "ordnanceNote": "All Bombing flights may carry any air-to-ground ordnance allowed for the specified aircraft type. Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.",
     "taskings": {
@@ -163,30 +164,24 @@
             "name": "USSR",
             "aircraft": {
               "1-2": "Su-24MP",
-              "3-5": "MiG-25RB",
+              "3-5": "MiG-25BM",
               "6-8": "Yak-28PP",
-              "9-10": "Tu-22PP"
+              "9-10": "Tu-22PD"
             }
           },
           "3-5": {
             "name": "USSR",
             "aircraft": {
-              "1-5": "MiG-25RB",
-              "6-10": "Tu-22PP"
+              "1-5": "MiG-25BM",
+              "6-10": "Tu-22PD"
             }
           },
-          "6-8": {
+          "6-10": {
             "name": "USSR",
             "aircraft": {
               "1-4": "Su-24MP",
-              "5-8": "MiG-25RB",
+              "5-8": "MiG-25BM",
               "9-10": "Yak-28PP"
-            }
-          },
-          "9-10": {
-            "name": "GDR",
-            "aircraft": {
-              "1-10": "MiG-21PF"
             }
           }
         }
@@ -203,18 +198,12 @@
               "6-10": "MiG-23M"
             }
           },
-          "6-8": {
+          "6-10": {
             "name": "USSR",
             "aircraft": {
               "1-4": "Yak-28R",
               "5-8": "MiG-25RB",
               "9-10": "Su-24MR"
-            }
-          },
-          "9-10": {
-            "name": "GDR",
-            "aircraft": {
-              "1-10": "MiG-21PF"
             }
           }
         }
@@ -232,18 +221,12 @@
               "8-10": "Su-27S"
             }
           },
-          "4-7": {
+          "4-10": {
             "name": "USSR",
             "aircraft": {
               "1-4": "MiG-23ML",
               "5-7": "MiG-29A",
               "8-10": "Su-27S"
-            }
-          },
-          "8-10": {
-            "name": "GDR",
-            "aircraft": {
-              "1-10": "MiG-23ML"
             }
           }
         }
@@ -261,16 +244,10 @@
               "9-10": "MiG-27K"
             }
           },
-          "5-8": {
+          "5-10": {
             "name": "USSR",
             "aircraft": {
               "1-10": "Tu-22M"
-            }
-          },
-          "9-10": {
-            "name": "GDR",
-            "aircraft": {
-              "1-10": "Su-22M4"
             }
           }
         }
@@ -283,7 +260,7 @@
           "1-5": {
             "name": "USSR",
             "aircraft": {
-              "1-5": "Su-17M4R",
+              "1-5": "Su-24MR",
               "6-10": "MiG-25RB"
             }
           },
@@ -294,17 +271,11 @@
               "8-10": "Su-24MR"
             }
           },
-          "8-9": {
+          "8-10": {
             "name": "USSR",
             "aircraft": {
               "1-5": "MiG-21R",
               "6-10": "MiG-25RB"
-            }
-          },
-          "10": {
-            "name": "GDR",
-            "aircraft": {
-              "1-10": "MiG-21R"
             }
           }
         }

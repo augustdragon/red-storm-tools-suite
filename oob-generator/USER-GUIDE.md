@@ -171,15 +171,13 @@ Some aircraft show dual bomb loads in the database (e.g., "5/3" or "3/2"). The g
 - **Higher value (first number)**: Used for normal-range missions from Table I (Bombing Raid)
 - **Lower value (second number)**: Used for extended-range deep strike missions from Table J (Deep Strike Raid)
 
-This reflects the payload/range tradeoff where deep strikes sacrifice ordnance capacity for extended range. The flight card will show only the single appropriate bomb value, not both.
-
-## Understanding Your Flight Sheet
+## Understanding The Flight Sheets
 
 ### Header Section
 - **Aircraft Type**: Model and nation
 - **Callsign/Counter/Aggression**: Complete during game setup
-- **Tasking**: Mission type (auto-filled from table roll)
-- **Fuel**: Aircraft-specific quantity
+- **Tasking**: Mission type (auto-filled from OOB table roll)
+- **Fuel**: Aircraft-specific 
 
 ### Stats Section
 - **Gun/IRM/RHM/AAM/Ordnance/Bomb/Sight**: Weapons and ordnance data from ADC
@@ -195,7 +193,7 @@ This reflects the payload/range tradeoff where deep strikes sacrifice ordnance c
 ### Individual Aircraft Boxes
 
 Each aircraft in the flight has:
-- **Number**: Position in formation
+- **Number**: Aircraft in flight (for combat rolls)
 - **Damage Status**: Checkboxes for Damaged/Crippled/Destroyed
 - **Ordnance Box**: Lists additional ordnance options from table rolls
 
