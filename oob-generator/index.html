@@ -1731,7 +1731,7 @@
         
         // Add NATO CSAR flights after NATO regular flights
         if (natoCSAR.length > 0) {
-          flightCardsHTML += '<div style="clear: both;"></div>';
+          flightCardsHTML += '<div style="clear: both;"></div><div class="csar-container">';
           for (let i = 0; i < natoCSAR.length; i++) {
             const flight = natoCSAR[i];
             console.log('Processing NATO CSAR flight:', flight.result || flight.text);
@@ -1748,6 +1748,7 @@
               console.error('✗ Error generating NATO CSAR card for:', flight.result || flight.text, error);
             }
           }
+          flightCardsHTML += '</div>';
         }
         
         // Page break between NATO and WP
@@ -1776,7 +1777,7 @@
         
         // Add WP CSAR flights after WP regular flights
         if (wpCSAR.length > 0) {
-          flightCardsHTML += '<div style="clear: both;"></div>';
+          flightCardsHTML += '<div style="clear: both;"></div><div class="csar-container">';
           for (let i = 0; i < wpCSAR.length; i++) {
             const flight = wpCSAR[i];
             console.log('Processing WP CSAR flight:', flight.result || flight.text);
@@ -1793,6 +1794,7 @@
               console.error('✗ Error generating WP CSAR card for:', flight.result || flight.text, error);
             }
           }
+          flightCardsHTML += '</div>';
         }
         
         console.log(`Total cards generated: ${flightCardsHTML.length > 0 ? 'Success' : 'None'}`);
@@ -3004,9 +3006,15 @@
       display: flex;
       flex-direction: column;
       margin-bottom: 5px;
+      height: 240pt; /* Fixed height for 2x3 layout (6 cards per page) */
     }
     
     /* Compact CSAR Card Styles - Half Width (2 per row) */
+    .csar-container {
+      font-size: 0; /* Remove whitespace between inline-block elements */
+      line-height: 0;
+    }
+    
     .compact-csar-card {
       border: 2px solid black;
       padding: 4px;
@@ -3017,8 +3025,11 @@
       margin-bottom: 5px;
       margin-right: 5px;
       width: calc(50% - 7px); /* Half width to fit 2 per row, accounting for margin */
+      height: 240pt; /* Match regular card height for 2x3 layout */
       vertical-align: top;
       box-sizing: border-box;
+      font-size: 7pt; /* Reset font size for content */
+      line-height: normal; /* Reset line height for content */
     }
     
     .compact-csar-card:nth-child(2n) {
