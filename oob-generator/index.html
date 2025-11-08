@@ -2808,8 +2808,9 @@
       
       // If still no nation code, check if flight has a nationality property (from table processor)
       // This is critical for helicopters where multiple nations use the same aircraft type (e.g., GDR and USSR both use Mi-8)
-      if (!nationCode && flight.nationality) {
-        nationCode = flight.nationality;
+      // Check both 'nationality' and 'atafZone' as different tables use different property names
+      if (!nationCode && (flight.nationality || flight.atafZone)) {
+        nationCode = flight.nationality || flight.atafZone;
         console.log(`Using nationality "${nationCode}" from table result for "${aircraftType}"`);
       } else if (!nationCode) {
         console.log(`No nationality found in flight object for "${aircraftType}"`, flight);
