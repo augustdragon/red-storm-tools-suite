@@ -64,6 +64,21 @@ These notes change the aircraft's stats without player input:
 - **Note A**: Changes IRM depletion to {6} for Bombing/SEAD/Rescue Support missions
 - **Note E**: Reduces bomb load to lower value for Table D missions (same as US Note C)
 - **Note G**: Removes IRM missiles for Bombing/SEAD/Rescue Support missions
+- **Note H**: Shows "Multirole aircraft [8.37]" for SEAD and Chaff Laying missions only
+
+**USSR Notes:**
+- **Note C**: Rolls to determine R-60M vs R-73 missile type and updates AAM field
+- **Note D**: Rolls to determine R-60 vs R-60M missile type and updates AAM field
+- **Note I**: Adjusts bomb load based on mission profile - lower value for deep strikes (Table J Bombing/SEAD), higher value for normal missions
+- **Note Q**: Shows "Multirole aircraft [8.37]" for SEAD and Chaff Laying missions only
+
+**GDR Notes:**
+- **Note C**: Rolls to determine R-60 vs R-60M missile type and updates AAM field
+- **Note D**: Adjusts bomb load based on mission profile - lower value for deep strikes (Table J Bombing/SEAD), higher value for normal missions
+- **Note J**: Shows "Multirole aircraft [8.37]" for SEAD and Chaff Laying missions only
+
+**BE/CA/NE Notes:**
+- **Note E**: Shows "Multirole aircraft [8.37]" for SEAD and Chaff Laying missions only
 
 #### Display Notes (Printed as Reminders)
 
@@ -78,14 +93,33 @@ These notes provide important rules that players must follow during gameplay:
 
 Display notes are shown in the **Capabilities/Notes** section of the flight card and do **NOT** modify the printed stats. They remind players of special rules during gameplay.
 
-#### CAP Flight Filtering
+#### Air-to-Air Mission Filtering
 
-Ground attack-specific notes are automatically hidden for CAP (Combat Air Patrol) missions since they're not relevant:
+Ground attack-specific information is automatically hidden for air-to-air missions since it's not relevant. This applies to all of these taskings:
+- **CAP** (Combat Air Patrol)
+- **Close Escort**
+- **Recon**
+- **Escort Jamming**
+- **Standoff Jamming**
+- **CSAR**
+- **Transport**
+- **Laser Designation**
+- **Chaff Laying**
+- **Fast FAC**
+
+**What's hidden for these missions:**
+- Ordnance listings
+- Bomb load values
+- Sight modifiers
 - Rocket pod substitutions
-- Bomb load information
 - Toss bombing capabilities
 - Internal bay usage
-- Defensive wheel formations (ground attack specific)
+
+**What's still shown:**
+- Gun ratings
+- IRM/RHM missiles
+- AAM (Air-to-Air Missiles)
+- Radar and EW systems
 
 ## Design Decisions
 
@@ -119,11 +153,25 @@ The generator uses a centralized **weapons.json** database for all weapon statis
 
 ### Clean vs Laden Speed Formatting
 
-Aircraft with different performance profiles for clean and laden configurations display a **split table**:
-- Left columns: Clean speeds (no external stores)
-- Right columns: Laden speeds (with bombs/missiles)
+Aircraft with different performance profiles for clean and laden configurations display a **split table** showing:
+- **Left columns** (Clean): Performance with no external stores
+- **Right columns** (Laden): Performance with bombs/missiles
+
+**Important**: Laden speeds only appear on flight cards when the aircraft:
+1. Has laden speed data in the database, AND
+2. Is carrying air-to-ground ordnance (bombs or ground-attack missiles), AND
+3. Has a ground-attack tasking (not CAP, Close Escort, Recon, etc.)
 
 Aircraft with only one speed profile display a **single table** for simplicity.
+
+### Dual Bomb Load Logic
+
+Some aircraft show dual bomb loads in the database (e.g., "5/3" or "3/2"). The generator automatically selects the appropriate value based on mission context:
+
+- **Higher value (first number)**: Used for normal-range missions from Table I (Bombing Raid)
+- **Lower value (second number)**: Used for extended-range deep strike missions from Table J (Deep Strike Raid)
+
+This reflects the payload/range tradeoff where deep strikes sacrifice ordnance capacity for extended range. The flight card will show only the single appropriate bomb value, not both.
 
 ## Understanding Your Flight Sheet
 
@@ -159,6 +207,9 @@ Each aircraft in the flight has:
 
 ### Multiple Flights
 When a table result produces multiple flights (e.g., "4 x {2}"), the generator automatically creates separate cards for each flight. You don't need to manually duplicate anything.
+
+### Multirole Aircraft Note
+The "Multirole aircraft [8.37]" note only appears for aircraft on **SEAD** or **Chaff Laying** missions, as these are the only taskings where the multirole rules apply per game rule 8.37.
 
 ### Note Interpretation
 - **Bold rule references** in notes (e.g., [7.1], [19.34]) point to specific rules in the Red Storm rulebook
