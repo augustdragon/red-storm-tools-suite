@@ -3009,10 +3009,12 @@
       height: 250pt; /* Fixed height for 2x3 layout (6 cards per page) */
     }
     
-    /* Compact CSAR Card Styles - Half Width (2 per row) */
+    /* Compact CSAR Card Styles - Quarter size (50% width × 50% height, 4 per row matching 2 regular cards) */
     .csar-container {
       font-size: 0; /* Remove whitespace between inline-block elements */
       line-height: 0;
+      display: block;
+      width: 100%;
     }
     
     .compact-csar-card {
@@ -3023,9 +3025,9 @@
       color: black;
       display: inline-block;
       margin-bottom: 3px;
-      margin-right: 5px;
-      width: calc(50% - 7px); /* Half width to fit 2 per row, accounting for margin */
-      height: 250pt; /* Match regular card height for 2x3 layout */
+      margin-right: 3px;
+      width: calc(50% - 4px); /* Half width of regular card, accounting for margin */
+      height: 125pt; /* Half height of regular card (250pt / 2) */
       vertical-align: top;
       box-sizing: border-box;
       font-size: 7pt; /* Reset font size for content */
@@ -3033,14 +3035,18 @@
     }
     
     .compact-csar-card:nth-child(2n) {
-      margin-right: 0;
+      margin-right: 0; /* Remove right margin on every 2nd card */
+    }
+    
+    .compact-csar-card:nth-child(4n+1) {
+      clear: left; /* Start new row every 4 cards */
     }
     
     .compact-csar-header {
       display: grid;
-      grid-template-columns: 40px 1fr 1fr;
-      gap: 3px;
-      margin-bottom: 3px;
+      grid-template-columns: 30px 1fr 1fr;
+      gap: 2px;
+      margin-bottom: 2px;
       align-items: stretch; /* Make all items stretch to same height */
     }
     
@@ -3049,17 +3055,18 @@
       flex-direction: column;
       justify-content: space-between;
       height: 100%; /* Fill available height in grid */
+      font-size: 6pt; /* Smaller font for compact header */
     }
     
     .roundel-box-compact {
       border: none;
-      padding: 2px;
+      padding: 1px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: white;
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
       overflow: hidden;
     }
     
@@ -3071,14 +3078,15 @@
     
     .compact-csar-info {
       display: flex;
-      gap: 3px;
-      margin-bottom: 3px;
+      gap: 2px;
+      margin-bottom: 2px;
       border-bottom: 1px solid #666;
-      padding-bottom: 3px;
+      padding-bottom: 2px;
     }
     
     .compact-csar-info .field {
       flex: 1;
+      font-size: 6pt;
     }
     
     .compact-aircraft-grid {
@@ -3090,26 +3098,26 @@
     
     .compact-aircraft-box {
       border: 1px solid #666;
-      padding: 2px;
+      padding: 1px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 1px;
     }
     
     .aircraft-number-compact {
-      font-size: 7pt;
+      font-size: 6pt;
       font-weight: bold;
       text-align: center;
-      padding: 2px 4px;
+      padding: 1px 2px;
       border: 1px solid #666;
-      min-width: 20px;
+      min-width: 15px;
     }
     
     .compact-damage-checks {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
       width: 100%;
     }
     
@@ -3117,19 +3125,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 2px;
+      gap: 1px;
     }
     
     .compact-damage-label {
-      font-size: 5pt;
+      font-size: 4pt;
       line-height: 1;
     }
     
     .damage-checkbox-compact {
-      min-width: 8px;
-      min-height: 8px;
-      width: 8px;
-      height: 8px;
+      min-width: 6px;
+      min-height: 6px;
+      width: 6px;
+      height: 6px;
       border: 1px solid #666;
       background: white;
       flex-shrink: 0;
