@@ -2804,7 +2804,14 @@
         }
       }
       
-      // If still no nation code, try to infer from aircraft database
+      // If still no nation code, check if flight has a nationality property (from table processor)
+      // This is critical for helicopters where multiple nations use the same aircraft type (e.g., GDR and USSR both use Mi-8)
+      if (!nationCode && flight.nationality) {
+        nationCode = flight.nationality;
+        console.log(`Using nationality "${nationCode}" from table result for "${aircraftType}"`);
+      }
+      
+      // If still no nation code, try to infer from aircraft database as last resort
       // This handles helicopters and other aircraft without nation prefixes
       if (!nationCode && aircraftType) {
         // Check both databases to find which one contains this aircraft
