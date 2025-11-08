@@ -69,9 +69,8 @@ class WPTableK extends BaseTableProcessor {
       debugParts.push(this.stripBrackets(aircraftResult.aircraftRollDebug));
     }
     
-    // Combine all results with nationality prefix
-    const nationalityPrefix = nationalityData.name.replace(' Combat Rescue Raid', '');
-    const combinedText = `${nationalityPrefix}: ${results.map(r => r.text).join(', ')}`;
+    // Combine all results (same format as NATO Table E)
+    const combinedText = results.map(r => r.text).join('<br>');
     const combinedDebug = debugParts.length > 0 ? `[${debugParts.join(' | ')}]` : '';
     
     return {
