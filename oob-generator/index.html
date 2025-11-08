@@ -2825,18 +2825,6 @@
         tasking = taskingMatch[1].trim();
       }
       
-      // Handle CSAR flights with simplified cards (helicopters don't need full aircraft data)
-      if (tasking === 'CSAR') {
-        console.log(`Generating simplified CSAR card for ${aircraftType}`);
-        let allCardsHTML = '';
-        for (let flightNum = 0; flightNum < numFlights; flightNum++) {
-          const isLastCard = flightNum === numFlights - 1;
-          const applyPageBreak = isLastNATOFlight && isLastCard;
-          allCardsHTML += generateSimpleCSARCard(aircraftType, flightSize, nationCode, faction, applyPageBreak);
-        }
-        return allCardsHTML;
-      }
-      
       // Extract ordnance if present (text in parentheses)
       let rolledOrdnance = '';
       const ordnanceMatch = resultText.match(/\(([^)]+)\)/);
@@ -3089,83 +3077,6 @@
         radar: radarDisplay,
         radarModifier: radarModifier
       };
-    }
-    
-    /**
-     * Generate a simplified flight card for CSAR helicopters
-     * @param {string} aircraftType - Aircraft name (e.g., "Mi-8", "H-53")
-     * @param {number} flightSize - Number of aircraft in flight
-     * @param {string} nationCode - Nation code
-     * @param {string} faction - NATO or WP
-     * @param {boolean} applyPageBreak - Whether to apply page break
-     * @returns {string} HTML for simple CSAR card
-     */
-    function generateSimpleCSARCard(aircraftType, flightSize, nationCode, faction, applyPageBreak = false) {
-      // Determine roundel image - use same mapping as main cards
-      const roundelMap = {
-        'US': 'USAF.jpg', 
-        'UK': 'UK.jpg', 
-        'FRG': 'FRG.jpg', 
-        'CAN': 'Canada.png', 
-        'BE': 'Belgium.jpg',
-        'BEL': 'Belgium.jpg',
-        'NE': 'Netherlands.jpg',
-        'HOL': 'Netherlands.jpg',
-        'USSR': 'USSR.jpg', 
-        'GDR': 'GDR.jpg'
-      };
-      const roundelImage = roundelMap[nationCode] || 'USAF.jpg';
-      
-      const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always;"' : '';
-      
-      return `
-    <div class="flight-card"${pageBreakStyle}>
-      <div class="flight-info-section">
-        <div class="flight-header">
-          <div class="roundel-box-header">
-            <img src="../assets/${roundelImage}" alt="${nationCode} Roundel">
-          </div>
-          <div class="field">
-            <span class="field-label">Aircraft</span>
-            <span class="field-value">${aircraftType}</span>
-          </div>
-          <div class="field">
-            <span class="field-label">Callsign</span>
-            <span class="field-value"></span>
-          </div>
-          <div class="field">
-            <span class="field-label">Counter</span>
-            <span class="field-value"></span>
-          </div>
-          <div class="field">
-            <span class="field-label">Aggr.</span>
-            <span class="field-value"></span>
-          </div>
-        </div>
-        
-        <div style="padding: 6px; background: #f0f0f0; font-weight: bold; text-align: center; font-size: 10pt; border: 1px solid #666; margin-bottom: 3px;">
-          CSAR - Combat Search and Rescue
-        </div>
-        
-        <div style="padding: 3px; background: #f5f5f5; font-size: 7pt; text-align: center; color: #666; border: 1px solid #ccc;">
-          Helicopter - No combat data required
-        </div>
-      </div>
-      
-      <div class="aircraft-grid">
-        ${Array(parseInt(flightSize)).fill(0).map((_, i) => `
-        <div class="aircraft-box">
-          <div class="aircraft-header">
-            <div class="aircraft-number">${i + 1}</div>
-          </div>
-          <div style="flex: 1; display: flex; align-items: center; justify-content: center; font-size: 9pt; color: #999; font-weight: bold;">
-            ${aircraftType}
-          </div>
-        </div>
-        `).join('')}
-      </div>
-    </div>
-      `;
     }
     
     /**

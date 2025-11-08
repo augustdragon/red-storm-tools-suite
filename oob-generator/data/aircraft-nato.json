@@ -1573,7 +1573,54 @@
     "ordnance": [],
     "capabilities": [],
     "aam": "AIM-9L"
+  },
+  
+  "H-53": {
+    "name": "H-53 CSAR Helicopter",
+    "model": "H-53",
+    "nation": "US",
+    "crew": 0,
+    "rwy": 0,
+    "fuel": 0,
+    "notes": null,
+    "weapons": {},
+    "speeds": {},
+    "ordnance": [],
+    "capabilities": ["CSAR"],
+    "aam": null
+  },
+  
+  "Puma": {
+    "name": "Puma CSAR Helicopter",
+    "model": "Puma",
+    "nation": "UK",
+    "crew": 0,
+    "rwy": 0,
+    "fuel": 0,
+    "notes": null,
+    "weapons": {},
+    "speeds": {},
+    "ordnance": [],
+    "capabilities": ["CSAR"],
+    "aam": null
+  },
+  
+  "CH-53": {
+    "name": "CH-53 CSAR Helicopter",
+    "model": "CH-53",
+    "nation": "FRG",
+    "crew": 0,
+    "rwy": 0,
+    "fuel": 0,
+    "notes": null,
+    "weapons": {},
+    "speeds": {},
+    "ordnance": [],
+    "capabilities": ["CSAR"],
+    "aam": null
   }
 }
+
+
 
 
