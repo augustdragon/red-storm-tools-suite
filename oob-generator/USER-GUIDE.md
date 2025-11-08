@@ -2,23 +2,23 @@
 
 ## Overview
 
-The Red Storm OOB Generator automates the process of creating Order of Battle (OOB) flight sheets for Red Storm: The Air War Over Central Germany, 1987. This guide explains how the generator works "behind the scenes" and important design decisions that affect your game experience.
+The Red Storm OOB Generator automates the process of creating Order of Battle (OOB) flight sheets for Red Storm: The Air War Over Central Germany, 1987. This guide explains how the generator works "behind the scenes" and important design decisions that affect your experience.
 
 ## How Flight Generation Works
 
 ### Step 1: Table Roll and Flight Composition
 
-When you click "Roll!" for a table, the generator:
+When you select a table and click "Make Rolls" for a table, the generator:
 1. **Rolls the dice** for the selected OOB table (NATO or Warsaw Pact)
-2. **Determines the result** based on the table's probability distribution
+2. **Determines the result** based on the table's nation and aircraft distribution
 3. **Parses the flight composition** including:
    - Number of flights (e.g., "4 x {2}" means 4 separate flights)
    - Aircraft per flight (the number in braces)
    - Aircraft type
    - Mission tasking (CAP, SEAD, Bombing, etc.)
-   - Nation/air force
+   - Nationality
 
-### Step 2: Ordnance Rolls (Tables C & I Only)
+### Step 2: Ordnance Rolls 
 
 For **Bombing Raid tables (NATO Table C and WP Table I)**, an additional automated roll determines available ordnance for each flight:
 
@@ -28,7 +28,7 @@ For **Bombing Raid tables (NATO Table C and WP Table I)**, an additional automat
   - ARM (Anti-Radiation Missiles)
   - LGB/EOGB (Laser/Electro-Optical Guided Bombs)
   
-The generator displays these additions in each aircraft's **Ordnance box** (e.g., "EOGM", "ARM") as a note to players about available weapon options. The base bomb load is implied and not printed.
+The generator displays these additions in each aircraft's **Ordnance box** (e.g., "EOGM", "ARM") as a note to players about available weapon options. The base bomb load ("Bombs/CBU/Rockets") is implied and not printed.
 
 ### Step 3: Aircraft Data Lookup
 
@@ -125,9 +125,9 @@ Ground attack-specific information is automatically hidden for air-to-air missio
 
 ### VH Altitude Row Omission
 
-**Why**: Very few aircraft operate at VH (Very High) altitude - primarily high-altitude interceptors like the MiG-25 and reconnaissance variants.
+**Why**: Very few aircraft operate at VH (Very High) altitude, primarily high-altitude interceptors like the MiG-25 and reconnaissance variants.
 
-**Implementation**: The generator checks if all VH speed values are "-" (dash). If so, the entire VH row is omitted from the speed table.
+**Implementation**: The generator checks if all VH speed values are "-". If so, the entire VH row is omitted from the speed/altitude table.
 
 **Benefit**: Saves vertical space on flight sheets, allowing them to fit better in the 2x3 grid layout. This is especially important for aircraft with longer capability descriptions or multiple special notes.
 
@@ -149,7 +149,7 @@ Missiles are displayed in the format: **+X/+Y** or **+X/NA**
 The generator uses a centralized **weapons.json** database for all weapon statistics. This ensures:
 - **Consistency**: All weapon ratings come from a single authoritative source
 - **Maintainability**: Changes to weapon stats only need to be made in one place
-- **Accuracy**: Notes that reference weapons (like gun pod rolls) dynamically look up current stats
+- **Accuracy**: Notes that reference weapons (like gun pod rolls) dynamically look up stats
 
 ### Clean vs Laden Speed Formatting
 
@@ -173,6 +173,7 @@ Some aircraft show dual bomb loads in the database (e.g., "5/3" or "3/2"). The g
 
 ## Understanding The Flight Sheets
 
+### Flight Card Layout:
 ### Header Section
 - **Aircraft Type**: Model and nation
 - **Callsign/Counter/Aggression**: Complete during game setup
@@ -203,32 +204,29 @@ Each aircraft in the flight has:
 
 - **Compact Size**: CSAR cards are quarter-size (50% width × 50% height of regular cards)
 - **4 Cards Per Row**: Four CSAR cards fit across the page width
-- **Simplified Information**: Only displays roundel, aircraft type, callsign, tasking, and aircraft damage status
-- **No Unnecessary Fields**: Omits fuel, counter, aggression, capabilities, notes, and ordnance boxes since CSAR helicopters don't need these for gameplay
+- **Simplified Information**: Only displays roundel, aircraft type, callsign, tasking, and aircraft damage status (Damaged, Shot Down)
 
 **CSAR Flight Sorting**:
 When multiple flights are generated, they are automatically organized for easy reference:
 1. **Regular flights appear first** (by faction: NATO, then Warsaw Pact)
 2. **CSAR flights appear after regular flights** (also grouped by faction)
-3. **Page breaks** separate NATO flights from Warsaw Pact flights
 
 This grouping makes it easy to track your combat flights separately from your rescue helicopters during gameplay.
 
 ## Tips for Use
 
 ### Printing Recommendations
-- **Flight sheets** are optimized for 2x3 grid printing (6 flights per page)
+- **Flight sheets** are optimized for 2x3 grid printing
+- Extensive testing confirms flights fit this 6-up layout for optimal page usage, but it's possible we missed an exception somewhere.
+- Sheets were developed for letter-sized paper
 - Print at actual size (100% scale) for best results
-
-### Multiple Flights
-When a table result produces multiple flights (e.g., "4 x {2}"), the generator automatically creates separate cards for each flight. You don't need to manually duplicate anything.
 
 ### Multirole Aircraft Note
 The "Multirole aircraft [8.37]" note only appears for aircraft on **SEAD** or **Chaff Laying** missions, as these are the only taskings where the multirole rules apply per game rule 8.37.
 
-### Note Interpretation
+### Notes Implementation
 - **Bold rule references** in notes (e.g., [7.1], [19.34]) point to specific rules in the Red Storm rulebook
-- Notes marked with dice rolls have already been resolved - the printed values reflect the roll results
+- Notes that direct the player to make a die roll are resolved by the app, and the printed values reflect the roll results
 - Display notes remind you of special rules to reduce lookups on aid cards
 
 ## Questions or Issues?
@@ -241,5 +239,5 @@ If you encounter any problems or have suggestions:
 ---
 
 **Version**: 1.0  
-**Last Updated**: November 7, 2025  
+**Last Updated**: November 8, 2025  
 **Maintained by**: Red Storm Tools Suite Development Team
