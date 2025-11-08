@@ -148,10 +148,160 @@ function closeModalOnOverlayClick(event) {
   }
 }
 
+/**
+ * Make rolls with variables (ATAF zone, nationality, or mission type)
+ */
+function makeRollsWithVariables() {
+  const currentTable = getSelectedTable();
+  if (!currentTable) return;
+  
+  const rollCountElement = document.getElementById('rollCountVariable');
+  if (!rollCountElement) {
+    console.error('rollCountVariable element not found');
+    return;
+  }
+  
+  const rollCount = parseInt(rollCountElement.value);
+  if (rollCount < 1 || rollCount > 20) {
+    alert('Please enter a number between 1 and 20');
+    return;
+  }
+
+  const dataSource = getTableDataSource();
+  const table = dataSource[currentTable];
+  
+  if (!table) {
+    console.error(`Table ${currentTable} not found in data source`);
+    alert(`Table ${currentTable} data not available`);
+    return;
+  }
+  
+  // Get variable selections with null checks
+  let atafZone = null;
+  let crewNationality = null;
+  let selectedMissionType = null;
+  let tacticalReconNation = null;
+  
+  if (table.hasATAF) {
+    const atafElement = document.getElementById('atafZone');
+    atafZone = atafElement ? atafElement.value : null;
+  } else if (table.hasNationality) {
+    const nationalityElement = document.getElementById('crewNationality');
+    crewNationality = nationalityElement ? nationalityElement.value : null;
+    // Use nationality as atafZone parameter for simplicity
+    atafZone = crewNationality;
+  } else if (table.hasMissionType) {
+    const missionElement = document.getElementById('missionType');
+    selectedMissionType = missionElement ? missionElement.value : null;
+    
+    // For Table L Tactical Recon, get the selected nation
+    if (currentTable === 'L' && selectedMissionType === 'Tactical Recon') {
+      const tacticalElement = document.getElementById('tacticalReconNation');
+      tacticalReconNation = tacticalElement ? tacticalElement.value : null;
+      // Pass mission type and nation as a combined parameter
+      atafZone = `${selectedMissionType}|${tacticalReconNation}`;
+    } else {
+      // Use mission type as atafZone parameter for simplicity
+      atafZone = selectedMissionType;
+    }
+  }
+  
+  // Use global scenario date instead of dropdown
+  const currentScenarioDate = getScenarioDate();
+  
+  for (let i = 0; i < rollCount; i++) {
+    const result = getTableResultWithVariables(currentTable, atafZone, currentScenarioDate);
+    
+    const resultEntry = {
+      id: Date.now() + i, // Use timestamp + index for unique ID
+      table: currentTable,
+      faction: getSelectedFaction(),
+      tableName: table.name,
+      atafZone: atafZone,
+      scenarioDate: scenarioDate,
+      nationRoll: result.nationRoll,
+      aircraftRoll: result.aircraftRoll,
+      nationName: result.nationName,
+      result: result.text,
+      debugText: result.debugText || result.debugInfo?.join(' | ') || '', // Handle both debugText and legacy debugInfo
+      timestamp: new Date().getTime() + i // Ensure unique timestamps
+    };
+    
+    addResult(resultEntry);
+  }
+  
+  updateResultsDisplay();
+  updateDateButtonStates(); // Update button states
+}
+
+/**
+ * Make rolls with basic parameters (no variables)
+ */
+function makeRolls() {
+  const currentTable = getSelectedTable();
+  if (!currentTable) return;
+  
+  const rollCount = parseInt(document.getElementById('rollCountBasic').value);
+  if (rollCount < 1 || rollCount > 20) {
+    alert('Please enter a number between 1 and 20');
+    return;
+  }
+
+  // Check if Table C or D and scenario date is required
+  const currentScenarioDate = getScenarioDate();
+  if ((currentTable === 'C' || currentTable === 'D') && currentTable !== 'D' && !currentScenarioDate) {
+    alert('Please select a scenario date first.');
+    return;
+  }
+
+  const dataSource = getTableDataSource();
+  const table = dataSource[currentTable];
+  
+  for (let i = 0; i < rollCount; i++) {
+    let result;
+    console.log(`Making roll ${i+1} for table ${currentTable}`);
+    
+    // All tables now use getTableResultWithVariables through processor architecture
+    if (currentTable === 'C') {
+      result = getTableResultWithVariables(currentTable, null, currentScenarioDate);
+    } else if (currentTable === 'D' || currentTable === 'G' || currentTable === 'H' || currentTable === 'I' || currentTable === 'J') {
+      console.log(`Routing ${currentTable} to getTableResultWithVariables`);
+      result = getTableResultWithVariables(currentTable, null, null);
+    } else {
+      result = getTableResultWithVariables(currentTable, null, null);
+    }
+    
+    console.log(`Result for ${currentTable}:`, result);
+    
+    const resultEntry = {
+      id: Date.now() + Math.random(), // Use timestamp + random for unique ID
+      table: currentTable,
+      faction: getSelectedFaction(),
+      tableName: table.name,
+      nationRoll: result.nationRoll,
+      aircraftRoll: result.aircraftRoll,
+      result: result.text,
+      debugText: result.debugText || result.debugInfo?.join(' | ') || '', // Handle both debugText and legacy debugInfo
+      scenarioDate: currentTable === 'C' ? currentScenarioDate : undefined,
+      timestamp: new Date().getTime() + i // Ensure unique timestamps
+    };
+    
+    console.log(`Result entry for display:`, resultEntry);
+    
+    addResult(resultEntry);
+  }
+  
+  updateResultsDisplay();
+  updateDateButtonStates(); // Update button states
+  // Keep parameter box visible - don't call cancelSelection()
+}
+
 // Make functions globally available for onclick handlers
 window.updateResultsDisplay = updateResultsDisplay;
 window.handleMissionTypeChange = handleMissionTypeChange;
 window.hideTableView = hideTableView;
 window.closeModalOnOverlayClick = closeModalOnOverlayClick;
+window.makeRolls = makeRolls;
+window.makeRollsWithVariables = makeRollsWithVariables;
 
 console.log('OOB Generator: ui-controller.js module loaded (Phase 4 - Component Extraction)');
