@@ -3195,6 +3195,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 3px;
+      flex: 1; /* Grow to fill remaining space in card */
     }
     
     .aircraft-box {
@@ -3205,6 +3206,7 @@
       align-items: center;
       min-height: 120px;
       position: relative;
+      height: 100%; /* Fill grid cell height */
     }
     
     .aircraft-header {
