@@ -1648,41 +1648,45 @@
         }
         
         // Generate HTML for all flights using designer layout
-        // Separate CSAR flights from regular flights
-        const regularFlights = [];
-        const csarFlights = [];
+        // Separate NATO and WP flights, then separate CSAR from regular within each faction
+        const natoRegular = [];
+        const natoCSAR = [];
+        const wpRegular = [];
+        const wpCSAR = [];
         
         for (const flight of sortedResults) {
-          // Check if this is a CSAR flight by looking at the tasking
-          if (flight.tasking === 'CSAR') {
-            csarFlights.push(flight);
+          const isCSAR = flight.tasking === 'CSAR';
+          
+          if (flight.faction === 'NATO') {
+            if (isCSAR) {
+              natoCSAR.push(flight);
+            } else {
+              natoRegular.push(flight);
+            }
           } else {
-            regularFlights.push(flight);
+            if (isCSAR) {
+              wpCSAR.push(flight);
+            } else {
+              wpRegular.push(flight);
+            }
           }
         }
         
-        console.log(`Generating flight cards: ${regularFlights.length} regular, ${csarFlights.length} CSAR`);
+        console.log(`Generating flight cards: NATO(${natoRegular.length} regular, ${natoCSAR.length} CSAR), WP(${wpRegular.length} regular, ${wpCSAR.length} CSAR)`);
         
         let flightCardsHTML = '';
         
-        // Process regular flights first
-        for (let i = 0; i < regularFlights.length; i++) {
-          const flight = regularFlights[i];
-          const nextFlight = i < regularFlights.length - 1 ? regularFlights[i + 1] : null;
+        // Process NATO regular flights first
+        for (let i = 0; i < natoRegular.length; i++) {
+          const flight = natoRegular[i];
           
-          console.log('Processing regular flight:', flight.result || flight.text);
-          
-          // Check if this is the last NATO flight before WP flights start (within regular flights)
-          const isLastNATOFlight = flight.faction === 'NATO' && nextFlight && nextFlight.faction === 'WP';
+          console.log('Processing NATO regular flight:', flight.result || flight.text);
           
           try {
-            const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, isLastNATOFlight);
+            const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
             if (cardHTML && cardHTML.trim()) {
               flightCardsHTML += cardHTML;
-              console.log('✓ Generated regular card for:', (flight.result || flight.text).substring(0, 50));
-              if (isLastNATOFlight) {
-                console.log('→ Applied page-break-after to last NATO flight');
-              }
+              console.log('✓ Generated NATO regular card for:', (flight.result || flight.text).substring(0, 50));
             } else {
               console.warn('⚠ Empty card generated for:', flight.result || flight.text);
             }
@@ -1691,27 +1695,69 @@
           }
         }
         
-        // Add a section break if there are CSAR flights
-        if (csarFlights.length > 0 && regularFlights.length > 0) {
-          flightCardsHTML += '<div style="clear: both; page-break-after: avoid; margin-top: 10px; border-top: 2px dashed #666; padding-top: 10px;"></div>';
+        // Add NATO CSAR flights after NATO regular flights
+        if (natoCSAR.length > 0) {
+          flightCardsHTML += '<div style="clear: both;"></div>';
+          for (let i = 0; i < natoCSAR.length; i++) {
+            const flight = natoCSAR[i];
+            console.log('Processing NATO CSAR flight:', flight.result || flight.text);
+            
+            try {
+              const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
+              if (cardHTML && cardHTML.trim()) {
+                flightCardsHTML += cardHTML;
+                console.log('✓ Generated NATO CSAR card for:', (flight.result || flight.text).substring(0, 50));
+              } else {
+                console.warn('⚠ Empty card generated for:', flight.result || flight.text);
+              }
+            } catch (error) {
+              console.error('✗ Error generating NATO CSAR card for:', flight.result || flight.text, error);
+            }
+          }
         }
         
-        // Process CSAR flights at the end
-        for (let i = 0; i < csarFlights.length; i++) {
-          const flight = csarFlights[i];
+        // Page break between NATO and WP
+        if (wpRegular.length > 0 || wpCSAR.length > 0) {
+          flightCardsHTML += '<div style="clear: both; page-break-after: always;"></div>';
+        }
+        
+        // Process WP regular flights
+        for (let i = 0; i < wpRegular.length; i++) {
+          const flight = wpRegular[i];
           
-          console.log('Processing CSAR flight:', flight.result || flight.text);
+          console.log('Processing WP regular flight:', flight.result || flight.text);
           
           try {
             const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
             if (cardHTML && cardHTML.trim()) {
               flightCardsHTML += cardHTML;
-              console.log('✓ Generated CSAR card for:', (flight.result || flight.text).substring(0, 50));
+              console.log('✓ Generated WP regular card for:', (flight.result || flight.text).substring(0, 50));
             } else {
               console.warn('⚠ Empty card generated for:', flight.result || flight.text);
             }
           } catch (error) {
-            console.error('✗ Error generating CSAR card for:', flight.result || flight.text, error);
+            console.error('✗ Error generating card for:', flight.result || flight.text, error);
+          }
+        }
+        
+        // Add WP CSAR flights after WP regular flights
+        if (wpCSAR.length > 0) {
+          flightCardsHTML += '<div style="clear: both;"></div>';
+          for (let i = 0; i < wpCSAR.length; i++) {
+            const flight = wpCSAR[i];
+            console.log('Processing WP CSAR flight:', flight.result || flight.text);
+            
+            try {
+              const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
+              if (cardHTML && cardHTML.trim()) {
+                flightCardsHTML += cardHTML;
+                console.log('✓ Generated WP CSAR card for:', (flight.result || flight.text).substring(0, 50));
+              } else {
+                console.warn('⚠ Empty card generated for:', flight.result || flight.text);
+              }
+            } catch (error) {
+              console.error('✗ Error generating WP CSAR card for:', flight.result || flight.text, error);
+            }
           }
         }
         
@@ -2935,10 +2981,11 @@
       color: black;
       display: inline-block;
       flex-direction: column;
-      margin-bottom: 2px;
-      margin-right: 2px;
-      width: 48%; /* Half width to fit 2 per row */
+      margin-bottom: 5px;
+      margin-right: 5px;
+      width: calc(50% - 7px); /* Half width minus margin and border */
       vertical-align: top;
+      box-sizing: border-box;
     }
     
     .compact-csar-card:nth-child(2n) {
@@ -2999,7 +3046,7 @@
     }
     
     .aircraft-number-compact {
-      font-size: 9pt;
+      font-size: 7pt;
       font-weight: bold;
       text-align: center;
       padding: 2px 4px;
