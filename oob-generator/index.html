@@ -1731,7 +1731,7 @@
         
         // Add NATO CSAR flights after NATO regular flights
         if (natoCSAR.length > 0) {
-          flightCardsHTML += '<div style="clear: both;"></div><div class="csar-container">';
+          flightCardsHTML += '<div class="csar-container">';
           for (let i = 0; i < natoCSAR.length; i++) {
             const flight = natoCSAR[i];
             console.log('Processing NATO CSAR flight:', flight.result || flight.text);
@@ -1777,7 +1777,7 @@
         
         // Add WP CSAR flights after WP regular flights
         if (wpCSAR.length > 0) {
-          flightCardsHTML += '<div style="clear: both;"></div><div class="csar-container">';
+          flightCardsHTML += '<div class="csar-container">';
           for (let i = 0; i < wpCSAR.length; i++) {
             const flight = wpCSAR[i];
             console.log('Processing WP CSAR flight:', flight.result || flight.text);
@@ -3009,10 +3009,10 @@
       height: 250pt; /* Fixed height for 2x3 layout (6 cards per page) */
     }
     
-    /* Compact CSAR Card Styles - Quarter size (50% width × 50% height, 4 per row matching 2 regular cards) */
+    /* Compact CSAR Card Styles - Quarter size (50% width × 50% height, 2 per row) */
     .csar-container {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 3px;
       margin-bottom: 3px;
     }
