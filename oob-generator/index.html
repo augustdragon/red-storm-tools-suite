@@ -2993,8 +2993,8 @@
     .flight-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 5px;
-      margin-bottom: 5px;
+      gap: 3px;
+      margin-bottom: 3px;
     }
     
     .flight-card {
@@ -3005,8 +3005,8 @@
       color: black;
       display: flex;
       flex-direction: column;
-      margin-bottom: 5px;
-      height: 240pt; /* Fixed height for 2x3 layout (6 cards per page) */
+      margin-bottom: 3px;
+      height: 260pt; /* Fixed height for 2x3 layout (6 cards per page) */
     }
     
     /* Compact CSAR Card Styles - Half Width (2 per row) */
@@ -3022,10 +3022,10 @@
       background: white;
       color: black;
       display: inline-block;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
       margin-right: 5px;
       width: calc(50% - 7px); /* Half width to fit 2 per row, accounting for margin */
-      height: 240pt; /* Match regular card height for 2x3 layout */
+      height: 260pt; /* Match regular card height for 2x3 layout */
       vertical-align: top;
       box-sizing: border-box;
       font-size: 7pt; /* Reset font size for content */
@@ -3041,7 +3041,14 @@
       grid-template-columns: 40px 1fr 1fr;
       gap: 3px;
       margin-bottom: 3px;
-      align-items: center;
+      align-items: stretch; /* Make all items stretch to same height */
+    }
+    
+    .compact-csar-header .field {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%; /* Fill available height in grid */
     }
     
     .roundel-box-compact {
