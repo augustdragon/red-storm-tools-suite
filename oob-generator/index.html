@@ -3009,10 +3009,10 @@
       height: 250pt; /* Fixed height for 2x3 layout (6 cards per page) */
     }
     
-    /* Compact CSAR Card Styles - Quarter size (50% width × 50% height, 2 per row) */
+    /* Compact CSAR Card Styles - Quarter size (50% of regular card width × 50% height, 4 per row aligning with 2 regular cards) */
     .csar-container {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 3px;
       margin-bottom: 3px;
     }
