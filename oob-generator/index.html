@@ -2086,28 +2086,6 @@
       }
     }
     
-    // Test function to verify data extraction
-    function testDataExtraction() {
-      const dataSource = getTableDataSource();
-      console.log('=== Phase 2 Data Extraction Test (Updated) ===');
-      console.log('Available tables:', Object.keys(dataSource));
-      
-      // Test extracted tables (Phase 2 Complete)
-      const extractedTables = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
-      console.log('Testing extracted tables...');
-      extractedTables.forEach(tableId => {
-        const table = dataSource[tableId];
-        if (table) {
-          console.log(`✅ Table ${tableId}: ${table.name}`);
-          console.log(`   Faction: ${table.faction}, Description: ${table.description.substring(0, 50)}...`);
-        } else {
-          console.log(`❌ Table ${tableId}: Not found`);
-        }
-      });
-      
-      console.log('=== Phase 2 Extraction Status: 12/12 tables extracted ===');
-    }
-    
     /**
      * Generate a single flight card using the designer layout
      * @param {object} flight - Flight result object from OOB generator
@@ -3422,11 +3400,6 @@
 </body>
 </html>`;
     }
-    
-    // Auto-run test when page loads
-    window.addEventListener('load', () => {
-      setTimeout(testDataExtraction, 1000); // Allow time for async loading
-    });
   </script>
   
   <!-- Load modules after DOM is ready -->
