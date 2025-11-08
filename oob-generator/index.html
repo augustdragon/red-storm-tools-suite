@@ -3006,7 +3006,7 @@
       margin-bottom: 5px;
     }
     
-    /* Compact CSAR Card Styles - Half Width */
+    /* Compact CSAR Card Styles - Quarter Width for 4 per row */
     .compact-csar-card {
       border: 2px solid black;
       padding: 4px;
@@ -3014,12 +3014,12 @@
       background: white;
       color: black;
       display: inline-block;
-      flex-direction: column;
       margin-bottom: 5px;
-      margin-right: 5px;
-      width: 24%; /* Quarter width to fit 4 per row */
+      margin-right: 4px;
+      width: calc(25% - 5px); /* Quarter width to fit 4 per row */
       vertical-align: top;
       box-sizing: border-box;
+      min-height: 100px; /* Match approximate height of regular cards */
     }
     
     .compact-csar-card:nth-child(4n) {
@@ -3028,7 +3028,7 @@
     
     .compact-csar-header {
       display: grid;
-      grid-template-columns: 50px 1fr 1fr;
+      grid-template-columns: 40px 1fr 1fr;
       gap: 3px;
       margin-bottom: 3px;
       align-items: center;
@@ -3041,8 +3041,9 @@
       align-items: center;
       justify-content: center;
       background: white;
-      min-height: 18px;
-      max-height: 28px;
+      width: 40px;
+      height: 40px;
+      overflow: hidden;
     }
     
     .roundel-box-compact img {
