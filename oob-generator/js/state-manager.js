@@ -181,10 +181,14 @@ function selectTable(tableId, faction) {
   selectedTable = tableId;
   selectedFaction = faction;
   
-  // Reset number of rolls to 1 when switching tables
-  const numRollsInput = document.getElementById('numRolls');
-  if (numRollsInput) {
-    numRollsInput.value = '1';
+  // Reset number of rolls to 1 when switching tables (for both input types)
+  const rollCountBasic = document.getElementById('rollCountBasic');
+  const rollCountVariable = document.getElementById('rollCountVariable');
+  if (rollCountBasic) {
+    rollCountBasic.value = '1';
+  }
+  if (rollCountVariable) {
+    rollCountVariable.value = '1';
   }
   
   // Update visual selection with null safety
