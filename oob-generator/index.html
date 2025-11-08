@@ -1752,7 +1752,7 @@
         
         // Page break between NATO and WP
         if (wpRegular.length > 0 || wpCSAR.length > 0) {
-          flightCardsHTML += '<div style="clear: both; page-break-after: always;"></div>';
+          flightCardsHTML += '</div><div style="page-break-after: always;"></div><div class="flight-grid">';
         }
         
         // Process WP regular flights
@@ -3006,7 +3006,7 @@
       margin-bottom: 5px;
     }
     
-    /* Compact CSAR Card Styles - Quarter Width for 4 per row */
+    /* Compact CSAR Card Styles - Half Width (2 per row) */
     .compact-csar-card {
       border: 2px solid black;
       padding: 4px;
@@ -3015,14 +3015,13 @@
       color: black;
       display: inline-block;
       margin-bottom: 5px;
-      margin-right: 4px;
-      width: calc(25% - 5px); /* Quarter width to fit 4 per row */
+      margin-right: 5px;
+      width: calc(50% - 7px); /* Half width to fit 2 per row, accounting for margin */
       vertical-align: top;
       box-sizing: border-box;
-      min-height: 100px; /* Match approximate height of regular cards */
     }
     
-    .compact-csar-card:nth-child(4n) {
+    .compact-csar-card:nth-child(2n) {
       margin-right: 0;
     }
     
