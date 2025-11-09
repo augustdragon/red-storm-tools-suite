@@ -2718,6 +2718,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 3px;
       flex: 1; /* Grow to fill remaining space in card */
+      margin-bottom: 8px; /* Maintain consistent gap from bottom of flight card */
     }
     
     .aircraft-box {
@@ -2727,7 +2728,7 @@
       flex-direction: column;
       align-items: center;
       position: relative;
-      height: 105px; /* Fixed height for consistent sizing across all flights */
+      height: 100%; /* Fill available grid cell height */
       box-sizing: border-box; /* Include border and padding in height calculation */
       overflow: hidden; /* Prevent content from overflowing */
     }
