@@ -1696,6 +1696,11 @@
         aircraftType = aircraftMatch[1].trim();
       }
       
+      // Save original aircraft type before any mapping happens
+      // This is needed for database lookups since databases use short keys like "NF-5A"
+      // while the mapping will convert to long names like "NF-5A Freedom Fighter"
+      const originalAircraftType = aircraftType;
+      
       // Extract nation from result or aircraft string
       const nationMatch = resultText.match(/^([A-Z]{2,4}):/);
       if (nationMatch) {
@@ -1730,17 +1735,18 @@
       // If still no nation code, try to infer from aircraft database as last resort
       // This handles helicopters and other aircraft without nation prefixes
       // Also handles cases where table result had combined nation codes like "BE/NE"
-      if (!nationCode && aircraftType) {
-        console.log(`Checking aircraft database for "${aircraftType}"`);
+      // Use originalAircraftType (before name mapping) for database lookup
+      if (!nationCode && originalAircraftType) {
+        console.log(`Checking aircraft database for "${originalAircraftType}"`);
         // Check both databases to find which one contains this aircraft
-        if (aircraftNATO[aircraftType]) {
+        if (aircraftNATO[originalAircraftType]) {
           // Found in NATO database, use the aircraft's nation
-          nationCode = aircraftNATO[aircraftType].nation || '';
-          console.log(`Inferred nation "${nationCode}" for "${aircraftType}" from NATO database`);
-        } else if (aircraftWP[aircraftType]) {
+          nationCode = aircraftNATO[originalAircraftType].nation || '';
+          console.log(`Inferred nation "${nationCode}" for "${originalAircraftType}" from NATO database`);
+        } else if (aircraftWP[originalAircraftType]) {
           // Found in WP database, use the aircraft's nation
-          nationCode = aircraftWP[aircraftType].nation || '';
-          console.log(`Inferred nation "${nationCode}" for "${aircraftType}" from WP database`);
+          nationCode = aircraftWP[originalAircraftType].nation || '';
+          console.log(`Inferred nation "${nationCode}" for "${originalAircraftType}" from WP database`);
         }
       }
       
