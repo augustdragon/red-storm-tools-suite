@@ -1715,10 +1715,13 @@
       // However, skip combined nations like "BE/NE" and instead check aircraft database for specific nation
       if (!nationCode && (flight.nationality || flight.atafZone)) {
         const flightNation = flight.nationality || flight.atafZone;
+        console.log(`Checking flight nation "${flightNation}" for "${aircraftType}"`);
         // Skip combined nation codes - we'll get the specific nation from the aircraft database
         if (flightNation && !flightNation.includes('/')) {
           nationCode = flightNation;
           console.log(`Using nationality "${nationCode}" from table result for "${aircraftType}"`);
+        } else {
+          console.log(`Skipping combined nation code "${flightNation}" - will check aircraft database`);
         }
       } else if (!nationCode) {
         console.log(`No nationality found in flight object for "${aircraftType}"`, flight);
@@ -1728,6 +1731,7 @@
       // This handles helicopters and other aircraft without nation prefixes
       // Also handles cases where table result had combined nation codes like "BE/NE"
       if (!nationCode && aircraftType) {
+        console.log(`Checking aircraft database for "${aircraftType}"`);
         // Check both databases to find which one contains this aircraft
         if (aircraftNATO[aircraftType]) {
           // Found in NATO database, use the aircraft's nation
