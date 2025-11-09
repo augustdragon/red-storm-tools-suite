@@ -2479,14 +2479,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Red Storm - Flight Sheets</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
+    /* ========== Base / Reset ========== */
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
     }
     
-    body {
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #000;
       font-family: Arial, sans-serif;
+    }
+    
+    body {
       padding: 5px;
       background: #f5f5f5;
     }
@@ -2494,6 +2507,14 @@
     @page {
       size: letter;
       margin: 0.25in;
+    }
+    
+    /* Avoid page breaks inside a card when printing */
+    @media print {
+      .flight-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
     }
     
     .page-title {
@@ -2513,18 +2534,17 @@
       margin-bottom: 3px;
     }
     
+    /* ========== Flight Card Shell ========== */
     .flight-card {
       border: 2px solid black;
       padding: 4px;
-      padding-bottom: 128px; /* Reserve space for bottom-anchored grid: height (120px) + bottom gap (8px) */
-      page-break-inside: avoid;
       background: white;
       color: black;
       display: flex;
       flex-direction: column;
       margin-bottom: 3px;
       height: 240pt; /* Fixed height for 2x3 layout (6 cards per page) */
-      position: relative; /* Establishes positioning context for absolute children */
+      gap: 3px; /* consistent vertical rhythm between sections */
     }
     
     /* Compact CSAR Card Styles - Quarter size (50% of regular card width × 50% height, 4 per row aligning with 2 regular cards) */
@@ -2715,18 +2735,24 @@
       font-weight: bold;
     }
     
+    /* ========== Flexible Aircraft Area (exactly four boxes) ========== */
     .aircraft-grid {
-      position: absolute; /* Anchor to bottom of flight card */
-      left: 4px; /* Align with card padding */
-      right: 4px;
-      bottom: 4px; /* Fixed gap from the bottom edge */
+      /* key bits */
+      flex: 1 1 auto; /* occupy the remaining vertical space */
+      min-height: 0; /* allow shrinking when info grows */
+      padding-bottom: 3px; /* fixed inner gap from card bottom */
+      
+      /* grid of four aircraft boxes */
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, 1fr); /* exactly 4 columns */
       gap: 3px;
-      height: 100px; /* Fixed grid height */
+      
+      /* keep content contained if something overflows */
+      overflow: hidden;
       box-sizing: border-box;
     }
     
+    /* Individual aircraft tiles */
     .aircraft-box {
       border: 1px solid #666;
       padding: 3px;
@@ -2734,8 +2760,8 @@
       flex-direction: column;
       align-items: center;
       position: relative;
-      box-sizing: border-box; /* Include border and padding in height calculation */
-      overflow: hidden; /* Prevent content from overflowing */
+      box-sizing: border-box;
+      overflow: hidden; /* never exceed bounds */
     }
     
     .aircraft-header {
@@ -2965,7 +2991,7 @@
   <script src="js/aircraft-notes.js"></script>
   <script src="js/app.js"></script>
   
-  <!-- Phase 5: Table Processor Classes -->
+  <!-- Table Processor Classes -->
   <script src="js/table-processors/BaseTableProcessor.js"></script>
   <script src="js/table-processors/NATOTableA.js"></script>
   <script src="js/table-processors/NATOTableB.js"></script>

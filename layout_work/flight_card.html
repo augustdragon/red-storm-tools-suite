@@ -1,0 +1,138 @@
+<div class="flight-card">
+  <!-- Flight-level information -->
+  <div class="flight-info-section">
+    <div class="flight-header">
+      <div class="roundel-box-header">
+        <img src="../assets/USAF.jpg" alt="US Roundel">
+      </div>
+      <div class="field">
+        <div class="field-label">Aircraft</div>
+        <div class="field-value">F-16A Fighting Falcon</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Callsign</div>
+        <div class="field-value"></div>
+      </div>
+      <div class="field">
+        <div class="field-label">Counter</div>
+        <div class="field-value"></div>
+      </div>
+      <div class="field">
+        <div class="field-label">Aggr.</div>
+        <div class="field-value"></div>
+      </div>
+    </div>
+    
+    <div class="tasking-fuel-row">
+      <div class="field">
+        <div class="field-label">Tasking</div>
+        <div class="field-value">CAP</div>
+      </div>
+      <div class="fuel-box">
+        <div class="fuel-label-value">
+          <span class="field-label">Fuel</span>
+          <span class="fuel-value">18</span>
+        </div>
+        <div class="fuel-circles-container">
+          <div class="fuel-circles-row">
+            <div class="fuel-circle"></div>
+            <div class="fuel-circle"></div>
+            <!-- ... more circles ... -->
+          </div>
+          <div class="fuel-circles-row">
+            <div class="fuel-circle"></div>
+            <!-- ... more circles ... -->
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">Notes</div>
+        <div class="field-value"></div>
+      </div>
+    </div>
+    
+    <div class="flight-weapons-row">
+      <div class="weapons-display">
+        <div class="weapon-item">
+          <span class="weapon-label">Gun:</span>
+          <span>+3 {4}</span>
+        </div>
+        <div class="weapon-item">
+          <span class="weapon-label">IRM:</span>
+          <span>3d+0</span>
+        </div>
+        <div class="weapon-item">
+          <span class="weapon-label">RHM:</span>
+          <span>2d+1</span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 10px; font-size: 7pt;">
+        <div><strong>Crew:</strong> 1</div>
+        <div><strong>Rwy:</strong> 1</div>
+      </div>
+    </div>
+    
+    <!-- Ordnance/AAM/Bomb line -->
+    <div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px;">
+      <strong>AAM:</strong> AIM-9L | <strong>Ordnance:</strong> LGB(1) | <strong>Bomb:</strong> 1.5
+    </div>
+    
+    <!-- Radar/RWR/Jam line -->
+    <div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px;">
+      <strong>Radar:</strong> APG-66 | <strong>RWR:</strong> A
+    </div>
+    
+    <!-- Capabilities/Notes line -->
+    <div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px;">
+      <strong>Capabilities:</strong> Radar, Night
+    </div>
+    
+    <!-- Speed table -->
+    <table class="speed-table">
+      <tr>
+        <th>Alt</th>
+        <th>C</th>
+        <th>D</th>
+        <th>M</th>
+      </tr>
+      <tr>
+        <td><strong>H</strong></td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+      </tr>
+      <!-- ... more rows ... -->
+    </table>
+  </div>
+  
+  <!-- Individual aircraft boxes (anchored to bottom) -->
+  <div class="aircraft-grid">
+    <div class="aircraft-box">
+      <div class="aircraft-header">
+        <div class="aircraft-number">1</div>
+        <div class="damage-boxes">
+          <div class="damage-column">
+            <div class="damage-row">
+              <div class="damage-label">Damaged</div>
+              <div class="damage-checkbox"></div>
+            </div>
+            <div class="damage-row">
+              <div class="damage-label">Crippled</div>
+              <div class="damage-checkbox"></div>
+            </div>
+            <div class="damage-row">
+              <div class="damage-label">Destroyed</div>
+              <div class="damage-checkbox"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ordnance-area-small">
+        <div class="ordnance-label-small">Ordnance</div>
+        <div style="font-size: 6pt; padding: 1px 3px;">+EOGM</div>
+        <div style="font-size: 6pt; padding: 1px 3px;">+ARM</div>
+      </div>
+    </div>
+    <!-- ... 3 more aircraft boxes ... -->
+  </div>
+</div>
