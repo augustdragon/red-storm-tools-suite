@@ -2083,10 +2083,8 @@
         'USSR': 'USSR.jpg',
         'GDR': 'GDR.jpg'
       };
-      // Debug: Log roundel selection for CSAR
-      if (tasking === 'CSAR') {
-        console.log(`CSAR Roundel Debug: nationCode="${nationCode}", aircraftData.nation="${aircraftData.nation}", aircraft="${aircraftType}"`);
-      }
+      // Debug: Log roundel selection
+      console.log(`Roundel selection for "${aircraftType}": nationCode="${nationCode}", aircraftData.nation="${aircraftData.nation}", result="${roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg'}"`);
       const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
       
       // Add page break style if this is the last NATO flight (breaks after, not before)
@@ -2343,6 +2341,7 @@
         'USSR': 'USSR.jpg',
         'GDR': 'GDR.jpg'
       };
+      console.log(`CSAR Roundel selection for "${aircraftType}": nationCode="${nationCode}", aircraftData.nation="${aircraftData.nation}"`);
       const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
       
       // Add page break style if needed
