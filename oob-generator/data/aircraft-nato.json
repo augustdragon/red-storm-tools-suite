@@ -1540,7 +1540,7 @@
   "NF-5A": {
     "name": "NF-5A Freedom Fighter",
     "model": "NF-5A",
-    "nation": "Netherlands",
+    "nation": "NE",
     "crew": 1,
     "rwy": 3,
     "fuel": 4,
