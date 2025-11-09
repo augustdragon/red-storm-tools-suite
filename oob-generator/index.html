@@ -1707,7 +1707,7 @@
         nationCode = nationMatch[1];
       } else {
         // Check if nation is in aircraft string
-        const nationInAircraft = aircraftType.match(/^(US|UK|FRG|CAN|HOL|BEL|USSR|DDR|POL|CZE)\s+(.+)/);
+        const nationInAircraft = aircraftType.match(/^(US|UK|FRG|CAN|NE|BE|USSR}GDR)\s+(.+)/);
         if (nationInAircraft) {
           nationCode = nationInAircraft[1];
           aircraftType = nationInAircraft[2];
@@ -1755,13 +1755,8 @@
       if (variantNationMatch) {
         const baseAircraft = variantNationMatch[1];
         const variantNation = variantNationMatch[2];
-        // Map variant codes to standard nation codes
-        if (variantNation === 'BE') {
-          nationCode = 'BEL';
-        } else if (variantNation === 'NE') {
-          nationCode = 'HOL';
-        }
-        // Keep full variant name for mapping lookup
+        // Use variant codes directly (BE, NE) - they're already in the roundel map
+        nationCode = variantNation;
         console.log(`Detected variant aircraft: ${aircraftType} -> nation: ${nationCode}, base: ${baseAircraft}`);
       }
       
