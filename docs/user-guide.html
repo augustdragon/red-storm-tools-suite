@@ -172,8 +172,8 @@
         <h3>What's Included</h3>
         <ul>
             <li><strong>Order of Battle Generator:</strong> Generate random aircraft flights using the official OOB tables</li>
-            <li><strong>Chit Pull Generator:</strong> Manage initiative and activation chits for gameplay</li>
-            <li><strong>Manual Flight Generator:</strong> Create custom flight sheets for any aircraft</li>
+            <li><strong>Chit Pull Generator:</strong> Digital chit draws to expedite gameplay</li>
+            <li><strong>Manual Flight Generator:</strong> Create custom flight sheets</li>
             <li><strong>Aircraft Notes Reference:</strong> Quick lookup for special aircraft capabilities and notes</li>
         </ul>
 
@@ -184,44 +184,27 @@
 
     <div class="tool-section" id="oob-generator">
         <h2>Order of Battle Generator</h2>
-        <p>The OOB Generator automates the process of creating Order of Battle (OOB) flight sheets for Red Storm: The Air War Over Central Germany, 1987. This section explains how the generator works and important design decisions that affect your experience.</p>
+        <p>The OOB Generator automates the process of using the Order of Battle (OOB) tables for Red Storm. This section explains how the generator works and important design decisions that affect your experience.</p>
 
         <h3>Getting Started</h3>
         <ol>
-            <li>Select a <strong>scenario date</strong> (Pre-war or Post-war) - this affects available aircraft</li>
-            <li>Choose a <strong>table</strong> from the NATO or Warsaw Pact buttons (A through L)</li>
-            <li>For tables that require parameters (ATAF zone, nationality, mission type), select from the dropdown</li>
+            <li>Select a <strong>scenario date</strong></li>
+            <li>Choose a <strong>table</strong></li>
+            <li>For tables that require parameters (ATAF zone, nationality, mission type), select from the dropdowns</li>
             <li>Enter the <strong>number of rolls</strong> (1-20) you want to make</li>
             <li>Click <strong>Make Rolls</strong> to generate results</li>
         </ol>
 
-        <h3>Table Types</h3>
-        <ul>
-            <li><strong>Tables A, B, C:</strong> Require ATAF zone selection (2ATAF or 4ATAF)</li>
-            <li><strong>Tables E, K:</strong> Require nationality selection for carrier/naval operations</li>
-            <li><strong>Tables F, L:</strong> Require mission type selection</li>
-            <li><strong>Tables D, G, H, I, J:</strong> No parameters needed, just select and roll</li>
-        </ul>
-
         <h3>How Flight Generation Works</h3>
         
-        <h4>Step 1: Table Roll and Flight Composition</h4>
+        <h4>Table Roll and Flight Composition</h4>
         <p>When you select a table and click "Make Rolls", the generator:</p>
         <ol>
-            <li><strong>Rolls the dice</strong> for the selected OOB table (NATO or Warsaw Pact)</li>
-            <li><strong>Determines the result</strong> based on the table's nation and aircraft distribution</li>
-            <li><strong>Parses the flight composition</strong> including:
-                <ul>
-                    <li>Number of flights (e.g., "4 x {2}" means 4 separate flights)</li>
-                    <li>Aircraft per flight (the number in braces)</li>
-                    <li>Aircraft type</li>
-                    <li>Mission tasking (CAP, SEAD, Bombing, etc.)</li>
-                    <li>Nationality</li>
-                </ul>
-            </li>
+            <li><strong>Rolls the dice</strong> for the selected OOB table</li>
+            <li><strong>Determines aircraft types, weapons, and ordnance for each flight</strong></li>
         </ol>
 
-        <h4>Step 2: Ordnance Rolls</h4>
+        <h4>Ordnance Rolls</h4>
         <p>For <strong>Bombing Raid tables (NATO Table C and WP Table I)</strong>, an additional automated roll determines available ordnance for each flight:</p>
         <ul>
             <li><strong>Base ordnance</strong> is always "Bombs/CBU/Rockets"</li>
@@ -233,10 +216,10 @@
                 </ul>
             </li>
         </ul>
-        <p>The generator displays these additions in each aircraft's Ordnance box as a note to players about available weapon options. The base bomb load is implied and not printed.</p>
+        <p>The generator displays these additions in each aircraft's Ordnance box as a note to players about available weapon options. The base bomb load (Bombs/CBU/Rockets) is implied and not printed.</p>
 
-        <h4>Step 3: Aircraft Data Lookup</h4>
-        <p>The generator looks up the selected aircraft to retrieve:</p>
+        <h4>Aircraft Data Lookup</h4>
+        <p>The generator provides data for aircraft types</p>
         <ul>
             <li>Performance data (speed/altitude)</li>
             <li>Weapons loadout</li>
@@ -246,16 +229,15 @@
             <li>Special capabilities and notes</li>
         </ul>
 
-        <h4>Step 4: Aircraft Note Processing</h4>
+        <h4>Aircraft Note Processing</h4>
         <p>Many aircraft have <strong>note codes</strong> (letters A-Z) that modify their characteristics based on mission tasking or require dice rolls. The generator automatically applies these notes.</p>
 
         <h3>Understanding Aircraft Notes</h3>
         
-        <h4>Automatic Note Processing</h4>
-        <p>These notes change the aircraft's stats without player input:</p>
+        <p>These notes are applied per the game rules and change the aircraft's stats without player input:</p>
         <ul>
             <li><strong>Weapon Rolls:</strong> Some notes roll for specific missile types (e.g., AIM-7E-2 vs AIM-7F) and update the AAM field with actual missile names</li>
-            <li><strong>Gun Pod Rolls:</strong> Rolls for SUU-23 gun pod availability</li>
+            <li><strong>Gun Pod Rolls:</strong> Rolls for gun pod availability</li>
             <li><strong>Bomb Load Adjustments:</strong> Reduces bomb loads for deep strike missions</li>
             <li><strong>Radar Degradation:</strong> Rolls for reduced radar performance on some aircraft</li>
             <li><strong>Missile Removal:</strong> Removes IRM missiles for specific mission types</li>
@@ -270,8 +252,7 @@
             <li><strong>Zoom Climb Restrictions:</strong> "Zoom Climb [6.33] not allowed"</li>
             <li><strong>Special Capabilities:</strong> SAR recon, laser designation, toss bombing, etc.</li>
         </ul>
-        <p>Display notes are shown in the <strong>Capabilities/Notes</strong> section and do NOT modify the printed stats. They remind players of special rules during gameplay.</p>
-
+        
         <h4>Air-to-Air Mission Filtering</h4>
         <p>Ground attack-specific information is automatically hidden for air-to-air missions (CAP, Close Escort, Recon, Escort Jamming, Standoff Jamming, CSAR, Transport, etc.):</p>
         <ul>
@@ -286,7 +267,7 @@
             <li><strong>Aircraft Type:</strong> Model and nation</li>
             <li><strong>Callsign/Counter/Aggression:</strong> Complete during game setup</li>
             <li><strong>Tasking:</strong> Mission type (auto-filled from OOB table roll)</li>
-            <li><strong>Fuel:</strong> Aircraft-specific fuel load with tracking bubbles</li>
+            <li><strong>Fuel:</strong> Aircraft-specific fuel load</li>
         </ul>
 
         <h4>Stats Section</h4>
@@ -300,9 +281,17 @@
         <h4>Speed Table</h4>
         <ul>
             <li>Shows Combat/Dash/Maneuver speeds for each altitude band</li>
-            <li>VH (Very High) row omitted if aircraft doesn't operate at that altitude</li>
+            <li>VH (Very High) row omitted if aircraft doesn't operate at that altitude to save space</li>
             <li>Clean vs Laden tables shown for ground-attack aircraft</li>
         </ul>
+
+        <h4>Clean vs Laden Speeds</h4>
+        <p>Aircraft with different performance profiles display a split table showing both clean and laden speeds. Laden speeds only appear when the aircraft:</p>
+        <ol>
+            <li>Has laden speed data in the database, AND</li>
+            <li>Is carrying air-to-ground ordnance, AND</li>
+            <li>Has a ground-attack tasking (not CAP, Close Escort, Recon, etc.)</li>
+        </ol>
 
         <h4>Individual Aircraft Boxes</h4>
         <ul>
@@ -314,15 +303,13 @@
         <h3>CSAR Flight Cards</h3>
         <p><strong>Combat Search and Rescue (CSAR)</strong> flights receive a special compact card design:</p>
         <ul>
-            <li><strong>Quarter-size cards:</strong> 50% width × 50% height of regular cards</li>
-            <li><strong>4 cards per row:</strong> Four CSAR cards fit across the page width</li>
-            <li><strong>Simplified information:</strong> Only roundel, aircraft type, callsign, tasking, and damage status</li>
-            <li><strong>Automatic sorting:</strong> CSAR flights appear after regular flights, grouped by faction</li>
+            <li><strong>Simplified information:</strong> Only roundel, aircraft type, callsign, tasking, and damage status (damaged/shot down)</li>
+            <li><strong>Sorting:</strong> CSAR flights appear after regular flights, grouped by faction</li>
         </ul>
 
         <h3>Design Decisions</h3>
         
-        <h4>BVR Rating Display</h4>
+        <h4>Missile Rating Display</h4>
         <p>Missiles are displayed in the format: <strong>+X/+Y</strong> or <strong>+X/NA</strong></p>
         <ul>
             <li><strong>+X:</strong> Standard rating modifier</li>
@@ -331,15 +318,7 @@
         </ul>
         <p><strong>Examples:</strong> AIM-9J: +0/NA | AIM-9L: +3/+0 | AIM-7F: +3/+1</p>
 
-        <h4>Clean vs Laden Speeds</h4>
-        <p>Aircraft with different performance profiles display a split table showing both clean and laden speeds. Laden speeds only appear when the aircraft:</p>
-        <ol>
-            <li>Has laden speed data in the database, AND</li>
-            <li>Is carrying air-to-ground ordnance, AND</li>
-            <li>Has a ground-attack tasking (not CAP, Close Escort, Recon, etc.)</li>
-        </ol>
-
-        <h4>Dual Bomb Load Logic</h4>
+        <h4>Bomb Load Logic</h4>
         <p>Some aircraft show dual bomb loads (e.g., "5/3"). The generator automatically selects:</p>
         <ul>
             <li><strong>Higher value:</strong> Normal-range missions</li>
@@ -354,39 +333,17 @@
             <li><strong>Printing:</strong> Optimized for 2x3 grid on letter-sized paper at 100% scale</li>
         </ul>
 
-        <div class="note">
-            <strong>Tip:</strong> The generator uses a centralized weapons database to ensure consistency. All weapon ratings and characteristics come from a single authoritative source.
-        </div>
-
-        <div class="note">
-            <strong>Note:</strong> Bold rule references in notes (e.g., [7.1], [19.34]) point to specific rules in the Red Storm rulebook for quick reference during gameplay.
-        </div>
-    </div>
-
     <div class="tool-section" id="chit-pull">
         <h2>Chit Pull Generator</h2>
-        <p>Manage initiative and activation chits for Red Storm gameplay sessions.</p>
+        <p>Digital chit pull tool for Red Storm gameplay sessions.</p>
 
         <h3>How to Use</h3>
         <ol>
-            <li>Configure your <strong>chit pools</strong> for both NATO and Warsaw Pact forces</li>
-            <li>Add chits by clicking the "+" buttons for each type</li>
-            <li>Click <strong>Draw Chit</strong> to randomly select from the available pool</li>
-            <li>The drawn chit will be displayed prominently</li>
-            <li>Use <strong>Reset Pool</strong> to start a new turn</li>
+            <li>Small and Large chit values are generated</li>
+            <li>Click <strong>Draw Chit</strong> to generate a random selection</li>
+            <li>Pool values reset after each draw</li>
+            <li>Previous draws are kept in history for reference</li>
         </ol>
-
-        <h3>Chit Types</h3>
-        <ul>
-            <li><strong>Initiative Chits:</strong> Determine turn order</li>
-            <li><strong>Activation Chits:</strong> Control when formations activate</li>
-            <li><strong>Special Chits:</strong> Weather, events, and special actions</li>
-        </ul>
-
-        <div class="note">
-            <strong>Note:</strong> The chit pull tool maintains separate pools for NATO and Warsaw Pact forces, and tracks which chits have been drawn each turn.
-        </div>
-    </div>
 
     <div class="tool-section" id="flight-sheets">
         <h2>Manual Flight Sheet Generator</h2>
@@ -397,71 +354,28 @@
             <li>Select a <strong>nation</strong> from the dropdown (or choose "All Nations")</li>
             <li>Choose an <strong>aircraft type</strong> from the filtered list</li>
             <li>Select <strong>flight size</strong> (1-ship, 2-ship, or 4-ship)</li>
-            <li>Click <strong>Add to Queue</strong> to stage the flight</li>
+            <li>Click <strong>Add to Queue</strong> to include the flight for printing</li>
             <li>Repeat for additional flights</li>
             <li>Click <strong>Print All Flights</strong> when ready</li>
+			<li>Note:  This tool does not include notes, ordnance details, conditional values, and some other details that are found in the OOB generator.</li>
         </ol>
 
-        <h3>Queue Management</h3>
-        <ul>
-            <li>Add multiple flights to the queue before printing</li>
-            <li>Remove individual flights with the "Remove" button</li>
-            <li>Clear the entire queue with "Clear All"</li>
-            <li>Preview shows the current flight configuration</li>
-        </ul>
-
         <div class="note">
-            <strong>Tip:</strong> Use this tool to create flight sheets for specific scenarios or to replace losses during a campaign.
+            <strong>Tip:</strong> Use this tool to create custom flights
         </div>
     </div>
 
     <div class="tool-section" id="aircraft-notes">
         <h2>Aircraft Notes Reference</h2>
-        <p>Quick reference guide for special aircraft capabilities and note codes.</p>
-
-        <h3>Note Categories</h3>
-        <ul>
-            <li><strong>Weapon Notes:</strong> Special ammunition or weapon system modifications</li>
-            <li><strong>Performance Notes:</strong> Speed, altitude, or maneuverability restrictions</li>
-            <li><strong>Capability Notes:</strong> Special equipment or operational capabilities</li>
-            <li><strong>Limitation Notes:</strong> Operational restrictions or deployment limitations</li>
-        </ul>
+        <p>Digital version of notes listed on aircraft data cards.</p>
 
         <h3>Using the Reference</h3>
         <ul>
             <li>Browse notes by nation/alliance</li>
             <li>Search for specific note codes</li>
             <li>View detailed explanations and game effects</li>
-            <li>See which aircraft are affected by each note</li>
         </ul>
     </div>
-
-    <div class="tool-section" id="tips">
-        <h2>Tips & Best Practices</h2>
-
-        <h3>General Tips</h3>
-        <ul>
-            <li><strong>Bookmark Tools:</strong> Add frequently used tools to your browser bookmarks for quick access</li>
-            <li><strong>Print Settings:</strong> Use "Print to PDF" to save flight sheets digitally</li>
-            <li><strong>Browser Compatibility:</strong> Best experience in Chrome, Firefox, or Edge</li>
-            <li><strong>Mobile Use:</strong> All tools work on tablets, though printing is best on desktop</li>
-        </ul>
-
-        <h3>Flight Sheet Tips</h3>
-        <ul>
-            <li>Print flight sheets before game sessions to save time</li>
-            <li>Use card sleeves to protect printed sheets for reuse</li>
-            <li>Mark tracking boxes with dry-erase markers if laminated</li>
-            <li>Keep blank sheets on hand for scenario-specific aircraft</li>
-        </ul>
-
-        <h3>OOB Generator Tips</h3>
-        <ul>
-            <li>Generate all flights for a scenario at once, then print</li>
-            <li>Use the debug view to understand dice rolls</li>
-            <li>Clear results between different scenarios to avoid confusion</li>
-            <li>Note the scenario date setting affects available aircraft</li>
-        </ul>
 
         <div class="note">
             <strong>Troubleshooting:</strong> If tools aren't working properly, try refreshing the page or clearing your browser cache. All tools work offline after initial loading.
