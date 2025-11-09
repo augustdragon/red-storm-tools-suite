@@ -1712,15 +1712,21 @@
       // If still no nation code, check if flight has a nationality property (from table processor)
       // This is critical for helicopters where multiple nations use the same aircraft type (e.g., GDR and USSR both use Mi-8)
       // Check both 'nationality' and 'atafZone' as different tables use different property names
+      // However, skip combined nations like "BE/NE" and instead check aircraft database for specific nation
       if (!nationCode && (flight.nationality || flight.atafZone)) {
-        nationCode = flight.nationality || flight.atafZone;
-        console.log(`Using nationality "${nationCode}" from table result for "${aircraftType}"`);
+        const flightNation = flight.nationality || flight.atafZone;
+        // Skip combined nation codes - we'll get the specific nation from the aircraft database
+        if (flightNation && !flightNation.includes('/')) {
+          nationCode = flightNation;
+          console.log(`Using nationality "${nationCode}" from table result for "${aircraftType}"`);
+        }
       } else if (!nationCode) {
         console.log(`No nationality found in flight object for "${aircraftType}"`, flight);
       }
       
       // If still no nation code, try to infer from aircraft database as last resort
       // This handles helicopters and other aircraft without nation prefixes
+      // Also handles cases where table result had combined nation codes like "BE/NE"
       if (!nationCode && aircraftType) {
         // Check both databases to find which one contains this aircraft
         if (aircraftNATO[aircraftType]) {
@@ -2067,6 +2073,9 @@
         'FRG': 'FRG.jpg',
         'BEL': 'Belgium.jpg',
         'Belgium': 'Belgium.jpg',
+        'BE': 'Belgium.jpg',
+        'BE/NE': 'Netherlands.jpg', // BE/NE combined entry defaults to Netherlands
+        'NE': 'Netherlands.jpg',
         'HOL': 'Netherlands.jpg',
         'Netherlands': 'Netherlands.jpg',
         'CAN': 'Canada.jpg',
@@ -2324,6 +2333,9 @@
         'FRG': 'FRG.jpg',
         'BEL': 'Belgium.jpg',
         'Belgium': 'Belgium.jpg',
+        'BE': 'Belgium.jpg',
+        'BE/NE': 'Netherlands.jpg', // BE/NE combined entry defaults to Netherlands
+        'NE': 'Netherlands.jpg',
         'HOL': 'Netherlands.jpg',
         'Netherlands': 'Netherlands.jpg',
         'CAN': 'Canada.jpg',
