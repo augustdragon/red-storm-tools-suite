@@ -1717,16 +1717,17 @@
       // If still no nation code, check if flight has a nationality property (from table processor)
       // This is critical for helicopters where multiple nations use the same aircraft type (e.g., GDR and USSR both use Mi-8)
       // Check both 'nationality' and 'atafZone' as different tables use different property names
-      // However, skip combined nations like "BE/NE" and instead check aircraft database for specific nation
+      // However, skip combined nations like "BE/NE" and ATAF zones like "2ATAF" - check aircraft database instead
       if (!nationCode && (flight.nationality || flight.atafZone)) {
         const flightNation = flight.nationality || flight.atafZone;
         console.log(`Checking flight nation "${flightNation}" for "${aircraftType}"`);
-        // Skip combined nation codes - we'll get the specific nation from the aircraft database
-        if (flightNation && !flightNation.includes('/')) {
+        // Valid nation codes: 2-4 uppercase letters, not ATAF zones
+        const validNationCodes = ['US', 'UK', 'FRG', 'CAN', 'BE', 'NE', 'USSR', 'GDR', 'POL', 'CZE'];
+        if (flightNation && validNationCodes.includes(flightNation)) {
           nationCode = flightNation;
           console.log(`Using nationality "${nationCode}" from table result for "${aircraftType}"`);
         } else {
-          console.log(`Skipping combined nation code "${flightNation}" - will check aircraft database`);
+          console.log(`Skipping invalid/combined nation code "${flightNation}" - will check aircraft database`);
         }
       } else if (!nationCode) {
         console.log(`No nationality found in flight object for "${aircraftType}"`, flight);
@@ -2081,8 +2082,6 @@
         'BE': 'Belgium.jpg',
         'BE/NE': 'Netherlands.jpg', // BE/NE combined entry defaults to Netherlands
         'NE': 'Netherlands.jpg',
-        'HOL': 'Netherlands.jpg',
-        'Netherlands': 'Netherlands.jpg',
         'CAN': 'Canada.jpg',
         'Canada': 'Canada.jpg',
         'USSR': 'USSR.jpg',
