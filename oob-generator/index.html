@@ -1721,8 +1721,8 @@
       if (!nationCode && (flight.nationality || flight.atafZone)) {
         const flightNation = flight.nationality || flight.atafZone;
         console.log(`Checking flight nation "${flightNation}" for "${aircraftType}"`);
-        // Valid nation codes: 2-4 uppercase letters, not ATAF zones
-        const validNationCodes = ['US', 'UK', 'FRG', 'CAN', 'BE', 'NE', 'USSR', 'GDR', 'POL', 'CZE'];
+        // Valid nation codes: only playable nations in Red Storm
+        const validNationCodes = ['US', 'UK', 'FRG', 'CAN', 'BE', 'NE', 'USSR', 'GDR'];
         if (flightNation && validNationCodes.includes(flightNation)) {
           nationCode = flightNation;
           console.log(`Using nationality "${nationCode}" from table result for "${aircraftType}"`);
