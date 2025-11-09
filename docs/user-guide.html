@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide - Red Storm Tools Suite</title>
+    <link rel="stylesheet" href="../shared/red-storm.css">
+    <style>
+        body {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #d4e4d4;
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #3a4a3a;
+            border-radius: 6px;
+            border: 1px solid #4a5a4a;
+        }
+
+        .back-link:hover {
+            background-color: #4a5a4a;
+        }
+
+        .guide-header {
+            background-color: #2d3d2d;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #4a5a4a;
+        }
+
+        .guide-header h1 {
+            margin: 0 0 10px 0;
+            color: #f4f4f4;
+            font-size: 2.5em;
+        }
+
+        .guide-header p {
+            margin: 0;
+            color: #d4e4d4;
+            font-size: 1.2em;
+        }
+
+        .tool-section {
+            background-color: #3a4a3a;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            border-left: 4px solid #5a6a5a;
+        }
+
+        .tool-section h2 {
+            margin-top: 0;
+            color: #f4f4f4;
+            font-size: 1.8em;
+            border-bottom: 2px solid #4a5a4a;
+            padding-bottom: 10px;
+        }
+
+        .tool-section h3 {
+            color: #e4f4e4;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .tool-section p {
+            color: #d4e4d4;
+            margin: 10px 0;
+        }
+
+        .tool-section ul, .tool-section ol {
+            color: #d4e4d4;
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+
+        .tool-section li {
+            margin: 8px 0;
+        }
+
+        .note {
+            background-color: #4a5a4a;
+            border-left: 4px solid #8a9a8a;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .note strong {
+            color: #c4d4c4;
+        }
+
+        code {
+            background-color: #2d3d2d;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #c4d4c4;
+        }
+
+        .screenshot {
+            max-width: 100%;
+            border: 2px solid #4a5a4a;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .toc {
+            background-color: #2d3d2d;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .toc h2 {
+            margin-top: 0;
+            color: #f4f4f4;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin: 8px 0;
+        }
+
+        .toc a {
+            color: #8a9a8a;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .toc a:hover {
+            color: #c4d4c4;
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-link">← Back to Tools Suite</a>
+
+    <div class="guide-header">
+        <h1>Red Storm Tools Suite - User Guide</h1>
+        <p>Complete documentation for all tools in the suite</p>
+    </div>
+
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#oob-generator">Order of Battle Generator</a></li>
+            <li><a href="#chit-pull">Chit Pull Generator</a></li>
+            <li><a href="#flight-sheets">Manual Flight Sheet Generator</a></li>
+            <li><a href="#aircraft-notes">Aircraft Notes Reference</a></li>
+            <li><a href="#tips">Tips & Best Practices</a></li>
+        </ul>
+    </div>
+
+    <div class="tool-section" id="overview">
+        <h2>Overview</h2>
+        <p>The Red Storm Tools Suite is a collection of web-based utilities designed to enhance your Red Storm gameplay experience. All tools run entirely in your browser - no installation required!</p>
+        
+        <h3>What's Included</h3>
+        <ul>
+            <li><strong>Order of Battle Generator:</strong> Generate random aircraft flights using the official OOB tables</li>
+            <li><strong>Chit Pull Generator:</strong> Manage initiative and activation chits for gameplay</li>
+            <li><strong>Manual Flight Generator:</strong> Create custom flight sheets for any aircraft</li>
+            <li><strong>Aircraft Notes Reference:</strong> Quick lookup for special aircraft capabilities and notes</li>
+        </ul>
+
+        <div class="note">
+            <strong>Note:</strong> All tools work offline after initial loading. Your data stays in your browser - nothing is sent to a server.
+        </div>
+    </div>
+
+    <div class="tool-section" id="oob-generator">
+        <h2>Order of Battle Generator</h2>
+        <p>The OOB Generator allows you to randomly generate aircraft flights using the tables from the Red Storm rulebook.</p>
+
+        <h3>Getting Started</h3>
+        <ol>
+            <li>Select a <strong>scenario date</strong> (Pre-war or Post-war) - this affects available aircraft</li>
+            <li>Choose a <strong>table</strong> from the NATO or Warsaw Pact buttons (A through L)</li>
+            <li>For tables that require parameters (ATAF zone, nationality, mission type), select from the dropdown</li>
+            <li>Enter the <strong>number of rolls</strong> (1-20) you want to make</li>
+            <li>Click <strong>Make Rolls</strong> to generate results</li>
+        </ol>
+
+        <h3>Table Types</h3>
+        <ul>
+            <li><strong>Tables A, B, C:</strong> Require ATAF zone selection (2ATAF or 4ATAF)</li>
+            <li><strong>Tables E, K:</strong> Require nationality selection for carrier/naval operations</li>
+            <li><strong>Tables F, L:</strong> Require mission type selection</li>
+            <li><strong>Tables D, G, H, I, J:</strong> No parameters needed, just select and roll</li>
+        </ul>
+
+        <h3>Working with Results</h3>
+        <ul>
+            <li><strong>Review Results:</strong> All generated flights appear in the results panel on the right</li>
+            <li><strong>Generate Flight Sheets:</strong> Click "Generate Flight Sheets" to create printable cards for all results</li>
+            <li><strong>Clear Results:</strong> Use the "Clear Results" button to start fresh</li>
+            <li><strong>Export:</strong> Flight sheets can be printed directly from your browser</li>
+        </ul>
+
+        <h3>Flight Sheet Features</h3>
+        <ul>
+            <li>Complete aircraft statistics and performance data</li>
+            <li>Weapon loadouts with ammunition tracking</li>
+            <li>Fuel tracking with bubble markers</li>
+            <li>Damage tracking for each aircraft</li>
+            <li>Speed tables for all altitude bands</li>
+            <li>Radar, RWR, and jamming capabilities</li>
+        </ul>
+
+        <div class="note">
+            <strong>Tip:</strong> CSAR helicopter flights get special compact cards that are 1/4 the size of regular aircraft cards, allowing up to 4 CSAR flights per row.
+        </div>
+    </div>
+
+    <div class="tool-section" id="chit-pull">
+        <h2>Chit Pull Generator</h2>
+        <p>Manage initiative and activation chits for Red Storm gameplay sessions.</p>
+
+        <h3>How to Use</h3>
+        <ol>
+            <li>Configure your <strong>chit pools</strong> for both NATO and Warsaw Pact forces</li>
+            <li>Add chits by clicking the "+" buttons for each type</li>
+            <li>Click <strong>Draw Chit</strong> to randomly select from the available pool</li>
+            <li>The drawn chit will be displayed prominently</li>
+            <li>Use <strong>Reset Pool</strong> to start a new turn</li>
+        </ol>
+
+        <h3>Chit Types</h3>
+        <ul>
+            <li><strong>Initiative Chits:</strong> Determine turn order</li>
+            <li><strong>Activation Chits:</strong> Control when formations activate</li>
+            <li><strong>Special Chits:</strong> Weather, events, and special actions</li>
+        </ul>
+
+        <div class="note">
+            <strong>Note:</strong> The chit pull tool maintains separate pools for NATO and Warsaw Pact forces, and tracks which chits have been drawn each turn.
+        </div>
+    </div>
+
+    <div class="tool-section" id="flight-sheets">
+        <h2>Manual Flight Sheet Generator</h2>
+        <p>Create custom flight sheets for specific aircraft without using the random OOB tables.</p>
+
+        <h3>Creating a Flight Sheet</h3>
+        <ol>
+            <li>Select a <strong>nation</strong> from the dropdown (or choose "All Nations")</li>
+            <li>Choose an <strong>aircraft type</strong> from the filtered list</li>
+            <li>Select <strong>flight size</strong> (1-ship, 2-ship, or 4-ship)</li>
+            <li>Click <strong>Add to Queue</strong> to stage the flight</li>
+            <li>Repeat for additional flights</li>
+            <li>Click <strong>Print All Flights</strong> when ready</li>
+        </ol>
+
+        <h3>Queue Management</h3>
+        <ul>
+            <li>Add multiple flights to the queue before printing</li>
+            <li>Remove individual flights with the "Remove" button</li>
+            <li>Clear the entire queue with "Clear All"</li>
+            <li>Preview shows the current flight configuration</li>
+        </ul>
+
+        <div class="note">
+            <strong>Tip:</strong> Use this tool to create flight sheets for specific scenarios or to replace losses during a campaign.
+        </div>
+    </div>
+
+    <div class="tool-section" id="aircraft-notes">
+        <h2>Aircraft Notes Reference</h2>
+        <p>Quick reference guide for special aircraft capabilities and note codes.</p>
+
+        <h3>Note Categories</h3>
+        <ul>
+            <li><strong>Weapon Notes:</strong> Special ammunition or weapon system modifications</li>
+            <li><strong>Performance Notes:</strong> Speed, altitude, or maneuverability restrictions</li>
+            <li><strong>Capability Notes:</strong> Special equipment or operational capabilities</li>
+            <li><strong>Limitation Notes:</strong> Operational restrictions or deployment limitations</li>
+        </ul>
+
+        <h3>Using the Reference</h3>
+        <ul>
+            <li>Browse notes by nation/alliance</li>
+            <li>Search for specific note codes</li>
+            <li>View detailed explanations and game effects</li>
+            <li>See which aircraft are affected by each note</li>
+        </ul>
+    </div>
+
+    <div class="tool-section" id="tips">
+        <h2>Tips & Best Practices</h2>
+
+        <h3>General Tips</h3>
+        <ul>
+            <li><strong>Bookmark Tools:</strong> Add frequently used tools to your browser bookmarks for quick access</li>
+            <li><strong>Print Settings:</strong> Use "Print to PDF" to save flight sheets digitally</li>
+            <li><strong>Browser Compatibility:</strong> Best experience in Chrome, Firefox, or Edge</li>
+            <li><strong>Mobile Use:</strong> All tools work on tablets, though printing is best on desktop</li>
+        </ul>
+
+        <h3>Flight Sheet Tips</h3>
+        <ul>
+            <li>Print flight sheets before game sessions to save time</li>
+            <li>Use card sleeves to protect printed sheets for reuse</li>
+            <li>Mark tracking boxes with dry-erase markers if laminated</li>
+            <li>Keep blank sheets on hand for scenario-specific aircraft</li>
+        </ul>
+
+        <h3>OOB Generator Tips</h3>
+        <ul>
+            <li>Generate all flights for a scenario at once, then print</li>
+            <li>Use the debug view to understand dice rolls</li>
+            <li>Clear results between different scenarios to avoid confusion</li>
+            <li>Note the scenario date setting affects available aircraft</li>
+        </ul>
+
+        <div class="note">
+            <strong>Troubleshooting:</strong> If tools aren't working properly, try refreshing the page or clearing your browser cache. All tools work offline after initial loading.
+        </div>
+    </div>
+
+    <div class="tool-section">
+        <h2>Support & Feedback</h2>
+        <p>This is a community-driven project. If you encounter issues or have suggestions:</p>
+        <ul>
+            <li>Report bugs on the <a href="https://github.com/augustdragon/red-storm-tools-suite" target="_blank" style="color: #8a9a8a;">GitHub repository</a></li>
+            <li>Share feedback and ideas in the Issues section</li>
+            <li>Contribute improvements via pull requests</li>
+        </ul>
+
+        <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
+            Red Storm and all related game materials are © GMT Games. This is an unofficial fan-made tool suite not affiliated with or endorsed by the copyright holder.
+        </p>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #4a5a4a;">
+        <a href="../index.html" class="back-link">← Back to Tools Suite</a>
+    </div>
+</body>
+</html>

@@ -37,6 +37,7 @@ jobs:
           mkdir -p dist/chit-pull
           mkdir -p dist/oob-generator
           mkdir -p dist/shared
+          mkdir -p dist/docs
           
           # Copy the .nojekyll file to disable Jekyll processing
           cp .nojekyll dist/.nojekyll
@@ -46,6 +47,9 @@ jobs:
           
           # Copy the OOB generator with all its files
           cp -r oob-generator dist/
+          
+          # Copy the docs folder with user guide
+          cp -r docs dist/
           
           # Copy the shared CSS file
           cp shared/red-storm.css dist/shared/red-storm.css
