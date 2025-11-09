@@ -2516,6 +2516,7 @@
     .flight-card {
       border: 2px solid black;
       padding: 4px;
+      padding-bottom: 128px; /* Reserve space for bottom-anchored grid: height (120px) + bottom gap (8px) */
       page-break-inside: avoid;
       background: white;
       color: black;
@@ -2523,6 +2524,7 @@
       flex-direction: column;
       margin-bottom: 3px;
       height: 240pt; /* Fixed height for 2x3 layout (6 cards per page) */
+      position: relative; /* Establishes positioning context for absolute children */
     }
     
     /* Compact CSAR Card Styles - Quarter size (50% of regular card width × 50% height, 4 per row aligning with 2 regular cards) */
@@ -2714,12 +2716,15 @@
     }
     
     .aircraft-grid {
+      position: absolute; /* Anchor to bottom of flight card */
+      left: 4px; /* Align with card padding */
+      right: 4px;
+      bottom: 8px; /* Fixed gap from the bottom edge */
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 3px;
-      flex: 1; /* Grow to fill remaining space in card */
-      max-height: 220px; /* Constrain maximum height to maintain consistent gap from bottom */
-      margin-bottom: 3px; /* Maintain consistent gap from bottom of flight card */
+      height: 120px; /* Fixed grid height */
+      box-sizing: border-box;
     }
     
     .aircraft-box {
@@ -2729,7 +2734,6 @@
       flex-direction: column;
       align-items: center;
       position: relative;
-      max-height: 110px; /* Constrain individual box height (220px grid / 2 rows) */
       box-sizing: border-box; /* Include border and padding in height calculation */
       overflow: hidden; /* Prevent content from overflowing */
     }
@@ -2803,6 +2807,7 @@
       background: white;
       flex: 1; /* Grow to fill remaining vertical space */
       overflow: hidden; /* Prevent content from overflowing card border */
+      font-size: 7pt; /* Smaller font size for additional ordnance items */
     }
     
     .ordnance-label-small {
