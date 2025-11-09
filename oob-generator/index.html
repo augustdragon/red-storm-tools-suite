@@ -2727,6 +2727,8 @@
       min-height: 120px;
       position: relative;
       height: 100%; /* Fill grid cell height */
+      box-sizing: border-box; /* Include border and padding in height calculation */
+      overflow: hidden; /* Prevent content from overflowing */
     }
     
     .aircraft-header {
