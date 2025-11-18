@@ -443,6 +443,7 @@
     "rwy": 4,
     "fuel": 15,
     "notes": "F",
+    "standoffJammingStrength": "16/32/64",
     "weapons": {
       "gun": null,
       "gunDepletion": null,
@@ -669,6 +670,7 @@
     "rwy": 2,
     "fuel": "U",
     "notes": "E, F, Q",
+    "standoffJammingStrength": "18/36/70",
     "weapons": {
       "gun": null,
       "gunDepletion": null,
@@ -1079,6 +1081,7 @@
     "rwy": 4,
     "fuel": "U",
     "notes": "G, O",
+    "standoffJammingStrength": "10/20/40",
     "weapons": {
       "gun": null,
       "gunDepletion": null,
@@ -1314,6 +1317,7 @@
     "rwy": 4,
     "fuel": "U",
     "notes": "D, I",
+    "standoffJammingStrength": "6/12/24",
     "weapons": {
       "gun": null,
       "gunDepletion": null,

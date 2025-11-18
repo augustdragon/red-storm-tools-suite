@@ -649,6 +649,7 @@
     "rwy": 3,
     "fuel": 8,
     "notes": "K, N, O, T",
+    "standoffJammingStrength": "8/16/32",
     "weapons": {
       "gun": null,
       "gunDepletion": null,
@@ -1014,6 +1015,7 @@
     "rwy": 4,
     "fuel": 10,
     "notes": "J, R",
+    "standoffJammingStrength": "8/16/32",
     "weapons": {
       "gun": "23mm",
       "gunDepletion": 3,
@@ -1137,6 +1139,7 @@
     "rwy": 3,
     "fuel": 10,
     "notes": "K, R, T",
+    "standoffJammingStrength": "7/14/28",
     "weapons": {
       "gun": null,
       "gunDepletion": null,
@@ -1173,6 +1176,7 @@
     "rwy": 2,
     "fuel": "U",
     "notes": "J, L, W",
+    "standoffJammingStrength": "10/20/40",
     "weapons": {
       "gun": "Rear Gun",
       "gunDepletion": 2,
@@ -1282,6 +1286,7 @@
     "rwy": 5,
     "fuel": "U",
     "notes": "K, L, T, W",
+    "standoffJammingStrength": "10/20/40",
     "weapons": {
       "gun": "Rear Gun",
       "gunDepletion": 4,
@@ -1354,6 +1359,7 @@
     "rwy": 5,
     "fuel": "U",
     "notes": "E, K, L, T, W",
+    "standoffJammingStrength": "10/20/40",
     "weapons": {
       "gun": "Rear Gun",
       "gunDepletion": 3,
