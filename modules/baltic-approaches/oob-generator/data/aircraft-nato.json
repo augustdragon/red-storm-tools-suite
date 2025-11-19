@@ -24,12 +24,7 @@
     "sight": "+3",
     "rwr": "A/3d",
     "jam": "Surf",
-    "radar": {
-      "name": null,
-      "type": null,
-      "range": null,
-      "modifier": null
-    },
+    "radar": "surf",
     "speeds": {
       "clean": {
         "combat": "3/3/3/-",
@@ -50,7 +45,11 @@
     ],
     "capabilities": ["Radar", "FLIR", "TFR", "Night"],
     "aam": null,
-    "surfaceSearchRadar": null
+    "surfaceSearchRadar": {
+      "name": "APQ-156",
+      "range": 20,
+      "type": "C"
+    }
   },
   
   "EA-6B": {
@@ -61,7 +60,7 @@
     "rwy": 3,
     "fuel": 10,
     "notes": "B, D, F",
-    "standoffJammingStrength": null,
+    "standoffJammingStrength": "11/23/45",
     "weapons": {
       "gun": null,
       "gunDepletion": null,
@@ -74,7 +73,7 @@
     "sight": null,
     "rwr": "D/4d",
     "jam": "Surf",
-    "radar": null,
+    "radar": "surf",
     "speeds": {
       "clean": {
         "combat": "3/3/3/-",
@@ -88,7 +87,11 @@
     ],
     "capabilities": ["Night", "Standoff, Spot"],
     "aam": null,
-    "surfaceSearchRadar": null
+    "surfaceSearchRadar": {
+      "name": "APQ-156",
+      "range": 20,
+      "type": "C"
+    }
   },
   
   "A-7E": {
@@ -111,7 +114,7 @@
     "sight": "+3",
     "rwr": "A/3d",
     "jam": "Surf",
-    "radar": null,
+    "radar": "surf",
     "speeds": {
       "clean": {
         "combat": "2/3/3/-",
@@ -132,7 +135,11 @@
     ],
     "capabilities": ["Radar", "FLIR", "Night"],
     "aam": "AIM-9L (8), 20mm Gun (3)",
-    "surfaceSearchRadar": null
+    "surfaceSearchRadar": {
+      "name": "APQ-126",
+      "range": 26,
+      "type": "C"
+    }
   },
   
   "AV-8B": {
@@ -234,9 +241,9 @@
     "jam": null,
     "radar": {
       "name": "AWG-9",
-      "type": "LD (20), 16+: -1",
-      "range": null,
-      "modifier": null
+      "type": "LD",
+      "range": 20,
+      "modifier": "16+: -1"
     },
     "speeds": {
       "clean": {
@@ -249,7 +256,11 @@
     "ordnance": [],
     "capabilities": ["Night", "Recon", "AAX+"],
     "aam": "AIM-9L (8), AIM-7M (6), AIM-54C (3), 20mm Gun (3), AIM-54C*",
-    "surfaceSearchRadar": null
+    "surfaceSearchRadar": {
+      "name": "AWG-9",
+      "range": 36,
+      "type": "C"
+    }
   },
   
   "F/A-18A": {
@@ -274,9 +285,9 @@
     "jam": null,
     "radar": {
       "name": "APG-65",
-      "type": "LD, TS, Surf (20), TS",
-      "range": null,
-      "modifier": null
+      "type": "LD, TS, Surf",
+      "range": 20,
+      "modifier": "16+: -1"
     },
     "speeds": {
       "clean": {
@@ -325,7 +336,7 @@
     "sight": "+1",
     "rwr": "C/-",
     "jam": "Surf",
-    "radar": null,
+    "radar": "surf",
     "speeds": {
       "clean": {
         "combat": "2/3/3/-",
@@ -343,7 +354,11 @@
     ],
     "capabilities": ["FLIR", "Night"],
     "aam": null,
-    "surfaceSearchRadar": null
+    "surfaceSearchRadar": {
+      "name": "APS-116",
+      "range": 44,
+      "type": "C"
+    }
   },
   
   "P-3C": {
@@ -366,7 +381,7 @@
     "sight": null,
     "rwr": "C/-",
     "jam": "Surf",
-    "radar": null,
+    "radar": "surf",
     "speeds": {
       "clean": {
         "combat": "2/2/2/-",
@@ -384,6 +399,10 @@
     ],
     "capabilities": ["Night"],
     "aam": null,
-    "surfaceSearchRadar": null
+    "surfaceSearchRadar": {
+      "name": "APS-115",
+      "range": 15,
+      "type": "C"
+    }
   }
 }
