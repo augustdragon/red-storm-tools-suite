@@ -1,0 +1,119 @@
+{
+  "_comment": "OOB Table Metadata - Properties and Descriptions for Baltic Approaches",
+  "_version": "1.0.0",
+  "_created": "2025-11-18",
+  "_description": "Metadata for Baltic Approaches OOB tables A2-L2",
+  
+  "extraction_status": {
+    "phase": "1-initial-setup",
+    "completion": "structure-created",
+    "extracted_tables": [],
+    "remaining_tables": ["A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2", "I2", "J2", "K2", "L2"],
+    "notes": [
+      "Table structure created for Baltic Approaches module",
+      "Tables A2-F2 are NATO tables",
+      "Tables G2-L2 are Warsaw Pact tables",
+      "Ready for table data population based on BA rules"
+    ]
+  },
+  
+  "table_categories": {
+    "NATO": {
+      "faction": "NATO",
+      "tables": ["A2", "B2", "C2", "D2", "E2", "F2"],
+      "extracted": [],
+      "color_scheme": {
+        "primary": "#1976d2",
+        "secondary": "#1565c0",
+        "background": "#e3f2fd",
+        "text": "#0d47a1"
+      }
+    },
+    "WP": {
+      "faction": "Warsaw Pact",
+      "tables": ["G2", "H2", "I2", "J2", "K2", "L2"],
+      "extracted": [],
+      "color_scheme": {
+        "primary": "#d32f2f",
+        "secondary": "#b71c1c",
+        "background": "#ffebee",
+        "text": "#b71c1c"
+      }
+    }
+  },
+  
+  "table_descriptions": {
+    "A2": {
+      "id": "A2",
+      "name": "NATO Table A2",
+      "faction": "NATO",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    },
+    "B2": {
+      "id": "B2",
+      "name": "NATO Table B2",
+      "faction": "NATO",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    },
+    "C2": {
+      "id": "C2",
+      "name": "NATO Table C2",
+      "faction": "NATO",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    },
+    "D2": {
+      "id": "D2",
+      "name": "NATO Table D2",
+      "faction": "NATO",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    },
+    "E2": {
+      "id": "E2",
+      "name": "NATO Table E2",
+      "faction": "NATO",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    },
+    "F2": {
+      "id": "F2",
+      "name": "NATO Table F2",
+      "faction": "NATO",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    },
+    "G2": {
+      "id": "G2",
+      "name": "WP Table G2",
+      "faction": "WP",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    },
+    "H2": {
+      "id": "H2",
+      "name": "WP Table H2",
+      "faction": "WP",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    },
+    "I2": {
+      "id": "I2",
+      "name": "WP Table I2",
+      "faction": "WP",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    },
+    "J2": {
+      "id": "J2",
+      "name": "WP Table J2",
+      "faction": "WP",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    },
+    "K2": {
+      "id": "K2",
+      "name": "WP Table K2",
+      "faction": "WP",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    },
+    "L2": {
+      "id": "L2",
+      "name": "WP Table L2",
+      "faction": "WP",
+      "description": "TBD - To be defined based on Baltic Approaches rules"
+    }
+  }
+}

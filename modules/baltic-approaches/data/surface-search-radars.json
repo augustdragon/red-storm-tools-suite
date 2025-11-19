@@ -53,6 +53,132 @@
       "range": 15,
       "type": "C",
       "notes": "Forward Beam, All-weather"
+    },
+    {
+      "aircraft": "P-3C Orion (UK)",
+      "radar": "Similar to US variant",
+      "range": 15,
+      "type": "C",
+      "notes": "Forward Beam, All-weather"
+    },
+    {
+      "aircraft": "Buccaneer S.2B",
+      "radar": "Blue Parrot",
+      "range": 16,
+      "type": "D",
+      "notes": "Forward Beam, All-weather"
+    },
+    {
+      "aircraft": "Sea Harrier FRS.1",
+      "radar": "Blue Fox",
+      "range": 16,
+      "type": "C",
+      "notes": "Multi-mode: Air-to-air (No LD) and Surface Search"
+    },
+    {
+      "aircraft": "Nimrod MR.2",
+      "radar": "Searchwater",
+      "range": 24,
+      "type": "C",
+      "notes": "Forward Beam, All-weather, Maritime patrol radar"
+    },
+    {
+      "aircraft": "Lynx HAS.3",
+      "radar": "Sea Spray",
+      "range": 16,
+      "type": "D",
+      "notes": "Helicopter surface search, All-weather"
+    },
+    {
+      "aircraft": "Tornado IDS (Navy)",
+      "radar": "TN4",
+      "range": 12,
+      "type": "B",
+      "notes": "Forward Beam, All-weather"
+    },
+    {
+      "aircraft": "BR-150 Atlantic 2",
+      "radar": "ARI-5955",
+      "range": 8,
+      "type": "C",
+      "notes": "Forward Beam, All-weather, Maritime patrol"
+    },
+    {
+      "aircraft": "MK-41 Sea King",
+      "radar": "Iguane",
+      "range": 16,
+      "type": "C",
+      "notes": "Helicopter surface search, All-weather"
+    },
+    {
+      "aircraft": "F-16A Fighting Falcon",
+      "radar": "APG-66",
+      "range": 12,
+      "type": "B",
+      "notes": "Multi-mode: Air-to-air (LD) and Surface Search"
+    },
+    {
+      "aircraft": "AJ-37 Viggen",
+      "radar": "PS-37/A",
+      "range": 12,
+      "type": "C",
+      "notes": "Forward Beam, All-weather"
+    },
+    {
+      "aircraft": "SH-37 Viggen",
+      "radar": "PS-37/A",
+      "range": 14,
+      "type": "C",
+      "notes": "Forward Beam, All-weather, Recon variant"
+    },
+    {
+      "aircraft": "Tu-22RD Blinder C",
+      "radar": "Down Beat",
+      "range": null,
+      "type": "D",
+      "notes": "LD [30], 24+: -2, Forward Beam"
+    },
+    {
+      "aircraft": "Tu-22M2 Backfire B",
+      "radar": "Down Beat",
+      "range": null,
+      "type": "C",
+      "notes": "LD [30], 24+: -2, Forward Beam"
+    },
+    {
+      "aircraft": "Tu-95RT Bear D",
+      "radar": "Big Bulge A",
+      "range": null,
+      "type": "D",
+      "notes": "LD [36], 28+: -2, All aspects"
+    },
+    {
+      "aircraft": "IL-38 May",
+      "radar": "Wet Eye",
+      "range": null,
+      "type": "C",
+      "notes": "LD [16], 14+: -2, All aspects"
+    },
+    {
+      "aircraft": "Ka-25T Hormone B",
+      "radar": "Big Bulge B",
+      "range": null,
+      "type": "D",
+      "notes": "LD [30], 24+: -2, All aspects"
+    },
+    {
+      "aircraft": "Su-24/Su-24M Drop Kick",
+      "radar": "Drop Kick",
+      "range": null,
+      "type": "C",
+      "notes": "LD [12], 10+: -2, Forward Beam"
+    },
+    {
+      "aircraft": "Mi-14PL Haze A",
+      "radar": "Short Horn",
+      "range": null,
+      "type": "D",
+      "notes": "LD [12], 10+: -2, All aspects"
     }
   ],
   

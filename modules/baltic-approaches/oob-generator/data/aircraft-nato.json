@@ -404,5 +404,691 @@
       "range": 15,
       "type": "C"
     }
+  },
+  
+  "P-3C Orion": {
+    "name": "P-3C Orion",
+    "model": "P-3C Orion",
+    "nation": "UK",
+    "crew": 11,
+    "rwy": 4,
+    "fuel": "U",
+    "notes": "B, I",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "C/-",
+    "jam": "Surf",
+    "radar": "surf",
+    "speeds": {
+      "clean": {
+        "combat": "2/2/2/-",
+        "dash": "-/-/-/-",
+        "maneuver": "1/1/1/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Night"],
+    "aam": null,
+    "surfaceSearchRadar": {
+      "name": "Similar to US variant",
+      "range": 15,
+      "type": "C"
+    }
+  },
+  
+  "Buccaneer S.2B": {
+    "name": "Buccaneer S.2B",
+    "model": "Buccaneer S.2B",
+    "nation": "UK",
+    "crew": 2,
+    "rwy": 3,
+    "fuel": 12,
+    "notes": "D, E, I",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "2",
+    "sight": "+1",
+    "rwr": "B/2n",
+    "jam": "Surf",
+    "radar": "surf",
+    "speeds": {
+      "clean": {
+        "combat": "3/3/2/-",
+        "dash": "4/4/3/-",
+        "maneuver": "4/3/3/-"
+      },
+      "laden": {
+        "combat": "2/2/2/-",
+        "dash": "3/3/3/-",
+        "maneuver": "2/2/2/-"
+      }
+    },
+    "ordnance": [
+      { "type": "LGB", "quantity": 1 },
+      { "type": "EOGB", "quantity": 1 },
+      { "type": "Sea Eagle", "quantity": 2 },
+      { "type": "AS.37", "quantity": 1 }
+    ],
+    "capabilities": ["TFR", "Night"],
+    "aam": "AIM-9L (8)",
+    "surfaceSearchRadar": {
+      "name": "Blue Parrot",
+      "range": 16,
+      "type": "D"
+    }
+  },
+  
+  "Sea Harrier FRS.1": {
+    "name": "Sea Harrier FRS.1",
+    "model": "Sea Harrier FRS.1",
+    "nation": "UK",
+    "crew": 1,
+    "rwy": 0,
+    "fuel": 5,
+    "notes": "F, J, K",
+    "weapons": {
+      "gun": "30mm",
+      "gunDepletion": 4,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "1.5",
+    "sight": "+1",
+    "rwr": "A/-",
+    "jam": null,
+    "radar": {
+      "name": "Blue Fox",
+      "type": "No LD, Surf",
+      "range": null,
+      "modifier": "[5] 4+: -1"
+    },
+    "speeds": {
+      "clean": {
+        "combat": "3/3/2/-",
+        "dash": "4/4/3/-",
+        "maneuver": "6/5/4/-"
+      },
+      "laden": {
+        "combat": "2/2/2/-",
+        "dash": "3/3/3/-",
+        "maneuver": "3/3/2/-"
+      }
+    },
+    "ordnance": [
+      { "type": "Rockets", "quantity": null },
+      { "type": "Sea Eagle", "quantity": 2 }
+    ],
+    "capabilities": ["Radar", "Night(Ltd)"],
+    "aam": "AIM-9L (6), 30mm Gun (4)",
+    "surfaceSearchRadar": {
+      "name": "Blue Fox",
+      "range": 16,
+      "type": "C"
+    }
+  },
+  
+  "Nimrod MR.2": {
+    "name": "Nimrod MR.2",
+    "model": "Nimrod MR.2",
+    "nation": "UK",
+    "crew": 13,
+    "rwy": 4,
+    "fuel": "U",
+    "notes": "B, I",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "C/-",
+    "jam": "Surf",
+    "radar": "surf",
+    "speeds": {
+      "clean": {
+        "combat": "2/3/3/-",
+        "dash": "-/-/-/-",
+        "maneuver": "1/1/1/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Night"],
+    "aam": "AIM-9L (8)",
+    "surfaceSearchRadar": {
+      "name": "Searchwater",
+      "range": 24,
+      "type": "C"
+    }
+  },
+  
+  "Lynx HAS.3": {
+    "name": "Lynx HAS.3",
+    "model": "Lynx HAS.3",
+    "nation": "UK",
+    "crew": 2,
+    "rwy": 0,
+    "fuel": "U",
+    "notes": "C",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "C/-",
+    "jam": "Surf",
+    "radar": "surf",
+    "speeds": {
+      "clean": {
+        "combat": "1/-/-/-",
+        "dash": "-/-/-/-",
+        "maneuver": "2/-/-/-"
+      },
+      "laden": null
+    },
+    "ordnance": [
+      { "type": "EOGM", "quantity": 1 }
+    ],
+    "capabilities": ["Night"],
+    "aam": null,
+    "surfaceSearchRadar": {
+      "name": "Sea Spray",
+      "range": 16,
+      "type": "D"
+    }
+  },
+  
+  "Tornado IDS (Navy)": {
+    "name": "Tornado IDS (Navy)",
+    "model": "Tornado IDS (Navy)",
+    "nation": "UK",
+    "crew": 2,
+    "rwy": 3,
+    "fuel": 9,
+    "notes": "C",
+    "weapons": {
+      "gun": "27mm",
+      "gunDepletion": 4,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "4/2",
+    "sight": "+4",
+    "rwr": "B/3d",
+    "jam": "Surf",
+    "radar": "surf",
+    "speeds": {
+      "clean": {
+        "combat": "4/4/5/-",
+        "dash": "5/6/7/-",
+        "maneuver": "4/5/6/-"
+      },
+      "laden": {
+        "combat": "3/3/3/-",
+        "dash": "4/4/5/-",
+        "maneuver": "2/3/3/-"
+      }
+    },
+    "ordnance": [
+      { "type": "Kormoran", "quantity": 2 }
+    ],
+    "capabilities": ["Radar", "Recon", "TFR", "Night"],
+    "aam": "AIM-9L (8), 27mm Gun (4)",
+    "surfaceSearchRadar": {
+      "name": "TN4",
+      "range": 12,
+      "type": "B"
+    }
+  },
+  
+  "BR-150 Atlantic 2": {
+    "name": "BR-150 Atlantic 2",
+    "model": "BR-150 Atlantic 2",
+    "nation": "FRG",
+    "crew": 10,
+    "rwy": 4,
+    "fuel": "U",
+    "notes": "B, I",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "C/-",
+    "jam": "Surf",
+    "radar": "surf",
+    "speeds": {
+      "clean": {
+        "combat": "2/2/-/-",
+        "dash": "-/-/-/-",
+        "maneuver": "1/1/-/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Night"],
+    "aam": null,
+    "surfaceSearchRadar": {
+      "name": "ARI-5955",
+      "range": 8,
+      "type": "C"
+    }
+  },
+  
+  "MK-41 Sea King": {
+    "name": "MK-41 Sea King",
+    "model": "MK-41 Sea King",
+    "nation": "FRG",
+    "crew": 4,
+    "rwy": 0,
+    "fuel": "U",
+    "notes": null,
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "B/-",
+    "jam": "Surf",
+    "radar": "surf",
+    "speeds": {
+      "clean": {
+        "combat": "1/-/-/-",
+        "dash": "-/-/-/-",
+        "maneuver": "2/-/-/-"
+      },
+      "laden": null
+    },
+    "ordnance": [
+      { "type": "EOGM", "quantity": 1 }
+    ],
+    "capabilities": ["Night"],
+    "aam": null,
+    "surfaceSearchRadar": {
+      "name": "Iguane",
+      "range": 16,
+      "type": "C"
+    }
+  },
+  
+  "F-16A (DK)": {
+    "name": "F-16A Fighting Falcon",
+    "model": "F-16A Fighting Falcon",
+    "nation": "DK",
+    "nationOptions": ["DK", "NE"],
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 6,
+    "notes": "A, C, G",
+    "weapons": {
+      "gun": "20mm",
+      "gunDepletion": 3,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "3/2",
+    "sight": "+3",
+    "rwr": "B/-",
+    "jam": null,
+    "radar": {
+      "name": "APG-66",
+      "type": "LD, Surf",
+      "range": 12,
+      "modifier": "10+: -1"
+    },
+    "speeds": {
+      "clean": {
+        "combat": "4/4/5/-",
+        "dash": "5/6/8/-",
+        "maneuver": "9/8/9/-"
+      },
+      "laden": {
+        "combat": "3/3/4/-",
+        "dash": "4/5/5/-",
+        "maneuver": "4/5/5/-"
+      }
+    },
+    "ordnance": [],
+    "capabilities": ["Radar", "Night(Ltd)"],
+    "aam": "AIM-9L (3), 20mm Gun (3)",
+    "surfaceSearchRadar": {
+      "name": "APG-66",
+      "range": 12,
+      "type": "B"
+    }
+  },
+  
+  "F-35XD Draken": {
+    "name": "F-35XD Draken",
+    "model": "F-35XD Draken",
+    "nation": "DK",
+    "crew": 1,
+    "rwy": 3,
+    "fuel": 6,
+    "notes": "H",
+    "weapons": {
+      "gun": "30mm",
+      "gunDepletion": 4,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "1.5",
+    "sight": "+2",
+    "rwr": "B/3d",
+    "jam": null,
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5/-",
+        "dash": "4/5/7/-",
+        "maneuver": "4/5/6/-"
+      },
+      "laden": {
+        "combat": "3/3/4/-",
+        "dash": "4/4/5/-",
+        "maneuver": "2/3/3/-"
+      }
+    },
+    "ordnance": [
+      { "type": "Rockets", "quantity": null }
+    ],
+    "capabilities": [],
+    "aam": "AIM-9N (3), 30mm Gun (4), 30mm Gun (4)",
+    "surfaceSearchRadar": null
+  },
+  
+  "RF-35XD Draken": {
+    "name": "RF-35XD Draken",
+    "model": "RF-35XD Draken",
+    "nation": "DK",
+    "crew": 1,
+    "rwy": 3,
+    "fuel": 8,
+    "notes": null,
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "B/3d",
+    "jam": null,
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5/-",
+        "dash": "4/5/7/-",
+        "maneuver": "4/5/6/-"
+      },
+      "laden": {
+        "combat": "3/3/4",
+        "dash": "4/4/5/",
+        "maneuver": "2/3/3/"
+      }
+    },
+    "ordnance": [],
+    "capabilities": ["Recon"],
+    "aam": null,
+    "surfaceSearchRadar": null
+  },
+  
+  "JA-37 Viggen": {
+    "name": "JA-37 Viggen",
+    "model": "JA-37 Viggen",
+    "nation": "SE",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 7,
+    "notes": "C, D, E, H",
+    "weapons": {
+      "gun": "30mm",
+      "gunDepletion": 4,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": "+2",
+    "rwr": "B/-",
+    "jam": null,
+    "radar": {
+      "name": "PS-46/A",
+      "type": "LD, TS",
+      "range": null,
+      "modifier": "[4], 12+: -1"
+    },
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5/-",
+        "dash": "5/6/7/-",
+        "maneuver": "5/6/7/-"
+      },
+      "laden": {
+        "combat": "3/3/4/-",
+        "dash": "4/4/5/-",
+        "maneuver": "3/3/3/-"
+      }
+    },
+    "ordnance": [
+      { "type": "Rockets", "quantity": null }
+    ],
+    "capabilities": ["Night"],
+    "aam": "AIM-9P/L (3), Skyflash (3), 30mm Gun (4)",
+    "surfaceSearchRadar": null
+  },
+  
+  "AJ-37 Viggen": {
+    "name": "AJ-37 Viggen",
+    "model": "AJ-37 Viggen",
+    "nation": "SE",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 8,
+    "notes": "H",
+    "weapons": {
+      "gun": "30mm",
+      "gunDepletion": 4,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "2",
+    "sight": "+2",
+    "rwr": "B/3d",
+    "jam": "Surf",
+    "radar": "surf",
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5/-",
+        "dash": "5/6/7/-",
+        "maneuver": "5/5/6/-"
+      },
+      "laden": {
+        "combat": "3/3/4/-",
+        "dash": "4/4/5/-",
+        "maneuver": "3/3/3/-"
+      }
+    },
+    "ordnance": [
+      { "type": "EOGM", "quantity": 1 },
+      { "type": "RB.04E", "quantity": 2 },
+      { "type": "Rockets", "quantity": null }
+    ],
+    "capabilities": ["Night", "Radar"],
+    "aam": "AIM-9P (8)",
+    "surfaceSearchRadar": {
+      "name": "PS-37/A",
+      "range": 12,
+      "type": "C"
+    }
+  },
+  
+  "SH-37 Viggen": {
+    "name": "SH-37 Viggen",
+    "model": "SH-37 Viggen",
+    "nation": "SE",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 8,
+    "notes": null,
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "B/3d",
+    "jam": "Surf",
+    "radar": "surf",
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5/-",
+        "dash": "5/6/7/-",
+        "maneuver": "5/5/6/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Recon", "Night"],
+    "aam": "AIM-9P (3)",
+    "surfaceSearchRadar": {
+      "name": "PS-37/A",
+      "range": 14,
+      "type": "C"
+    }
+  },
+  
+  "J-35F2 Draken": {
+    "name": "J-35F2 Draken",
+    "model": "J-35F2 Draken",
+    "nation": "SE",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 6,
+    "notes": "A, B, D",
+    "weapons": {
+      "gun": "30mm",
+      "gunDepletion": 4,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "1",
+    "sight": "+1",
+    "rwr": "-/-",
+    "jam": null,
+    "radar": {
+      "name": "PS-011/A",
+      "type": "No LD",
+      "range": null,
+      "modifier": "[6]"
+    },
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5/-",
+        "dash": "4/5/7/-",
+        "maneuver": "4/5/6/-"
+      },
+      "laden": {
+        "combat": "3/3/4/-",
+        "dash": "4/4/5/-",
+        "maneuver": "2/3/3/-"
+      }
+    },
+    "ordnance": [
+      { "type": "Rockets", "quantity": null }
+    ],
+    "capabilities": ["Night", "IRS1"],
+    "aam": "AIM-9P (3), AIM-4F (6), 30mm Gun (4)",
+    "surfaceSearchRadar": null
+  },
+  
+  "J-32E Lansen": {
+    "name": "J-32E Lansen",
+    "model": "J-32E Lansen",
+    "nation": "SE",
+    "crew": 2,
+    "rwy": 2,
+    "fuel": 6,
+    "notes": "F, G",
+    "standoffJammingStrength": "7/14/28",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "C/-",
+    "jam": null,
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "3/3/3/-",
+        "dash": "4/4/4/-",
+        "maneuver": "4/4/4/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Night"],
+    "aam": null,
+    "surfaceSearchRadar": null
   }
 }

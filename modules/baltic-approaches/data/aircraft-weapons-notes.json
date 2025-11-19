@@ -38,6 +38,79 @@
       "class": "Gun",
       "standard": 3,
       "notes": null
+    },
+    "27mm Gun": {
+      "class": "Gun",
+      "standard": 3,
+      "notes": null
+    },
+    "30mm Gun": {
+      "class": "Gun",
+      "standard": 4,
+      "notes": null
+    },
+    "AIM-9P": {
+      "class": "IRM",
+      "standard": 3,
+      "BVR": 1,
+      "BVRRange": "1 (Forward), 1 (Rearward)"
+    },
+    "AIM-9N": {
+      "class": "IRM",
+      "standard": 3,
+      "BVR": 1,
+      "BVRRange": "1 (Forward), 1 (Rearward)"
+    },
+    "AIM-4F": {
+      "class": "IRM",
+      "standard": 3,
+      "BVR": 1,
+      "BVRRange": "1 (Forward), 1 (Rearward)"
+    },
+    "Skyflash": {
+      "class": "RHM",
+      "standard": 3,
+      "BVR": 2,
+      "BVRRange": "1-3 (Forward), 2-3 (Beam), 2-3 (Rear)"
+    },
+    "R-13M (AA-2D)": {
+      "class": "IRM",
+      "standard": 0,
+      "BVR": null,
+      "BVRRange": null
+    },
+    "R-60 (AA-8A)": {
+      "class": "IRM",
+      "standard": 1,
+      "BVR": null,
+      "BVRRange": null
+    },
+    "R-3R (AA-2C)": {
+      "class": "RHM",
+      "standard": 0,
+      "BVR": -1,
+      "BVRRange": "1-2 (Front), 1 (Beam)"
+    },
+    "R-23 (AA-7A)": {
+      "class": "RHM",
+      "standard": 2,
+      "BVR": -1,
+      "BVRRange": "1-4 (Front), 1-2 (Beam), 1 (Rear)"
+    },
+    "23mm Gun": {
+      "class": "Gun",
+      "standard": 2,
+      "notes": null
+    },
+    "23mm Pod": {
+      "class": "Gun",
+      "standard": 1,
+      "notes": "Roll to determine IRM load for each flight: 1-6 Pod, 7-10 no Pod"
+    },
+    "Rear Gun": {
+      "class": "Gun",
+      "standard": 3,
+      "notes": "Rear-facing defensive gun"
     }
   },
   
@@ -100,6 +173,11 @@
     "EA-6B": {
       "aircraft": "EA-6B Prowler",
       "strength": "11 / 23 / 45",
+      "notes": "Jamming Strength [9.21]"
+    },
+    "J-32E": {
+      "aircraft": "J-32E Lansen",
+      "strength": "7 / 14 / 28",
       "notes": "Jamming Strength [9.21]"
     }
   }

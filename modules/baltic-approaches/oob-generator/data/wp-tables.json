@@ -1,0 +1,61 @@
+{
+  "_comment": "Warsaw Pact OOB Tables (G2-L2) - Baltic Approaches Order of Battle Data",
+  "_version": "1.0.0",
+  "_created": "2025-11-18",
+  "_description": "Warsaw Pact OOB tables for Baltic Approaches module. Tables G2-L2 correspond to different mission types and force compositions.",
+  "_note": "Placeholder structure - tables to be populated based on Baltic Approaches rules",
+  
+  "G2": {
+    "name": "WP Table G2 - TBD",
+    "faction": "WP",
+    "description": "Placeholder for Baltic Approaches WP Table G2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  },
+  
+  "H2": {
+    "name": "WP Table H2 - TBD",
+    "faction": "WP",
+    "description": "Placeholder for Baltic Approaches WP Table H2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  },
+  
+  "I2": {
+    "name": "WP Table I2 - TBD",
+    "faction": "WP",
+    "description": "Placeholder for Baltic Approaches WP Table I2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  },
+  
+  "J2": {
+    "name": "WP Table J2 - TBD",
+    "faction": "WP",
+    "description": "Placeholder for Baltic Approaches WP Table J2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  },
+  
+  "K2": {
+    "name": "WP Table K2 - TBD",
+    "faction": "WP",
+    "description": "Placeholder for Baltic Approaches WP Table K2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  },
+  
+  "L2": {
+    "name": "WP Table L2 - TBD",
+    "faction": "WP",
+    "description": "Placeholder for Baltic Approaches WP Table L2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  }
+}

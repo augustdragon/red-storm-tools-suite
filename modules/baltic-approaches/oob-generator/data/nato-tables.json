@@ -1,0 +1,61 @@
+{
+  "_comment": "NATO OOB Tables (A2-F2) - Baltic Approaches Order of Battle Data",
+  "_version": "1.0.0",
+  "_created": "2025-11-18",
+  "_description": "NATO OOB tables for Baltic Approaches module. Tables A2-F2 correspond to different mission types and force compositions.",
+  "_note": "Placeholder structure - tables to be populated based on Baltic Approaches rules",
+  
+  "A2": {
+    "name": "NATO Table A2 - TBD",
+    "faction": "NATO",
+    "description": "Placeholder for Baltic Approaches NATO Table A2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  },
+  
+  "B2": {
+    "name": "NATO Table B2 - TBD",
+    "faction": "NATO",
+    "description": "Placeholder for Baltic Approaches NATO Table B2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  },
+  
+  "C2": {
+    "name": "NATO Table C2 - TBD",
+    "faction": "NATO",
+    "description": "Placeholder for Baltic Approaches NATO Table C2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  },
+  
+  "D2": {
+    "name": "NATO Table D2 - TBD",
+    "faction": "NATO",
+    "description": "Placeholder for Baltic Approaches NATO Table D2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  },
+  
+  "E2": {
+    "name": "NATO Table E2 - TBD",
+    "faction": "NATO",
+    "description": "Placeholder for Baltic Approaches NATO Table E2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  },
+  
+  "F2": {
+    "name": "NATO Table F2 - TBD",
+    "faction": "NATO",
+    "description": "Placeholder for Baltic Approaches NATO Table F2",
+    "flightSize": null,
+    "hasDate": false,
+    "nations": {}
+  }
+}
