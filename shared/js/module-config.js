@@ -82,17 +82,17 @@ const MODULES = {
     // Nation Configuration
     nations: {
       nato: [
-        { code: 'USA', name: 'United States', roundel: '/shared/assets/roundels/icons/US.png' },
-        { code: 'UK', name: 'United Kingdom', roundel: '/shared/assets/roundels/icons/UK.png' },
-        { code: 'FRG', name: 'West Germany', roundel: '/shared/assets/roundels/icons/FRG.png' },
-        { code: 'DK', name: 'Denmark', roundel: '/shared/assets/roundels/icons/Denmark.png' },
-        { code: 'SE', name: 'Sweden', roundel: '/shared/assets/roundels/icons/Sweden.png' },
-        { code: 'NE', name: 'Netherlands', roundel: '/shared/assets/roundels/icons/Netherlands.png' }
+        { code: 'USA', name: 'United States', roundel: '/shared/assets/roundels/USAF.jpg' },
+        { code: 'UK', name: 'United Kingdom', roundel: '/shared/assets/roundels/UK.jpg' },
+        { code: 'FRG', name: 'West Germany', roundel: '/shared/assets/roundels/FRG.jpg' },
+        { code: 'DK', name: 'Denmark', roundel: '/shared/assets/roundels/Denmark.jpg' },
+        { code: 'SE', name: 'Sweden', roundel: '/shared/assets/roundels/Sweden.jpg' },
+        { code: 'NE', name: 'Netherlands', roundel: '/shared/assets/roundels/Netherlands.jpg' }
       ],
       wp: [
-        { code: 'USSR', name: 'Soviet Union', roundel: '/shared/assets/roundels/icons/USSR.png' },
-        { code: 'GDR', name: 'East Germany', roundel: '/shared/assets/roundels/icons/GDR.png' },
-        { code: 'POL', name: 'Poland', roundel: '/shared/assets/roundels/icons/Poland.png' }
+        { code: 'USSR', name: 'Soviet Union', roundel: '/shared/assets/roundels/USSR.jpg' },
+        { code: 'GDR', name: 'East Germany', roundel: '/shared/assets/roundels/GDR.jpg' },
+        { code: 'POL', name: 'Poland', roundel: '/shared/assets/roundels/Poland.jpg' }
       ]
     },
     
