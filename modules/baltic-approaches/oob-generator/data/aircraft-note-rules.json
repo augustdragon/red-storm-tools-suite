@@ -1,0 +1,61 @@
+{
+  "_comment": "Baltic Approaches Aircraft Note Rules",
+  "_version": "1.0.0",
+  "_created": "2025-11-18",
+  "_description": "Aircraft note definitions for Baltic Approaches module. Notes A-M have different meanings than Red Storm.",
+  
+  "USN/USMC": {
+    "A": {
+      "description": "Use same bomb point load for Deep Strike and Naval Strike raids",
+      "type": "loadoutModification"
+    },
+    "B": {
+      "description": "May Spot Jam [11.34] two radars at the same time",
+      "type": "special"
+    },
+    "C": {
+      "description": "May enter Defensive Wheel formation [7.1]",
+      "type": "formation"
+    },
+    "D": {
+      "description": "If tasked with Escort Jamming [8.341] may carry HARMs [17.54] and attack naval or land radars",
+      "type": "weaponModification"
+    },
+    "E": {
+      "description": "V/STOL aircraft [7.37]",
+      "type": "special"
+    },
+    "F": {
+      "description": "Zoom Climb [8.43] not allowed",
+      "type": "restriction"
+    },
+    "G": {
+      "description": "May do Max Turns as Free Turns [8.32]",
+      "type": "maneuver"
+    },
+    "H": {
+      "description": "A/V -1: If tasked with Bombing, SEAD, Recon, or Rescue Support",
+      "type": "modifier"
+    },
+    "I": {
+      "description": "Flt: May carry AIM-7 and AIM-54 RAAM at the same time",
+      "type": "weaponModification"
+    },
+    "J": {
+      "description": "If tasked with Maritime Patrol, may carry Harpoon and attack naval targets",
+      "type": "weaponModification"
+    },
+    "K": {
+      "description": "If tasked with Recon, missile load is AIM-9L (6), AIM-7M (3)",
+      "type": "loadoutModification"
+    },
+    "L": {
+      "description": "AAX-1 sensor: Automatic visual ID at end of Detection Phase of one die detected enemy flight in forward arc, line of sight, and same altitude as 1-8 hex range. Day only",
+      "type": "sensor"
+    },
+    "M": {
+      "description": "Large Aircraft [19.22] (see B-40 Climbing limitations) and Poor SAM Defense [15.32]",
+      "type": "restriction"
+    }
+  }
+}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aircraft Notes Reference - Baltic Approaches</title>
+  <link rel="stylesheet" href="../../../shared/css/red-storm.css">
+  <style>
+    /* Override body to match OOB generator */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background-color: #2d3d2d;
+    }
+
+    /* Custom styles for notes table */
+    .notes-table {
+      width: 100%;
+      background-color: #344034;
+      border-radius: 5px;
+      overflow: hidden;
+      border-collapse: collapse;
+    }
+
+    .notes-table thead {
+      background-color: #3f4f3f;
+    }
+
+    .notes-table th {
+      color: #e8f0e8;
+      padding: 10px;
+      text-align: left;
+      font-weight: bold;
+      font-size: 16px;
+      border-bottom: 2px solid #2d3a2d;
+    }
+
+    .notes-table th:first-child {
+      width: 50px;
+      text-align: center;
+    }
+
+    .notes-table tbody tr {
+      border-bottom: 1px solid #2d3a2d;
+    }
+
+    .notes-table tbody tr:nth-child(even) {
+      background-color: #3d4f3d;
+    }
+
+    .notes-table tbody tr:hover {
+      background-color: #4a5a4a;
+    }
+
+    .notes-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .notes-table td {
+      color: #d8e4d8;
+      padding: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .note-code-cell {
+      text-align: center;
+      font-weight: bold;
+      font-size: 17px;
+      color: #e8f0e8;
+    }
+
+    .note-description-cell {
+      color: #c8d8c8;
+    }
+
+    /* Override header to match OOB generator */
+    .header {
+      margin-bottom: 20px;
+    }
+
+    .header .title {
+      font-size: 32px;
+      letter-spacing: 0;
+      margin-bottom: 5px;
+      color: #ffffff;
+    }
+
+    .header .subtitle {
+      font-size: 16px;
+      letter-spacing: 0;
+      font-style: italic;
+      opacity: 0.9;
+      color: #ffffff;
+    }
+
+    /* Form controls container - two-column grid spanning full width */
+    .section {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      margin: 0 0 30px 0;
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 15px;
+    }
+
+    .controls-section {
+      background-color: #3a4a3a;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #4a5a4a;
+    }
+
+    .controls-title {
+      color: #d4e4d4;
+      padding: 0 0 8px 0;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #4a5a4a;
+    }
+
+    .nation-select,
+    .search-box {
+      width: 100%;
+      padding: 10px 12px;
+      background-color: #2d3a2d;
+      color: #d4e4d4;
+      border: 2px solid #4a5a4a;
+      border-radius: 6px;
+      font-size: 15px;
+      transition: all 0.3s;
+      box-sizing: border-box;
+    }
+
+    .nation-select {
+      cursor: pointer;
+    }
+
+    .nation-select:focus,
+    .search-box:focus {
+      outline: none;
+      border-color: #7a8a7a;
+      background-color: #3a4a3a;
+    }
+
+    .search-box::placeholder {
+      color: #6a7a6a;
+    }
+
+    @media print {
+      .back-link,
+      .section:first-of-type {
+        display: none;
+      }
+
+      .notes-table {
+        page-break-inside: avoid;
+      }
+
+      .notes-table tbody tr {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="title">Baltic Approaches</div>
+      <div class="subtitle">Aircraft Notes Reference</div>
+    </div>
+
+    <a href="../index.html" class="back-link">← Back to Baltic Approaches Tools</a>
+
+    <div class="section">
+      <div class="controls-section">
+        <div class="controls-title">Select Nation</div>
+        <select id="nationSelect" class="nation-select">
+          <option value="USN/USMC">USN/USMC - US Navy & Marines</option>
+          <option value="UK">UK - Royal Air Force & Navy</option>
+          <option value="FRG">FRG - West German Air Force</option>
+          <option value="Denmark">Denmark - Royal Danish Air Force</option>
+          <option value="Sweden">Sweden - Swedish Air Force</option>
+          <option value="Netherlands">Netherlands - Royal Netherlands Air Force</option>
+          <option value="USSR">USSR - Soviet Air Force & Navy</option>
+          <option value="GDR">GDR - East German Air Force</option>
+          <option value="Poland">Poland - Polish Air Force</option>
+        </select>
+      </div>
+
+      <div class="controls-section">
+        <div class="controls-title">Search Notes</div>
+        <input type="text" id="searchBox" class="search-box" placeholder="Search by note code or text...">
+      </div>
+    </div>
+
+    <div id="notesSection">
+      <!-- Notes table will be inserted here -->
+    </div>
+  </div>
+
+  <script>
+    // Notes database for Baltic Approaches
+    const notesData = {
+      'USN/USMC': [
+        { code: 'A', desc: 'Use same bomb point load for Deep Strike and Naval Strike raids' },
+        { code: 'B', desc: 'May Spot Jam [11.34] two radars at the same time' },
+        { code: 'C', desc: 'May enter Defensive Wheel formation [7.1]' },
+        { code: 'D', desc: 'If tasked with Escort Jamming [8.341] may carry HARMs [17.54] and attack naval or land radars' },
+        { code: 'E', desc: 'V/STOL aircraft [7.37]' },
+        { code: 'F', desc: 'Zoom Climb [8.43] not allowed' },
+        { code: 'G', desc: 'May do Max Turns as Free Turns [8.32]' },
+        { code: 'H', desc: 'A/V -1: If tasked with Bombing, SEAD, Recon, or Rescue Support' },
+        { code: 'I', desc: 'Flt: May carry AIM-7 and AIM-54 RAAM at the same time' },
+        { code: 'J', desc: 'If tasked with Maritime Patrol, may carry Harpoon and attack naval targets' },
+        { code: 'K', desc: 'If tasked with Recon, missile load is AIM-9L (6), AIM-7M (3)' },
+        { code: 'L', desc: 'AAX-1 sensor: Automatic visual ID at end of Detection Phase of one die detected enemy flight in forward arc, line of sight, and same altitude as 1-8 hex range. Day only' },
+        { code: 'M', desc: 'Large Aircraft [19.22] (see B-40 Climbing limitations) and Poor SAM Defense [15.32]' }
+      ],
+      'UK': [
+        { code: 'TBD', desc: 'UK aircraft notes to be added when UK aircraft data is available' }
+      ],
+      'FRG': [
+        { code: 'TBD', desc: 'FRG aircraft notes to be added when FRG aircraft data is available' }
+      ],
+      'Denmark': [
+        { code: 'TBD', desc: 'Denmark aircraft notes to be added when Danish aircraft data is available' }
+      ],
+      'Sweden': [
+        { code: 'TBD', desc: 'Sweden aircraft notes to be added when Swedish aircraft data is available' }
+      ],
+      'Netherlands': [
+        { code: 'TBD', desc: 'Netherlands aircraft notes to be added when Dutch aircraft data is available' }
+      ],
+      'USSR': [
+        { code: 'TBD', desc: 'USSR aircraft notes to be added when Soviet aircraft data is available' }
+      ],
+      'GDR': [
+        { code: 'TBD', desc: 'GDR aircraft notes to be added when East German aircraft data is available' }
+      ],
+      'Poland': [
+        { code: 'TBD', desc: 'Poland aircraft notes to be added when Polish aircraft data is available' }
+      ]
+    };
+
+    const nationSelect = document.getElementById('nationSelect');
+    const searchBox = document.getElementById('searchBox');
+    const notesSection = document.getElementById('notesSection');
+
+    let currentNation = 'USN/USMC';
+    let searchTerm = '';
+
+    function renderNotes() {
+      const notes = notesData[currentNation] || [];
+      const filtered = notes.filter(note => {
+        if (!searchTerm) return true;
+        const search = searchTerm.toLowerCase();
+        return note.code.toLowerCase().includes(search) || 
+               note.desc.toLowerCase().includes(search);
+      });
+
+      const html = `
+        <table class="notes-table">
+          <thead>
+            <tr>
+              <th>Note</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered.map(note => `
+              <tr>
+                <td class="note-code-cell">${note.code}</td>
+                <td class="note-description-cell">${note.desc}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      notesSection.innerHTML = html;
+    }
+
+    nationSelect.addEventListener('change', (e) => {
+      currentNation = e.target.value;
+      renderNotes();
+    });
+
+    searchBox.addEventListener('input', (e) => {
+      searchTerm = e.target.value;
+      renderNotes();
+    });
+
+    // Initial render
+    renderNotes();
+  </script>
+  
+  <!-- Footer -->
+  <div style="text-align: center; margin-top: 60px; padding: 30px 20px; border-top: 1px solid #4a5a4a; opacity: 0.8; background-color: #1a2a1a;">
+    <p style="margin: 10px 0;">Red Storm Tools Suite | Baltic Approaches Module</p>
+    <p style="font-size: 0.85em; margin-top: 10px; opacity: 0.7;">
+      Red Storm: Baltic Approaches and all related game materials are © GMT Games. This is an unofficial fan-made tool suite not affiliated with or endorsed by the copyright holder.
+    </p>
+  </div>
+</body>
+</html>
