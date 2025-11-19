@@ -1,0 +1,242 @@
+/**
+ * Module Configuration System
+ * 
+ * Defines all game modules (Red Storm, Baltic Approaches, future expansions)
+ * and their specific configurations including table structures, nations, and data paths.
+ */
+
+const MODULES = {
+  'red-storm': {
+    id: 'red-storm',
+    name: 'Red Storm',
+    fullName: 'Red Storm: The Air War Over Central Germany, 1987',
+    description: 'The base game covering NATO vs Warsaw Pact air operations over Central Europe',
+    basePath: '/modules/red-storm',
+    
+    // OOB Table Configuration
+    tables: {
+      nato: {
+        prefix: '',  // Tables A-F
+        range: ['A', 'B', 'C', 'D', 'E', 'F'],
+        dataPath: '/modules/red-storm/oob-generator/data/nato-tables.json'
+      },
+      wp: {
+        prefix: '',  // Tables G-L
+        range: ['G', 'H', 'I', 'J', 'K', 'L'],
+        dataPath: '/modules/red-storm/oob-generator/data/wp-tables.json'
+      }
+    },
+    
+    // Nation Configuration
+    nations: {
+      nato: [
+        { code: 'US', name: 'United States', roundel: '/shared/assets/roundels/icons/US.png' },
+        { code: 'UK', name: 'United Kingdom', roundel: '/shared/assets/roundels/icons/UK.png' },
+        { code: 'FRG', name: 'West Germany', roundel: '/shared/assets/roundels/icons/FRG.png' },
+        { code: 'BEL', name: 'Belgium', roundel: '/shared/assets/roundels/icons/Belgium.png' },
+        { code: 'CAN', name: 'Canada', roundel: '/shared/assets/roundels/icons/Canada.png' },
+        { code: 'HOL', name: 'Netherlands', roundel: '/shared/assets/roundels/icons/Netherlands.png' }
+      ],
+      wp: [
+        { code: 'USSR', name: 'Soviet Union', roundel: '/shared/assets/roundels/icons/USSR.png' },
+        { code: 'GDR', name: 'East Germany', roundel: '/shared/assets/roundels/icons/GDR.png' }
+      ]
+    },
+    
+    // Data Files
+    data: {
+      aircraftNATO: '/modules/red-storm/oob-generator/data/aircraft-nato.json',
+      aircraftWP: '/modules/red-storm/oob-generator/data/aircraft-wp.json',
+      weapons: '/modules/red-storm/oob-generator/data/weapons.json',
+      noteRules: '/modules/red-storm/oob-generator/data/aircraft-note-rules.json'
+    },
+    
+    // Features
+    features: {
+      ships: false,
+      scenarioDate: true  // Pre/Post June 1987
+    }
+  },
+  
+  'baltic-approaches': {
+    id: 'baltic-approaches',
+    name: 'Baltic Approaches',
+    fullName: 'Red Storm: Baltic Approaches',
+    description: 'Northern European theater expansion covering Denmark, Sweden, and the Baltic Sea',
+    basePath: '/modules/baltic-approaches',
+    
+    // OOB Table Configuration
+    tables: {
+      nato: {
+        prefix: '2',  // Tables A2-F2
+        range: ['A2', 'B2', 'C2', 'D2', 'E2', 'F2'],
+        dataPath: '/modules/baltic-approaches/oob-generator/data/nato-tables.json'
+      },
+      wp: {
+        prefix: '2',  // Tables G2-L2
+        range: ['G2', 'H2', 'I2', 'J2', 'K2', 'L2'],
+        dataPath: '/modules/baltic-approaches/oob-generator/data/wp-tables.json'
+      }
+    },
+    
+    // Nation Configuration
+    nations: {
+      nato: [
+        { code: 'USA', name: 'United States', roundel: '/shared/assets/roundels/icons/US.png' },
+        { code: 'UK', name: 'United Kingdom', roundel: '/shared/assets/roundels/icons/UK.png' },
+        { code: 'FRG', name: 'West Germany', roundel: '/shared/assets/roundels/icons/FRG.png' },
+        { code: 'DK', name: 'Denmark', roundel: '/shared/assets/roundels/icons/Denmark.png' },
+        { code: 'SE', name: 'Sweden', roundel: '/shared/assets/roundels/icons/Sweden.png' },
+        { code: 'NE', name: 'Netherlands', roundel: '/shared/assets/roundels/icons/Netherlands.png' }
+      ],
+      wp: [
+        { code: 'USSR', name: 'Soviet Union', roundel: '/shared/assets/roundels/icons/USSR.png' },
+        { code: 'GDR', name: 'East Germany', roundel: '/shared/assets/roundels/icons/GDR.png' },
+        { code: 'POL', name: 'Poland', roundel: '/shared/assets/roundels/icons/Poland.png' }
+      ]
+    },
+    
+    // Data Files
+    data: {
+      aircraftNATO: '/modules/baltic-approaches/oob-generator/data/aircraft-nato.json',
+      aircraftWP: '/modules/baltic-approaches/oob-generator/data/aircraft-wp.json',
+      weapons: '/modules/baltic-approaches/oob-generator/data/weapons.json',
+      noteRules: '/modules/baltic-approaches/oob-generator/data/aircraft-note-rules.json',
+      shipsNATO: '/modules/baltic-approaches/data/ships-nato.json',
+      shipsWP: '/modules/baltic-approaches/data/ships-wp.json'
+    },
+    
+    // Features
+    features: {
+      ships: true,
+      scenarioDate: false
+    }
+  }
+};
+
+/**
+ * Get module configuration by ID
+ * @param {string} moduleId - Module identifier
+ * @returns {object|null} Module configuration or null if not found
+ */
+function getModuleConfig(moduleId) {
+  return MODULES[moduleId] || null;
+}
+
+/**
+ * Get all available modules
+ * @returns {array} Array of module configurations
+ */
+function getAllModules() {
+  return Object.values(MODULES);
+}
+
+/**
+ * Get nation configuration for a module
+ * @param {string} moduleId - Module identifier
+ * @param {string} faction - 'nato' or 'wp'
+ * @returns {array} Array of nation objects
+ */
+function getModuleNations(moduleId, faction) {
+  const module = MODULES[moduleId];
+  if (!module || !module.nations[faction]) {
+    return [];
+  }
+  return module.nations[faction];
+}
+
+/**
+ * Get roundel path for a nation code
+ * @param {string} moduleId - Module identifier
+ * @param {string} nationCode - Nation code (e.g., 'US', 'USSR')
+ * @returns {string|null} Path to roundel image or null
+ */
+function getNationRoundel(moduleId, nationCode) {
+  const module = MODULES[moduleId];
+  if (!module) return null;
+  
+  // Search both NATO and WP nations
+  const allNations = [...module.nations.nato, ...module.nations.wp];
+  const nation = allNations.find(n => n.code === nationCode);
+  
+  return nation ? nation.roundel : null;
+}
+
+/**
+ * Get data file path for a module
+ * @param {string} moduleId - Module identifier
+ * @param {string} dataType - Type of data (e.g., 'aircraftNATO', 'weapons')
+ * @returns {string|null} Path to data file or null
+ */
+function getModuleDataPath(moduleId, dataType) {
+  const module = MODULES[moduleId];
+  if (!module || !module.data[dataType]) {
+    return null;
+  }
+  return module.data[dataType];
+}
+
+/**
+ * Determine current module from URL or localStorage
+ * @returns {string} Module ID
+ */
+function getCurrentModule() {
+  // Check URL hash first (e.g., #red-storm or #baltic-approaches)
+  const hash = window.location.hash.substring(1);
+  if (hash && MODULES[hash]) {
+    return hash;
+  }
+  
+  // Check localStorage for last selected module
+  const stored = localStorage.getItem('selectedModule');
+  if (stored && MODULES[stored]) {
+    return stored;
+  }
+  
+  // Default to Red Storm
+  return 'red-storm';
+}
+
+/**
+ * Set current module (saves to localStorage and updates URL)
+ * @param {string} moduleId - Module identifier
+ */
+function setCurrentModule(moduleId) {
+  if (!MODULES[moduleId]) {
+    console.error(`Invalid module ID: ${moduleId}`);
+    return;
+  }
+  
+  localStorage.setItem('selectedModule', moduleId);
+  window.location.hash = moduleId;
+}
+
+// Export for both browser and Node.js environments
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    MODULES,
+    getModuleConfig,
+    getAllModules,
+    getModuleNations,
+    getNationRoundel,
+    getModuleDataPath,
+    getCurrentModule,
+    setCurrentModule
+  };
+}
+
+// Browser global
+if (typeof window !== 'undefined') {
+  window.ModuleConfig = {
+    MODULES,
+    getModuleConfig,
+    getAllModules,
+    getModuleNations,
+    getNationRoundel,
+    getModuleDataPath,
+    getCurrentModule,
+    setCurrentModule
+  };
+}
+
+console.log('Module Configuration System loaded');

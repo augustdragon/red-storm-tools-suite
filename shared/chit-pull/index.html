@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Red Storm Initiative Chit Pull</title>
-  <link rel="stylesheet" href="../shared/red-storm.css">
+  <link rel="stylesheet" href="../css/red-storm.css">
 </head>
 <body>
   <div class="container">
@@ -13,7 +13,26 @@
       <div class="subtitle">Initiative Chit Pull</div>
     </div>
 
-    <a href="../" class="back-link">← Back to Red Storm Tools Suite</a>
+    <a href="#" id="backLink" class="back-link">← Back to Module</a>
+
+    <script>
+      // Dynamic back button based on URL parameter or referrer
+      const urlParams = new URLSearchParams(window.location.search);
+      const moduleParam = urlParams.get('module');
+      const backLink = document.getElementById('backLink');
+      
+      if (moduleParam === 'baltic-approaches') {
+        backLink.href = '../../modules/baltic-approaches/index.html';
+        backLink.textContent = '← Back to Baltic Approaches';
+      } else if (moduleParam === 'red-storm') {
+        backLink.href = '../../modules/red-storm/index.html';
+        backLink.textContent = '← Back to Red Storm';
+      } else {
+        // Default to module selection
+        backLink.href = '../../index.html';
+        backLink.textContent = '← Back to Module Selection';
+      }
+    </script>
 
     <div class="main-content">
       <div class="fixed-section">

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Red Storm Order of Battle Generator</title>
   <!-- Updated: Table A implementation with nested roll system -->
-  <link rel="stylesheet" href="../shared/red-storm.css">
+  <link rel="stylesheet" href="../../../shared/css/red-storm.css">
   <link rel="stylesheet" href="css/oob-generator.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
       <!-- Version info hidden for production - uncomment to show: v2024.10.08-debug-26 -->
     </div>
 
-    <a href="../" class="back-link">← Back to Red Storm Tools</a>
+    <a href="../index.html" class="back-link">← Back to Red Storm Tools</a>
 
     <!-- Debug Toggle - Hidden for production -->
     <div class="section" id="debugToggle" style="display: none; text-align: center; margin-bottom: 10px;">
@@ -2101,7 +2101,7 @@
       <div class="flight-info-section">
         <div class="flight-header">
           <div class="roundel-box-header">
-            <img src="../assets/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
+            <img src="../../../shared/assets/roundels/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
           </div>
           <div class="field">
             <div class="field-label">Aircraft</div>
@@ -2358,7 +2358,7 @@
       <!-- Compact CSAR header -->
       <div class="compact-csar-header">
         <div class="roundel-box-compact">
-          <img src="../assets/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
+          <img src="../../../shared/assets/roundels/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
         </div>
         <div class="field">
           <div class="field-label">Aircraft</div>
@@ -2997,6 +2997,9 @@
 </html>`;
     }
   </script>
+  
+  <!-- Module Configuration -->
+  <script src="../../../shared/js/module-config.js"></script>
   
   <!-- Load modules after DOM is ready -->
   <script src="js/utils.js"></script>

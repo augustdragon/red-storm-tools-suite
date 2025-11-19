@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Storm - Tools</title>
+    <link rel="stylesheet" href="../../shared/css/red-storm.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #2d3d2d;
+            min-height: 100vh;
+            color: #f4f4f4;
+        }
+        
+        .nav-header {
+            background-color: #1a2a1a;
+            padding: 15px 30px;
+            border-bottom: 2px solid #4a5a4a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-header a {
+            color: #8a9a8a;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-header a:hover {
+            color: #b4c4b4;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background-color: #1a2a1a;
+            border-radius: 8px;
+            border-bottom: 3px solid #4a5a4a;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0 0 10px 0;
+            color: #f4f4f4;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            margin: 0;
+            color: #b4c4b4;
+            font-style: italic;
+        }
+        
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .tool-card {
+            background-color: #1a2a1a;
+            border-radius: 10px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #3a4a3a;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-3px);
+            border-color: #5a7a5a;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #4a6a4a, #6a8a6a);
+        }
+        
+        .tool-card h2 {
+            font-size: 1.5em;
+            margin: 0 0 10px 0;
+            color: #f4f4f4;
+        }
+        
+        .tool-card p {
+            color: #b4c4b4;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .tool-card .open-button {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: #4a6a4a;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .tool-card .open-button:hover {
+            background-color: #5a7a5a;
+        }
+        
+        .tool-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px;
+            color: #8a9a8a;
+            border-top: 1px solid #3a4a3a;
+        }
+        
+        @media (max-width: 768px) {
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-header">
+        <span style="color: #f4f4f4; font-weight: bold;">Red Storm - The Air War Over Central Germany, 1987</span>
+        <a href="../../index.html">← Back to Module Selection</a>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Red Storm Tools</h1>
+            <p>Select a tool to begin</p>
+        </div>
+        
+        <div class="tool-grid">
+            <!-- OOB Generator -->
+            <div class="tool-card" onclick="window.location.href='oob-generator/index.html'">
+                <div class="tool-icon">📋</div>
+                <h2>OOB Generator</h2>
+                <p>Generate Order of Battle cards with randomized aircraft loadouts from NATO and Warsaw Pact tables.</p>
+                <a href="oob-generator/index.html" class="open-button">Open Tool →</a>
+            </div>
+            
+            <!-- Aircraft Notes -->
+            <div class="tool-card" onclick="window.location.href='aircraft-notes.html'">
+                <div class="tool-icon">✈️</div>
+                <h2>Aircraft Reference</h2>
+                <p>Browse detailed specifications, capabilities, and tactical notes for all aircraft in Red Storm.</p>
+                <a href="aircraft-notes.html" class="open-button">View Reference →</a>
+            </div>
+            
+            <!-- Manual Flight Generator -->
+            <div class="tool-card" onclick="window.location.href='flight-generator.html'">
+                <div class="tool-icon">🎲</div>
+                <h2>Manual Flight Cards</h2>
+                <p>Create custom flight cards by manually selecting aircraft and loadouts.</p>
+                <a href="flight-generator.html" class="open-button">Create Flights →</a>
+            </div>
+            
+            <!-- Chit Pull (Shared) -->
+            <div class="tool-card" onclick="window.location.href='../../shared/chit-pull/index.html?module=red-storm'">
+                <div class="tool-icon">🎯</div>
+                <h2>Chit Pull Generator</h2>
+                <p>Randomize air superiority and weather conditions for your scenarios.</p>
+                <a href="../../shared/chit-pull/index.html?module=red-storm" class="open-button">Generate Chits →</a>
+            </div>
+            
+            <!-- User Guide (Shared) -->
+            <div class="tool-card" onclick="window.location.href='../../shared/docs/README.md'">
+                <div class="tool-icon">📖</div>
+                <h2>User Guide</h2>
+                <p>Comprehensive documentation for all Red Storm tools and features.</p>
+                <a href="../../shared/docs/README.md" class="open-button">Read Guide →</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Red Storm Module - NATO Tables A-F | WP Tables G-L</p>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #7a8a7a;">
+                Scenario Date: Pre/Post June 1987
+            </p>
+        </div>
+    </div>
+    
+    <script src="../../shared/js/module-config.js"></script>
+    <script>
+        // Set current module on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.ModuleConfig) {
+                window.ModuleConfig.setCurrentModule('red-storm');
+            }
+        });
+    </script>
+</body>
+</html>
