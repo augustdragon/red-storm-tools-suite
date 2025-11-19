@@ -1,0 +1,106 @@
+{
+  "_comment": "Baltic Approaches Air-to-Air Weapons and Aircraft Notes",
+  "_version": "1.0.0",
+  "_created": "2025-11-18",
+  
+  "weapons": {
+    "AIM-9L": {
+      "class": "IRM",
+      "standard": 3,
+      "BVR": 1,
+      "BVRRange": "1 (Forward), 1 (Rearward)"
+    },
+    "AIM-9M": {
+      "class": "IRM",
+      "standard": 3,
+      "BVR": 1,
+      "BVRRange": "1-2 (Forward), 1 (Rearward)"
+    },
+    "AIM-7M": {
+      "class": "RHM",
+      "standard": 3,
+      "BVR": 2,
+      "BVRRange": "1-3 (Forward), 2-3 (Beam), 2-3 (Rear)"
+    },
+    "AIM-54C": {
+      "class": "RHM",
+      "standard": "+1",
+      "BVR": 0,
+      "BVRRange": "2-18 (Front), 2-9 (Beam), 2-3 (Rear)",
+      "notes": "Treat as 27mm for Strafe [17.33]"
+    },
+    "20mm Gun": {
+      "class": "Gun",
+      "standard": 3,
+      "notes": null
+    },
+    "25mm Gun": {
+      "class": "Gun",
+      "standard": 3,
+      "notes": null
+    }
+  },
+  
+  "aircraftNotes": {
+    "A": {
+      "code": "A",
+      "description": "Use same bomb point load for Deep Strike and Naval Strike raids"
+    },
+    "B": {
+      "code": "B",
+      "description": "May Spot Jam [11.34] two radars at the same time"
+    },
+    "C": {
+      "code": "C",
+      "description": "May enter Defensive Wheel formation [7.1]"
+    },
+    "D": {
+      "code": "D",
+      "description": "If tasked with Escort Jamming [8.341] may carry HARMs [17.54] and attack naval or land radars"
+    },
+    "E": {
+      "code": "E",
+      "description": "V/STOL aircraft [7.37]"
+    },
+    "F": {
+      "code": "F",
+      "description": "Zoom Climb [8.43] not allowed"
+    },
+    "G": {
+      "code": "G",
+      "description": "May do Max Turns as Free Turns [8.32]"
+    },
+    "H": {
+      "code": "H",
+      "description": "A/V -1: If tasked with Bombing, SEAD, Recon, or Rescue Support"
+    },
+    "I": {
+      "code": "I",
+      "description": "Flt: May carry AIM-7 and AIM-54 RAAM at the same time"
+    },
+    "J": {
+      "code": "J",
+      "description": "If tasked with Maritime Patrol, may carry Harpoon and attack naval targets"
+    },
+    "K": {
+      "code": "K",
+      "description": "If tasked with Recon, missile load is AIM-9L (6), AIM-7M (3)"
+    },
+    "L": {
+      "code": "L",
+      "description": "AAX-1 sensor: Automatic visual ID at end of Detection Phase of one die detected enemy flight in forward arc, line of sight, and same altitude as 1-8 hex range. Day only"
+    },
+    "M": {
+      "code": "M",
+      "description": "Large Aircraft [19.22] (see B-40 Climbing limitations) and Poor SAM Defense [15.32]"
+    }
+  },
+  
+  "standoffJamming": {
+    "EA-6B": {
+      "aircraft": "EA-6B Prowler",
+      "strength": "11 / 23 / 45",
+      "notes": "Jamming Strength [9.21]"
+    }
+  }
+}

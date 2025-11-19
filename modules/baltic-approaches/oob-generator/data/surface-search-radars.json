@@ -1,0 +1,65 @@
+{
+  "_comment": "Baltic Approaches Surface Search Radars",
+  "_version": "1.0.0",
+  "_created": "2025-11-18",
+  "_description": "Surface search radar capabilities for naval strike aircraft",
+  
+  "radars": [
+    {
+      "aircraft": "A-6E",
+      "radar": "APQ-156",
+      "range": 20,
+      "type": "C",
+      "notes": "Forward Beam, All-weather"
+    },
+    {
+      "aircraft": "EA-6B",
+      "radar": "APQ-156",
+      "range": 20,
+      "type": "C",
+      "notes": "Forward Beam, All-weather"
+    },
+    {
+      "aircraft": "A-7E",
+      "radar": "APQ-126",
+      "range": 26,
+      "type": "C",
+      "notes": "Forward Beam, All-weather"
+    },
+    {
+      "aircraft": "F/A-18A",
+      "radar": "APG-65",
+      "range": 20,
+      "type": "C",
+      "notes": "TS (Track Scan) mode capable"
+    },
+    {
+      "aircraft": "F-14A",
+      "radar": "AWG-9",
+      "range": 36,
+      "type": "C",
+      "notes": "Forward Beam, All-weather"
+    },
+    {
+      "aircraft": "S-3A",
+      "radar": "APS-116",
+      "range": 44,
+      "type": "C",
+      "notes": "Forward Beam, All-weather"
+    },
+    {
+      "aircraft": "P-3C",
+      "radar": "APS-115",
+      "range": 15,
+      "type": "C",
+      "notes": "Forward Beam, All-weather"
+    }
+  ],
+  
+  "_notes": {
+    "C": "Surface Search type",
+    "range": "Range in hexes for surface target detection",
+    "Forward Beam": "Radar can only detect targets in forward arc",
+    "All-weather": "Can operate in all weather conditions"
+  }
+}

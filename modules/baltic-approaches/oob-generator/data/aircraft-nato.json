@@ -1,0 +1,389 @@
+{
+  "_comment": "Baltic Approaches NATO Aircraft Database - USN/USMC Aircraft",
+  "_version": "1.0.0",
+  "_created": "2025-11-18",
+  "_description": "Aircraft specifications for Baltic Approaches NATO forces. Speed values format: L/M/H/VH altitude bands.",
+  
+  "A-6E": {
+    "name": "A-6E Intruder",
+    "model": "A-6E Intruder",
+    "nation": "USA",
+    "crew": 2,
+    "rwy": 3,
+    "fuel": 13,
+    "notes": "F",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "4",
+    "sight": "+3",
+    "rwr": "A/3d",
+    "jam": "Surf",
+    "radar": {
+      "name": null,
+      "type": null,
+      "range": null,
+      "modifier": null
+    },
+    "speeds": {
+      "clean": {
+        "combat": "3/3/3/-",
+        "dash": "4/4/4/-",
+        "maneuver": "5/4/3/-"
+      },
+      "laden": {
+        "combat": "2/2/2/-",
+        "dash": "3/3/3/-",
+        "maneuver": "2/2/2/-"
+      }
+    },
+    "ordnance": [
+      { "type": "LGB", "quantity": 1 },
+      { "type": "EOGB", "quantity": 1 },
+      { "type": "Harpoon", "quantity": 2 },
+      { "type": "Shrike", "quantity": 1 }
+    ],
+    "capabilities": ["Radar", "FLIR", "TFR", "Night"],
+    "aam": null,
+    "surfaceSearchRadar": null
+  },
+  
+  "EA-6B": {
+    "name": "EA-6B Prowler",
+    "model": "EA-6B Prowler",
+    "nation": "USA",
+    "crew": 4,
+    "rwy": 3,
+    "fuel": 10,
+    "notes": "B, D, F",
+    "standoffJammingStrength": null,
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "D/4d",
+    "jam": "Surf",
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "3/3/3/-",
+        "dash": "4/4/4/-",
+        "maneuver": "5/4/3/-"
+      },
+      "laden": null
+    },
+    "ordnance": [
+      { "type": "HARM", "quantity": 1 }
+    ],
+    "capabilities": ["Night", "Standoff, Spot"],
+    "aam": null,
+    "surfaceSearchRadar": null
+  },
+  
+  "A-7E": {
+    "name": "A-7E Corsair II",
+    "model": "A-7E Corsair II",
+    "nation": "USA",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 8,
+    "notes": "C, F",
+    "weapons": {
+      "gun": "20mm",
+      "gunDepletion": 3,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "3",
+    "sight": "+3",
+    "rwr": "A/3d",
+    "jam": "Surf",
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "2/3/3/-",
+        "dash": "3/4/4/-",
+        "maneuver": "5/3/3/-"
+      },
+      "laden": {
+        "combat": "2/3/3/-",
+        "dash": "3/3/3/-",
+        "maneuver": "2/2/2/-"
+      }
+    },
+    "ordnance": [
+      { "type": "LGB", "quantity": 1 },
+      { "type": "EOGB", "quantity": 1 },
+      { "type": "Shrike", "quantity": 1 },
+      { "type": "HARM", "quantity": 2 }
+    ],
+    "capabilities": ["Radar", "FLIR", "Night"],
+    "aam": "AIM-9L (8), 20mm Gun (3)",
+    "surfaceSearchRadar": null
+  },
+  
+  "AV-8B": {
+    "name": "AV-8B Harrier II",
+    "model": "AV-8B Harrier II",
+    "nation": "USA",
+    "crew": 1,
+    "rwy": 1,
+    "fuel": 5,
+    "notes": "C, E, G",
+    "weapons": {
+      "gun": "25mm",
+      "gunDepletion": 3,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "1.5",
+    "sight": "+2",
+    "rwr": "B/-",
+    "jam": null,
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "3/3/2/-",
+        "dash": "4/4/3/-",
+        "maneuver": "6/5/4/-"
+      },
+      "laden": {
+        "combat": "1/1/1/-",
+        "dash": "3/3/-/-",
+        "maneuver": "3/3/-/-"
+      }
+    },
+    "ordnance": [
+      { "type": "LGB", "quantity": 1 },
+      { "type": "EOGM", "quantity": 1 }
+    ],
+    "capabilities": [],
+    "aam": "AIM-9L (8), 25mm Gun (3)",
+    "surfaceSearchRadar": null
+  },
+  
+  "RF-4B": {
+    "name": "RF-4B Phantom II",
+    "model": "RF-4B Phantom II",
+    "nation": "USA",
+    "crew": 2,
+    "rwy": 3,
+    "fuel": 10,
+    "notes": null,
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "A/3d",
+    "jam": null,
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "4/4/4/-",
+        "dash": "5/5/7/-",
+        "maneuver": "5/6/6/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Recon", "TFR", "Night"],
+    "aam": null,
+    "surfaceSearchRadar": null
+  },
+  
+  "F-14A": {
+    "name": "F-14A Tomcat",
+    "model": "F-14A Tomcat",
+    "nation": "USA",
+    "crew": 2,
+    "rwy": 3,
+    "fuel": 12,
+    "notes": "I, K, L",
+    "weapons": {
+      "gun": "20mm",
+      "gunDepletion": 3,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "A/3d",
+    "jam": null,
+    "radar": {
+      "name": "AWG-9",
+      "type": "LD (20), 16+: -1",
+      "range": null,
+      "modifier": null
+    },
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5/-",
+        "dash": "5/6/8/-",
+        "maneuver": "6/7/7/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Night", "Recon", "AAX+"],
+    "aam": "AIM-9L (8), AIM-7M (6), AIM-54C (3), 20mm Gun (3), AIM-54C*",
+    "surfaceSearchRadar": null
+  },
+  
+  "F/A-18A": {
+    "name": "F/A-18A Hornet",
+    "model": "F/A-18A Hornet",
+    "nation": "USA",
+    "crew": 1,
+    "rwy": 3,
+    "fuel": 8,
+    "notes": "A, E, H",
+    "weapons": {
+      "gun": "20mm",
+      "gunDepletion": 3,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "4/2",
+    "sight": "+3",
+    "rwr": "C/3d",
+    "jam": null,
+    "radar": {
+      "name": "APG-65",
+      "type": "LD, TS, Surf (20), TS",
+      "range": null,
+      "modifier": null
+    },
+    "speeds": {
+      "clean": {
+        "combat": "4/4/5/-",
+        "dash": "5/6/8/-",
+        "maneuver": "7/7/8/-"
+      },
+      "laden": {
+        "combat": "3/3/4/-",
+        "dash": "4/5/5/-",
+        "maneuver": "4/5/5/-"
+      }
+    },
+    "ordnance": [
+      { "type": "LGB", "quantity": 1 },
+      { "type": "EOGB", "quantity": 1 },
+      { "type": "Harpoon", "quantity": 1 },
+      { "type": "HARM", "quantity": 1 },
+      { "type": "Rockets", "quantity": null }
+    ],
+    "capabilities": ["Radar", "TFR", "Night"],
+    "aam": "AIM-9M (8), AIM-7M (3), 20mm Gun (3)",
+    "surfaceSearchRadar": {
+      "range": 20,
+      "notes": "TS mode capable"
+    }
+  },
+  
+  "S-3A": {
+    "name": "S-3A Viking",
+    "model": "S-3A Viking",
+    "nation": "USA",
+    "crew": 4,
+    "rwy": 2,
+    "fuel": 10,
+    "notes": "F",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "2",
+    "sight": "+1",
+    "rwr": "C/-",
+    "jam": "Surf",
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "2/3/3/-",
+        "dash": "3/4/4/-",
+        "maneuver": "4/3/2/-"
+      },
+      "laden": {
+        "combat": "2/2/2/-",
+        "dash": "3/3/3/-",
+        "maneuver": "2/2/2/-"
+      }
+    },
+    "ordnance": [
+      { "type": "Harpoon", "quantity": 2 }
+    ],
+    "capabilities": ["FLIR", "Night"],
+    "aam": null,
+    "surfaceSearchRadar": null
+  },
+  
+  "P-3C": {
+    "name": "P-3C Orion",
+    "model": "P-3C Orion",
+    "nation": "USA",
+    "crew": 11,
+    "rwy": 4,
+    "fuel": "U",
+    "notes": "F, J, M",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "C/-",
+    "jam": "Surf",
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "2/2/2/-",
+        "dash": "-/-/-/-",
+        "maneuver": "1/1/1/-"
+      },
+      "laden": {
+        "combat": "2/2/2/-",
+        "dash": "-/-/-/-",
+        "maneuver": "1/1/1/-"
+      }
+    },
+    "ordnance": [
+      { "type": "Harpoon", "quantity": 2 }
+    ],
+    "capabilities": ["Night"],
+    "aam": null,
+    "surfaceSearchRadar": null
+  }
+}
