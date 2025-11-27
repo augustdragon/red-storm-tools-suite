@@ -11,50 +11,116 @@ const MODULES = {
     name: 'Red Storm',
     fullName: 'Red Storm: The Air War Over Central Germany, 1987',
     description: 'The base game covering NATO vs Warsaw Pact air operations over Central Europe',
-    basePath: '/modules/red-storm',
+    basePath: './oob-generator',
     
     // OOB Table Configuration
     tables: {
       nato: {
         prefix: '',  // Tables A-F
         range: ['A', 'B', 'C', 'D', 'E', 'F'],
-        dataPath: '/modules/red-storm/oob-generator/data/nato-tables.json'
+        dataPath: './data/nato-tables.json'
       },
       wp: {
         prefix: '',  // Tables G-L
         range: ['G', 'H', 'I', 'J', 'K', 'L'],
-        dataPath: '/modules/red-storm/oob-generator/data/wp-tables.json'
+        dataPath: './data/wp-tables.json'
       }
     },
     
     // Nation Configuration
     nations: {
       nato: [
-        { code: 'US', name: 'United States', roundel: '/shared/assets/roundels/icons/US.png' },
-        { code: 'UK', name: 'United Kingdom', roundel: '/shared/assets/roundels/icons/UK.png' },
-        { code: 'FRG', name: 'West Germany', roundel: '/shared/assets/roundels/icons/FRG.png' },
-        { code: 'BEL', name: 'Belgium', roundel: '/shared/assets/roundels/icons/Belgium.png' },
-        { code: 'CAN', name: 'Canada', roundel: '/shared/assets/roundels/icons/Canada.png' },
-        { code: 'HOL', name: 'Netherlands', roundel: '/shared/assets/roundels/icons/Netherlands.png' }
+        { code: 'US', name: 'United States', roundel: '../../../shared/assets/roundels/icons/US.png' },
+        { code: 'UK', name: 'United Kingdom', roundel: '../../../shared/assets/roundels/icons/UK.png' },
+        { code: 'FRG', name: 'West Germany', roundel: '../../../shared/assets/roundels/icons/FRG.png' },
+        { code: 'BEL', name: 'Belgium', roundel: '../../../shared/assets/roundels/icons/Belgium.png' },
+        { code: 'CAN', name: 'Canada', roundel: '../../../shared/assets/roundels/icons/Canada.png' },
+        { code: 'HOL', name: 'Netherlands', roundel: '../../../shared/assets/roundels/icons/Netherlands.png' }
       ],
       wp: [
-        { code: 'USSR', name: 'Soviet Union', roundel: '/shared/assets/roundels/icons/USSR.png' },
-        { code: 'GDR', name: 'East Germany', roundel: '/shared/assets/roundels/icons/GDR.png' }
+        { code: 'USSR', name: 'Soviet Union', roundel: '../../../shared/assets/roundels/icons/USSR.png' },
+        { code: 'GDR', name: 'East Germany', roundel: '../../../shared/assets/roundels/icons/GDR.png' }
       ]
     },
     
     // Data Files
     data: {
-      aircraftNATO: '/modules/red-storm/oob-generator/data/aircraft-nato.json',
-      aircraftWP: '/modules/red-storm/oob-generator/data/aircraft-wp.json',
-      weapons: '/modules/red-storm/oob-generator/data/weapons.json',
-      noteRules: '/modules/red-storm/oob-generator/data/aircraft-note-rules.json'
+      aircraftNATO: '../../../shared/data/aircraft-nato.json',
+      aircraftWP: '../../../shared/data/aircraft-wp.json',
+      weapons: '../../../shared/data/weapons.json',
+      noteRules: '../../../shared/data/aircraft-note-rules.json',
+      nameMapping: '../../../shared/data/aircraft-name-mapping.json'
     },
     
-    // Features
+    // Print Generation Configuration
+    print: {
+      // Data structure mapping for aircraft databases
+      dataStructure: {
+        weaponPaths: {
+          gun: 'weapons.gun',
+          gunDepletion: 'weapons.gunDepletion',
+          irm: 'weapons.irm', 
+          irmDepletion: 'weapons.irmDepletion',
+          rhm: 'weapons.rhm',
+          rhmDepletion: 'weapons.rhmDepletion'
+        },
+        speedPaths: {
+          clean: 'speeds.clean',
+          laden: 'speeds.laden'
+        },
+        basicFields: {
+          name: 'name',
+          model: 'model',
+          crew: 'crew',
+          runway: 'runway',
+          fuel: 'fuel',
+          notes: 'notes',
+          nation: 'nation'
+        }
+      },
+      // Aircraft data conversion settings
+      conversion: {
+        speedFormat: 'separated',  // 'separated' (VH/H/M/L) vs 'simple' (single values)
+        weaponFormat: 'complex',   // 'complex' (nested objects) vs 'simple' (direct properties)
+        useNameMapping: true
+      },
+      // Roundel configuration
+      roundels: {
+        'US': 'USAF.jpg',
+        'UK': 'UK.jpg', 
+        'FRG': 'FRG.jpg',
+        'BEL': 'Belgium.jpg',
+        'Belgium': 'Belgium.jpg',
+        'BE': 'Belgium.jpg',
+        'CAN': 'Canada.jpg',
+        'Canada': 'Canada.jpg',
+        'HOL': 'Netherlands.jpg',
+        'NE': 'Netherlands.jpg',
+        'USSR': 'USSR.jpg',
+        'GDR': 'GDR.jpg'
+      }
+    },
+    
+    // Features and Scenario Configuration
     features: {
       ships: false,
       scenarioDate: true  // Pre/Post June 1987
+    },
+    
+    // Scenario Date Configuration
+    scenarioDates: {
+      'pre': {
+        id: 'pre',
+        label: 'Pre-6/1/87',
+        buttonId: 'preDate',
+        description: 'Before June 1, 1987'
+      },
+      'post': {
+        id: 'post',
+        label: '6/1/87 or later',
+        buttonId: 'postDate',
+        description: 'June 1, 1987 or later'
+      }
     }
   },
   
@@ -63,53 +129,125 @@ const MODULES = {
     name: 'Baltic Approaches',
     fullName: 'Red Storm: Baltic Approaches',
     description: 'Northern European theater expansion covering Denmark, Sweden, and the Baltic Sea',
-    basePath: '/modules/baltic-approaches',
+    basePath: './oob-generator',
     
     // OOB Table Configuration
     tables: {
       nato: {
         prefix: '2',  // Tables A2-F2
         range: ['A2', 'B2', 'C2', 'D2', 'E2', 'F2'],
-        dataPath: '/modules/baltic-approaches/oob-generator/data/nato-tables.json'
+        dataPath: './data/nato-tables.json'
       },
       wp: {
         prefix: '2',  // Tables G2-L2
         range: ['G2', 'H2', 'I2', 'J2', 'K2', 'L2'],
-        dataPath: '/modules/baltic-approaches/oob-generator/data/wp-tables.json'
+        dataPath: './data/wp-tables.json'
       }
     },
     
     // Nation Configuration
     nations: {
       nato: [
-        { code: 'USA', name: 'United States', roundel: '/shared/assets/roundels/USAF.jpg' },
-        { code: 'UK', name: 'United Kingdom', roundel: '/shared/assets/roundels/UK.jpg' },
-        { code: 'FRG', name: 'West Germany', roundel: '/shared/assets/roundels/FRG.jpg' },
-        { code: 'DK', name: 'Denmark', roundel: '/shared/assets/roundels/Denmark.jpg' },
-        { code: 'SE', name: 'Sweden', roundel: '/shared/assets/roundels/Sweden.jpg' },
-        { code: 'NE', name: 'Netherlands', roundel: '/shared/assets/roundels/Netherlands.jpg' }
+        { code: 'USA', name: 'United States', roundel: '../../../shared/assets/roundels/USAF.jpg' },
+        { code: 'UK', name: 'United Kingdom', roundel: '../../../shared/assets/roundels/UK.jpg' },
+        { code: 'FRG', name: 'West Germany', roundel: '../../../shared/assets/roundels/FRG.jpg' },
+        { code: 'DK', name: 'Denmark', roundel: '../../../shared/assets/roundels/Denmark.jpg' },
+        { code: 'SE', name: 'Sweden', roundel: '../../../shared/assets/roundels/Sweden.jpg' },
+        { code: 'NE', name: 'Netherlands', roundel: '../../../shared/assets/roundels/Netherlands.jpg' }
       ],
       wp: [
-        { code: 'USSR', name: 'Soviet Union', roundel: '/shared/assets/roundels/USSR.jpg' },
-        { code: 'GDR', name: 'East Germany', roundel: '/shared/assets/roundels/GDR.jpg' },
-        { code: 'POL', name: 'Poland', roundel: '/shared/assets/roundels/Poland.jpg' }
+        { code: 'USSR', name: 'Soviet Union', roundel: '../../../shared/assets/roundels/USSR.jpg' },
+        { code: 'GDR', name: 'East Germany', roundel: '../../../shared/assets/roundels/GDR.jpg' },
+        { code: 'POL', name: 'Poland', roundel: '../../../shared/assets/roundels/Poland.jpg' }
       ]
     },
     
     // Data Files
     data: {
-      aircraftNATO: '/modules/baltic-approaches/oob-generator/data/aircraft-nato.json',
-      aircraftWP: '/modules/baltic-approaches/oob-generator/data/aircraft-wp.json',
-      weapons: '/modules/baltic-approaches/oob-generator/data/weapons.json',
-      noteRules: '/modules/baltic-approaches/oob-generator/data/aircraft-note-rules.json',
-      shipsNATO: '/modules/baltic-approaches/data/ships-nato.json',
-      shipsWP: '/modules/baltic-approaches/data/ships-wp.json'
+      aircraftNATO: '../../../shared/data/aircraft-nato.json',
+      aircraftWP: '../../../shared/data/aircraft-wp.json',
+      weapons: '../../../shared/data/weapons.json',
+      noteRules: '../../../shared/data/aircraft-note-rules.json',
+      nameMapping: '../../../shared/data/aircraft-name-mapping.json',
+      surfaceRadars: './data/surface-search-radars.json',
+      shipsNATO: '../data/ships-nato.json',
+      shipsWP: '../data/ships-wp.json'
     },
     
-    // Features
+    // Print Generation Configuration
+    print: {
+      // Data structure mapping for Baltic Approaches aircraft databases
+      dataStructure: {
+        weaponPaths: {
+          gun: 'weapons.gun',              // Nested structure like Red Storm
+          gunDepletion: 'weapons.gunDepletion',
+          irm: 'weapons.irm',
+          irmDepletion: 'weapons.irmDepletion', 
+          rhm: 'weapons.rhm',
+          rhmDepletion: 'weapons.rhmDepletion'
+        },
+        speedPaths: {
+          clean: 'speeds.clean',   // Baltic has complex speeds like Red Storm
+          laden: 'speeds.laden'    // Baltic also has laden speeds
+        },
+        basicFields: {
+          name: 'name',
+          model: 'name',           // Baltic uses 'name' for model
+          crew: 'crew',
+          runway: 'rwy',           // Baltic uses 'rwy' field
+          fuel: 'fuel',
+          notes: 'notes',
+          nation: 'nation'
+        }
+      },
+      // Aircraft data conversion settings
+      conversion: {
+        speedFormat: 'separated',  // Baltic uses L/M/H/VH format like Red Storm
+        speedOrder: 'LMHVH',       // Baltic order: L/M/H/VH vs Red Storm VH/H/M/L
+        weaponFormat: 'complex',   // Baltic has nested weapon structure
+        useNameMapping: true
+      },
+      // Roundel configuration
+      roundels: {
+        'USA': 'USAF.jpg',
+        'US': 'USAF.jpg',
+        'UK': 'UK.jpg',
+        'FRG': 'FRG.jpg', 
+        'DK': 'Denmark.jpg',
+        'SE': 'Sweden.jpg',
+        'NE': 'Netherlands.jpg',
+        'USSR': 'USSR.jpg',
+        'GDR': 'GDR.jpg',
+        'POL': 'Poland.jpg'
+      }
+    },
+    
+    // Features and Scenario Configuration
     features: {
       ships: true,
-      scenarioDate: false
+      scenarioDate: true
+    },
+    
+    // Scenario Date Configuration
+    scenarioDates: {
+      'may-early': {
+        id: 'may-early',
+        label: '15-20 May',
+        buttonId: 'mayEarly',
+        description: 'Early campaign period'
+      },
+      'may-late': {
+        id: 'may-late',
+        label: '21-31 May',
+        buttonId: 'mayLate', 
+        description: 'Mid campaign period'
+      },
+      'june-early': {
+        id: 'june-early',
+        label: '1-15 June',
+        buttonId: 'juneEarly',
+        description: 'Later campaign period'
+      }
     }
   }
 };

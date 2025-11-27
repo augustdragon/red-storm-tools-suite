@@ -6,7 +6,7 @@
   <title>Red Storm Order of Battle Generator</title>
   <!-- Updated: Table A implementation with nested roll system -->
   <link rel="stylesheet" href="../../../shared/css/red-storm.css">
-  <link rel="stylesheet" href="css/oob-generator.css">
+  <link rel="stylesheet" href="../../../shared/oob-generator/css/oob-generator.css">
 </head>
 <body>
   <div class="container">
@@ -1135,7 +1135,20 @@
       }
     });
 
-    // Generate Printable Flight Sheet
+    // Initialize shared PrintGenerator with Red Storm configuration
+    let printGenerator = null;
+    
+    // Function to get or create PrintGenerator instance
+    function getPrintGenerator() {
+      if (!printGenerator) {
+        // Get Red Storm module configuration
+        const redStormConfig = window.ModuleConfig ? window.ModuleConfig.getModuleConfig('red-storm') : null;
+        printGenerator = new PrintGenerator(redStormConfig);
+      }
+      return printGenerator;
+    }
+
+    // Generate Printable Flight Sheet - Red Storm Legacy Implementation
     function generatePrintableSheet() {
       // Use the results array directly instead of localStorage
       if (results.length === 0) {
@@ -1273,7 +1286,7 @@
             console.log('Processing NATO CSAR flight:', flight.result || flight.text);
             
             try {
-              const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
+              const cardHTML = await getPrintGenerator().generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
               if (cardHTML && cardHTML.trim()) {
                 flightCardsHTML += cardHTML;
                 console.log('✓ Generated NATO CSAR card for:', (flight.result || flight.text).substring(0, 50));
@@ -1299,7 +1312,7 @@
           console.log('Processing WP regular flight:', flight.result || flight.text);
           
           try {
-            const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
+            const cardHTML = await getPrintGenerator().generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
             if (cardHTML && cardHTML.trim()) {
               flightCardsHTML += cardHTML;
               console.log('✓ Generated WP regular card for:', (flight.result || flight.text).substring(0, 50));
@@ -1319,7 +1332,7 @@
             console.log('Processing WP CSAR flight:', flight.result || flight.text);
             
             try {
-              const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
+              const cardHTML = await getPrintGenerator().generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
               if (cardHTML && cardHTML.trim()) {
                 flightCardsHTML += cardHTML;
                 console.log('✓ Generated WP CSAR card for:', (flight.result || flight.text).substring(0, 50));
@@ -1336,7 +1349,7 @@
         console.log(`Total cards generated: ${flightCardsHTML.length > 0 ? 'Success' : 'None'}`);
         
         // Write complete HTML document with designer styles
-        printWindow.document.write(generateDesignerSheetHTML(flightCardsHTML));
+        printWindow.document.write(getPrintGenerator().generateDesignerSheetHTML(flightCardsHTML));
         printWindow.document.close();
         
       } catch (error) {
@@ -1668,7 +1681,7 @@
           // Only the last card of multi-flight NATO results gets the page break
           const isLastCard = i === flightParts.length - 1;
           const applyPageBreakToThisFlight = isLastNATOFlight && isLastCard;
-          allCards += await generateDesignerFlightCard(tempFlight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, applyPageBreakToThisFlight);
+          allCards += await getPrintGenerator().generateDesignerFlightCard(tempFlight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, applyPageBreakToThisFlight);
         }
         
         return allCards;
@@ -1851,7 +1864,7 @@
       }
       
       // Convert to designer format
-      let aircraftData = convertAircraftData(rawAircraftData, nationCode, weaponsData);
+      let aircraftData = getPrintGenerator().convertAircraftData(rawAircraftData, nationCode, weaponsData);
       
       // Apply note rules if available
       if (noteRulesData && nationCode) {
@@ -3002,30 +3015,30 @@
   <script src="../../../shared/js/module-config.js"></script>
   
   <!-- Load modules after DOM is ready -->
-  <script src="js/utils.js"></script>
-  <script src="js/dice-roller.js"></script>
-  <script src="js/state-manager.js"></script>
-  <script src="js/table-processor.js"></script>
-  <script src="js/ui-controller.js"></script>
-  <script src="js/print-generator.js"></script>
-  <script src="js/aircraft-notes.js"></script>
-  <script src="js/app.js"></script>
+  <script src="../../../shared/oob-generator/js/utils.js"></script>
+  <script src="../../../shared/oob-generator/js/dice-roller.js"></script>
+  <script src="../../../shared/oob-generator/js/state-manager.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processor.js"></script>
+  <script src="../../../shared/oob-generator/js/ui-controller.js"></script>
+  <script src="../../../shared/oob-generator/js/print-generator.js"></script>
+  <script src="../../../shared/oob-generator/js/aircraft-notes.js"></script>
+  <script src="../../../shared/oob-generator/js/app.js"></script>
   
   <!-- Table Processor Classes -->
-  <script src="js/table-processors/BaseTableProcessor.js"></script>
-  <script src="js/table-processors/NATOTableA.js"></script>
-  <script src="js/table-processors/NATOTableB.js"></script>
-  <script src="js/table-processors/NATOTableC.js"></script>
-  <script src="js/table-processors/NATOTableD.js"></script>
-  <script src="js/table-processors/NATOTableE.js"></script>
-  <script src="js/table-processors/NATOTableF.js"></script>
-  <script src="js/table-processors/WPTableG.js"></script>
-  <script src="js/table-processors/WPTableH.js"></script>
-  <script src="js/table-processors/WPTableI.js"></script>
-  <script src="js/table-processors/WPTableJ.js"></script>
-  <script src="js/table-processors/WPTableK.js"></script>
-  <script src="js/table-processors/WPTableL.js"></script>
-  <script src="js/table-processors/TableProcessorFactory.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/BaseTableProcessor.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableA.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableB.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableC.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableD.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableE.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableF.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableG.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableH.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableI.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableJ.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableK.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableL.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/TableProcessorFactory.js"></script>
   
   <!-- Footer -->
   <div style="text-align: center; margin-top: 60px; padding: 30px 20px; border-top: 1px solid #4a5a4a; opacity: 0.8; background-color: #1a2a1a;">

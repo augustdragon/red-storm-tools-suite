@@ -1,0 +1,205 @@
+/**
+ * WPTableI2 - Baltic Approaches WP Bombing Raid Processor
+ * 
+ * Table I2: WP Bombing Raid (Baltic Approaches)
+ * 
+ * Structure:
+ * - Roll for nationality first (1-4 GDR, 5-8 POL, 9-10 USSR)
+ * - Each nationality has three taskings: Close Escort, SEAD, Bombing
+ * - Fixed flight configurations per nationality
+ * - Ordnance rolls for SEAD and Bombing flights
+ * 
+ * Nationalities:
+ * - GDR: 3x{4} Close Escort, 2x{4} SEAD, 5x{4} Bombing
+ * - POL: 3x{4} Close Escort, 2x{4} SEAD, 5x{4} Bombing
+ * - USSR: 3x{4} Close Escort, 2x{4} SEAD, 5x{4} Bombing
+ */
+
+class WPTableI2 extends BaseTableProcessor {
+  constructor(tableData) {
+    super('I2', tableData);
+  }
+
+  /**
+   * Process WP Table I2 - Bombing Raid
+   * 
+   * @param {object} params - Processing parameters (none required)
+   * @returns {object} Result object with bombing raid information
+   */
+  process(params) {
+    // Roll for nationality: 1-4 GDR, 5-8 POL, 9-10 USSR
+    const nationalityRoll = this.rollDie(10);
+    let nationality;
+    
+    if (nationalityRoll <= 4) {
+      nationality = 'GDR';
+    } else if (nationalityRoll <= 8) {
+      nationality = 'POL';
+    } else {
+      nationality = 'USSR';
+    }
+
+    const nationalityData = this.tableData.nationalities[nationality];
+    if (!nationalityData) {
+      return {
+        text: `Error: Unknown nationality "${nationality}" for Table I2`,
+        error: `Unknown nationality "${nationality}"`
+      };
+    }
+
+    const flights = [];
+    const debugRolls = [`Raid Nationality: ${nationalityRoll} → ${nationality}`];
+    const taskingOrder = ['Close Escort', 'SEAD', 'Bombing'];
+
+    // Process each tasking
+    for (const taskingName of taskingOrder) {
+      const taskingData = nationalityData.taskings[taskingName];
+      if (!taskingData) continue;
+
+      const { flightSize, flightCount, aircraft } = taskingData;
+
+      // Generate flights for this tasking
+      for (let i = 1; i <= flightCount; i++) {
+        // Roll for aircraft
+        const aircraftResult = this.rollForAircraft(aircraft, `${taskingName} Flight ${i} Aircraft`);
+        if (aircraftResult.error) {
+          return {
+            text: `Error: ${aircraftResult.error}`,
+            error: aircraftResult.error
+          };
+        }
+
+        // Roll for ordnance if this is SEAD or Bombing
+        let ordnance = 'Air-to-Air';
+        if (taskingName === 'SEAD' || taskingName === 'Bombing') {
+          const ordnanceRolls = nationalityData.ordnanceRolls[taskingName];
+          if (ordnanceRolls) {
+            const ordnanceResult = this.rollForOrdnance(ordnanceRolls, `${taskingName} Flight ${i} Ordnance`);
+            if (ordnanceResult.error) {
+              return {
+                text: `Error: ${ordnanceResult.error}`,
+                error: ordnanceResult.error
+              };
+            }
+            ordnance = ordnanceResult.ordnanceType;
+            debugRolls.push(ordnanceResult.ordnanceRollDebug);
+          }
+        }
+
+        flights.push({
+          faction: 'WP',
+          nationality: nationality,
+          aircraft: aircraftResult.aircraftType,
+          flightSize: flightSize,
+          tasking: taskingName,
+          ordnance: ordnance
+        });
+
+        debugRolls.push(aircraftResult.aircraftRollDebug);
+      }
+    }
+
+    // Format result text to match RS Table I style
+    const resultLines = [];
+    resultLines.push(`${nationality} Bombing Raid`);
+    
+    // Build tasking results for flight sheet compatibility
+    const taskingResults = [];
+    
+    for (const taskingName of taskingOrder) {
+      const taskingFlights = flights.filter(f => f.tasking === taskingName);
+      if (taskingFlights.length === 0) continue;
+      
+      const flightSize = taskingFlights[0].flightSize;
+      
+      if (taskingName === 'Close Escort') {
+        // Close Escort: Grouped format like RS for display
+        const aircraftList = taskingFlights.map(f => f.aircraft).join(', ');
+        resultLines.push(`${nationality}: ${taskingFlights.length} x {${flightSize}} ${aircraftList}, ${taskingName}`);
+        
+        // Add individual flights to taskings array for flight sheet generation
+        for (const flight of taskingFlights) {
+          taskingResults.push({
+            tasking: taskingName,
+            text: `1 x {${flightSize}} ${nationality}, ${taskingName}`,
+            nationality: nationality,
+            aircraftType: flight.aircraft,
+            flightSize: flightSize,
+            flightCount: 1
+          });
+        }
+      } else {
+        // SEAD and Bombing: Individual flights with ordnance like RS
+        for (const flight of taskingFlights) {
+          if (flight.ordnance && flight.ordnance !== 'Air-to-Air') {
+            resultLines.push(`${flight.nationality}: 1 x {${flight.flightSize}} ${flight.aircraft}, ${taskingName} (${flight.ordnance})`);
+          } else {
+            resultLines.push(`${flight.nationality}: 1 x {${flight.flightSize}} ${flight.aircraft}, ${taskingName}`);
+          }
+          
+          // Add each individual flight to taskings array
+          taskingResults.push({
+            tasking: taskingName,
+            text: flight.ordnance && flight.ordnance !== 'Air-to-Air' 
+              ? `1 x {${flight.flightSize}} ${flight.nationality}, ${taskingName} (${flight.ordnance})`
+              : `1 x {${flight.flightSize}} ${flight.nationality}, ${taskingName}`,
+            nationality: flight.nationality,
+            aircraftType: flight.aircraft,
+            flightSize: flight.flightSize,
+            flightCount: 1,
+            ordnance: flight.ordnance
+          });
+        }
+      }
+    }
+    
+    const resultText = resultLines.join('<br>');
+
+    return {
+      text: resultText,
+      result: nationalityData.result,
+      table: 'I2',
+      tableName: this.tableData.name,
+      faction: 'WP',
+      nationality: nationality,
+      raidType: 'Bombing',
+      taskings: taskingResults,
+      flights: flights,
+      debugRolls: debugRolls,
+      ordnanceNote: this.tableData.ordnanceNote || null
+    };
+  }
+
+  /**
+   * Roll for ordnance availability
+   */
+  rollForOrdnance(ordnanceRolls, rollName) {
+    const roll = makeDebugRoll(10, rollName);
+    const rollValue = roll.roll;
+
+    // Find matching ordnance range
+    for (const [range, ordnanceType] of Object.entries(ordnanceRolls)) {
+      const [min, max] = this.parseRange(range);
+      if (rollValue >= min && rollValue <= max) {
+        return {
+          ordnanceType: ordnanceType,
+          ordnanceRoll: rollValue,
+          ordnanceRollDebug: roll.debug
+        };
+      }
+    }
+
+    return {
+      error: `No ordnance found for roll ${rollValue}`,
+      ordnanceRoll: rollValue,
+      ordnanceRollDebug: roll.debug
+    };
+  }
+}
+
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = WPTableI2;
+}
+
+console.log('WPTableI2 processor loaded');

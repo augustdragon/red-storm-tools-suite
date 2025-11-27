@@ -33,32 +33,29 @@ jobs:
       - name: Create web build manually
         run: |
           mkdir -p dist
-          mkdir -p dist/assets
-          mkdir -p dist/chit-pull
-          mkdir -p dist/oob-generator
-          mkdir -p dist/shared
-          mkdir -p dist/docs
           
           # Copy the .nojekyll file to disable Jekyll processing
           cp .nojekyll dist/.nojekyll
           
-          # Copy the chit pull app with all its files
-          cp -r chit-pull dist/
+          # Copy all module directories (Red Storm, Baltic Approaches, future expansions)
+          cp -r modules dist/
           
-          # Copy the OOB generator with all its files
-          cp -r oob-generator dist/
+          # Copy all shared assets (CSS, JS, images, roundels, etc.)
+          cp -r shared dist/
           
           # Copy the docs folder with user guide
           cp -r docs dist/
           
-          # Copy the shared CSS file
-          cp shared/red-storm.css dist/shared/red-storm.css
-
           # Copy top-level assets including icons and cover image
           cp -r assets dist/
 
-          # Copy the main index.html (new landing page)
+          # Copy the main index.html (landing page)
           cp index.html dist/index.html
+          
+          # Legacy support: Copy old chit-pull location if it still exists
+          if [ -d "chit-pull" ]; then
+            cp -r chit-pull dist/
+          fi
           
       - name: Setup Pages
         uses: actions/configure-pages@v4

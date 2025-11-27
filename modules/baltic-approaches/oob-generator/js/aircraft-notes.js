@@ -4,6 +4,33 @@
  */
 
 /**
+ * Map nation code to note rules key based on module
+ * @param {string} nationCode - Nation code from aircraft data
+ * @param {string} module - Module identifier (RS or BA)
+ * @returns {string} Mapped nation code for note rules lookup
+ */
+function getNationKey(nationCode, module) {
+  if (module === 'BA') {
+    // Baltic Approaches module mappings
+    if (['UK', 'FRG', 'DK', 'NE'].includes(nationCode)) {
+      return 'NATO_BA';
+    } else if (nationCode === 'US') {
+      // For BA module, US can be USN or USMC - determine from context if needed
+      // For now, we'll use a single USN/USMC handler
+      return 'USN'; // Will be handled by applyUSNUSMC_Notes
+    } else if (nationCode === 'USSR') {
+      return 'USSR_BA';
+    } else if (nationCode === 'POL') {
+      return 'POL';
+    } else if (nationCode === 'SE') {
+      return 'SE';
+    }
+  }
+  // Red Storm module or unmapped - return original nation code
+  return nationCode;
+}
+
+/**
  * Apply aircraft note rules to modify aircraft data
  * @param {object} aircraftData - Original aircraft data
  * @param {string} tasking - Mission tasking
@@ -11,9 +38,10 @@
  * @param {string} nationCode - Nation code (US, UK, FRG, USSR, GDR, BEL, CAN, HOL)
  * @param {string} sourceTable - Table ID where the aircraft was generated from
  * @param {object} weaponsData - Weapons database with ratings
+ * @param {string} module - Module identifier (RS or BA) - optional, defaults to RS
  * @returns {object} Modified aircraft data
  */
-function applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode, sourceTable, weaponsData) {
+function applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode, sourceTable, weaponsData, module = 'RS') {
   // Early return if no note rules data or no notes on aircraft
   if (!noteRulesData || !aircraftData.notes) {
     return aircraftData;
@@ -34,19 +62,34 @@ function applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode
   // Parse aircraft notes into array (e.g., "A, B, C, E" -> ["A", "B", "C", "E"])
   const notes = aircraftData.notes.split(',').map(n => n.trim());
   
+  // Map nation code based on module
+  const mappedNation = getNationKey(nationCode, module);
+  
   // Apply nation-specific notes
-  if (nationCode === 'US') {
+  if (mappedNation === 'US') {
     applyUSNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable, weaponsData);
-  } else if (nationCode === 'UK') {
+  } else if (mappedNation === 'UK') {
     applyUKNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable, weaponsData);
-  } else if (nationCode === 'FRG') {
+  } else if (mappedNation === 'FRG') {
     applyFRGNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable);
-  } else if (nationCode === 'USSR') {
+  } else if (mappedNation === 'USSR') {
     applyUSSRNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable);
-  } else if (nationCode === 'GDR') {
+  } else if (mappedNation === 'GDR') {
     applyGDRNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable, weaponsData);
-  } else if (['BEL', 'CAN', 'HOL'].includes(nationCode)) {
+  } else if (['BEL', 'CAN', 'HOL'].includes(mappedNation)) {
     applyBECANENotes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable);
+  }
+  // Baltic Approaches module nations
+  else if (mappedNation === 'NATO_BA') {
+    applyNATOBA_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable);
+  } else if (mappedNation === 'USN' || mappedNation === 'USMC') {
+    applyUSNUSMC_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable);
+  } else if (mappedNation === 'USSR_BA') {
+    applyUSSR_BA_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable);
+  } else if (mappedNation === 'POL') {
+    applyPOL_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable, weaponsData);
+  } else if (mappedNation === 'SE') {
+    applySE_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable);
   }
   
   return modifiedData;
@@ -570,6 +613,444 @@ function applyBECANENotes(modifiedData, notes, tasking, sourceTable, isAirToGrou
   // BE/CA/NE Note E: Multirole aircraft
   if (notes.includes('E') && (tasking === 'SEAD' || tasking === 'Chaff Laying')) {
     modifiedData.specialRules.push('Multirole aircraft [8.37].');
+  }
+}
+
+// ===== BALTIC APPROACHES MODULE NOTES =====
+
+/**
+ * Apply NATO (BA) aircraft notes
+ * Nations: UK, FRG, DK, NE (mapped to NATO_BA in BA module)
+ * 
+ * MODIFICATION NOTES (4):
+ * A - AIM-9 depletion {6} for Bombing/SEAD/Recon/Rescue Support
+ * C - Lower bomb load for Deep Strike/Naval Strike (tables D/E)
+ * F - Remove AIM-9 for Bombing/Naval Strike/SEAD/Rescue Support
+ * H - Remove AIM-9 for Bombing/SEAD
+ * 
+ * PRINT-ONLY NOTES (7):
+ * B - Large Aircraft restrictions
+ * D - Internal bay restrictions
+ * E - Pave Spike laser designator
+ * G - Multirole aircraft
+ * I - Zoom Climb not allowed
+ * J - Max Turns as Free Turns
+ * K - Defensive Wheel formation
+ */
+function applyNATOBA_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable) {
+  // Process modification notes first (depletion changes, bomb load changes)
+  // Then process weapon removal notes last
+  
+  // NATO Note A: AIM-9 depletion {6} - MODIFICATION
+  if (notes.includes('A') && (tasking === 'Bombing' || tasking === 'SEAD' || tasking === 'Recon' || tasking === 'Rescue Support')) {
+    if (modifiedData.irm) {
+      modifiedData.irm = modifiedData.irm.replace(/\{\d+\}/, '{6}');
+    }
+  }
+  
+  // NATO Note B: Large Aircraft - PRINT ONLY
+  if (notes.includes('B')) {
+    modifiedData.specialRules.push('Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32].');
+  }
+  
+  // NATO Note C: Lower bomb load for Deep Strike/Naval Strike - MODIFICATION
+  if (notes.includes('C') && (sourceTable === 'D' || sourceTable === 'E') && isAirToGroundCapable) {
+    if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+      const bombParts = modifiedData.bomb.split('/');
+      modifiedData.bomb = bombParts[1].trim();
+    }
+  }
+  
+  // NATO Note D: Internal bay - PRINT ONLY
+  if (notes.includes('D') && isAirToGroundCapable) {
+    modifiedData.specialRules.push('Internal bay. May only carry regular bombs in the bay. Use clean ratings while laden.');
+  }
+  
+  // NATO Note E: Pave Spike laser designator - PRINT ONLY
+  if (notes.includes('E') && isAirToGroundCapable) {
+    modifiedData.specialRules.push('AN/AVQ-23E Pave Spike Pod. May laser designate [17.69] for other flights.');
+  }
+  
+  // NATO Note G: Multirole aircraft - PRINT ONLY
+  if (notes.includes('G') && (tasking === 'SEAD' || tasking === 'Chaff Laying')) {
+    modifiedData.specialRules.push('Multirole aircraft [8.37].');
+  }
+  
+  // NATO Note I: Zoom Climb not allowed - PRINT ONLY
+  if (notes.includes('I')) {
+    modifiedData.specialRules.push('Zoom Climb [6.33] not allowed.');
+  }
+  
+  // NATO Note J: Max Turns as Free Turns - PRINT ONLY
+  if (notes.includes('J')) {
+    modifiedData.specialRules.push('May do Max Turns as Free Turns [6.32].');
+  }
+  
+  // NATO Note K: Defensive Wheel - PRINT ONLY
+  if (notes.includes('K')) {
+    modifiedData.specialRules.push('May enter Defensive Wheel formation [7.1].');
+  }
+  
+  // Process weapon removal notes LAST so they don't interfere with modifications
+  
+  // NATO Note F: No AIM-9 for certain taskings - MODIFICATION (WEAPON REMOVAL)
+  if (notes.includes('F')) {
+    if (tasking === 'Bombing' || tasking === 'Naval Strike' || tasking === 'SEAD' || tasking === 'Rescue Support') {
+      modifiedData.irm = null;
+    }
+  }
+  
+  // NATO Note H: No AIM-9 for Bombing/SEAD - MODIFICATION (WEAPON REMOVAL)
+  if (notes.includes('H')) {
+    if (tasking === 'Bombing' || tasking === 'SEAD') {
+      modifiedData.irm = null;
+    }
+  }
+}
+
+/**
+ * Apply USN/USMC aircraft notes
+ * Nation: US (mapped to USN or USMC in BA module)
+ * 
+ * MODIFICATION NOTES (3):
+ * A - Lower bomb load for Deep Strike/Naval Strike (tables D/E)
+ * H - AIM-7 depletion {6} for Bombing/SEAD/Recon/Rescue Support
+ * K - Recon missile load: AIM-9L {6}, AIM-7M {6}
+ * 
+ * PRINT-ONLY NOTES (10):
+ * B - Spot Jam two radars
+ * C - Defensive Wheel formation
+ * D - Escort Jamming with HARM
+ * E - Multirole aircraft
+ * F - Zoom Climb not allowed
+ * G - Max Turns as Free Turns
+ * I - AIM-7 and AIM-54 combined
+ * J - Maritime Patrol with Harpoon
+ * L - AAX-1 sensor auto visual ID
+ * M - Large Aircraft restrictions
+ */
+function applyUSNUSMC_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable) {
+  // USN/USMC Note A: Lower bomb load for Deep Strike/Naval Strike - MODIFICATION
+  if (notes.includes('A') && (sourceTable === 'D' || sourceTable === 'E') && isAirToGroundCapable) {
+    if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+      const bombParts = modifiedData.bomb.split('/');
+      modifiedData.bomb = bombParts[1].trim();
+    }
+  }
+  
+  // USN/USMC Note B: Spot Jam two radars - PRINT ONLY
+  if (notes.includes('B')) {
+    modifiedData.specialRules.push('May Spot Jam [19.34] two radars at the same time.');
+  }
+  
+  // USN/USMC Note C: Defensive Wheel - PRINT ONLY
+  if (notes.includes('C')) {
+    modifiedData.specialRules.push('May enter Defensive Wheel formation [7.1].');
+  }
+  
+  // USN/USMC Note D: Escort Jamming with HARM - PRINT ONLY
+  if (notes.includes('D') && tasking === 'Escort Jamming') {
+    modifiedData.specialRules.push('If tasked with Escort Jamming [8.341] may carry HARMs [17.54] and attack naval or land radar targets.');
+  }
+  
+  // USN/USMC Note E: Multirole aircraft - PRINT ONLY
+  if (notes.includes('E') && (tasking === 'SEAD' || tasking === 'Chaff Laying')) {
+    modifiedData.specialRules.push('Multirole aircraft [8.37].');
+  }
+  
+  // USN/USMC Note F: Zoom Climb not allowed - PRINT ONLY
+  if (notes.includes('F')) {
+    modifiedData.specialRules.push('Zoom Climb [6.33] not allowed.');
+  }
+  
+  // USN/USMC Note G: Max Turns as Free Turns - PRINT ONLY
+  if (notes.includes('G')) {
+    modifiedData.specialRules.push('May do Max Turns as Free Turns [6.32].');
+  }
+  
+  // USN/USMC Note H: AIM-7 depletion {6} - MODIFICATION
+  if (notes.includes('H') && (tasking === 'Bombing' || tasking === 'SEAD' || tasking === 'Recon' || tasking === 'Rescue Support')) {
+    if (modifiedData.rhm) {
+      modifiedData.rhm = modifiedData.rhm.replace(/\{\d+\}/, '{6}');
+    }
+  }
+  
+  // USN/USMC Note I: AIM-7 and AIM-54 combined - PRINT ONLY
+  if (notes.includes('I')) {
+    modifiedData.specialRules.push('Flights may carry AIM-7 and AIM-54 RHM at the same time.');
+  }
+  
+  // USN/USMC Note J: Maritime Patrol with Harpoon - PRINT ONLY
+  if (notes.includes('J') && tasking === 'Maritime Patrol') {
+    modifiedData.specialRules.push('If tasked with Maritime Patrol, may carry Harpoon and attack naval targets.');
+  }
+  
+  // USN/USMC Note K: Recon missile load - MODIFICATION
+  if (notes.includes('K') && tasking === 'Recon') {
+    if (modifiedData.irm) {
+      modifiedData.irm = modifiedData.irm.replace(/\{\d+\}/, '{6}');
+    }
+    if (modifiedData.rhm) {
+      modifiedData.rhm = modifiedData.rhm.replace(/\{\d+\}/, '{6}');
+    }
+  }
+  
+  // USN/USMC Note L: AAX-1 sensor - PRINT ONLY
+  if (notes.includes('L')) {
+    modifiedData.specialRules.push('AAX-1 sensor: Automatic visual ID at end of Detection Phase of one detected enemy flight in forward arc, line of sight, and same altitude at 1-8 hex range. Day only.');
+  }
+  
+  // USN/USMC Note M: Large Aircraft - PRINT ONLY
+  if (notes.includes('M')) {
+    modifiedData.specialRules.push('Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32].');
+  }
+}
+
+/**
+ * Apply USSR (BA) aircraft notes
+ * Nation: USSR (mapped to USSR_BA in BA module)
+ * 
+ * MODIFICATION NOTES (1):
+ * B - Lower bomb load for Deep Strike/Naval Strike (tables J/K)
+ * 
+ * PRINT-ONLY NOTES (7):
+ * A - Large Aircraft restrictions (no Rockets/CBU/AT CBU/Anti-Runway)
+ * C - SSM data relay long range (Deck 8, Low+ 36)
+ * D - SSM data relay medium range (Deck 8, Low+ 24)
+ * E - Defensive Wheel formation
+ * F - Kh-25/AP and KMGU options
+ * G - Zoom Climb not allowed
+ * H - Semi-conformal AS-4 station
+ */
+function applyUSSR_BA_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable) {
+  // USSR_BA Note A: Large Aircraft restrictions - PRINT ONLY
+  if (notes.includes('A')) {
+    modifiedData.specialRules.push('Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32]. May not carry Rockets, CBU, AT CBU, or Anti-Runway ordnance.');
+  }
+  
+  // USSR_BA Note B: Lower bomb load for Deep Strike/Naval Strike - MODIFICATION
+  if (notes.includes('B') && (sourceTable === 'J' || sourceTable === 'K') && isAirToGroundCapable) {
+    if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+      const bombParts = modifiedData.bomb.split('/');
+      modifiedData.bomb = bombParts[1].trim();
+    }
+  }
+  
+  // USSR_BA Note C: SSM data relay long range - PRINT ONLY
+  if (notes.includes('C')) {
+    modifiedData.specialRules.push('SSM Missile data relay [35.94], maximum ranges: Deck 8 Hexes, Low+: 36 Hexes.');
+  }
+  
+  // USSR_BA Note D: SSM data relay medium range - PRINT ONLY
+  if (notes.includes('D')) {
+    modifiedData.specialRules.push('SSM Missile data relay [35.94], maximum ranges: Deck 8 Hexes, Low+: 24 Hexes.');
+  }
+  
+  // USSR_BA Note E: Defensive Wheel - PRINT ONLY
+  if (notes.includes('E')) {
+    modifiedData.specialRules.push('May enter Defensive Wheel formation [7.1].');
+  }
+  
+  // USSR_BA Note F: Kh-25/AP and KMGU - PRINT ONLY
+  if (notes.includes('F') && isAirToGroundCapable) {
+    if (tasking === 'SEAD') {
+      modifiedData.specialRules.push('Kh-25/AP only allowed if tasked with SEAD. May swap regular bombs for KMGU [17.66].');
+    } else {
+      modifiedData.specialRules.push('May swap regular bombs for KMGU [17.66].');
+    }
+  }
+  
+  // USSR_BA Note G: Zoom Climb not allowed - PRINT ONLY
+  if (notes.includes('G')) {
+    modifiedData.specialRules.push('Zoom Climb [6.33] not allowed.');
+  }
+  
+  // USSR_BA Note H: Semi-conformal AS-4 station - PRINT ONLY
+  if (notes.includes('H') && isAirToGroundCapable) {
+    modifiedData.specialRules.push('Semi-conformal center station. May load AS-4(1) instead of AS-4(2) and use clean ratings.');
+  }
+}
+
+/**
+ * Apply Poland aircraft notes
+ * Nation: POL
+ * 
+ * MODIFICATION NOTES (4):
+ * A - Remove IRM/RHM for Bombing/SEAD/Chaff Laying
+ * B - Roll for IRM type: R-13M (1-5) or R-60 (6-10)
+ * C - Lower bomb load for Deep Strike/Naval Strike (tables J/K)
+ * F - Roll for 23mm Gun Pod: Yes (1-6) or No (7-10)
+ * 
+ * PRINT-ONLY NOTES (7):
+ * D - Chaff capability for Chaff Laying
+ * E - Ordnance restrictions (Bombs/AT CBU/Rockets only)
+ * G - Defensive Wheel formation
+ * H - SSM data relay (Deck 8, Low+ 25)
+ * I - Short Horn surface search radar
+ * J - Multirole aircraft
+ * K - KMGU option
+ */
+function applyPOL_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable, weaponsData) {
+  // POL Note A: No IRM/RHM for certain taskings - MODIFICATION
+  if (notes.includes('A')) {
+    if (tasking === 'Bombing' || tasking === 'SEAD' || tasking === 'Chaff Laying') {
+      modifiedData.irm = null;
+      modifiedData.rhm = null;
+    }
+  }
+  
+  // POL Note B: Roll for IRM type - MODIFICATION (with dice roll)
+  if (notes.includes('B') && modifiedData.irm) {
+    const irmRoll = Math.floor(Math.random() * 10) + 1;
+    const depletionMatch = modifiedData.irm.match(/\{\d+\}/);
+    const depletion = depletionMatch ? depletionMatch[0] : '{3}';
+    
+    if (irmRoll <= 5) {
+      modifiedData.irm = `R-13M ${depletion}`;
+      if (modifiedData.aam) {
+        modifiedData.aam = modifiedData.aam.replace(/R-13M\/R-60/g, 'R-13M');
+      }
+    } else {
+      modifiedData.irm = `R-60 ${depletion}`;
+      if (modifiedData.aam) {
+        modifiedData.aam = modifiedData.aam.replace(/R-13M\/R-60/g, 'R-60');
+      }
+    }
+  }
+  
+  // POL Note C: Lower bomb load for Deep Strike/Naval Strike - MODIFICATION
+  if (notes.includes('C') && (sourceTable === 'J' || sourceTable === 'K') && isAirToGroundCapable) {
+    if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+      const bombParts = modifiedData.bomb.split('/');
+      modifiedData.bomb = bombParts[1].trim();
+    }
+  }
+  
+  // POL Note D: Chaff capability - PRINT ONLY
+  if (notes.includes('D') && tasking === 'Chaff Laying') {
+    modifiedData.specialRules.push('May carry Chaff [17.68] if tasked with Chaff Laying.');
+  }
+  
+  // POL Note E: Ordnance restrictions - PRINT ONLY
+  if (notes.includes('E') && isAirToGroundCapable) {
+    modifiedData.specialRules.push('Only Bombs, AT CBU, or Rocket Pods allowed.');
+  }
+  
+  // POL Note F: 23mm Gun Pod roll - MODIFICATION (with dice roll)
+  if (notes.includes('F')) {
+    const gunRoll = Math.floor(Math.random() * 10) + 1;
+    if (gunRoll <= 6) {
+      const gunPod = weaponsData && weaponsData.guns && weaponsData.guns['23mm Gun Pod'];
+      const gunRating = gunPod ? gunPod.stdRtg : 2;
+      
+      if (modifiedData.gun) {
+        modifiedData.gun += `, 23mm Gun Pod +${gunRating} {4}`;
+      } else {
+        modifiedData.gun = `23mm Gun Pod +${gunRating} {4}`;
+      }
+    }
+  }
+  
+  // POL Note G: Defensive Wheel - PRINT ONLY
+  if (notes.includes('G')) {
+    modifiedData.specialRules.push('May enter Defensive Wheel formation [7.1].');
+  }
+  
+  // POL Note H: SSM data relay - PRINT ONLY
+  if (notes.includes('H')) {
+    modifiedData.specialRules.push('SSM missile data relay [35.94], max range at Deck: 8 hexes, Low+: 25 hexes.');
+  }
+  
+  // POL Note I: Short Horn radar - PRINT ONLY
+  if (notes.includes('I')) {
+    modifiedData.specialRules.push('Short Horn surface search radar. Stats: Column D / LD [12], 10+: -2, all arcs.');
+  }
+  
+  // POL Note J: Multirole aircraft - PRINT ONLY
+  if (notes.includes('J') && (tasking === 'SEAD' || tasking === 'Chaff Laying')) {
+    modifiedData.specialRules.push('Multirole aircraft [8.37].');
+  }
+  
+  // POL Note K: KMGU option - PRINT ONLY
+  if (notes.includes('K') && isAirToGroundCapable) {
+    modifiedData.specialRules.push('May swap regular bombs for KMGU [17.66].');
+  }
+}
+
+/**
+ * Apply Sweden aircraft notes
+ * Nation: SE
+ * 
+ * MODIFICATION NOTES (3):
+ * A - Remove AIM-4/AIM-9 for Bombing/SEAD
+ * C - AIM-9 depletion {6} and remove RHM for Bombing
+ * E - Roll for AIM-9 type: AIM-9P (1-6) or AIM-9L (7-10)
+ * 
+ * PRINT-ONLY NOTES (5):
+ * B - Rocket Pods only
+ * D - Multirole aircraft
+ * F - Spot Jam one radar
+ * G - Standoff Jamming arc restrictions (forward/rear only)
+ * H - No AT/AP CBU allowed
+ */
+function applySE_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable) {
+  // SE Note A: No AIM-4/AIM-9 for Bombing/SEAD - MODIFICATION
+  if (notes.includes('A')) {
+    if (tasking === 'Bombing' || tasking === 'SEAD') {
+      modifiedData.irm = null;
+    }
+  }
+  
+  // SE Note B: Rocket Pods only - PRINT ONLY
+  if (notes.includes('B') && isAirToGroundCapable) {
+    modifiedData.specialRules.push('Only ordnance allowed are Rocket Pods [17.63].');
+  }
+  
+  // SE Note C: AIM-9 depletion {6} and no RHM for Bombing - MODIFICATION
+  if (notes.includes('C') && tasking === 'Bombing') {
+    if (modifiedData.irm) {
+      modifiedData.irm = modifiedData.irm.replace(/\{\d+\}/, '{6}');
+    }
+    modifiedData.rhm = null;
+  }
+  
+  // SE Note D: Multirole aircraft - PRINT ONLY
+  if (notes.includes('D') && (tasking === 'SEAD' || tasking === 'Chaff Laying')) {
+    modifiedData.specialRules.push('Multirole aircraft [8.37].');
+  }
+  
+  // SE Note E: Roll for AIM-9 type - MODIFICATION (with dice roll)
+  if (notes.includes('E') && modifiedData.irm) {
+    const aim9Roll = Math.floor(Math.random() * 10) + 1;
+    const depletionMatch = modifiedData.irm.match(/\{\d+\}/);
+    const depletion = depletionMatch ? depletionMatch[0] : '{3}';
+    
+    if (aim9Roll <= 6) {
+      modifiedData.irm = `AIM-9P ${depletion}`;
+      if (modifiedData.aam) {
+        modifiedData.aam = modifiedData.aam.replace(/AIM-9P\/L/g, 'AIM-9P');
+      }
+    } else {
+      modifiedData.irm = `AIM-9L ${depletion}`;
+      if (modifiedData.aam) {
+        modifiedData.aam = modifiedData.aam.replace(/AIM-9P\/L/g, 'AIM-9L');
+      }
+    }
+  }
+  
+  // SE Note F: Spot Jam one radar - PRINT ONLY
+  if (notes.includes('F')) {
+    modifiedData.specialRules.push('May Spot Jam [19.34] one radar.');
+  }
+  
+  // SE Note G: Standoff Jamming arc restrictions - PRINT ONLY
+  if (notes.includes('G') && (tasking === 'Escort Jamming' || tasking === 'Standoff Jamming')) {
+    modifiedData.specialRules.push('May only place Standoff Jamming arc in forward or rear arcs, not beams.');
+  }
+  
+  // SE Note H: No AT/AP CBU - PRINT ONLY
+  if (notes.includes('H')) {
+    modifiedData.specialRules.push('No AT or AP CBU [17.61] allowed regardless of task.');
   }
 }
 

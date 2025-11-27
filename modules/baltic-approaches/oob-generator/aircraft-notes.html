@@ -181,15 +181,11 @@
       <div class="controls-section">
         <div class="controls-title">Select Nation</div>
         <select id="nationSelect" class="nation-select">
-          <option value="USN/USMC">USN/USMC - US Navy & Marines</option>
-          <option value="UK">UK - Royal Air Force & Navy</option>
-          <option value="FRG">FRG - West German Air Force</option>
-          <option value="Denmark">Denmark - Royal Danish Air Force</option>
-          <option value="Sweden">Sweden - Swedish Air Force</option>
-          <option value="Netherlands">Netherlands - Royal Netherlands Air Force</option>
+          <option value="USN/USMC">USN/USMC - United States Navy & Marine Corps</option>
+          <option value="NATO">NATO - NE / UK / FRG / DK</option>
           <option value="USSR">USSR - Soviet Air Force & Navy</option>
-          <option value="GDR">GDR - East German Air Force</option>
-          <option value="Poland">Poland - Polish Air Force</option>
+          <option value="POL">POL - Polish Air Force</option>
+          <option value="SE">SE - Swedish Air Force</option>
         </select>
       </div>
 
@@ -205,48 +201,36 @@
   </div>
 
   <script>
-    // Notes database for Baltic Approaches
-    const notesData = {
-      'USN/USMC': [
-        { code: 'A', desc: 'Use same bomb point load for Deep Strike and Naval Strike raids' },
-        { code: 'B', desc: 'May Spot Jam [11.34] two radars at the same time' },
-        { code: 'C', desc: 'May enter Defensive Wheel formation [7.1]' },
-        { code: 'D', desc: 'If tasked with Escort Jamming [8.341] may carry HARMs [17.54] and attack naval or land radars' },
-        { code: 'E', desc: 'V/STOL aircraft [7.37]' },
-        { code: 'F', desc: 'Zoom Climb [8.43] not allowed' },
-        { code: 'G', desc: 'May do Max Turns as Free Turns [8.32]' },
-        { code: 'H', desc: 'A/V -1: If tasked with Bombing, SEAD, Recon, or Rescue Support' },
-        { code: 'I', desc: 'Flt: May carry AIM-7 and AIM-54 RAAM at the same time' },
-        { code: 'J', desc: 'If tasked with Maritime Patrol, may carry Harpoon and attack naval targets' },
-        { code: 'K', desc: 'If tasked with Recon, missile load is AIM-9L (6), AIM-7M (3)' },
-        { code: 'L', desc: 'AAX-1 sensor: Automatic visual ID at end of Detection Phase of one die detected enemy flight in forward arc, line of sight, and same altitude as 1-8 hex range. Day only' },
-        { code: 'M', desc: 'Large Aircraft [19.22] (see B-40 Climbing limitations) and Poor SAM Defense [15.32]' }
-      ],
-      'UK': [
-        { code: 'TBD', desc: 'UK aircraft notes to be added when UK aircraft data is available' }
-      ],
-      'FRG': [
-        { code: 'TBD', desc: 'FRG aircraft notes to be added when FRG aircraft data is available' }
-      ],
-      'Denmark': [
-        { code: 'TBD', desc: 'Denmark aircraft notes to be added when Danish aircraft data is available' }
-      ],
-      'Sweden': [
-        { code: 'TBD', desc: 'Sweden aircraft notes to be added when Swedish aircraft data is available' }
-      ],
-      'Netherlands': [
-        { code: 'TBD', desc: 'Netherlands aircraft notes to be added when Dutch aircraft data is available' }
-      ],
-      'USSR': [
-        { code: 'TBD', desc: 'USSR aircraft notes to be added when Soviet aircraft data is available' }
-      ],
-      'GDR': [
-        { code: 'TBD', desc: 'GDR aircraft notes to be added when East German aircraft data is available' }
-      ],
-      'Poland': [
-        { code: 'TBD', desc: 'Poland aircraft notes to be added when Polish aircraft data is available' }
-      ]
-    };
+    // Load notes data from JSON file
+    let notesData = {};
+
+    fetch('data/aircraft-note-rules.json')
+      .then(response => response.json())
+      .then(data => {
+        // Convert nested structure to flat arrays for each nation
+        notesData['USN/USMC'] = Object.entries(data['USN/USMC'] || {})
+          .filter(([key]) => !key.startsWith('_'))
+          .map(([code, note]) => ({ code, desc: note.description }));
+        notesData['NATO'] = Object.entries(data['NATO'] || {})
+          .filter(([key]) => !key.startsWith('_'))
+          .map(([code, note]) => ({ code, desc: note.description }));
+        notesData['USSR'] = Object.entries(data['USSR'] || {})
+          .filter(([key]) => !key.startsWith('_'))
+          .map(([code, note]) => ({ code, desc: note.description }));
+        notesData['POL'] = Object.entries(data['POL'] || {})
+          .filter(([key]) => !key.startsWith('_'))
+          .map(([code, note]) => ({ code, desc: note.description }));
+        notesData['SE'] = Object.entries(data['SE'] || {})
+          .filter(([key]) => !key.startsWith('_'))
+          .map(([code, note]) => ({ code, desc: note.description }));
+        
+        renderNotes();
+      })
+      .catch(error => {
+        console.error('Error loading notes data:', error);
+        document.getElementById('notesSection').innerHTML = 
+          '<p style="color: #ff6666; padding: 20px;">Error loading notes data. Please check the console.</p>';
+      });
 
     const nationSelect = document.getElementById('nationSelect');
     const searchBox = document.getElementById('searchBox');
@@ -295,9 +279,6 @@
       searchTerm = e.target.value;
       renderNotes();
     });
-
-    // Initial render
-    renderNotes();
   </script>
   
   <!-- Footer -->

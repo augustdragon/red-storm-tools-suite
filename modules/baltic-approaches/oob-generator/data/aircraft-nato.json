@@ -10,7 +10,7 @@
     "nation": "USA",
     "crew": 2,
     "rwy": 3,
-    "fuel": 13,
+    "fuel": 10,
     "notes": "F",
     "weapons": {
       "gun": null,
@@ -22,9 +22,9 @@
     },
     "bomb": "4",
     "sight": "+3",
-    "rwr": "A/3d",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "A",
+    "jam": "3d",
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "3/3/3/-",
@@ -44,12 +44,7 @@
       { "type": "Shrike", "quantity": 1 }
     ],
     "capabilities": ["Radar", "FLIR", "TFR", "Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "APQ-156",
-      "range": 20,
-      "type": "C"
-    }
+    "aam": null
   },
   
   "EA-6B": {
@@ -71,9 +66,9 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "D/4d",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "D",
+    "jam": "4d",
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "3/3/3/-",
@@ -86,12 +81,7 @@
       { "type": "HARM", "quantity": 1 }
     ],
     "capabilities": ["Night", "Standoff, Spot"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "APQ-156",
-      "range": 20,
-      "type": "C"
-    }
+    "aam": null
   },
   
   "A-7E": {
@@ -105,21 +95,21 @@
     "weapons": {
       "gun": "20mm",
       "gunDepletion": 3,
-      "irm": null,
-      "irmDepletion": null,
+      "irm": "AIM-9L",
+      "irmDepletion": 6,
       "rhm": null,
       "rhmDepletion": null
     },
     "bomb": "3",
     "sight": "+3",
-    "rwr": "A/3d",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "A",
+    "jam": "3d",
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "2/3/3/-",
         "dash": "3/4/4/-",
-        "maneuver": "5/3/3/-"
+        "maneuver": "5/4/3/-"
       },
       "laden": {
         "combat": "2/3/3/-",
@@ -134,12 +124,7 @@
       { "type": "HARM", "quantity": 2 }
     ],
     "capabilities": ["Radar", "FLIR", "Night"],
-    "aam": "AIM-9L (8), 20mm Gun (3)",
-    "surfaceSearchRadar": {
-      "name": "APQ-126",
-      "range": 26,
-      "type": "C"
-    }
+    "aam": "AIM-9L (6), 20mm Gun (3)"
   },
   
   "AV-8B": {
@@ -180,8 +165,7 @@
       { "type": "EOGM", "quantity": 1 }
     ],
     "capabilities": [],
-    "aam": "AIM-9L (8), 25mm Gun (3)",
-    "surfaceSearchRadar": null
+    "aam": "AIM-9L (8), 25mm Gun (3)"
   },
   
   "RF-4B": {
@@ -202,8 +186,8 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "A/3d",
-    "jam": null,
+    "rwr": "A",
+    "jam": "3d",
     "radar": null,
     "speeds": {
       "clean": {
@@ -215,8 +199,7 @@
     },
     "ordnance": [],
     "capabilities": ["Recon", "TFR", "Night"],
-    "aam": null,
-    "surfaceSearchRadar": null
+    "aam": null
   },
   
   "F-14A": {
@@ -228,7 +211,7 @@
     "fuel": 12,
     "notes": "I, K, L",
     "weapons": {
-      "gun": "20mm",
+      "gun": "20mm Gun +3",
       "gunDepletion": 3,
       "irm": null,
       "irmDepletion": null,
@@ -237,8 +220,8 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "A/3d",
-    "jam": null,
+    "rwr": "A",
+    "jam": "3d",
     "radar": {
       "name": "AWG-9",
       "type": "LD",
@@ -255,12 +238,7 @@
     },
     "ordnance": [],
     "capabilities": ["Night", "Recon", "AAX+"],
-    "aam": "AIM-9L (8), AIM-7M (6), AIM-54C (3), 20mm Gun (3), AIM-54C*",
-    "surfaceSearchRadar": {
-      "name": "AWG-9",
-      "range": 36,
-      "type": "C"
-    }
+    "aam": "AIM-9L (8), AIM-7M (6), AIM-54C (3), 20mm Gun (3)"
   },
   
   "F/A-18A": {
@@ -281,8 +259,8 @@
     },
     "bomb": "4/2",
     "sight": "+3",
-    "rwr": "C/3d",
-    "jam": null,
+    "rwr": "C",
+    "jam": "3d",
     "radar": {
       "name": "APG-65",
       "type": "LD, TS, Surf",
@@ -309,11 +287,7 @@
       { "type": "Rockets", "quantity": null }
     ],
     "capabilities": ["Radar", "TFR", "Night"],
-    "aam": "AIM-9M (8), AIM-7M (3), 20mm Gun (3)",
-    "surfaceSearchRadar": {
-      "range": 20,
-      "notes": "TS mode capable"
-    }
+    "aam": "AIM-9M (8), AIM-7M (3), 20mm Gun (3)"
   },
   
   "S-3A": {
@@ -334,9 +308,9 @@
     },
     "bomb": "2",
     "sight": "+1",
-    "rwr": "C/-",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "C",
+    "jam": null,
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "2/3/3/-",
@@ -353,12 +327,7 @@
       { "type": "Harpoon", "quantity": 2 }
     ],
     "capabilities": ["FLIR", "Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "APS-116",
-      "range": 44,
-      "type": "C"
-    }
+    "aam": null
   },
   
   "P-3C": {
@@ -379,9 +348,9 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "C/-",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "C",
+    "jam": null,
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "2/2/2/-",
@@ -398,19 +367,14 @@
       { "type": "Harpoon", "quantity": 2 }
     ],
     "capabilities": ["Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "APS-115",
-      "range": 15,
-      "type": "C"
-    }
+    "aam": null
   },
   
-  "P-3C Orion": {
+  "P-3C Orion (NE)": {
     "name": "P-3C Orion",
     "model": "P-3C Orion",
-    "nation": "UK",
-    "crew": 11,
+    "nation": "NE",
+    "crew": 13,
     "rwy": 4,
     "fuel": "U",
     "notes": "B, I",
@@ -424,12 +388,12 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "C/-",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "C",
+    "jam": null,
+    "radar": "Surf",
     "speeds": {
       "clean": {
-        "combat": "2/2/2/-",
+        "combat": "3/3/2/-",
         "dash": "-/-/-/-",
         "maneuver": "1/1/1/-"
       },
@@ -437,12 +401,7 @@
     },
     "ordnance": [],
     "capabilities": ["Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "Similar to US variant",
-      "range": 15,
-      "type": "C"
-    }
+    "aam": "AIM-9L (8)"
   },
   
   "Buccaneer S.2B": {
@@ -463,9 +422,9 @@
     },
     "bomb": "2",
     "sight": "+1",
-    "rwr": "B/2n",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "B",
+    "jam": "2n",
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "3/3/2/-",
@@ -485,12 +444,7 @@
       { "type": "AS.37", "quantity": 1 }
     ],
     "capabilities": ["TFR", "Night"],
-    "aam": "AIM-9L (8)",
-    "surfaceSearchRadar": {
-      "name": "Blue Parrot",
-      "range": 16,
-      "type": "D"
-    }
+    "aam": "AIM-9L (8)"
   },
   
   "Sea Harrier FRS.1": {
@@ -511,7 +465,7 @@
     },
     "bomb": "1.5",
     "sight": "+1",
-    "rwr": "A/-",
+    "rwr": "A",
     "jam": null,
     "radar": {
       "name": "Blue Fox",
@@ -536,12 +490,7 @@
       { "type": "Sea Eagle", "quantity": 2 }
     ],
     "capabilities": ["Radar", "Night(Ltd)"],
-    "aam": "AIM-9L (6), 30mm Gun (4)",
-    "surfaceSearchRadar": {
-      "name": "Blue Fox",
-      "range": 16,
-      "type": "C"
-    }
+    "aam": "AIM-9L (6), 30mm Gun (4)"
   },
   
   "Nimrod MR.2": {
@@ -562,9 +511,9 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "C/-",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "C",
+    "jam": null,
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "2/3/3/-",
@@ -575,12 +524,7 @@
     },
     "ordnance": [],
     "capabilities": ["Night"],
-    "aam": "AIM-9L (8)",
-    "surfaceSearchRadar": {
-      "name": "Searchwater",
-      "range": 24,
-      "type": "C"
-    }
+    "aam": null
   },
   
   "Lynx HAS.3": {
@@ -601,9 +545,9 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "C/-",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "C",
+    "jam": null,
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "1/-/-/-",
@@ -616,12 +560,7 @@
       { "type": "EOGM", "quantity": 1 }
     ],
     "capabilities": ["Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "Sea Spray",
-      "range": 16,
-      "type": "D"
-    }
+    "aam": null
   },
   
   "Tornado IDS (Navy)": {
@@ -642,9 +581,9 @@
     },
     "bomb": "4/2",
     "sight": "+4",
-    "rwr": "B/3d",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "B",
+    "jam": "3d",
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "4/4/5/-",
@@ -661,12 +600,7 @@
       { "type": "Kormoran", "quantity": 2 }
     ],
     "capabilities": ["Radar", "Recon", "TFR", "Night"],
-    "aam": "AIM-9L (8), 27mm Gun (4)",
-    "surfaceSearchRadar": {
-      "name": "TN4",
-      "range": 12,
-      "type": "B"
-    }
+    "aam": "AIM-9L (8), 27mm Gun (4)"
   },
   
   "BR-150 Atlantic 2": {
@@ -687,9 +621,9 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "C/-",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "C",
+    "jam": null,
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "2/2/-/-",
@@ -700,12 +634,7 @@
     },
     "ordnance": [],
     "capabilities": ["Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "ARI-5955",
-      "range": 8,
-      "type": "C"
-    }
+    "aam": null
   },
   
   "MK-41 Sea King": {
@@ -726,9 +655,9 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "B/-",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "B",
+    "jam": null,
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "1/-/-/-",
@@ -741,12 +670,7 @@
       { "type": "EOGM", "quantity": 1 }
     ],
     "capabilities": ["Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "Iguane",
-      "range": 16,
-      "type": "C"
-    }
+    "aam": null
   },
   
   "F-16A (DK)": {
@@ -790,12 +714,7 @@
     },
     "ordnance": [],
     "capabilities": ["Radar", "Night(Ltd)"],
-    "aam": "AIM-9L (3), 20mm Gun (3)",
-    "surfaceSearchRadar": {
-      "name": "APG-66",
-      "range": 12,
-      "type": "B"
-    }
+    "aam": "AIM-9L (3), 20mm Gun (3)"
   },
   
   "F-35XD Draken": {
@@ -816,8 +735,8 @@
     },
     "bomb": "1.5",
     "sight": "+2",
-    "rwr": "B/3d",
-    "jam": null,
+    "rwr": "B",
+    "jam": "3d",
     "radar": null,
     "speeds": {
       "clean": {
@@ -835,8 +754,7 @@
       { "type": "Rockets", "quantity": null }
     ],
     "capabilities": [],
-    "aam": "AIM-9N (3), 30mm Gun (4), 30mm Gun (4)",
-    "surfaceSearchRadar": null
+    "aam": "AIM-9N (3), 30mm Gun (4), 30mm Gun (4)"
   },
   
   "RF-35XD Draken": {
@@ -857,8 +775,8 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "B/3d",
-    "jam": null,
+    "rwr": "B",
+    "jam": "3d",
     "radar": null,
     "speeds": {
       "clean": {
@@ -874,8 +792,7 @@
     },
     "ordnance": [],
     "capabilities": ["Recon"],
-    "aam": null,
-    "surfaceSearchRadar": null
+    "aam": null
   },
   
   "JA-37 Viggen": {
@@ -896,7 +813,7 @@
     },
     "bomb": null,
     "sight": "+2",
-    "rwr": "B/-",
+    "rwr": "B",
     "jam": null,
     "radar": {
       "name": "PS-46/A",
@@ -920,8 +837,7 @@
       { "type": "Rockets", "quantity": null }
     ],
     "capabilities": ["Night"],
-    "aam": "AIM-9P/L (3), Skyflash (3), 30mm Gun (4)",
-    "surfaceSearchRadar": null
+    "aam": "AIM-9P/L (3), Skyflash (3), 30mm Gun (4)"
   },
   
   "AJ-37 Viggen": {
@@ -942,9 +858,9 @@
     },
     "bomb": "2",
     "sight": "+2",
-    "rwr": "B/3d",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "B",
+    "jam": "3d",
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "3/4/5/-",
@@ -963,12 +879,7 @@
       { "type": "Rockets", "quantity": null }
     ],
     "capabilities": ["Night", "Radar"],
-    "aam": "AIM-9P (8)",
-    "surfaceSearchRadar": {
-      "name": "PS-37/A",
-      "range": 12,
-      "type": "C"
-    }
+    "aam": "AIM-9P (8)"
   },
   
   "SH-37 Viggen": {
@@ -989,9 +900,9 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "B/3d",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "B",
+    "jam": "3d",
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "3/4/5/-",
@@ -1002,12 +913,7 @@
     },
     "ordnance": [],
     "capabilities": ["Recon", "Night"],
-    "aam": "AIM-9P (3)",
-    "surfaceSearchRadar": {
-      "name": "PS-37/A",
-      "range": 14,
-      "type": "C"
-    }
+    "aam": "AIM-9P (3)"
   },
   
   "J-35F2 Draken": {
@@ -1028,7 +934,7 @@
     },
     "bomb": "1",
     "sight": "+1",
-    "rwr": "-/-",
+    "rwr": null,
     "jam": null,
     "radar": {
       "name": "PS-011/A",
@@ -1052,8 +958,7 @@
       { "type": "Rockets", "quantity": null }
     ],
     "capabilities": ["Night", "IRS1"],
-    "aam": "AIM-9P (3), AIM-4F (6), 30mm Gun (4)",
-    "surfaceSearchRadar": null
+    "aam": "AIM-9P (3), AIM-4F (6), 30mm Gun (4)"
   },
   
   "J-32E Lansen": {
@@ -1075,7 +980,7 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "C/-",
+    "rwr": "C",
     "jam": null,
     "radar": null,
     "speeds": {
@@ -1088,7 +993,7 @@
     },
     "ordnance": [],
     "capabilities": ["Night"],
-    "aam": null,
-    "surfaceSearchRadar": null
+    "aam": null
   }
 }
+

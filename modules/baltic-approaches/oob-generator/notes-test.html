@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BA Aircraft Notes Test Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            color: #333;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.success {
+            background: #27ae60;
+        }
+
+        button.success:hover {
+            background: #229954;
+        }
+
+        button.danger {
+            background: #e74c3c;
+        }
+
+        button.danger:hover {
+            background: #c0392b;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card.passed {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+        }
+
+        .stat-card.failed {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        }
+
+        .stat-card .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .nation-section {
+            margin-bottom: 30px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .nation-header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.3em;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nation-header:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
+        }
+
+        .nation-body {
+            padding: 20px;
+            background: white;
+        }
+
+        .test-case {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #95a5a6;
+            background: #f8f9fa;
+        }
+
+        .test-case.pass {
+            border-left-color: #27ae60;
+            background: #d5f4e6;
+        }
+
+        .test-case.fail {
+            border-left-color: #e74c3c;
+            background: #fadbd8;
+        }
+
+        .test-case.pending {
+            border-left-color: #f39c12;
+            background: #fef5e7;
+        }
+
+        .test-header {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .test-status {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .test-status.pass {
+            background: #27ae60;
+            color: white;
+        }
+
+        .test-status.fail {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .test-status.pending {
+            background: #f39c12;
+            color: white;
+        }
+
+        .test-details {
+            font-size: 0.95em;
+            margin-top: 10px;
+        }
+
+        .test-details .detail-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 10px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+        }
+
+        .test-details .label {
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+
+        .test-details .value {
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+        }
+
+        .dice-roll-info {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .dice-roll-info .roll-result {
+            font-weight: 600;
+            color: #856404;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #7f8c8d;
+        }
+
+        .collapse-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
+        .collapsed .nation-body {
+            display: none;
+        }
+
+        code {
+            background: #ecf0f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Baltic Approaches Aircraft Notes Test Suite</h1>
+        <p class="subtitle">Validation testing for BA module aircraft note processing</p>
+
+        <div class="controls">
+            <button id="runAllTests">▶ Run All Tests</button>
+            <button id="runModificationTests" class="success">⚙ Run Modification Tests Only</button>
+            <button id="runDiceRollTests" class="success">🎲 Run Dice Roll Tests Only</button>
+            <button id="clearResults" class="danger">✖ Clear Results</button>
+        </div>
+
+        <div class="summary" id="summary">
+            <div class="stat-card">
+                <div class="label">Total Tests</div>
+                <div class="value" id="totalTests">-</div>
+            </div>
+            <div class="stat-card passed">
+                <div class="label">Passed</div>
+                <div class="value" id="passedTests">-</div>
+            </div>
+            <div class="stat-card failed">
+                <div class="label">Failed</div>
+                <div class="value" id="failedTests">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Pending</div>
+                <div class="value" id="pendingTests">-</div>
+            </div>
+        </div>
+
+        <div id="testResults">
+            <div class="loading">Click "Run All Tests" to begin testing...</div>
+        </div>
+    </div>
+
+    <script>
+        let testData = null;
+        let testResults = [];
+
+        // Load test cases
+        async function loadTestCases() {
+            try {
+                const response = await fetch('data/test-cases.json');
+                testData = await response.json();
+                console.log('Test cases loaded:', testData);
+            } catch (error) {
+                console.error('Failed to load test cases:', error);
+                document.getElementById('testResults').innerHTML = 
+                    '<div class="error-message">Failed to load test cases: ' + error.message + '</div>';
+            }
+        }
+
+        // Load aircraft-notes.js dynamically
+        async function loadAircraftNotes() {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                // Use local copy in BA module
+                script.src = 'js/aircraft-notes.js';
+                script.onload = () => {
+                    console.log('Aircraft notes module loaded');
+                    resolve();
+                };
+                script.onerror = () => {
+                    reject(new Error('Failed to load aircraft-notes.js'));
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        // Run a single test case
+        function runTest(testCase, nationKey) {
+            const result = {
+                nation: nationKey,
+                description: testCase.description,
+                status: 'pending',
+                errors: [],
+                diceRoll: null,
+                modifications: {}
+            };
+
+            try {
+                // Check if applyDesignerNoteRules is available
+                if (typeof applyDesignerNoteRules === 'undefined') {
+                    throw new Error('applyDesignerNoteRules is not defined - aircraft-notes.js not loaded');
+                }
+
+                // Create a copy of the aircraft data
+                const aircraftCopy = JSON.parse(JSON.stringify(testCase.aircraft));
+                
+                // Apply notes (pass module from aircraft data)
+                // Pass empty object for noteRulesData to bypass the null check
+                const modified = applyDesignerNoteRules(
+                    aircraftCopy,
+                    testCase.tasking,
+                    {}, // Empty object to bypass null check
+                    testCase.aircraft.nation,
+                    testCase.sourceTable,
+                    { guns: {} }, // Minimal weapons data structure for gun pod tests
+                    testCase.aircraft.module || 'BA'
+                );
+
+                // Check modifications
+                if (testCase.expectedModifications) {
+                    for (const [key, expectedValue] of Object.entries(testCase.expectedModifications)) {
+                        // Handle regex patterns for dice roll tests
+                        if (key.endsWith('_pattern')) {
+                            const actualKey = key.replace('_pattern', '');
+                            const pattern = new RegExp(expectedValue);
+                            const actualValue = modified[actualKey];
+                            
+                            result.modifications[actualKey] = {
+                                expected: expectedValue,
+                                actual: actualValue,
+                                match: pattern.test(actualValue)
+                            };
+
+                            if (!pattern.test(actualValue)) {
+                                result.errors.push(`${actualKey}: Expected pattern ${expectedValue}, got ${actualValue}`);
+                            }
+                        } else {
+                            const actualValue = modified[key];
+                            result.modifications[key] = {
+                                expected: expectedValue,
+                                actual: actualValue,
+                                match: actualValue === expectedValue
+                            };
+
+                            if (actualValue !== expectedValue) {
+                                result.errors.push(`${key}: Expected ${expectedValue}, got ${actualValue}`);
+                            }
+                        }
+                    }
+                }
+
+                // Store dice roll info if this is a dice roll test
+                if (testCase.requiresDiceRoll) {
+                    result.diceRoll = testCase.diceRollNote;
+                }
+
+                result.status = result.errors.length === 0 ? 'pass' : 'fail';
+            } catch (error) {
+                result.status = 'fail';
+                result.errors.push('Exception: ' + error.message);
+                console.error('Test error:', error);
+            }
+
+            return result;
+        }
+
+        // Run all tests for a nation
+        function runNationTests(nationKey, filter = null) {
+            const nationTests = testData[nationKey];
+            if (!nationTests) return [];
+
+            const results = [];
+            
+            for (const [noteKey, tests] of Object.entries(nationTests)) {
+                if (noteKey.startsWith('_')) continue; // Skip metadata
+
+                for (const test of tests) {
+                    // Apply filter if specified
+                    if (filter === 'modification' && test.requiresDiceRoll) continue;
+                    if (filter === 'diceRoll' && !test.requiresDiceRoll) continue;
+
+                    const result = runTest(test, nationKey);
+                    result.noteKey = noteKey;
+                    results.push(result);
+                }
+            }
+
+            return results;
+        }
+
+        // Run all tests
+        function runAllTests(filter = null) {
+            if (!testData) {
+                alert('Test data not loaded!');
+                return;
+            }
+
+            testResults = [];
+            const nations = ['NATO', 'USN_USMC', 'USSR_BA', 'POL', 'SE'];
+
+            for (const nation of nations) {
+                const results = runNationTests(nation, filter);
+                testResults.push(...results);
+            }
+
+            displayResults();
+            updateSummary();
+        }
+
+        // Display test results
+        function displayResults() {
+            const container = document.getElementById('testResults');
+            const nations = ['NATO', 'USN_USMC', 'USSR_BA', 'POL', 'SE'];
+            const nationLabels = {
+                'NATO': 'NATO (UK, FRG, DK, NE)',
+                'USN_USMC': 'USN/USMC (US)',
+                'USSR_BA': 'USSR (Baltic Approaches)',
+                'POL': 'Poland',
+                'SE': 'Sweden'
+            };
+
+            let html = '';
+
+            for (const nation of nations) {
+                const nationResults = testResults.filter(r => r.nation === nation);
+                if (nationResults.length === 0) continue;
+
+                const passed = nationResults.filter(r => r.status === 'pass').length;
+                const failed = nationResults.filter(r => r.status === 'fail').length;
+
+                html += `
+                    <div class="nation-section">
+                        <div class="nation-header" onclick="toggleNation(this)">
+                            <span>${nationLabels[nation]} (${passed}/${nationResults.length} passed)</span>
+                            <span class="collapse-icon">▼</span>
+                        </div>
+                        <div class="nation-body">
+                `;
+
+                for (const result of nationResults) {
+                    html += `
+                        <div class="test-case ${result.status}">
+                            <div class="test-header">
+                                <span><strong>Note ${result.noteKey}:</strong> ${result.description}</span>
+                                <span class="test-status ${result.status}">${result.status.toUpperCase()}</span>
+                            </div>
+                    `;
+
+                    if (result.diceRoll) {
+                        html += `
+                            <div class="dice-roll-info">
+                                🎲 <strong>Dice Roll Test:</strong> ${result.diceRoll}
+                            </div>
+                        `;
+                    }
+
+                    if (Object.keys(result.modifications).length > 0) {
+                        html += '<div class="test-details">';
+                        for (const [key, mod] of Object.entries(result.modifications)) {
+                            const icon = mod.match ? '✓' : '✗';
+                            html += `
+                                <div class="detail-row">
+                                    <span class="label">${icon} ${key}:</span>
+                                    <span class="value">
+                                        Expected: <code>${mod.expected}</code><br>
+                                        Actual: <code>${mod.actual !== null ? mod.actual : 'null'}</code>
+                                    </span>
+                                </div>
+                            `;
+                        }
+                        html += '</div>';
+                    }
+
+                    if (result.errors.length > 0) {
+                        html += '<div class="error-message">';
+                        html += result.errors.join('<br>');
+                        html += '</div>';
+                    }
+
+                    html += '</div>';
+                }
+
+                html += '</div></div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Update summary statistics
+        function updateSummary() {
+            const total = testResults.length;
+            const passed = testResults.filter(r => r.status === 'pass').length;
+            const failed = testResults.filter(r => r.status === 'fail').length;
+            const pending = testResults.filter(r => r.status === 'pending').length;
+
+            document.getElementById('totalTests').textContent = total;
+            document.getElementById('passedTests').textContent = passed;
+            document.getElementById('failedTests').textContent = failed;
+            document.getElementById('pendingTests').textContent = pending;
+        }
+
+        // Toggle nation section
+        function toggleNation(header) {
+            header.parentElement.classList.toggle('collapsed');
+        }
+
+        // Clear results
+        function clearResults() {
+            testResults = [];
+            document.getElementById('testResults').innerHTML = 
+                '<div class="loading">Click "Run All Tests" to begin testing...</div>';
+            document.getElementById('totalTests').textContent = '-';
+            document.getElementById('passedTests').textContent = '-';
+            document.getElementById('failedTests').textContent = '-';
+            document.getElementById('pendingTests').textContent = '-';
+        }
+
+        // Event listeners
+        document.getElementById('runAllTests').addEventListener('click', () => runAllTests());
+        document.getElementById('runModificationTests').addEventListener('click', () => runAllTests('modification'));
+        document.getElementById('runDiceRollTests').addEventListener('click', () => runAllTests('diceRoll'));
+        document.getElementById('clearResults').addEventListener('click', clearResults);
+
+        // Initialize - load both test cases and aircraft notes module
+        async function initialize() {
+            try {
+                await loadAircraftNotes();
+                await loadTestCases();
+                console.log('Initialization complete');
+            } catch (error) {
+                console.error('Initialization error:', error);
+                document.getElementById('testResults').innerHTML = 
+                    '<div class="error-message">Initialization failed: ' + error.message + '</div>';
+            }
+        }
+
+        initialize();
+    </script>
+</body>
+</html>

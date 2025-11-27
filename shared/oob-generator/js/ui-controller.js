@@ -188,8 +188,16 @@ function makeRollsWithVariables() {
   } else if (table.hasNationality) {
     const nationalityElement = document.getElementById('crewNationality');
     crewNationality = nationalityElement ? nationalityElement.value : null;
-    // Use nationality as atafZone parameter for simplicity
-    atafZone = crewNationality;
+    
+    // For Baltic Approaches E2 with FRG nationality, include hex type
+    if (currentTable === 'E2' && crewNationality === 'FRG') {
+      const hexTypeElement = document.getElementById('hexType');
+      const hexType = hexTypeElement ? hexTypeElement.value : 'land';
+      atafZone = `${crewNationality}:${hexType}`;
+    } else {
+      // Use nationality as atafZone parameter for simplicity
+      atafZone = crewNationality;
+    }
   } else if (table.hasMissionType) {
     const missionElement = document.getElementById('missionType');
     selectedMissionType = missionElement ? missionElement.value : null;

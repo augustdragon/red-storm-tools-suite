@@ -38,6 +38,43 @@ class BaseTableProcessor {
   }
 
   /**
+   * Roll a die with specified number of sides
+   * @param {number} sides - Number of sides on the die
+   * @returns {number} Random number between 1 and sides
+   */
+  rollDie(sides) {
+    return Math.floor(Math.random() * sides) + 1;
+  }
+
+  /**
+   * Parse a range string into min/max values
+   * @param {string} range - Range string (e.g., "1-4" or "5")
+   * @returns {number[]} Array with [min, max] values
+   */
+  parseRange(range) {
+    if (!range || typeof range !== 'string') return [0, 0];
+    
+    if (range.includes('-')) {
+      const [min, max] = range.split('-').map(n => parseInt(n.trim()));
+      return [min, max];
+    } else {
+      const num = parseInt(range.trim());
+      return [num, num];
+    }
+  }
+
+  /**
+   * Check if a value falls within a range string
+   * @param {number} value - Value to check
+   * @param {string} range - Range string (e.g., "1-4" or "5")
+   * @returns {boolean} True if value is in range
+   */
+  isInRange(value, range) {
+    const [min, max] = this.parseRange(range);
+    return value >= min && value <= max;
+  }
+
+  /**
    * Roll for nation based on table structure
    * 
    * @param {object} nationsData - Nations data from table

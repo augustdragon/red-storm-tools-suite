@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baltic Approaches - Aircraft Data Reference</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-bottom: 2px solid #95a5a6;
+            padding-bottom: 5px;
+        }
+        .controls {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .controls label {
+            margin-right: 20px;
+            font-weight: bold;
+        }
+        .controls input, .controls select {
+            margin-right: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            font-size: 0.85em;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 6px;
+            text-align: left;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            font-size: 0.9em;
+        }
+        td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: top;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .nato-row {
+            border-left: 4px solid #3498db;
+        }
+        .wp-row {
+            border-left: 4px solid #e74c3c;
+        }
+        .hidden {
+            display: none;
+        }
+        .speed-block {
+            font-size: 0.85em;
+            line-height: 1.3;
+        }
+        .ordnance-list {
+            font-size: 0.85em;
+            margin: 0;
+            padding-left: 15px;
+        }
+        .capabilities {
+            font-size: 0.85em;
+        }
+        .null-value {
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Baltic Approaches - Aircraft Data Reference</h1>
+    
+    <div class="controls">
+        <label>Filter by Nation:</label>
+        <select id="nationFilter">
+            <option value="all">All Nations</option>
+            <option value="USA">USA</option>
+            <option value="UK">UK</option>
+            <option value="FRG">FRG</option>
+            <option value="DK">DK</option>
+            <option value="NE">NE</option>
+            <option value="SE">SE</option>
+            <option value="USSR">USSR</option>
+            <option value="POL">POL</option>
+            <option value="GDR">GDR</option>
+        </select>
+        
+        <label>Search:</label>
+        <input type="text" id="searchBox" placeholder="Search aircraft name...">
+    </div>
+
+    <div id="natoSection">
+        <h2>NATO Aircraft</h2>
+        <table id="natoTable">
+            <thead>
+                <tr>
+                    <th>Aircraft</th>
+                    <th>Nation</th>
+                    <th>Crew</th>
+                    <th>Rwy</th>
+                    <th>Fuel</th>
+                    <th>Speeds (Clean)<br>C/D/M</th>
+                    <th>Speeds (Laden)<br>C/D/M</th>
+                    <th>Bomb</th>
+                    <th>Sight</th>
+                    <th>RWR</th>
+                    <th>Jam</th>
+                    <th>Radar</th>
+                    <th>AAM</th>
+                    <th>Ordnance</th>
+                    <th>Capabilities</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody id="natoBody">
+                <!-- Data will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="wpSection">
+        <h2>Warsaw Pact Aircraft</h2>
+        <table id="wpTable">
+            <thead>
+                <tr>
+                    <th>Aircraft</th>
+                    <th>Nation</th>
+                    <th>Crew</th>
+                    <th>Rwy</th>
+                    <th>Fuel</th>
+                    <th>Speeds (Clean)<br>C/D/M</th>
+                    <th>Speeds (Laden)<br>C/D/M</th>
+                    <th>Bomb</th>
+                    <th>Sight</th>
+                    <th>RWR</th>
+                    <th>Jam</th>
+                    <th>Radar</th>
+                    <th>AAM</th>
+                    <th>Ordnance</th>
+                    <th>Capabilities</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody id="wpBody">
+                <!-- Data will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Note: To use this file, either:
+        // 1. Serve it via a local web server (e.g., python -m http.server)
+        // 2. Or manually copy-paste the JSON data into the loadData() function below
+        
+        let surfaceRadarData = {};
+        
+        function loadData() {
+            // Try to load via fetch first
+            Promise.all([
+                fetch('data/aircraft-nato.json').then(r => r.json()).catch(() => null),
+                fetch('data/aircraft-wp.json').then(r => r.json()).catch(() => null),
+                fetch('data/surface-search-radars.json').then(r => r.json()).catch(() => null)
+            ]).then(([natoData, wpData, surfRadar]) => {
+                // Store surface radar lookup data
+                if (surfRadar && surfRadar.radars) {
+                    surfRadar.radars.forEach(entry => {
+                        surfaceRadarData[entry.aircraft] = entry;
+                    });
+                }
+                if (natoData) {
+                    const tbody = document.getElementById('natoBody');
+                    Object.keys(natoData).forEach(key => {
+                        if (key.startsWith('_')) return;
+                        const aircraft = natoData[key];
+                        const row = createAircraftRow(key, aircraft, 'nato-row');
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    document.getElementById('natoBody').innerHTML = '<tr><td colspan="16" style="text-align:center; padding:20px;">ERROR: Could not load NATO aircraft data.<br>Please serve this HTML file via a local web server or open it in a browser that allows local file access.</td></tr>';
+                }
+                
+                if (wpData) {
+                    const tbody = document.getElementById('wpBody');
+                    Object.keys(wpData).forEach(key => {
+                        if (key.startsWith('_')) return;
+                        const aircraft = wpData[key];
+                        const row = createAircraftRow(key, aircraft, 'wp-row');
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    document.getElementById('wpBody').innerHTML = '<tr><td colspan="16" style="text-align:center; padding:20px;">ERROR: Could not load WP aircraft data.<br>Please serve this HTML file via a local web server or open it in a browser that allows local file access.</td></tr>';
+                }
+            });
+        }
+        
+        // Load data when page loads
+        window.addEventListener('DOMContentLoaded', loadData);
+
+        function createAircraftRow(key, aircraft, cssClass) {
+            const row = document.createElement('tr');
+            row.className = cssClass;
+            row.dataset.nation = aircraft.nation || '';
+            row.dataset.name = aircraft.name.toLowerCase();
+
+            const formatValue = (val) => val === null || val === undefined ? '<span class="null-value">—</span>' : val;
+            
+            const speedsClean = aircraft.speeds?.clean ? 
+                `<div class="speed-block">C: ${aircraft.speeds.clean.combat}<br>D: ${aircraft.speeds.clean.dash}<br>M: ${aircraft.speeds.clean.maneuver}</div>` : 
+                '<span class="null-value">—</span>';
+            
+            const speedsLaden = aircraft.speeds?.laden ? 
+                `<div class="speed-block">C: ${aircraft.speeds.laden.combat}<br>D: ${aircraft.speeds.laden.dash}<br>M: ${aircraft.speeds.laden.maneuver}</div>` : 
+                '<span class="null-value">—</span>';
+
+            const ordnance = aircraft.ordnance && aircraft.ordnance.length > 0 ?
+                '<ul class="ordnance-list">' + aircraft.ordnance.map(o => `<li>${o.type}${o.quantity ? ` (${o.quantity})` : ''}</li>`).join('') + '</ul>' :
+                '<span class="null-value">—</span>';
+
+            const capabilities = aircraft.capabilities && aircraft.capabilities.length > 0 ?
+                `<span class="capabilities">${aircraft.capabilities.join(', ')}</span>` :
+                '<span class="null-value">—</span>';
+
+            const radarType = (() => {
+                if (aircraft.radar && typeof aircraft.radar === 'object') {
+                    const { name, type, range, modifier } = aircraft.radar;
+                    const detailParts = [];
+                    if (type) detailParts.push(type);
+                    if (range !== null && range !== undefined && range !== '') detailParts.push(`[${range}], ${modifier || ''}`);
+                    else if (modifier) detailParts.push(modifier);
+                    const details = detailParts.length ? `<br><small>${detailParts.join(' • ')}</small>` : '';
+                    
+                    // Check if this radar has surface capability and add surface radar details
+                    let surfDetails = '';
+                    if (type && type.includes('Surf')) {
+                        const surfRadarLookup = surfaceRadarData[aircraft.name];
+                        if (surfRadarLookup) {
+                            const surfParts = [];
+                            if (surfRadarLookup.col) surfParts.push(`Col ${surfRadarLookup.col}`);
+                            if (surfRadarLookup.detect) surfParts.push(surfRadarLookup.detect);
+                            if (surfRadarLookup.arcs) surfParts.push(`Arcs ${surfRadarLookup.arcs}`);
+                            if (surfParts.length > 0) {
+                                surfDetails = `<br><small>Surf: ${surfParts.join(' • ')}</small>`;
+                            }
+                        }
+                    }
+                    
+                    return `${name || '—'}${details}${surfDetails}`;
+                }
+
+                // Check for surface-only radars using lookup
+                const surfRadarLookup = surfaceRadarData[aircraft.name];
+                const hasSurfaceRadar = surfRadarLookup && (aircraft.radar === 'Surf' || aircraft.radar === 'surf');
+                if (hasSurfaceRadar) {
+                    const detailParts = [];
+                    if (surfRadarLookup.col) detailParts.push(`Col ${surfRadarLookup.col}`);
+                    if (surfRadarLookup.range !== null && surfRadarLookup.range !== undefined && surfRadarLookup.range !== '') detailParts.push(`Range ${surfRadarLookup.range}`);
+                    if (surfRadarLookup.detect) detailParts.push(surfRadarLookup.detect);
+                    if (surfRadarLookup.notes) detailParts.push(surfRadarLookup.notes);
+                    if (surfRadarLookup.arcs) detailParts.push(`Arcs ${surfRadarLookup.arcs}`);
+                    const details = detailParts.length ? `<br><small>${detailParts.join(' • ')}</small>` : '';
+                    return `${surfRadarLookup.radar || 'Surf'}${details}`;
+                }
+
+                if (aircraft.radar === 'Surf' || aircraft.radar === 'surf') {
+                    return 'Surf';
+                }
+                return formatValue(aircraft.radar);
+            })();
+
+            row.innerHTML = `
+                <td><strong>${key}</strong><br><small>${aircraft.name}</small></td>
+                <td>${aircraft.nation}</td>
+                <td>${aircraft.crew}</td>
+                <td>${formatValue(aircraft.rwy)}</td>
+                <td>${aircraft.fuel}</td>
+                <td>${speedsClean}</td>
+                <td>${speedsLaden}</td>
+                <td>${formatValue(aircraft.bomb)}</td>
+                <td>${formatValue(aircraft.sight)}</td>
+                <td>${formatValue(aircraft.rwr)}</td>
+                <td>${formatValue(aircraft.jam)}</td>
+                <td>${radarType}</td>
+                <td>${formatValue(aircraft.aam)}</td>
+                <td>${ordnance}</td>
+                <td>${capabilities}</td>
+                <td>${formatValue(aircraft.notes)}</td>
+            `;
+
+            return row;
+        }
+
+        // Filter functionality
+        document.getElementById('nationFilter').addEventListener('change', filterTable);
+        document.getElementById('searchBox').addEventListener('input', filterTable);
+
+        function filterTable() {
+            const nationFilter = document.getElementById('nationFilter').value;
+            const searchText = document.getElementById('searchBox').value.toLowerCase();
+            
+            const allRows = document.querySelectorAll('#natoBody tr, #wpBody tr');
+            
+            allRows.forEach(row => {
+                const matchesNation = nationFilter === 'all' || row.dataset.nation === nationFilter;
+                const matchesSearch = searchText === '' || row.dataset.name.includes(searchText);
+                
+                if (matchesNation && matchesSearch) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -4,13 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Guide - Red Storm Tools Suite</title>
-    <link rel="stylesheet" href="../shared/red-storm.css">
+    <link rel="stylesheet" href="../css/red-storm.css">
     <style>
         body {
+            padding: 0;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .main-content {
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
-            line-height: 1.6;
+        }
+
+        .nav-header {
+            background-color: rgba(26, 42, 26, 0.9);
+            padding: 15px 30px;
+            border-bottom: 2px solid #4a5a4a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-header a {
+            color: #8a9a8a;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-header a:hover {
+            color: #b4c4b4;
         }
 
         .back-link {
@@ -114,44 +138,64 @@
         }
 
         .toc {
-            background-color: #2d3d2d;
-            padding: 20px;
+            background-color: #3a4a3a;
+            padding: 25px;
             border-radius: 8px;
             margin-bottom: 30px;
+            border-left: 4px solid #5a6a5a;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .toc h2 {
             margin-top: 0;
             color: #f4f4f4;
+            font-size: 1.8em;
+            border-bottom: 2px solid #4a5a4a;
+            padding-bottom: 10px;
         }
 
         .toc ul {
             list-style: none;
             padding-left: 0;
+            color: #f4f4f4;
+            margin: 15px 0;
         }
 
         .toc li {
-            margin: 8px 0;
+            margin: 15px 0;
+            font-size: 1.1em;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .toc li:hover {
+            background-color: rgba(74, 90, 74, 0.3);
         }
 
         .toc a {
-            color: #8a9a8a;
+            color: #f4f4f4;
             text-decoration: none;
             transition: color 0.3s ease;
+            display: block;
         }
 
         .toc a:hover {
-            color: #c4d4c4;
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
-    <a href="../index.html" class="back-link">← Back to Tools Suite</a>
-
-    <div class="guide-header">
-        <h1>Red Storm Tools Suite - User Guide</h1>
-        <p>Complete documentation for all tools in the suite</p>
+    <div class="nav-header">
+        <span style="color: #f4f4f4; font-weight: bold;">User Guide</span>
+        <a href="../../index.html">← Back to Module Selection</a>
     </div>
+    
+    <div class="main-content">
+        <div class="guide-header">
+            <h1>Red Storm Tools Suite - User Guide</h1>
+            <p>Complete documentation for all tools in the suite</p>
+        </div>
 
     <div class="toc">
         <h2>Table of Contents</h2>
@@ -356,10 +400,8 @@
             <li>Click <strong>Add to Queue</strong> to include the flight for printing</li>
             <li>Repeat for additional flights</li>
             <li>Click <strong>Print All Flights</strong> when ready</li>
-			<li>Note:  This tool does not include notes, ordnance details, conditional values, and some other details that are found in the OOB generator.</li>
+            <li>Note: This tool does not include notes, ordnance details, conditional values, and some other details that are found in the OOB generator.</li>
         </ol>
-
-       </div>
     </div>
 
     <div class="tool-section" id="aircraft-notes">
@@ -388,8 +430,11 @@
         </p>
     </div>
 
-    <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #4a5a4a;">
-        <a href="../index.html" class="back-link">← Back to Tools Suite</a>
+    </div>
+    
+    <div class="nav-header" style="border-top: 2px solid #4a5a4a; border-bottom: none; margin-top: 40px;">
+        <span></span>
+        <a href="../../index.html">← Back to Module Selection</a>
     </div>
 </body>
 </html>

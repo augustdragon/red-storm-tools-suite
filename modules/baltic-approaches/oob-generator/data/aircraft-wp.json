@@ -13,17 +13,17 @@
     "fuel": 8,
     "notes": "B, E, F",
     "weapons": {
-      "gun": null,
-      "gunDepletion": null,
-      "irm": null,
-      "irmDepletion": null,
+      "gun": "30mm",
+      "gunDepletion": 4,
+      "irm": "R-60",
+      "irmDepletion": 6,
       "rhm": null,
       "rhmDepletion": null
     },
     "bomb": "3/2",
     "sight": "+1",
-    "rwr": "A/2n",
-    "jam": null,
+    "rwr": "A",
+    "jam": "2n",
     "radar": null,
     "speeds": {
       "clean": {
@@ -42,8 +42,7 @@
       { "type": "EOGM(F)", "quantity": 1 }
     ],
     "capabilities": [],
-    "aam": "R-60 (6)",
-    "surfaceSearchRadar": null
+    "aam": "R-60"
   },
   
   "Tu-22RD": {
@@ -64,30 +63,20 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "A/2n",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "A",
+    "jam": "2n",
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "2/3/4/-",
         "dash": "4/4/6/-",
         "maneuver": "1/1/1/-"
       },
-      "laden": {
-        "combat": "2/3/4/-",
-        "dash": "4/4/5/-",
-        "maneuver": "1/1/1/-"
-      }
+      "laden": null
     },
     "ordnance": [],
     "capabilities": ["Recon", "Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "Down Beat",
-      "range": null,
-      "type": "D",
-      "notes": "LD [30], 24+: -2"
-    }
+    "aam": null
   },
   
   "Tu-22M2": {
@@ -99,8 +88,8 @@
     "fuel": "U",
     "notes": "A, G, H",
     "weapons": {
-      "gun": null,
-      "gunDepletion": null,
+      "gun": "Rear Gun",
+      "gunDepletion": 3,
       "irm": null,
       "irmDepletion": null,
       "rhm": null,
@@ -108,9 +97,9 @@
     },
     "bomb": "10",
     "sight": "+2",
-    "rwr": "B/3d",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "B",
+    "jam": "3d",
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "2/4/5/-",
@@ -127,13 +116,7 @@
       { "type": "AS-4", "quantity": 2 }
     ],
     "capabilities": ["Radar", "Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "Down Beat",
-      "range": null,
-      "type": "C",
-      "notes": "LD [30], 24+: -2"
-    }
+    "aam": null
   },
   
   "Tu-95RT": {
@@ -154,30 +137,20 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "A/-",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "A",
+    "jam": null,
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "2/2/2/-",
         "dash": "-/-/-/-",
         "maneuver": "1/1/1/-"
       },
-      "laden": {
-        "combat": "2/2/2/-",
-        "dash": "-/-/-/-",
-        "maneuver": "1/1/1/-"
-      }
+      "laden": null
     },
     "ordnance": [],
     "capabilities": ["Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "Big Bulge A",
-      "range": null,
-      "type": "D",
-      "notes": "LD [36], 28+: -2"
-    }
+    "aam": null
   },
   
   "IL-38": {
@@ -198,30 +171,20 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "A/-",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "A",
+    "jam": null,
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "2/2/2/-",
         "dash": "-/-/-/-",
         "maneuver": "1/1/1/-"
       },
-      "laden": {
-        "combat": "2/2/2/-",
-        "dash": "-/-/-/-",
-        "maneuver": "1/1/1/-"
-      }
+      "laden": null
     },
     "ordnance": [],
     "capabilities": ["Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "Wet Eye",
-      "range": null,
-      "type": "C",
-      "notes": "LD [16], 14+: -2"
-    }
+    "aam": null
   },
   
   "Ka-25T": {
@@ -242,9 +205,9 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "A/-",
-    "jam": "Surf",
-    "radar": "surf",
+    "rwr": "A",
+    "jam": null,
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "1/-/-/-",
@@ -255,13 +218,7 @@
     },
     "ordnance": [],
     "capabilities": ["Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "Big Bulge B",
-      "range": null,
-      "type": "D",
-      "notes": "LD [30], 24+: -2"
-    }
+    "aam": null
   },
   
   "An-12B": {
@@ -273,8 +230,8 @@
     "fuel": "U",
     "notes": "A",
     "weapons": {
-      "gun": null,
-      "gunDepletion": null,
+      "gun": "Rear Gun",
+      "gunDepletion": 3,
       "irm": null,
       "irmDepletion": null,
       "rhm": null,
@@ -282,7 +239,7 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "A/-",
+    "rwr": "A",
     "jam": null,
     "radar": null,
     "speeds": {
@@ -295,8 +252,7 @@
     },
     "ordnance": [],
     "capabilities": ["Night"],
-    "aam": "Rear Gun (3)",
-    "surfaceSearchRadar": null
+    "aam": "Rear Gun (3)"
   },
   
   "AS-4": {
@@ -330,8 +286,7 @@
     },
     "ordnance": [],
     "capabilities": ["Night"],
-    "aam": null,
-    "surfaceSearchRadar": null
+    "aam": null
   },
   
   "MiG-21PFM": {
@@ -343,22 +298,22 @@
     "fuel": 6,
     "notes": "A, D, E, F, J",
     "weapons": {
-      "gun": null,
-      "gunDepletion": null,
-      "irm": null,
-      "irmDepletion": null,
+      "gun": "23mm Pod",
+      "gunDepletion": 4,
+      "irm": "R-13M",
+      "irmDepletion": 6,
       "rhm": null,
       "rhmDepletion": null
     },
     "bomb": ".5",
     "sight": "+0",
-    "rwr": "A/-",
+    "rwr": "A",
     "jam": null,
     "radar": {
       "name": "RP-21M",
       "type": "No LD",
-      "range": null,
-      "modifier": "[4]"
+      "range": "[4]",
+      "modifier": null
     },
     "speeds": {
       "clean": {
@@ -376,8 +331,7 @@
       { "type": "Chaff", "quantity": null }
     ],
     "capabilities": ["Night(Ltd)"],
-    "aam": "R-13M (6), 23mm Pod (4)",
-    "surfaceSearchRadar": null
+    "aam": "R-13M"
   },
   
   "MiG-21RF": {
@@ -398,8 +352,8 @@
     },
     "bomb": null,
     "sight": null,
-    "rwr": "A/2n",
-    "jam": null,
+    "rwr": "A",
+    "jam": "2n",
     "radar": null,
     "speeds": {
       "clean": {
@@ -411,8 +365,7 @@
     },
     "ordnance": [],
     "capabilities": ["Recon", "Night(Ltd)"],
-    "aam": null,
-    "surfaceSearchRadar": null
+    "aam": null
   },
   
   "MiG-21MF": {
@@ -424,41 +377,38 @@
     "fuel": 6,
     "notes": "A, D, E, J",
     "weapons": {
-      "gun": null,
-      "gunDepletion": null,
-      "irm": null,
-      "irmDepletion": null,
+      "gun": "23mm Gun",
+      "gunDepletion": 4,
+      "irm": "R-13M",
+      "irmDepletion": 3,
       "rhm": null,
       "rhmDepletion": null
     },
     "bomb": "1",
     "sight": "+0",
-    "rwr": "A/-",
+    "rwr": "A",
     "jam": null,
     "radar": {
       "name": "RP-21MA",
       "type": "No LD",
-      "range": null,
-      "modifier": "[4]"
+      "range": "[4]",
+      "modifier": null
     },
     "speeds": {
       "clean": {
         "combat": "3/4/5/-",
         "dash": "4/5/7/-",
-        "maneuver": "5/8/7/-"
+        "maneuver": "5/6/7/-"
       },
       "laden": {
-        "combat": "2/3/3/-",
-        "dash": "3/4/4/-",
+        "combat": "3/3/3/-",
+        "dash": "4/4/4/-",
         "maneuver": "2/2/3/-"
       }
     },
-    "ordnance": [
-      { "type": "Chaff", "quantity": null }
-    ],
-    "capabilities": ["Night(Ltd)"],
-    "aam": "R-13M (3), 23mm Gun (4)",
-    "surfaceSearchRadar": null
+    "ordnance": [],
+    "capabilities": ["Night(Ltd)","IRST"],
+    "aam": "R-13M"
   },
   
   "MiG-21bis": {
@@ -468,24 +418,24 @@
     "crew": 1,
     "rwy": 2,
     "fuel": 6,
-    "notes": "A, J, E, J",
+    "notes": "A, B, E, J",
     "weapons": {
-      "gun": null,
-      "gunDepletion": null,
-      "irm": null,
-      "irmDepletion": null,
-      "rhm": null,
-      "rhmDepletion": null
+      "gun": "23mm",
+      "gunDepletion": 4,
+      "irm": "R-13M/R-60",
+      "irmDepletion": 6,
+      "rhm": "R-3R",
+      "rhmDepletion": 6
     },
     "bomb": "1",
     "sight": "+0",
-    "rwr": "A/-",
+    "rwr": "A",
     "jam": null,
     "radar": {
       "name": "RP-22M",
       "type": "No LD",
-      "range": null,
-      "modifier": "[5]"
+      "range": "[5]",
+      "modifier": null
     },
     "speeds": {
       "clean": {
@@ -501,8 +451,7 @@
     },
     "ordnance": [],
     "capabilities": ["Night(Ltd)"],
-    "aam": "R-13M/R0 (6), R-3R (8), 23mm Gun (4)",
-    "surfaceSearchRadar": null
+    "aam": "R-13M/R60, R-3R,"
   },
   
   "MiG-23MF": {
@@ -514,22 +463,22 @@
     "fuel": 6,
     "notes": "A, C, E, J",
     "weapons": {
-      "gun": null,
-      "gunDepletion": null,
-      "irm": null,
-      "irmDepletion": null,
-      "rhm": null,
-      "rhmDepletion": null
+      "gun": "23mm",
+      "gunDepletion": 4,
+      "irm": "R-60",
+      "irmDepletion": 6,
+      "rhm": "R-23",
+      "rhmDepletion": 6
     },
     "bomb": "2/1",
     "sight": "+0",
-    "rwr": "A/-",
+    "rwr": "A",
     "jam": null,
     "radar": {
       "name": "S-23E",
       "type": "No LD",
-      "range": null,
-      "modifier": "[8] 6+: -2"
+      "range": "[8]",
+      "modifier": " 6+: -2"
     },
     "speeds": {
       "clean": {
@@ -544,9 +493,8 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Night(Ltd)", "IRS1"],
-    "aam": "R-60 (6), R-23 (8), 23mm Gun (½)",
-    "surfaceSearchRadar": null
+    "capabilities": ["Night(Ltd)", "IRST"],
+    "aam": "R-60, R-23"
   },
   
   "Su-20MK": {
@@ -558,22 +506,22 @@
     "fuel": 8,
     "notes": "A, C, E, G",
     "weapons": {
-      "gun": null,
-      "gunDepletion": null,
-      "irm": null,
-      "irmDepletion": null,
+      "gun": "30mm",
+      "gunDepletion": 4,
+      "irm": "R-13M",
+      "irmDepletion": 6,
       "rhm": null,
       "rhmDepletion": null
     },
     "bomb": "2/1",
     "sight": "+1",
-    "rwr": "A/2n",
-    "jam": null,
+    "rwr": "A",
+    "jam": "2n",
     "radar": null,
     "speeds": {
       "clean": {
         "combat": "3/4/4/-",
-        "dash": "4/5/5/-",
+        "dash": "4/5/6/-",
         "maneuver": "4/5/5/-"
       },
       "laden": {
@@ -584,8 +532,7 @@
     },
     "ordnance": [],
     "capabilities": [],
-    "aam": "R-13M (6), 30mm Gun (4)",
-    "surfaceSearchRadar": null
+    "aam": "R-13M"
   },
   
   "Su-22M4": {
@@ -597,22 +544,22 @@
     "fuel": 8,
     "notes": "C, G, K",
     "weapons": {
-      "gun": null,
-      "gunDepletion": null,
-      "irm": null,
-      "irmDepletion": null,
+      "gun": "30mm",  
+      "gunDepletion": 4,
+      "irm": "R-60",
+      "irmDepletion": 6,
       "rhm": null,
       "rhmDepletion": null
     },
     "bomb": "3/2",
     "sight": "+1",
-    "rwr": "B/2n",
-    "jam": null,
+    "rwr": "B",
+    "jam": "2n",
     "radar": null,
     "speeds": {
       "clean": {
-        "combat": "3/4/6/-",
-        "dash": "4/5/7/-",
+        "combat": "3/4/5-",
+        "dash": "5/5/7/-",
         "maneuver": "4/5/5/-"
       },
       "laden": {
@@ -625,8 +572,7 @@
       { "type": "EOGM", "quantity": 1 }
     ],
     "capabilities": ["Recon"],
-    "aam": "R-60 (6), 30mm Gun (4)",
-    "surfaceSearchRadar": null
+    "aam": "R-60"
   },
   
   "Mi-14PL": {
@@ -648,8 +594,8 @@
     "bomb": null,
     "sight": null,
     "rwr": null,
-    "jam": "Surf",
-    "radar": "surf",
+    "jam": null,
+    "radar": "Surf",
     "speeds": {
       "clean": {
         "combat": "1/-/-/-",
@@ -660,12 +606,7 @@
     },
     "ordnance": [],
     "capabilities": ["Night"],
-    "aam": null,
-    "surfaceSearchRadar": {
-      "name": "Short Horn",
-      "range": null,
-      "type": "D",
-      "notes": "LD [12], 10+: -2"
-    }
+    "aam": null
   }
 }
+

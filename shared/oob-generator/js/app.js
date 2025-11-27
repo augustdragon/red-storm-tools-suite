@@ -31,11 +31,15 @@ class OOBApp {
   getBasePath() {
     // Get the directory of the current page
     const path = window.location.pathname;
+    console.log('OOB Generator: Current pathname:', path);
+    
     if (path.includes('/oob-generator/')) {
       // If we're in the oob-generator directory, use relative paths
+      console.log('OOB Generator: Using relative path for data files');
       return './';
     }
     // Fallback to relative path
+    console.log('OOB Generator: Using fallback relative path');
     return './';
   }
 
@@ -56,6 +60,10 @@ class OOBApp {
 
   async loadTableData() {
     console.log('OOB Generator: Loading table data from JSON files...');
+    console.log('OOB Generator: Trying paths:');
+    console.log('  NATO:', this.basePath + 'data/nato-tables.json');
+    console.log('  WP:', this.basePath + 'data/wp-tables.json');
+    console.log('  Metadata:', this.basePath + 'data/table-metadata.json');
     
     try {
       const [natoResponse, wpResponse, metadataResponse] = await Promise.all([
@@ -63,6 +71,12 @@ class OOBApp {
         fetch(this.basePath + 'data/wp-tables.json'), 
         fetch(this.basePath + 'data/table-metadata.json')
       ]);
+
+      console.log('OOB Generator: Response status:', {
+        nato: natoResponse.status,
+        wp: wpResponse.status,
+        metadata: metadataResponse.status
+      });
 
       if (!natoResponse.ok || !wpResponse.ok || !metadataResponse.ok) {
         throw new Error(`Failed to load data files - NATO: ${natoResponse.status}, WP: ${wpResponse.status}, Metadata: ${metadataResponse.status}`);

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aircraft Notes Reference - All Modules</title>
+  <link rel="stylesheet" href="css/red-storm.css">
+  <style>
+    /* Override body to match OOB generator */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background-color: #2d3d2d;
+    }
+
+    /* Custom styles for notes table */
+    .notes-table {
+      width: 100%;
+      background-color: #344034;
+      border-radius: 5px;
+      overflow: hidden;
+      border-collapse: collapse;
+    }
+
+    .notes-table thead {
+      background-color: #3f4f3f;
+    }
+
+    .notes-table th {
+      color: #e8f0e8;
+      padding: 10px;
+      text-align: left;
+      font-weight: bold;
+      font-size: 16px;
+      border-bottom: 2px solid #2d3a2d;
+    }
+
+    .notes-table th:first-child {
+      width: 100px;
+      text-align: center;
+    }
+
+    .notes-table th:nth-child(2) {
+      width: 180px;
+      text-align: left;
+    }
+
+    .notes-table th:nth-child(3) {
+      width: 60px;
+      text-align: center;
+    }
+
+    .notes-table tbody tr {
+      border-bottom: 1px solid #2d3a2d;
+    }
+
+    .notes-table tbody tr:nth-child(even) {
+      background-color: #3d4f3d;
+    }
+
+    .notes-table tbody tr:hover {
+      background-color: #4a5a4a;
+    }
+
+    .notes-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .notes-table td {
+      padding: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .note-code-cell {
+      text-align: center;
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .note-description-cell {
+    }
+
+    .note-nation-cell {
+      font-size: 13px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    .roundel-icon {
+      height: 24px;
+      width: auto;
+      vertical-align: middle;
+      margin: 0 2px;
+    }
+
+    /* Nation-specific color schemes inspired by roundels */
+    /* USAF / USN/USMC - US Star roundel colors (light blue) */
+    .notes-table tbody tr.nation-usaf,
+    .notes-table tbody tr.nation-usn {
+      background-color: #94bddb;
+      color: #000000;
+    }
+
+    .notes-table tbody tr.nation-usaf:hover,
+    .notes-table tbody tr.nation-usn:hover {
+      background-color: #d9f0ff;
+      color: #000000;
+    }
+
+    /* UK - RAF roundel colors (darker blue with red accent) */
+    .notes-table tbody tr.nation-uk {
+      background-color: #feea9a;
+      color: #000000;
+    }
+
+    .notes-table tbody tr.nation-uk:hover {
+      background-color: #fdffd2;
+      color: #000000;
+    }
+
+    /* FRG - German roundel colors (black/red/gold - darker tones) */
+    .notes-table tbody tr.nation-frg {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .notes-table tbody tr.nation-frg:hover {
+      background-color: #d0d2d4;
+      color: #000000;
+    }
+
+    /* BE/CA/NE - Belgium/Canada/Netherlands (orange/maple leaf - warm tones) */
+    .notes-table tbody tr.nation-benl {
+      background-color: #fdfed4;
+      color: #000000;
+    }
+
+    .notes-table tbody tr.nation-benl:hover {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    /* USSR - Soviet red star (red tones) */
+    .notes-table tbody tr.nation-ussr {
+      background-color: #fcfa95;
+      color: #000000;
+    }
+
+    .notes-table tbody tr.nation-ussr:hover {
+      background-color: #f8facf;
+      color: #000000;
+    }
+
+    /* GDR - East German (similar to USSR but slightly different) */
+    .notes-table tbody tr.nation-gdr {
+      background-color: #ffb2b2e9;
+      color: #000000;
+    }
+
+    .notes-table tbody tr.nation-gdr:hover {
+      background-color: #e9d46b;
+      color: #000000;
+    }
+
+    /* NATO - NATO blue */
+    .notes-table tbody tr.nation-nato {
+      background-color: #b2bae6;
+      color: #000000;
+    }
+
+    .notes-table tbody tr.nation-nato:hover {
+      background-color: #dde8fa;
+      color: #000000;
+    }
+
+    /* POL - Polish checkerboard (red and white - slightly reddish) */
+    .notes-table tbody tr.nation-pol {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .notes-table tbody tr.nation-pol:hover {
+      background-color: #e2e2e4;
+      color: #000000;
+    }
+
+    /* SE - Swedish three crowns (blue and yellow - cooler blue) */
+    .notes-table tbody tr.nation-se {
+      background-color: #fffedd;
+      color: #000000;
+    }
+
+    .notes-table tbody tr.nation-se:hover {
+      background-color: #c9d0c1;
+      color: #000000;
+    }
+
+    .note-module-cell {
+      text-align: center;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    /* Override header to match OOB generator */
+    .header {
+      margin-bottom: 20px;
+    }
+
+    .header .title {
+      font-size: 32px;
+      letter-spacing: 0;
+      margin-bottom: 5px;
+      color: #ffffff;
+    }
+
+    .header .subtitle {
+      font-size: 16px;
+      letter-spacing: 0;
+      font-style: italic;
+      opacity: 0.9;
+      color: #ffffff;
+    }
+
+    /* Form controls container - three-column grid */
+    .section {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      margin: 0 0 30px 0;
+      display: grid;
+      grid-template-columns: 1.5fr 2fr 2fr;
+      gap: 15px;
+    }
+
+    .controls-section {
+      background-color: #3a4a3a;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #4a5a4a;
+    }
+
+    .controls-title {
+      color: #d4e4d4;
+      padding: 0 0 8px 0;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #4a5a4a;
+    }
+
+    .module-select,
+    .nation-select,
+    .search-box {
+      width: 100%;
+      padding: 10px 12px;
+      background-color: #2d3a2d;
+      color: #d4e4d4;
+      border: 2px solid #4a5a4a;
+      border-radius: 6px;
+      font-size: 15px;
+      transition: all 0.3s;
+      box-sizing: border-box;
+    }
+
+    .module-select,
+    .nation-select {
+      cursor: pointer;
+    }
+
+    .module-select:focus,
+    .nation-select:focus,
+    .search-box:focus {
+      outline: none;
+      border-color: #7a8a7a;
+      background-color: #3a4a3a;
+    }
+
+    .search-box::placeholder {
+      color: #6a7a6a;
+    }
+
+    .nav-header {
+      background-color: rgba(26, 42, 26, 0.9);
+      padding: 15px 30px;
+      border-bottom: 2px solid #4a5a4a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-header span {
+      color: #f4f4f4;
+      font-weight: bold;
+    }
+    .nav-header a {
+      color: #8a9a8a;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .nav-header a:hover {
+      color: #b4c4b4;
+    }
+
+    @media print {
+      .back-link,
+      .section:first-of-type {
+        display: none;
+      }
+
+      .notes-table {
+        page-break-inside: avoid;
+      }
+
+      .notes-table tbody tr {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-header">
+    <span>Aircraft Notes Reference</span>
+    <a href="/">← Back to Module Selection</a>
+  </div>
+  <div class="container">
+    <div class="header">
+      <div class="title">Red Storm Tools Suite</div>
+      <div class="subtitle">Aircraft Notes Reference - All Modules</div>
+    </div>
+
+    <div class="section">
+      <div class="controls-section">
+        <div class="controls-title">Select Module</div>
+        <select id="moduleSelect" class="module-select">
+          <option value="RS">Red Storm</option>
+          <option value="BA">Baltic Approaches</option>
+        </select>
+      </div>
+
+      <div class="controls-section">
+        <div class="controls-title">Select Nation/Faction</div>
+        <select id="nationSelect" class="nation-select">
+          <option value="All">All Nations</option>
+        </select>
+      </div>
+
+      <div class="controls-section">
+        <div class="controls-title">Search Notes</div>
+        <input type="text" id="searchBox" class="search-box" placeholder="Search by note code or text...">
+      </div>
+    </div>
+
+    <div id="notesSection">
+      <!-- Notes table will be inserted here -->
+    </div>
+  </div>
+
+  <script>
+    // Complete notes database with all modules
+    const allNotesData = {
+      "USAF": {
+        "module": "RS",
+        "name": "USAF - United States Air Force",
+        "notes": {
+          "A": "AIM-9 and/or AIM-7 depletions are {6} if tasked with Bombing or SEAD",
+          "B": "Automatic BVR engagement success. May attempt to engage two different enemy flights in BVR combat [11.44] in same Movement Phase",
+          "C": "Use lower bomb point load for Deep Strike Raids",
+          "D": "AN/ASX-1 TISEO sensor. Automatic visual ID at end of Detection Phase of one detected enemy flight in forward arc, line of sight, and same altitude at 1-8 hex range",
+          "E": "Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32]",
+          "F": "May Spot Jam [19.34] two radars at the same time",
+          "G": "May enter Defensive Wheel formation [7.1]",
+          "H": "Only load allowed is LGB(1). Internal bomb bay, use clean ratings while laden",
+          "I": "GBU-15(V)B glide bomb. May use EOGB day or night",
+          "J": "Roll to determine AIM-9 model for each flight: 1-4 AIM-9L, 5+ AIM-9M. Roll to determine AIM-7 model for each flight: 1-6 AIM-7F, 7+ AIM-7M",
+          "K": "Synthetic Aperture Radar (SAR) recon capability [24.2]",
+          "L": "May carry Shrike or HARM, not both. If loaded with Shrikes, aircraft may still carry a normal bomb point load as well",
+          "M": "AGM-65D Maverick IR Missile. May use EOGM day or night",
+          "N": "Only Level Bombing and Radar Bombing profiles allowed",
+          "O": "Non-Cooperative Target Recognition. Automatic visual ID at end of Detection Phase of one detected enemy flight in forward arc, same altitude, and 1-16 hex range",
+          "P": "Multirole aircraft [8.37]",
+          "Q": "Zoom Climb [6.33] not allowed",
+          "R": "Laser Spot Tracker. LGB only allowed vs targets within 2 hexes of NATO Armor or Mech unit",
+          "S": "SUU-23 Gun Pod. Roll for each flight: 1-5 add 20mm (4), 6+ no effect"
+        }
+      },
+      "UK": {
+        "module": "RS",
+        "name": "UK - Royal Air Force",
+        "notes": {
+          "A": "AIM-9 not allowed if tasked with Bombing, SEAD, or Rescue Support",
+          "B": "May substitute Rocket Pods for bombs",
+          "C": "Internal bay. May only carry regular bombs in bay. Use clean ratings while laden",
+          "D": "ADEN 30mm Gun. Roll for each flight: 1-3 Normal, 4-7 Reduce to {2}, 8+ -2",
+          "E": "May do Max Turns as Free Turns [6.32]",
+          "F": "LGB only allowed using laser designation [17.68] by another flight",
+          "G": "May Spot Jam [19.34] one radar",
+          "H": "Use lower bomb point load for Deep Strike Raids",
+          "I": "May enter Defensive Wheel formation [7.1]",
+          "J": "AN/AWQ-23E Pave Spike Pod. May laser designate [17.69] for other flights",
+          "K": "May only do photo recon runs [24.1] at Deck altitude. Side Looking Camera [24.1] not allowed",
+          "L": "Inertial navigation/attack system. May use Toss Bombing [17.34] profile without Radar capability",
+          "M": "Roll to determine radar capability for each flight: 1-3 Normal, 4-7 Reduce to {2}, 8+ -2",
+          "N": "If tasked with Recon, no AIM-9",
+          "O": "Zoom Climb [6.33] not allowed"
+        }
+      },
+      "FRG": {
+        "module": "RS",
+        "name": "FRG - West German Air Force",
+        "notes": {
+          "A": "AIM-9 depletion is {6} if tasked with Bombing, SEAD, or Rescue Support",
+          "B": "May substitute Rocket Pods [17.63] for bombs",
+          "C": "May enter Defensive Wheel formation [7.1]",
+          "D": "May Spot Jam [19.34] one radar",
+          "E": "Use lower bomb point load for Deep Strike Raids",
+          "F": "Synthetic Aperture Radar (SAR) recon capability [24.2]",
+          "G": "AIM-9 not allowed if tasked with Bombing, SEAD, or Rescue Support",
+          "H": "Multirole aircraft [8.37]",
+          "I": "Zoom Climb [6.33] not allowed"
+        }
+      },
+      "BE/CA/NE": {
+        "module": "RS",
+        "name": "Belgium / Canada / Netherlands",
+        "notes": {
+          "A": "AIM-9 depletion number is {6} if tasked with Bombing or SEAD",
+          "B": "May substitute Rocket Pods [17.63] for bombs",
+          "C": "Use lower bomb point load for Deep Strike Raids",
+          "D": "No AIM-9 if tasked with Bombing",
+          "E": "Multirole aircraft [8.37]"
+        }
+      },
+      "USSR_RS": {
+        "module": "RS",
+        "name": "USSR - Soviet Air Force (Red Storm)",
+        "notes": {
+          "A": "No IRM/R-27 if tasked with Bombing, SEAD, Rescue Support, or Chaff Laying",
+          "B": "If tasked with Bombing or SEAD, Jam rating is 2h",
+          "C": "Soviet Doctrine rule [11.32] does not apply",
+          "D": "Roll to determine IRM load for each flight. 1-4 R-60, 5-10 R-60M",
+          "E": "Internal Chaff Dispenser. May carry Chaff [17.68] and use clean ratings",
+          "F": "May enter Defensive Wheel formation [7.1]",
+          "G": "May carry AS-6(2) or Kh-28(2), not both",
+          "H": "Roll to determine IRM load for each flight. 1-5 R-60M, 6-10 R-73",
+          "I": "Use lower bomb point load for Deep Strike Raids",
+          "J": "May Spot Jam [19.34] two radars at same time",
+          "K": "May Spot Jam [19.34] one radar",
+          "L": "Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32]. May not carry CBU or Anti-Runway ordnance",
+          "M": "Synthetic Aperture Radar (SAR) recon capability [24.2]",
+          "N": "Kh-25MP, Kh-28M, or Kh-58 only allowed if tasked with SEAD",
+          "O": "May only place Standoff or Spot Jamming markers if tasked with Escort Jamming [19.32]",
+          "P": "Bomb load NA if tasked with Recon",
+          "Q": "Multirole aircraft [8.37]",
+          "R": "May carry Chaff [17.68] (Chaff Laying or Escort Jamming [19.32])",
+          "S": "May swap regular bombs for KMGU [17.68]",
+          "T": "May only place Standoff Jamming arc in forward or rear arcs, not beam arcs",
+          "U": "No R-27 if tasked with Bombing, SEAD, or Rescue Support",
+          "V": "May swap regular bombs for BETAB-500 Anti-Runway Bombs [17.04]",
+          "W": "Zoom Climb [6.33] not allowed"
+        }
+      },
+      "GDR": {
+        "module": "RS",
+        "name": "GDR - East German Air Force",
+        "notes": {
+          "A": "No IRM / RHM if tasked with Bombing, SEAD, or Chaff Laying",
+          "B": "May swap regular bombs for KMGU [17.66]",
+          "C": "Roll to determine IRM load for each flight: 1-5 R-60, 6-10 R-60M",
+          "D": "Use lower bomb point load for Deep Strike Raids",
+          "E": "Only Bombs, AT CBU, or Rockets allowed",
+          "F": "Roll for 23mm Gun {4} Pod for each flight: 1-6 Pod, 7-10 No Pod",
+          "G": "May enter Defensive Wheel formation [7.1]",
+          "H": "May carry Chaff [17.68] if tasked with Chaff Laying",
+          "I": "If tasked with Bombing or SEAD, Jam rating is 2n",
+          "J": "Multirole aircraft [8.37]"
+        }
+      },
+      "USN/USMC": {
+        "module": "BA",
+        "name": "USN/USMC - United States Navy & Marine Corps",
+        "notes": {
+          "A": "Use lower bomb point load for Deep Strike and Naval Strike raids.",
+          "B": "May Spot Jam [19.34] two radars at the same time.",
+          "C": "May enter Defensive Wheel formation [7.1].",
+          "D": "If tasked with Escort Jamming [8.341] may carry HARMs [17.54] and attack naval or land radar targets.",
+          "E": "Multirole aircraft [8.37].",
+          "F": "Zoom Climb [6.33] not allowed.",
+          "G": "May do Max Turns as Free Turns [6.32].",
+          "H": "AIM-7 depletion is {6} if tasked with Bombing, SEAD, Recon, or Rescue Support.",
+          "I": "Flights may carry AIM-7 and AIM-54 RHM at the same time.",
+          "J": "If tasked with Maritime Patrol, may carry Harpoon and attack naval targets.",
+          "K": "If tasked with Recon, missile load is AIM-9L {6}, AIM-7M {6}.",
+          "L": "AAX-1 sensor: Automatic visual ID at end of Detection Phase of one detected enemy flight in forward arc, line of sight, and same altitude at 1-8 hex range. Day only.",
+          "M": "Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32]"
+        }
+      },
+      "NATO": {
+        "module": "BA",
+        "name": "NATO - NE / UK / FRG / DK",
+        "notes": {
+          "A": "AIM-9 depletion is {6} if tasked with Bombing, SEAD, Recon, or Rescue Support.",
+          "B": "Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32].",
+          "C": "Use lower bomb point load for Deep Strike and Naval Strike raids.",
+          "D": "Internal bay. May only carry regular bombs in the bay. Use clean ratings while laden.",
+          "E": "AN/AVQ-23E Pave Spke Pod. May laser designate [17.69] for other flights.",
+          "F": "AIM-9 not allowed if tasked with Bombing, Naval Strike, SEAD, or Rescue Support.",
+          "G": "Multirole aircraft [8.37].",
+          "H": "No AIM-9 if tasked with Bombing or SEAD.",
+          "I": "Zoom Climb [6.33] not allowed.",
+          "J": "May do Max Turns as Free Turns [6.32].",
+          "K": "May enter Defensive Wheel formation [7.1]."
+        }
+      },
+      "USSR_BA": {
+        "module": "BA",
+        "name": "USSR - Soviet Air Force & Navy (Baltic Approaches)",
+        "notes": {
+          "A": "Large Aircraft [19.22] (see [6.40] for climbing limitations) and Poor SAM Defense [15.32]. May not carry Rockets, CBU, AT CBU, or Anti-Runway ordnance.",
+          "B": "Use lower bomb point load for Deep Strike and Naval Strike Raids.",
+          "C": "SSM Missile data relay [35.94], maximum ranges: Deck 8 Hexes, Low+: 36 Hexes.",
+          "D": "SSM Missile data relay [35.94], maximum ranges: Deck 8 Hexes, Low+: 24 Hexes.",
+          "E": "May enter Defensive Wheel formation [7.1].",
+          "F": "Kh-25/AP only allowed if tasked with SEAD. May swap regular bombs for KMGU [17.66].",
+          "G": "Zoom Climb [6.33] not allowed.",
+          "H": "Semi-conformal center station. May load AS-4(1) instead of AS-4(2) and use clean ratings."
+        }
+      },
+      "POL": {
+        "module": "BA",
+        "name": "POL - Polish Air Force",
+        "notes": {
+          "A": "No IRM / RHM if tasked with Bombing/SEAD/Chaff Laying.",
+          "B": "Roll to determine IRM load for each flight: 1-5 R-13M, 6-10 R-60.",
+          "C": "Use lower bomb point load for Deep Strike and Naval Strike raids.",
+          "D": "May carry Chaff [17.68] if tasked with Chaff Laying.",
+          "E": "Only Bombs, AT CBU, or Rocket Pods allowed.",
+          "F": "Roll for 23mm Gun {4} Pod for each flight: 1-6 Pod, 7-10 No Pod.",
+          "G": "May enter Defensive Wheel formation [7.1].",
+          "H": "SSM missile data relay [35.94], max range at Deck: 8 hexes, Low+: 25 hexes.",
+          "I": "Short Horn surface search radar. Stats: Column D / LD [12], 10+: -2, all arcs.",
+          "J": "Multirole aircraft [8.37].",
+          "K": "May swap regular bombs for KMGU [17.66]."
+        }
+      },
+      "SE": {
+        "module": "BA",
+        "name": "SE - Swedish Air Force",
+        "notes": {
+          "A": "No AIM-4 or AIM-9 if tasked with Bombing or SEAD.",
+          "B": "Only ordnance allowed are Rocket Pods [17.63].",
+          "C": "AIM-9 Depletion {6} and no RHM if tasked with Bombing.",
+          "D": "Multirole aircraft [8.37].",
+          "E": "Roll to determine AIM-9 for each flight: 1-6 AIM-9P, 7-10 AIM-9L.",
+          "F": "May Spot Jam [19.34] one radar.",
+          "G": "May only place Standoff Jamming arc in forward or rear arcs, not beams.",
+          "H": "No AT or AP CBU [17.61] allowed regardless of task."
+        }
+      }
+    };
+
+    const moduleSelect = document.getElementById('moduleSelect');
+    const nationSelect = document.getElementById('nationSelect');
+    const searchBox = document.getElementById('searchBox');
+    const notesSection = document.getElementById('notesSection');
+
+    let currentModule = 'RS';
+    let currentNation = 'All';
+    let searchTerm = '';
+
+    // Update nation dropdown based on selected module
+    function updateNationOptions() {
+      const nations = Object.keys(allNotesData).filter(key => {
+        return allNotesData[key].module === currentModule;
+      });
+
+      nationSelect.innerHTML = '<option value="All">All Nations</option>';
+      nations.forEach(key => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = allNotesData[key].name;
+        nationSelect.appendChild(option);
+      });
+
+      currentNation = 'All';
+      renderNotes();
+    }
+
+    function renderNotes() {
+      // Collect all notes to display
+      const notesToDisplay = [];
+      
+      Object.keys(allNotesData).forEach(nationKey => {
+        const nationData = allNotesData[nationKey];
+        
+        // Filter by module
+        if (nationData.module !== currentModule) {
+          return;
+        }
+        
+        // Filter by nation
+        if (currentNation !== 'All' && nationKey !== currentNation) {
+          return;
+        }
+        
+        // Add all notes from this nation
+        Object.entries(nationData.notes).forEach(([code, desc]) => {
+          notesToDisplay.push({
+            code,
+            desc,
+            module: nationData.module,
+            nation: nationData.name
+          });
+        });
+      });
+
+      // Filter by search term
+      const filtered = notesToDisplay.filter(note => {
+        if (!searchTerm) return true;
+        const search = searchTerm.toLowerCase();
+        return note.code.toLowerCase().includes(search) || 
+               note.desc.toLowerCase().includes(search) ||
+               note.nation.toLowerCase().includes(search);
+      });
+
+      // Sort by module, then nation, then note code
+      filtered.sort((a, b) => {
+        if (a.module !== b.module) {
+          return a.module.localeCompare(b.module);
+        }
+        if (a.nation !== b.nation) {
+          return a.nation.localeCompare(b.nation);
+        }
+        return a.code.localeCompare(b.code);
+      });
+
+      // Map nation names to CSS class names
+      const getNationClass = (nationName) => {
+        if (nationName.includes('USAF')) return 'nation-usaf';
+        if (nationName.includes('USN') || nationName.includes('USMC')) return 'nation-usn';
+        if (nationName.includes('Royal Air Force')) return 'nation-uk';
+        if (nationName.includes('West German')) return 'nation-frg';
+        if (nationName.includes('Belgium') || nationName.includes('Canada') || nationName.includes('Netherlands')) return 'nation-benl';
+        if (nationName.includes('Soviet') || nationName.includes('USSR')) return 'nation-ussr';
+        if (nationName.includes('East German') || nationName.includes('GDR')) return 'nation-gdr';
+        if (nationName.includes('NATO')) return 'nation-nato';
+        if (nationName.includes('Polish')) return 'nation-pol';
+        if (nationName.includes('Swedish')) return 'nation-se';
+        return 'nation-default';
+      };
+
+      // Get roundel images based on nation name
+      const getRoundelImages = (nationName) => {
+        const basePath = '../shared/assets/roundels/';
+        if (nationName.includes('USAF')) return `<img src="${basePath}USAF.jpg" class="roundel-icon" alt="USAF">`;
+        if (nationName.includes('USN') || nationName.includes('USMC')) return `<img src="${basePath}USAF.jpg" class="roundel-icon" alt="USN/USMC">`;
+        if (nationName.includes('Royal Air Force')) return `<img src="${basePath}UK.jpg" class="roundel-icon" alt="UK">`;
+        if (nationName.includes('West German')) return `<img src="${basePath}FRG.jpg" class="roundel-icon" alt="FRG">`;
+        if (nationName.includes('Belgium') || nationName.includes('Canada') || nationName.includes('Netherlands')) {
+          return `<img src="${basePath}Belgium.jpg" class="roundel-icon" alt="Belgium"><img src="${basePath}Canada.jpg" class="roundel-icon" alt="Canada"><img src="${basePath}Netherlands.jpg" class="roundel-icon" alt="Netherlands">`;
+        }
+        if (nationName.includes('Soviet') || nationName.includes('USSR')) return `<img src="${basePath}USSR.jpg" class="roundel-icon" alt="USSR">`;
+        if (nationName.includes('East German') || nationName.includes('GDR')) return `<img src="${basePath}GDR.jpg" class="roundel-icon" alt="GDR">`;
+        if (nationName.includes('NATO')) return `<img src="${basePath}nato.jpg" class="roundel-icon" alt="NATO">`;
+        if (nationName.includes('Polish')) return `<img src="${basePath}Poland.jpg" class="roundel-icon" alt="Poland">`;
+        if (nationName.includes('Swedish')) return `<img src="${basePath}Sweden.jpg" class="roundel-icon" alt="Sweden">`;
+        return nationName;
+      };
+
+      const html = `
+        <table class="notes-table">
+          <thead>
+            <tr>
+              <th>Module</th>
+              <th>Nation</th>
+              <th>Note</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered.length > 0 ? filtered.map(note => `
+              <tr class="${getNationClass(note.nation)}">
+                <td class="note-module-cell" style="text-align: center; font-weight: bold;">${note.module}</td>
+                <td class="note-nation-cell">${getRoundelImages(note.nation)}</td>
+                <td class="note-code-cell">${note.code}</td>
+                <td class="note-description-cell">${note.desc}</td>
+              </tr>
+            `).join('') : '<tr><td colspan="4" style="text-align: center; padding: 40px; color: #888;">No notes found matching your criteria</td></tr>'}
+          </tbody>
+        </table>
+      `;
+      notesSection.innerHTML = html;
+    }
+
+    moduleSelect.addEventListener('change', (e) => {
+      currentModule = e.target.value;
+      updateNationOptions();
+    });
+
+    nationSelect.addEventListener('change', (e) => {
+      currentNation = e.target.value;
+      renderNotes();
+    });
+
+    searchBox.addEventListener('input', (e) => {
+      searchTerm = e.target.value;
+      renderNotes();
+    });
+
+    // Initial render
+    updateNationOptions();
+  </script>
+  
+  <!-- Footer -->
+  <div style="text-align: center; margin-top: 60px; padding: 30px 20px; border-top: 1px solid #4a5a4a; opacity: 0.8; background-color: #1a2a1a;">
+    <p style="margin: 10px 0;">Red Storm Tools Suite | Version 1.0.0</p>
+    <p style="font-size: 0.85em; margin-top: 10px; opacity: 0.7;">
+      Red Storm and Baltic Approaches and all related game materials are © GMT Games. This is an unofficial fan-made tool suite not affiliated with or endorsed by the copyright holder.
+    </p>
+    <p style="font-size: 0.95em; margin-top: 20px;">
+      If you like this project and want to help support its development, you can donate here.
+    </p>
+    <div style="margin-top: 20px;">
+      <form action="https://www.paypal.com/donate" method="post" target="_top">
+        <input type="hidden" name="business" value="ZXPFSDHKU5HKC" />
+        <input type="hidden" name="no_recurring" value="0" />
+        <input type="hidden" name="currency_code" value="USD" />
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+      </form>
+    </div>
+    <a href="https://github.com/augustdragon/red-storm-tools-suite" style="display: inline-block; margin-top: 20px; color: #d4e4d4; text-decoration: none; padding: 10px 20px; border: 1px solid #4a5a4a; border-radius: 6px;" target="_blank">
+      📂 View on GitHub
+    </a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>D3 Full Test</title>
+    <script src="shared/js/module-config.js"></script>
+    <script src="shared/oob-generator/js/dice-roller.js"></script>
+    <script src="shared/oob-generator/js/utils.js"></script>
+    <script src="shared/oob-generator/js/table-processors/BaseTableProcessor.js"></script>
+    <script src="shared/oob-generator/js/table-processors/NATOTableD3.js"></script>
+    <script src="shared/oob-generator/js/app.js"></script>
+</head>
+<body>
+    <h1>D3 Full Test with Aircraft Database</h1>
+    <p>This test loads the aircraft database and then tests D3 generation.</p>
+    
+    <button onclick="loadDataAndTest()">Load Data and Test D3</button>
+    <button onclick="testFRGDKDirectly()">Test FRG/DK Directly</button>
+    <div id="output"></div>
+
+    <script>
+        // Test with full data loading
+        async function loadDataAndTest() {
+            try {
+                console.log('=== LOADING AIRCRAFT DATABASE ===');
+                
+                // Load aircraft database
+                const aircraftResponse = await fetch('shared/data/aircraft-nato.json');
+                if (!aircraftResponse.ok) {
+                    throw new Error('Failed to load aircraft database');
+                }
+                
+                window.aircraftNATO = await aircraftResponse.json();
+                console.log('Aircraft database loaded:', Object.keys(window.aircraftNATO).length, 'aircraft');
+                console.log('RF-35XD Draken:', window.aircraftNATO['RF-35XD Draken']);
+                
+                // Load D3 table data
+                console.log('=== LOADING D3 TABLE DATA ===');
+                const tableResponse = await fetch('modules/baltic-approaches/oob-generator/data/nato-tables.json');
+                if (!tableResponse.ok) {
+                    throw new Error('Failed to load table data');
+                }
+                
+                const allTables = await tableResponse.json();
+                const tableData = allTables.D3;
+                console.log('D3 table data loaded');
+                
+                // Test D3 generation multiple times to get FRG/DK
+                console.log('=== TESTING D3 GENERATION ===');
+                const processor = new NATOTableD3(tableData);
+                
+                for (let i = 0; i < 5; i++) {
+                    console.log(`\n--- Test ${i+1} ---`);
+                    const result = processor.process({ scenarioDate: '15-31 May' });
+                    console.log('Nationality:', result.nationalityData?.nationality);
+                    
+                    if (result.nationalityData?.nationality === 'FRG/DK') {
+                        console.log('Found FRG/DK raid!');
+                        console.log('Result:', result);
+                        
+                        document.getElementById('output').innerHTML = `
+                            <h2>FRG/DK Raid Test Result:</h2>
+                            <p><strong>Nationality:</strong> ${result.nationalityData.nationality}</p>
+                            <h3>Flights:</h3>
+                            <div>${result.text}</div>
+                            <h3>Flight Data:</h3>
+                            <pre>${JSON.stringify(result.flights, null, 2)}</pre>
+                        `;
+                        break;
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Test failed:', error);
+                document.getElementById('output').innerHTML = `<p style="color: red;">Test failed: ${error.message}</p>`;
+            }
+        }
+        
+        // Test FRG/DK processing directly by forcing the result
+        async function testFRGDKDirectly() {
+            try {
+                console.log('=== DIRECT FRG/DK TEST ===');
+                
+                // Load aircraft database if not already loaded
+                if (!window.aircraftNATO) {
+                    const aircraftResponse = await fetch('shared/data/aircraft-nato.json');
+                    window.aircraftNATO = await aircraftResponse.json();
+                    console.log('Aircraft database loaded');
+                }
+                
+                // Load D3 table data
+                const tableResponse = await fetch('modules/baltic-approaches/oob-generator/data/nato-tables.json');
+                const allTables = await tableResponse.json();
+                const tableData = allTables.D3;
+                
+                console.log('Testing direct FRG/DK raid processing...');
+                
+                const processor = new NATOTableD3(tableData);
+                
+                // Get the FRG/DK nationality data directly
+                const frgdkData = tableData.nationalityRolls['15-31 May']['1-4'];
+                console.log('FRG/DK data:', frgdkData);
+                
+                // Generate the raid package directly
+                const result = processor.generateRaidPackage(frgdkData);
+                console.log('Generated raid package:', result);
+                
+                document.getElementById('output').innerHTML = `
+                    <h2>Direct FRG/DK Test:</h2>
+                    <h3>Flights:</h3>
+                    <div>${result.text}</div>
+                    <h3>Flight Details:</h3>
+                    <pre>${JSON.stringify(result.flights, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                console.error('Direct test failed:', error);
+                document.getElementById('output').innerHTML = `<p style="color: red;">Direct test failed: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

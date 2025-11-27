@@ -41,13 +41,16 @@ function escapeHtml(text) {
  * @returns {object} Table data object
  */
 function getTableDataSource() {
-  // Phase 3: Enhanced data source selection
+  // Phase 3: Enhanced data source selection with module support
   // Prefer JSON data, fallback to embedded data seamlessly
   
   if (window.oobTables && Object.keys(window.oobTables).length > 0) {
     // Check if we have actual table data (not just placeholders)
-    const firstTable = window.oobTables['A'];
-    if (firstTable && firstTable.name) {
+    // Try both Red Storm (A) and Baltic Approaches (A2) table formats
+    const firstTableRS = window.oobTables['A'];
+    const firstTableBA = window.oobTables['A2'];
+    
+    if ((firstTableRS && firstTableRS.name) || (firstTableBA && firstTableBA.name)) {
       console.log('Using hybrid JSON + embedded data source');
       return window.oobTables;
     }
@@ -56,8 +59,10 @@ function getTableDataSource() {
   // If no valid data in window.oobTables, check if embedded oobTables exists
   if (typeof oobTables !== 'undefined') {
     console.log('Checking embedded data source...');
-    const firstTable = oobTables['A'];
-    if (firstTable && firstTable.name) {
+    const firstTableRS = oobTables['A'];
+    const firstTableBA = oobTables['A2'];
+    
+    if ((firstTableRS && firstTableRS.name) || (firstTableBA && firstTableBA.name)) {
       console.log('Using embedded data source (fallback)');
       return oobTables;
     } else {

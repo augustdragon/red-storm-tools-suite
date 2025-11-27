@@ -3,20 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Red Storm - Tools</title>
-    <link rel="stylesheet" href="../../shared/css/red-storm.css">
+    <title>Red Storm Tools Suite</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #2d3d2d;
+            background-image: url('../../shared/assets/roundels/cover.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             min-height: 100vh;
             color: #f4f4f4;
         }
         
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(45, 61, 45, 0.85);
+            z-index: -1;
+        }
+        
         .nav-header {
-            background-color: #1a2a1a;
+            background-color: rgba(26, 42, 26, 0.9);
             padding: 15px 30px;
             border-bottom: 2px solid #4a5a4a;
             display: flex;
@@ -35,7 +50,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
         }
@@ -43,90 +58,92 @@
         .header {
             text-align: center;
             margin-bottom: 50px;
-            padding: 30px;
-            background-color: #1a2a1a;
+            padding: 20px;
+            background-color: rgba(26, 42, 26, 0.9);
             border-radius: 8px;
-            border-bottom: 3px solid #4a5a4a;
+            border-bottom: 2px solid #4a5a4a;
         }
         
         .header h1 {
-            font-size: 2.5em;
-            margin: 0 0 10px 0;
-            color: #f4f4f4;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-size: 3.5em;
+            margin: 0;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         .header p {
-            font-size: 1.1em;
-            margin: 0;
-            color: #b4c4b4;
-            font-style: italic;
+            font-size: 1.3em;
+            margin: 15px 0;
+            opacity: 0.9;
         }
         
         .tool-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 40px 0;
         }
         
         .tool-card {
-            background-color: #1a2a1a;
-            border-radius: 10px;
-            padding: 25px;
-            cursor: pointer;
+            background-color: rgba(58, 74, 58, 0.9);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
             transition: all 0.3s ease;
-            border: 2px solid #3a4a3a;
-            position: relative;
-            overflow: hidden;
+            border: 1px solid #4a5a4a;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         
         .tool-card:hover {
-            transform: translateY(-3px);
-            border-color: #5a7a5a;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        }
-        
-        .tool-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, #4a6a4a, #6a8a6a);
-        }
-        
-        .tool-card h2 {
-            font-size: 1.5em;
-            margin: 0 0 10px 0;
-            color: #f4f4f4;
-        }
-        
-        .tool-card p {
-            color: #b4c4b4;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-        
-        .tool-card .open-button {
-            display: inline-block;
-            padding: 10px 25px;
-            background-color: #4a6a4a;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-        
-        .tool-card .open-button:hover {
-            background-color: #5a7a5a;
+            transform: translateY(-5px);
+            background-color: rgba(69, 85, 69, 0.9);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            border-color: #5a6a5a;
         }
         
         .tool-icon {
-            font-size: 2em;
-            margin-bottom: 10px;
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .tool-icon img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 3px solid #5a6a5a;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 5px;
+        }
+        
+        .tool-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #f4f4f4;
+        }
+        
+        .tool-button {
+            display: inline-block;
+            background-color: #5a6a5a;
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            border: 2px solid #4a5a4a;
+        }
+        
+        .tool-button:hover {
+            background-color: #6a7a6a;
+            transform: translateY(-2px);
+            border-color: #7a8a7a;
         }
         
         .footer {
@@ -138,8 +155,17 @@
         }
         
         @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
             .tool-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .tool-card {
+                padding: 20px;
             }
         }
     </style>
@@ -152,57 +178,40 @@
     
     <div class="container">
         <div class="header">
-            <h1>Red Storm Tools</h1>
-            <p>Select a tool to begin</p>
+            <h1>Red Storm Tools Suite</h1>
         </div>
         
         <div class="tool-grid">
             <!-- OOB Generator -->
             <div class="tool-card" onclick="window.location.href='oob-generator/index.html'">
-                <div class="tool-icon">📋</div>
-                <h2>OOB Generator</h2>
-                <p>Generate Order of Battle cards with randomized aircraft loadouts from NATO and Warsaw Pact tables.</p>
-                <a href="oob-generator/index.html" class="open-button">Open Tool →</a>
+                <div class="tool-icon"><img src="../../shared/assets/roundels/USAF.jpg" alt="USAF Roundel"></div>
+                <div class="tool-title">Order of Battle Generator</div>
+                <a href="oob-generator/index.html" class="tool-button">Launch Generator</a>
             </div>
             
-            <!-- Aircraft Notes -->
-            <div class="tool-card" onclick="window.location.href='aircraft-notes.html'">
-                <div class="tool-icon">✈️</div>
-                <h2>Aircraft Reference</h2>
-                <p>Browse detailed specifications, capabilities, and tactical notes for all aircraft in Red Storm.</p>
-                <a href="aircraft-notes.html" class="open-button">View Reference →</a>
+            <div class="tool-card">
+                <div class="tool-icon"><img src="../../shared/assets/roundels/UK.jpg" alt="UK Roundel"></div>
+                <div class="tool-title">Chit Pull Generator</div>
+                <a href="../../shared/chit-pull/index.html?module=red-storm" class="tool-button">Launch Chit Pull</a>
             </div>
             
-            <!-- Manual Flight Generator -->
-            <div class="tool-card" onclick="window.location.href='flight-generator.html'">
-                <div class="tool-icon">🎲</div>
-                <h2>Manual Flight Cards</h2>
-                <p>Create custom flight cards by manually selecting aircraft and loadouts.</p>
-                <a href="flight-generator.html" class="open-button">Create Flights →</a>
+            <div class="tool-card">
+                <div class="tool-icon"><img src="../../shared/assets/roundels/USSR.jpg" alt="USSR Roundel"></div>
+                <div class="tool-title">Aircraft Notes Reference</div>
+                <a href="oob-generator/aircraft-notes.html" class="tool-button">View Notes</a>
             </div>
             
-            <!-- Chit Pull (Shared) -->
-            <div class="tool-card" onclick="window.location.href='../../shared/chit-pull/index.html?module=red-storm'">
-                <div class="tool-icon">🎯</div>
-                <h2>Chit Pull Generator</h2>
-                <p>Randomize air superiority and weather conditions for your scenarios.</p>
-                <a href="../../shared/chit-pull/index.html?module=red-storm" class="open-button">Generate Chits →</a>
+            <div class="tool-card">
+                <div class="tool-icon"><img src="../../shared/assets/roundels/GDR.jpg" alt="GDR Roundel"></div>
+                <div class="tool-title">Manual Flight Generator</div>
+                <a href="oob-generator/flight-sheet-designer.html" class="tool-button">Launch Generator</a>
             </div>
             
-            <!-- User Guide (Shared) -->
-            <div class="tool-card" onclick="window.location.href='../../shared/docs/README.md'">
-                <div class="tool-icon">📖</div>
-                <h2>User Guide</h2>
-                <p>Comprehensive documentation for all Red Storm tools and features.</p>
-                <a href="../../shared/docs/README.md" class="open-button">Read Guide →</a>
+            <div class="tool-card">
+                <div class="tool-icon"><img src="../../shared/assets/roundels/FRG.jpg" alt="FRG Roundel"></div>
+                <div class="tool-title">User Guide</div>
+                <a href="../../docs/user-guide.html" class="tool-button">View Guide</a>
             </div>
-        </div>
-        
-        <div class="footer">
-            <p>Red Storm Module - NATO Tables A-F | WP Tables G-L</p>
-            <p style="margin-top: 10px; font-size: 0.9em; color: #7a8a7a;">
-                Scenario Date: Pre/Post June 1987
-            </p>
         </div>
     </div>
     

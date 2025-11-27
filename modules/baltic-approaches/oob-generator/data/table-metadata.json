@@ -4,6 +4,24 @@
   "_created": "2025-11-18",
   "_description": "Metadata for Baltic Approaches OOB tables A2-L2",
   
+  "scenario_dates": {
+    "may-early": {
+      "id": "may-early",
+      "label": "15-20 May",
+      "description": "Early campaign period"
+    },
+    "may-late": {
+      "id": "may-late", 
+      "label": "21-31 May",
+      "description": "Mid campaign period"
+    },
+    "june-early": {
+      "id": "june-early",
+      "label": "1-15 June", 
+      "description": "Later campaign period"
+    }
+  },
+  
   "extraction_status": {
     "phase": "1-initial-setup",
     "completion": "structure-created",

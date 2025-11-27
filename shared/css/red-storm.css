@@ -285,9 +285,9 @@ body {
 
 /* Scenario Date Toggle */
 .scenario-date-button {
-  background-color: #4a5a4a;
-  color: #f4f4f4;
-  border: 2px solid #6a7a6a;
+  background-color: #4a5a4a !important;
+  color: #f4f4f4 !important;
+  border: 2px solid #6a7a6a !important;
   border-radius: 6px;
   padding: 12px 24px;
   font-size: 16px;
@@ -298,14 +298,14 @@ body {
 }
 
 .scenario-date-button:hover {
-  background-color: #5a6a5a;
-  border-color: #7a8a7a;
+  background-color: #5a6a5a !important;
+  border-color: #7a8a7a !important;
 }
 
 .scenario-date-button.active {
-  background-color: #2a5a3a;
-  border-color: #4a8a5a;
-  color: #e4f4e4;
+  background-color: #2a5a3a !important;
+  border-color: #4a8a5a !important;
+  color: #e4f4e4 !important;
 }
 
 /* Forms and Inputs */
@@ -912,4 +912,45 @@ body {
   color: #b4c4b4;
   margin-bottom: 15px;
   font-style: italic;
+}
+/* CSAR Flight Card Grid Layout */
+.csar-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  width: 100%;
+  page-break-inside: avoid;
+}
+
+.compact-csar-card {
+  width: 100%;
+  height: 130pt;
+  page-break-inside: avoid;
+  border: 2px solid black;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  font-size: 6pt;
+  line-height: 1.1;
+  background: white;
+  color: black;
+  padding: 2px;
+}
+
+.compact-damage-label {
+  font-size: 6pt;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.damage-checkbox-compact {
+  min-width: 12px;
+  min-height: 12px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #666;
+  background: white;
+  flex-shrink: 0;
 }

@@ -43,7 +43,7 @@ let currentResultId = 1;
 
 /**
  * Set the scenario date and update UI accordingly
- * @param {string} dateValue - 'pre' or 'post'
+ * @param {string} dateValue - Scenario date ID (e.g., 'pre', 'post', 'may-early', etc.)
  */
 function setScenarioDate(dateValue) {
   // Don't allow changing date if results exist
@@ -82,65 +82,70 @@ function setScenarioDate(dateValue) {
   // Update status message
   const scenarioStatus = document.getElementById('scenarioStatus');
   if (scenarioStatus) {
-    const dateText = dateValue === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
+    let dateText = dateValue;
+    
+    // For Baltic Approaches ordinal dates (1, 2, 3), use BA_DATE_RANGES mapping
+    if (typeof dateValue === 'number' && window.BA_DATE_RANGES) {
+      dateText = window.BA_DATE_RANGES[dateValue] || dateValue;
+    }
+    // For string dates, try module configuration
+    else if (window.ModuleConfig) {
+      const currentModule = window.ModuleConfig.getCurrentModule();
+      const moduleConfig = window.ModuleConfig.getModuleConfig(currentModule);
+      if (moduleConfig && moduleConfig.scenarioDates && moduleConfig.scenarioDates[dateValue]) {
+        dateText = moduleConfig.scenarioDates[dateValue].label;
+      }
+    }
+    
     scenarioStatus.textContent = `Scenario Date: ${dateText} - Select table to generate order of battle`;
     scenarioStatus.style.color = '#4caf50'; // Green to indicate ready
   }
   
-  console.log(`Scenario date set to: ${dateValue}, table selection enabled`);
 }
 
 /**
  * Update the visual state of date buttons
  */
 function updateDateButtonStates() {
-  const preButton = document.getElementById('preDate');
-  const postButton = document.getElementById('postDate');
+  const currentDate = getScenarioDate();
+  const dateButtons = document.querySelectorAll('.scenario-date-button');
   
-  // Check if buttons exist before modifying them
-  if (!preButton || !postButton) {
-    console.warn('Date buttons not found in DOM');
-    return;
-  }
-  
-  // Disable buttons if results exist
-  if (hasGeneratedResults) {
-    preButton.disabled = true;
-    postButton.disabled = true;
-    preButton.style.opacity = '0.5';
-    postButton.style.opacity = '0.5';
-    preButton.title = 'Clear results to change scenario date';
-    postButton.title = 'Clear results to change scenario date';
-  } else {
-    preButton.disabled = false;
-    postButton.disabled = false;
-    preButton.style.opacity = '1';
-    postButton.style.opacity = '1';
-    preButton.title = '';
-    postButton.title = '';
-  }
-  
-  // Update active state
-  preButton.classList.toggle('active', scenarioDate === 'pre');
-  postButton.classList.toggle('active', scenarioDate === 'post');
-  
-  // Update scenario status message
-  const scenarioStatus = document.getElementById('scenarioStatus');
-  if (scenarioStatus) {
-    if (scenarioDate) {
-      const dateText = scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
-      if (hasGeneratedResults) {
-        scenarioStatus.textContent = `Scenario Date: ${dateText} (locked - clear results to change)`;
-        scenarioStatus.style.color = '#ff9800'; // Orange for locked
-      } else {
-        scenarioStatus.textContent = `Scenario Date: ${dateText} - Select table to generate order of battle`;
-        scenarioStatus.style.color = '#4caf50'; // Green for ready
+  dateButtons.forEach(button => {
+    // Extract date value from onclick attribute
+    const onclickAttr = button.getAttribute('onclick');
+    let buttonDate = null;
+    
+    if (onclickAttr) {
+      // Support both string and numeric date values
+      const stringMatch = onclickAttr.match(/setScenarioDate\('([^']+)'\)/);
+      const numericMatch = onclickAttr.match(/setScenarioDate\((\d+)\)/);
+      
+      if (stringMatch) {
+        buttonDate = stringMatch[1];
+      } else if (numericMatch) {
+        buttonDate = parseInt(numericMatch[1]);
       }
-    } else {
-      scenarioStatus.textContent = 'Select scenario date to enable table generation';
-      scenarioStatus.style.color = '#b4c4b4'; // Gray for not ready
     }
-  }
+    
+    // Disable buttons if results exist
+    if (hasGeneratedResults) {
+      button.disabled = true;
+      button.style.opacity = '0.5';
+      button.title = 'Clear results to change scenario date';
+    } else {
+      button.disabled = false;
+      button.style.opacity = '1';
+      button.title = '';
+      
+      // Update button appearance based on selection
+      // Use loose equality to handle both string and numeric comparisons
+      if (buttonDate == currentDate) {
+        button.classList.add('active');
+      } else {
+        button.classList.remove('active');
+      }
+    }
+  });
 }
 
 /**
@@ -245,26 +250,61 @@ function selectTable(tableId, faction) {
       if (nationalitySelection) {
         nationalitySelection.style.display = hasNationality ? 'flex' : 'none';
         
-        // Populate nationality dropdown based on faction
+        // Populate nationality dropdown based on faction and module
         if (hasNationality) {
           const crewNationalitySelect = document.getElementById('crewNationality');
           if (crewNationalitySelect) {
             crewNationalitySelect.innerHTML = '';
             
+            // Determine module from table ID (if it ends with '2', it's Baltic Approaches)
+            const isBalticApproaches = tableId.endsWith('2');
+            
             if (faction === 'NATO') {
-              // Table E - NATO Combat Rescue
-              crewNationalitySelect.innerHTML = `
-                <option value="US">US</option>
-                <option value="UK">UK/BE/NE</option>
-                <option value="FRG">FRG</option>
-                <option value="CAN">CAN (uses US rescue)</option>
-              `;
+              if (isBalticApproaches) {
+                // Baltic Approaches Table E2 - NATO Combat Rescue
+                crewNationalitySelect.innerHTML = `
+                  <option value="FRG">FRG</option>
+                  <option value="DK">DK</option>
+                  <option value="SE">SE</option>
+                `;
+              } else {
+                // Red Storm Table E - NATO Combat Rescue
+                crewNationalitySelect.innerHTML = `
+                  <option value="US">US</option>
+                  <option value="UK">UK/BE/NE</option>
+                  <option value="FRG">FRG</option>
+                  <option value="CAN">CAN (uses US rescue)</option>
+                `;
+              }
             } else if (faction === 'WP') {
-              // Table K - WP Combat Rescue
-              crewNationalitySelect.innerHTML = `
-                <option value="USSR">USSR</option>
-                <option value="GDR">GDR</option>
-              `;
+              if (isBalticApproaches) {
+                // Different options for different WP tables
+                if (tableId === 'J3') {
+                  // Naval Strike Raid (J3) - all WP nations
+                  crewNationalitySelect.innerHTML = `
+                    <option value="USSR">USSR</option>
+                    <option value="GDR">GDR</option>
+                    <option value="POL">POL</option>
+                  `;
+                } else {
+                  // K2 - Combat Rescue (GDR only)
+                  crewNationalitySelect.innerHTML = `
+                    <option value="GDR">GDR</option>
+                    <option value="GDR Naval">GDR Naval</option>
+                  `;
+                }
+              } else {
+                // Red Storm Table K - WP Combat Rescue
+                crewNationalitySelect.innerHTML = `
+                  <option value="USSR">USSR</option>
+                  <option value="GDR">GDR</option>
+                `;
+              }
+            }
+            
+            // Trigger nationality change handler to show/hide hex type selection for E2
+            if (typeof window.handleNationalityChange === 'function') {
+              window.handleNationalityChange();
             }
           }
         }
@@ -290,6 +330,11 @@ function selectTable(tableId, faction) {
         }
       }
       if (tacticalReconNationSelection) tacticalReconNationSelection.style.display = 'none'; // Initially hidden
+      
+      // For E2 table, trigger nationality change handler to show hex type if FRG is selected
+      if (tableId === 'E2' && typeof window.handleNationalityChange === 'function') {
+        window.handleNationalityChange();
+      }
       
     } else {
       // Simple tables use rollInputSection
@@ -425,6 +470,23 @@ function getSelectedFaction() {
   return selectedFaction;
 }
 
+/**
+ * Set the current module for state management
+ * @param {string} moduleName - Module name (e.g., 'red-storm', 'baltic-approaches')
+ */
+function setModule(moduleName) {
+    console.log('OOB Generator: Setting module:', moduleName);
+    window.CURRENT_MODULE = moduleName;
+    
+    // Reset state when switching modules
+    scenarioDate = null;
+    selectedTable = null;
+    selectedFaction = null;
+    hasGeneratedResults = false;
+    
+    console.log('OOB Generator: Module set and state reset for:', moduleName);
+}
+
 // Make functions globally available for onclick handlers
 window.setScenarioDate = setScenarioDate;
 window.selectTable = selectTable;
@@ -436,5 +498,7 @@ window.getSelectedTable = getSelectedTable;
 window.getScenarioDate = getScenarioDate;
 window.getSelectedFaction = getSelectedFaction;
 window.addResult = addResult;
+window.setModule = setModule;
+window.clearAllResults = clearAllResults;
 
 console.log('OOB Generator: state-manager.js module loaded (Phase 4 - Component Extraction)');

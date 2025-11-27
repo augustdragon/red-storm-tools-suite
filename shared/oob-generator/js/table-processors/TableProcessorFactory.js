@@ -43,10 +43,18 @@ class TableProcessorFactory {
 
     // Load table data
     const allTables = this.loadTableData();
-    const tableData = allTables[tableId];
+    
+    // Map special table IDs to their base table for data lookup
+    let dataTableId = tableId;
+    // A2-SE has its own data entry, don't map to A2
+    if (tableId === 'A2-SE') {
+      dataTableId = 'A2-SE';
+    }
+    
+    const tableData = allTables[dataTableId];
 
     if (!tableData) {
-      console.error(`Table ${tableId} not found in data source`);
+      console.error(`Table ${dataTableId} not found in data source`);
       return null;
     }
 
@@ -54,6 +62,7 @@ class TableProcessorFactory {
     let processor = null;
 
     switch (tableId) {
+      // Red Storm NATO tables
       case 'A':
         processor = new NATOTableA(tableData);
         break;
@@ -72,6 +81,32 @@ class TableProcessorFactory {
       case 'F':
         processor = new NATOTableF(tableData);
         break;
+      
+      // Baltic Approaches NATO tables
+      case 'A2':
+      case 'A2-SE': // A2-SE routes to A2 processor with different params
+        processor = new NATOTableA2(tableData, tableId);
+        break;
+      case 'B2':
+        processor = new NATOTableB2(tableData);
+        break;
+      case 'C2':
+        processor = new NATOTableC2(tableData);
+        break;
+      case 'D2':
+        processor = new NATOTableD2(tableData);
+        break;
+      case 'D3':
+        processor = new NATOTableD3(tableData);
+        break;
+      case 'E2':
+        processor = new NATOTableE2(tableData);
+        break;
+      case 'F2':
+        processor = new NATOTableF2(tableData);
+        break;
+      
+      // Red Storm Warsaw Pact tables
       case 'G':
         processor = new WPTableG(tableData);
         break;
@@ -89,6 +124,29 @@ class TableProcessorFactory {
         break;
       case 'L':
         processor = new WPTableL(tableData);
+        break;
+      
+      // Baltic Approaches Warsaw Pact tables
+      case 'G2':
+        processor = new WPTableG2(tableData);
+        break;
+      case 'H2':
+        processor = new WPTableH2(tableData);
+        break;
+      case 'I2':
+        processor = new WPTableI2(tableData);
+        break;
+      case 'J2':
+        processor = new WPTableJ2(tableData);
+        break;
+      case 'J3':
+        processor = new WPTableJ3(tableData);
+        break;
+      case 'K2':
+        processor = new WPTableK2(tableData);
+        break;
+      case 'L2':
+        processor = new WPTableL2(tableData);
         break;
       default:
         console.error(`Unknown table ID: ${tableId}`);
@@ -167,6 +225,12 @@ function getTableProcessorFactory() {
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { TableProcessorFactory, getTableProcessorFactory };
+}
+
+// Make factory available globally for browser usage
+if (typeof window !== 'undefined') {
+  window.TableProcessorFactory = TableProcessorFactory;
+  window.getTableProcessorFactory = getTableProcessorFactory;
 }
 
 console.log('TableProcessorFactory loaded');
