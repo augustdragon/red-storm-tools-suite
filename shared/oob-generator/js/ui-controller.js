@@ -92,10 +92,16 @@ function updateResultsDisplay() {
       debugDisplay = `<div style="font-size: 11px; color: #888; font-family: monospace; margin-top: 4px; padding: 2px 4px; background-color: rgba(255,255,255,0.05); border-radius: 2px;">${result.debugText}</div>`;
     }
     
+    // For D3 table, append nationality to table name if available
+    let displayTableName = result.tableName;
+    if (result.table === 'D3' && result.nationality) {
+      displayTableName = `${result.tableName} - ${result.nationality} Raid`;
+    }
+    
     return `
       <div class="result-item ${factionClass}">
         <div class="result-info">
-          <div class="result-table">${result.tableName}${variableText}</div>
+          <div class="result-table">${displayTableName}${variableText}</div>
           <div class="result-text">
             ${result.result}
             <span class="result-roll">${rollText}</span>
@@ -232,8 +238,20 @@ function makeRollsWithVariables() {
       nationName: result.nationName,
       result: result.text,
       debugText: result.debugText || result.debugInfo?.join(' | ') || '', // Handle both debugText and legacy debugInfo
-      timestamp: new Date().getTime() + i // Ensure unique timestamps
+      timestamp: new Date().getTime() + i, // Ensure unique timestamps
+      // Preserve structured data from table processors (WPTableI2, D3, J3, etc.)
+      taskings: result.taskings,
+      flights: result.flights,
+      nationality: result.nationality
     };
+    
+    console.log('[UI CONTROLLER] Storing result entry:', resultEntry);
+    console.log('[UI CONTROLLER] Result has flights array:', !!result.flights, 'Count:', result.flights?.length);
+    if (result.flights) {
+      result.flights.forEach((f, idx) => {
+        console.log(`[UI CONTROLLER] Flight ${idx}: nationality=${f.nationality}, aircraft=${f.aircraftType}`);
+      });
+    }
     
     addResult(resultEntry);
   }
@@ -291,7 +309,11 @@ function makeRolls() {
       result: result.text,
       debugText: result.debugText || result.debugInfo?.join(' | ') || '', // Handle both debugText and legacy debugInfo
       scenarioDate: currentTable === 'C' ? currentScenarioDate : undefined,
-      timestamp: new Date().getTime() + i // Ensure unique timestamps
+      timestamp: new Date().getTime() + i, // Ensure unique timestamps
+      // Preserve structured data from table processors (WPTableI2, D3, J3, etc.)
+      taskings: result.taskings,
+      flights: result.flights,
+      nationality: result.nationality
     };
     
     console.log(`Result entry for display:`, resultEntry);

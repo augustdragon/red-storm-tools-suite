@@ -109,7 +109,7 @@ class NATOTableD2 extends BaseTableProcessor {
       };
     }
 
-    // Roll for aircraft
+    // Roll for aircraft ONCE per tasking (all flights get same aircraft)
     const aircraftResult = this.rollForAircraft(nationResult.nationData.aircraft, `${tasking} Aircraft`);
     if (aircraftResult.error) {
       return {
@@ -123,20 +123,53 @@ class NATOTableD2 extends BaseTableProcessor {
     // Determine flight configuration
     const flightConfig = this.getFlightConfiguration(tasking, taskingData);
     
-    // Generate result text like Table D
-    const flightText = `${flightConfig.count} x {${flightConfig.size}} ${nationResult.nationName} ${aircraftResult.aircraftType}, ${tasking}`;
+    const debugRolls = [
+      nationResult.nationRollDebug,
+      aircraftResult.aircraftRollDebug
+    ];
+
+    // For SEAD and Bombing, roll ordnance per flight
+    const flightLines = [];
+    if (tasking === 'SEAD' || tasking === 'Bombing') {
+      const ordnanceRolls = this.tableData.ordnanceRolls?.[tasking];
+      if (ordnanceRolls) {
+        for (let i = 1; i <= flightConfig.count; i++) {
+          const ordnanceResult = this.rollForOrdnance(ordnanceRolls, `${tasking} Flight ${i} Ordnance`);
+          if (ordnanceResult.error) {
+            return {
+              tasking,
+              text: `Error: ${ordnanceResult.error}`,
+              error: ordnanceResult.error,
+              debugRolls: []
+            };
+          }
+          debugRolls.push(ordnanceResult.ordnanceRollDebug);
+          const flightLine = `1 x {${flightConfig.size}} ${nationResult.nationName} ${aircraftResult.aircraftType}, ${tasking} (${ordnanceResult.ordnanceType})`;
+          flightLines.push(flightLine);
+        }
+      } else {
+        // No ordnance rolls defined, output without ordnance
+        for (let i = 1; i <= flightConfig.count; i++) {
+          const flightLine = `1 x {${flightConfig.size}} ${nationResult.nationName} ${aircraftResult.aircraftType}, ${tasking}`;
+          flightLines.push(flightLine);
+        }
+      }
+    } else {
+      // Non-ordnance taskings (CAP, Recon, Escort Jamming) - one line per flight
+      for (let i = 1; i <= flightConfig.count; i++) {
+        const flightLine = `1 x {${flightConfig.size}} ${nationResult.nationName} ${aircraftResult.aircraftType}, ${tasking}`;
+        flightLines.push(flightLine);
+      }
+    }
 
     return {
       tasking,
-      text: flightText,
+      text: flightLines.join('<br>'),
       nationality: nationResult.nationName,
       aircraftType: aircraftResult.aircraftType,
       flightSize: flightConfig.size,
       flightCount: flightConfig.count,
-      debugRolls: [
-        nationResult.nationRollDebug,
-        aircraftResult.aircraftRollDebug
-      ]
+      debugRolls: debugRolls
     };
   }
 
@@ -164,6 +197,40 @@ class NATOTableD2 extends BaseTableProcessor {
     }
     
     return { count: config.count, size: config.size };
+  }
+
+  /**
+   * Roll for ordnance type
+   * 
+   * @param {object} ordnanceRolls - Ordnance roll table
+   * @param {string} rollName - Name for debug
+   * @returns {object} Roll result
+   */
+  rollForOrdnance(ordnanceRolls, rollName) {
+    const roll = this.rollDie(10);
+    
+    // Find matching ordnance
+    for (const [range, ordnance] of Object.entries(ordnanceRolls)) {
+      if (this.isInRange(roll, range)) {
+        return {
+          ordnanceType: ordnance,
+          ordnanceRollDebug: {
+            name: rollName,
+            roll: roll,
+            result: ordnance
+          }
+        };
+      }
+    }
+
+    return {
+      error: `No ordnance found for roll ${roll}`,
+      ordnanceRollDebug: {
+        name: rollName,
+        roll: roll,
+        result: 'ERROR'
+      }
+    };
   }
 }
 

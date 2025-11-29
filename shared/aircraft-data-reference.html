@@ -422,7 +422,8 @@
             const row = document.createElement('tr');
             row.className = cssClass;
             row.dataset.nation = aircraft.nation || '';
-            row.dataset.name = aircraft.name.toLowerCase();
+            const displayName = (aircraft.name && String(aircraft.name).trim()) ? String(aircraft.name) : key;
+            row.dataset.name = displayName.toLowerCase();
             row.dataset.module = aircraft.module || '';
 
             const formatValue = (val) => val === null || val === undefined ? '<span class="null-value">—</span>' : val;
@@ -551,7 +552,24 @@
             
             // Format AAM field with depletion values from weapons object, including gun
             const aamDisplay = (() => {
-                if (!aircraft.aam && (!aircraft.weapons || !aircraft.weapons.gun)) {
+                const normalizeList = (value) => {
+                    if (value === null || value === undefined) return [];
+                    if (Array.isArray(value)) {
+                        return value.map(item => String(item).trim()).filter(Boolean);
+                    }
+                    const strValue = typeof value === 'string' ? value : String(value);
+                    return strValue.split(',').map(item => item.trim()).filter(Boolean);
+                };
+
+                const hasWeaponData = Boolean(
+                    aircraft.weapons && (
+                        aircraft.weapons.gun ||
+                        aircraft.weapons.irm ||
+                        aircraft.weapons.rhm
+                    )
+                );
+
+                if (!aircraft.aam && !hasWeaponData) {
                     return '<span class="null-value">—</span>';
                 }
                 
@@ -560,29 +578,50 @@
                     const { irm, irmDepletion, rhm, rhmDepletion, gun, gunDepletion } = aircraft.weapons;
                     const aamParts = [];
                     
-                    if (irm && irmDepletion) {
-                        aamParts.push(`${irm} {${irmDepletion}}`);
-                    } else if (irm) {
-                        aamParts.push(irm);
+                    const irmWeapons = normalizeList(irm);
+                    if (irmWeapons.length) {
+                        const irmDepletions = normalizeList(irmDepletion);
+                        if (irmDepletions.length && irmDepletions.length === irmWeapons.length) {
+                            irmWeapons.forEach((weapon, index) => {
+                                aamParts.push(`${weapon} {${irmDepletions[index]}}`);
+                            });
+                        } else if (irmDepletions.length) {
+                            const sharedDepletion = irmDepletions[0];
+                            irmWeapons.forEach(weapon => {
+                                aamParts.push(`${weapon} {${sharedDepletion}}`);
+                            });
+                        } else if (irmDepletion !== null && irmDepletion !== undefined) {
+                            irmWeapons.forEach(weapon => {
+                                aamParts.push(`${weapon} {${irmDepletion}}`);
+                            });
+                        } else {
+                            aamParts.push(...irmWeapons);
+                        }
                     }
                     
-                    if (rhm && rhmDepletion) {
-                        // Handle cases where rhm might have multiple weapons separated by comma
-                        const rhmWeapons = rhm.split(',').map(w => w.trim());
-                        const rhmDepletions = String(rhmDepletion).split(',').map(d => d.trim());
-                        
-                        if (rhmWeapons.length === rhmDepletions.length) {
+                    const rhmWeapons = normalizeList(rhm);
+                    if (rhmWeapons.length) {
+                        const rhmDepletions = normalizeList(rhmDepletion);
+                        if (rhmDepletions.length && rhmDepletions.length === rhmWeapons.length) {
                             rhmWeapons.forEach((weapon, index) => {
                                 aamParts.push(`${weapon} {${rhmDepletions[index]}}`);
                             });
-                        } else {
-                            // Single depletion for all weapons
+                        } else if (rhmDepletions.length) {
+                            const sharedDepletion = rhmDepletions[0];
+                            rhmWeapons.forEach(weapon => {
+                                aamParts.push(`${weapon} {${sharedDepletion}}`);
+                            });
+                        } else if (rhmDepletion !== null && rhmDepletion !== undefined) {
                             rhmWeapons.forEach(weapon => {
                                 aamParts.push(`${weapon} {${rhmDepletion}}`);
                             });
+                        } else {
+                            aamParts.push(...rhmWeapons);
                         }
-                    } else if (rhm) {
-                        aamParts.push(rhm);
+                    }
+                    
+                    if (!rhmWeapons.length && rhm) {
+                        aamParts.push(String(rhm));
                     }
                     
                     // Add gun if present - extract caliber only (e.g., "20mm M61" -> "20mm")
@@ -606,7 +645,7 @@
             })();
             
             row.innerHTML = `
-                <td><strong>${key}</strong><br><small>${aircraft.name}</small></td>
+                <td><strong>${key}</strong><br><small>${displayName}</small></td>
                 <td>${moduleTag}</td>
                 <td>${aircraft.nation}</td>
                 <td>${aircraft.crew}</td>

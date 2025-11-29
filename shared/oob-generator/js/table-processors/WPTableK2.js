@@ -45,67 +45,58 @@ class WPTableK2 extends BaseTableProcessor {
       };
     }
 
+    const resultLines = [];
     const flights = [];
     const debugRolls = [];
 
-    // Process each flight type
+    // Process each flight type (one aircraft roll per type)
     for (const flightConfig of nationalityData.flights) {
       const { type, flightSize, flightCount, aircraft } = flightConfig;
 
-      // Generate flights
-      for (let i = 1; i <= flightCount; i++) {
-        // Roll for aircraft if needed
-        let aircraftType;
-        let aircraftDebug = null;
+      // Roll for aircraft once per flight type
+      let aircraftType;
+      let aircraftDebug = null;
 
-        if (typeof aircraft === 'object' && !Array.isArray(aircraft)) {
-          // Aircraft is a roll table
-          const aircraftResult = this.rollForAircraft(aircraft, `${type} Flight ${i} Aircraft`);
-          if (aircraftResult.error) {
-            return {
-              text: `Error: ${aircraftResult.error}`,
-              error: aircraftResult.error
-            };
-          }
-          aircraftType = aircraftResult.aircraftType;
-          aircraftDebug = aircraftResult.aircraftRollDebug;
-          debugRolls.push(aircraftDebug);
-        } else {
-          // Fixed aircraft type
-          const aircraftValue = Object.values(aircraft)[0];
-          aircraftType = aircraftValue;
+      if (typeof aircraft === 'object' && !Array.isArray(aircraft)) {
+        // Aircraft is a roll table
+        const aircraftResult = this.rollForAircraft(aircraft, `${type} Aircraft`);
+        if (aircraftResult.error) {
+          return {
+            text: `Error: ${aircraftResult.error}`,
+            error: aircraftResult.error
+          };
         }
+        aircraftType = aircraftResult.aircraftType;
+        aircraftDebug = aircraftResult.aircraftRollDebug;
+        debugRolls.push(aircraftDebug);
+      } else {
+        // Fixed aircraft type
+        const aircraftValue = Object.values(aircraft)[0];
+        aircraftType = aircraftValue;
+      }
 
+      // Format result line matching RS Table K style
+      const taskingDisplay = type === 'CSAR' ? 'CSAR' : 'Rescue Support';
+      resultLines.push(`${flightCount} x {${flightSize}} ${aircraftType}, ${taskingDisplay}`);
+
+      // Build flight records for flight sheet generation
+      for (let i = 1; i <= flightCount; i++) {
         flights.push({
           faction: 'WP',
           nationality: 'GDR',
           aircraft: aircraftType,
           flightSize: flightSize,
-          tasking: type,
+          tasking: taskingDisplay,
           ordnance: type === 'Rescue Support' ? 'Air-to-Ground' : 'None'
         });
       }
     }
 
-    // Format result text
-    const raidType = nationality === 'GDR Naval' ? 'GDR Naval Combat Rescue' : 'GDR Land Combat Rescue';
-    let resultText = `${raidType} Raid<br>`;
-    
-    // Group flights by type for display
-    const flightTypes = [...new Set(flights.map(f => f.tasking))];
-    for (const taskingType of flightTypes) {
-      const taskingFlights = flights.filter(f => f.tasking === taskingType);
-      if (taskingFlights.length > 0) {
-        const firstFlight = taskingFlights[0];
-        resultText += `${taskingFlights.length} x {${firstFlight.flightSize}} [${taskingType}], ${taskingType}<br>`;
-        for (const flight of taskingFlights) {
-          resultText += `GDR: ${flight.aircraft}<br>`;
-        }
-      }
-    }
+    // Combine all results with line breaks (like RS Table K)
+    const combinedText = resultLines.join('<br>');
 
     return {
-      text: resultText,
+      text: combinedText,
       result: nationalityData.result,
       table: 'K2',
       tableName: this.tableData.name,

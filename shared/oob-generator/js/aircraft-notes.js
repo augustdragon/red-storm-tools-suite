@@ -92,6 +92,23 @@ function applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode
     applySE_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable);
   }
   
+  // Apply dual bomb load resolution for NATO nations
+  // If bomb has dual values (X/Y format) and we're NOT on a Deep Strike table,
+  // use the higher (first) value for standard missions
+  const natoNations = ['US', 'UK', 'FRG', 'BEL', 'CAN', 'HOL', 'NATO_BA', 'USN/USMC', 'DK', 'SE'];
+  const deepStrikeTables = ['D', 'D2', 'D3', 'E', 'J', 'J2', 'K', 'K2'];
+  
+  if (natoNations.includes(mappedNation) && modifiedData.bomb && modifiedData.bomb.includes('/')) {
+    // Check if this is NOT a Deep Strike table
+    if (!deepStrikeTables.includes(sourceTable) && isAirToGroundCapable) {
+      const bombParts = modifiedData.bomb.split('/');
+      if (bombParts.length === 2) {
+        // Use higher (first) value for non-Deep Strike missions
+        modifiedData.bomb = bombParts[0];
+      }
+    }
+  }
+  
   return modifiedData;
 }
 
@@ -116,8 +133,8 @@ function applyUSNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundCa
     modifiedData.specialRules.push('Auto BVR/2 targets [11.44]');
   }
   
-  // US Note C: Reduced bomb load for Deep Strike Raid (Table D)
-  if (notes.includes('C') && sourceTable === 'D' && isAirToGroundCapable) {
+  // US Note C: Reduced bomb load for Deep Strike Raid (Tables D, D2, D3)
+  if (notes.includes('C') && ['D', 'D2', 'D3'].includes(sourceTable) && isAirToGroundCapable) {
     if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
       const bombParts = modifiedData.bomb.split('/');
       if (bombParts.length === 2) {
@@ -258,8 +275,8 @@ function applyUKNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundCa
     modifiedData.specialRules.push('May Spot Jam [19.34] one radar.');
   }
   
-  // UK Note H: Lower bomb load for Deep Strike
-  if (notes.includes('H') && sourceTable === 'D' && isAirToGroundCapable) {
+  // UK Note H: Lower bomb load for Deep Strike (Tables D, D2, D3)
+  if (notes.includes('H') && ['D', 'D2', 'D3'].includes(sourceTable) && isAirToGroundCapable) {
     if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
       const bombParts = modifiedData.bomb.split('/');
       if (bombParts.length === 2) {
@@ -340,8 +357,8 @@ function applyFRGNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundC
     modifiedData.specialRules.push('May Spot Jam [19.34] one radar.');
   }
   
-  // FRG Note E: Use lower bomb load for Deep Strike Raids (Table D)
-  if (notes.includes('E') && sourceTable === 'D' && isAirToGroundCapable) {
+  // FRG Note E: Use lower bomb load for Deep Strike Raids (Tables D, D2, D3)
+  if (notes.includes('E') && ['D', 'D2', 'D3'].includes(sourceTable) && isAirToGroundCapable) {
     if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
       const bombParts = modifiedData.bomb.split('/');
       modifiedData.bomb = bombParts[1].trim();
@@ -536,7 +553,9 @@ function applyGDRNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundC
     applyDualBombLoad(modifiedData, sourceTable, tasking);
   }
   
-  // GDR Note E: Only Bombs, AT CBU, or Rockets allowed - MODIFICATION
+  // GDR Note E: Only Bombs, AT CBU, or Rockets allowed
+  // NOTE: As of implementation update, Table I processor prevents ordnance rolling for GDR MiG-21s
+  // This code serves as a safety net for any edge cases
   if (notes.includes('E') && isAirToGroundCapable) {
     modifiedData.specialRules.push('Only Bombs, AT CBU, or Rockets allowed.');
     // Remove EOGM, ARM, LGB, EOGB from rolled ordnance
@@ -611,8 +630,8 @@ function applyBECANENotes(modifiedData, notes, tasking, sourceTable, isAirToGrou
     modifiedData.specialRules.push('May substitute Rocket Pods [17.63] for bombs.');
   }
   
-  // BE/CA/NE Note C: Use lower bomb load for Deep Strike Raids (Table D)
-  if (notes.includes('C') && sourceTable === 'D' && isAirToGroundCapable) {
+  // BE/CA/NE Note C: Use lower bomb load for Deep Strike Raids (Tables D, D2, D3)
+  if (notes.includes('C') && ['D', 'D2', 'D3'].includes(sourceTable) && isAirToGroundCapable) {
     if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
       const bombParts = modifiedData.bomb.split('/');
       modifiedData.bomb = bombParts[1].trim();

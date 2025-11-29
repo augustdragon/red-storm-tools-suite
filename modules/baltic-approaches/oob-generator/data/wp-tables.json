@@ -185,16 +185,16 @@
             "flightSize": 4,
             "flightCount": 2,
             "aircraft": {
-              "1-6": "MiG-21MF",
-              "7-10": "Su-20MK"
+              "1-4": "MiG-21MF",
+              "5-9": "Su-22M4",
+              "10": "MiG-21SPS"
             }
           },
           "Bombing": {
             "flightSize": 4,
             "flightCount": 5,
             "aircraft": {
-              "1-2": "MiG-21MF",
-              "3-5": "Su-20MK",
+              "1-5": "MiG-21MF",
               "6-10": "Su-22M4"
             }
           }
@@ -229,14 +229,15 @@
             "flightCount": 2,
             "aircraft": {
               "1-6": "MiG-21MF",
-              "7-10": "Su-22M4"
+              "7-10": "Su-22MK"
             }
           },
           "Bombing": {
             "flightSize": 4,
             "flightCount": 5,
             "aircraft": {
-              "1-5": "MiG-21MF",
+              "1-2": "MiG-21MF",
+              "3-5": "Su-20MK",
               "6-10": "Su-22M4"
             }
           }
@@ -279,9 +280,9 @@
             "flightSize": 4,
             "flightCount": 5,
             "aircraft": {
-              "1-2": "MiG-21MF",
-              "3-5": "Su-20MK",
-              "6-10": "Su-22M4"
+              "1-3": "Su-17M3",
+              "4-7": "MiG-27M",
+              "6-10": "MiG-23MLA"
             }
           }
         },
@@ -380,7 +381,7 @@
     "name": "WP Table J3 - Naval Strike Raid",
     "faction": "WP",
     "description": "WP Naval Strike Raid - Specialized naval strike aircraft led by SEAD flights",
-    "hasNationality": true,
+    "hasNationality": false,
     "hasDate": false,
     "ordnanceNote": "All Bombing and SEAD flights may only carry Bombs, ARM, EOGM, EOGB, or LGB ordnance. Recon flights may only carry air-to-air missiles and guns.",
     "nationalities": {
@@ -519,13 +520,13 @@
     "ordnanceRolls": {
       "SEAD": {
         "1-5": "Bombs/CBU/Rockets",
-        "6-7": "Above plus EOGM/ARM",
-        "8-10": "Above plus LGB/LGB"
+        "6-7": "Bombs/CBU/Rockets + EOGM/ARM",
+        "8-10": "Bombs/CBU/Rockets + EOGM/ARM + LGB/EOGB"
       },
       "Naval Strike": {
         "1-5": "Bombs/CBU/Rockets",
-        "6-7": "Above plus EOGM/ARM",
-        "8-10": "Above plus LGB/LGB"
+        "6-7": "Bombs/CBU/Rockets + EOGM/ARM",
+        "8-10": "Bombs/CBU/Rockets + EOGM/ARM + LGB/EOGB"
       }
     }
   },
@@ -533,7 +534,7 @@
   "K2": {
     "name": "WP Table K2 - Combat Rescue",
     "faction": "WP",
-    "description": "WP Combat Rescue - Combat Search and Rescue operations for downed pilots",
+    "description": "Combat Search and Rescue operations for downed pilots",
     "hasNationality": true,
     "hasDate": false,
     "ordnanceNote": "All flights tasked with Rescue Support may carry any ordnance allowed for the specified aircraft type.",

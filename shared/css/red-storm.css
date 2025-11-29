@@ -65,7 +65,7 @@ body {
 }
 
 .section-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   margin-bottom: 15px;
   color: #f4f4f4;
@@ -353,6 +353,19 @@ body {
   text-align: center;
 }
 
+/* Restore browser number field controls for roll counters */
+input[type="number"] {
+  appearance: auto;
+  -moz-appearance: auto;
+  -webkit-appearance: auto;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: auto;
+  height: auto;
+}
+
 .action-buttons {
   display: flex;
   gap: 15px;
@@ -627,6 +640,65 @@ body {
   color: #a4c4f2;
 }
 
+.oob-back-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 640px;
+  margin: 0 auto 32px;
+  padding: 0 16px;
+}
+
+.oob-back-link {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: none;
+  text-decoration: none;
+  color: #f5f5f5;
+  background: rgba(12, 22, 34, 0.8);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.45);
+  transition: transform 0.2s ease, border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.oob-back-link:hover {
+  transform: translateY(-1px);
+}
+
+.oob-back-nav--ba .oob-back-link {
+  color: #e6f0ff;
+  border-color: rgba(159, 212, 255, 0.5);
+  background: linear-gradient(135deg, rgba(76, 102, 122, 0.92), rgba(34, 50, 64, 0.92));
+  box-shadow: 0 20px 40px rgba(8, 12, 24, 0.8);
+}
+
+.oob-back-nav--ba .oob-back-link:hover {
+  background: rgba(122, 154, 170, 0.35);
+  border-color: #9fd4ff;
+  color: #ffffff;
+}
+
+.oob-back-nav--rs .oob-back-link {
+  color: #e9f5e5;
+  border-color: rgba(126, 168, 126, 0.45);
+  background: linear-gradient(135deg, rgba(36, 56, 36, 0.92), rgba(16, 30, 16, 0.92));
+  box-shadow: 0 20px 40px rgba(4, 10, 6, 0.8);
+}
+
+.oob-back-nav--rs .oob-back-link:hover {
+  background: rgba(126, 168, 126, 0.25);
+  border-color: #b4ecb4;
+  color: #ffffff;
+}
+
 /* Layout Helpers */
 .button-container {
   display: flex;
@@ -756,27 +828,57 @@ body {
 
 /* Faction-Specific Table View Styling */
 
+/* Date range headers - blue for NATO, red for WP */
+.table-view-modal.nato-table-view .date-range-header {
+  background-color: #5e92f3;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: center;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.table-view-modal.wp-table-view .date-range-header {
+  background-color: #e57373;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: center;
+  padding: 8px;
+  border-radius: 6px;
+}
+
 /* NATO Table View Styling */
 .table-view-modal.nato-table-view {
-  background-color: #1a2a3a;
-  border: 2px solid #1976d2;
+  background: linear-gradient(135deg, #1e3a5f 0%, #2c4f7c 100%);
+  border: 2px solid #4a90e2;
+}
+
+.table-view-modal.nato-table-view .table-view-content {
+  background-color: transparent;
 }
 
 .table-view-modal.nato-table-view .section-title {
   color: #1976d2;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 18px;
   background-color: #e3f2fd;
   color: #0d47a1;
-  padding: 12px;
+  padding: 8px 12px;
   border-radius: 6px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .table-view-modal.nato-table-view .table-description {
-  background-color: #e3f2fd;
-  color: #0d47a1;
-  border: 1px solid #1976d2;
+  background-color: rgba(227, 242, 253, 0.15);
+  color: #e3f2fd;
+  border: 1px solid rgba(25, 118, 210, 0.3);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
 }
 
 .table-view-modal.nato-table-view .nation-section,
@@ -784,9 +886,12 @@ body {
 .table-view-modal.nato-table-view .nationality-section,
 .table-view-modal.nato-table-view .mission-section,
 .table-view-modal.nato-table-view .flight-type-section {
-  background-color: #bbdefb;
-  border-left: 4px solid #1976d2;
-  border: 1px solid #1976d2;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-left: 4px solid rgba(25, 118, 210, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 
 .table-view-modal.nato-table-view .nation-header,
@@ -794,41 +899,52 @@ body {
 .table-view-modal.nato-table-view .nationality-header,
 .table-view-modal.nato-table-view .mission-header,
 .table-view-modal.nato-table-view .flight-type-header {
-  color: #0d47a1;
+  color: #bbdefb;
   font-weight: bold;
-  border-bottom: 1px solid #1976d2;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .table-view-modal.nato-table-view .aircraft-item {
-  color: #1565c0;
-  font-weight: 500;
+  color: #e3f2fd;
+  font-weight: 400;
+  padding: 2px 0;
 }
 
 .table-view-modal.nato-table-view .mission-description {
-  color: #1565c0;
+  color: #bbdefb;
+  font-style: italic;
 }
 
 /* Warsaw Pact Table View Styling */
 .table-view-modal.wp-table-view {
-  background-color: #3a1a1a;
-  border: 2px solid #d32f2f;
+  background: linear-gradient(135deg, #4a2020 0%, #5c2a2a 100%);
+  border: 2px solid #c62828;
+}
+
+.table-view-modal.wp-table-view .table-view-content {
+  background-color: transparent;
 }
 
 .table-view-modal.wp-table-view .section-title {
   color: #d32f2f;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 18px;
   background-color: #ffebee;
   color: #b71c1c;
-  padding: 12px;
+  padding: 8px 12px;
   border-radius: 6px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .table-view-modal.wp-table-view .table-description {
-  background-color: #ffebee;
-  color: #b71c1c;
-  border: 1px solid #d32f2f;
+  background-color: rgba(255, 235, 238, 0.15);
+  color: #ffebee;
+  border: 1px solid rgba(211, 47, 47, 0.3);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
 }
 
 .table-view-modal.wp-table-view .nation-section,
@@ -836,9 +952,12 @@ body {
 .table-view-modal.wp-table-view .nationality-section,
 .table-view-modal.wp-table-view .mission-section,
 .table-view-modal.wp-table-view .flight-type-section {
-  background-color: #ffcdd2;
-  border-left: 4px solid #d32f2f;
-  border: 1px solid #d32f2f;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-left: 4px solid rgba(211, 47, 47, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 
 .table-view-modal.wp-table-view .nation-header,
@@ -846,18 +965,22 @@ body {
 .table-view-modal.wp-table-view .nationality-header,
 .table-view-modal.wp-table-view .mission-header,
 .table-view-modal.wp-table-view .flight-type-header {
-  color: #b71c1c;
+  color: #ffcdd2;
   font-weight: bold;
-  border-bottom: 1px solid #d32f2f;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .table-view-modal.wp-table-view .aircraft-item {
-  color: #c62828;
-  font-weight: 500;
+  color: #ffebee;
+  font-weight: 400;
+  padding: 2px 0;
 }
 
 .table-view-modal.wp-table-view .mission-description {
-  color: #c62828;
+  color: #ffcdd2;
+  font-style: italic;
 }
 
 /* Legacy Warsaw Pact styles for backward compatibility */

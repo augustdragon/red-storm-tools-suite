@@ -16,7 +16,10 @@
       <!-- Version info hidden for production - uncomment to show: v2024.10.08-debug-26 -->
     </div>
 
-    <a href="../index.html" class="back-link">← Back to Red Storm Tools</a>
+    <div class="oob-back-nav oob-back-nav--rs">
+      <a href="../../../index.html" class="oob-back-link">← Back to Module Selection</a>
+      <a href="../index.html" class="oob-back-link">↺ Back to Red Storm Hub</a>
+    </div>
 
     <!-- Debug Toggle - Hidden for production -->
     <div class="section" id="debugToggle" style="display: none; text-align: center; margin-bottom: 10px;">
@@ -184,7 +187,7 @@
       <!-- Table View Overlay -->
       <div class="table-view-overlay" id="tableViewOverlay" style="display: none;" onclick="closeModalOnOverlayClick(event)">
         <div class="table-view-modal" onclick="event.stopPropagation()">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 15px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 15px;">
             <div class="section-title" id="tableViewTitle" style="margin: 0; flex: 1; min-width: 0;"></div>
             <button class="action-button cancel-button" onclick="hideTableView()" style="padding: 5px 10px; font-size: 12px; flex-shrink: 0;">✕ Close</button>
           </div>
@@ -466,6 +469,12 @@
       } else if (tableId === 'F' && atafZone) {
         // For table F, show mission type
         titleText += ` [${atafZone}]`;
+      } else if (tableId === 'K' && atafZone) {
+        // For table K, show nationality
+        titleText += ` [${atafZone}]`;
+      } else if (tableId === 'L' && atafZone) {
+        // For table L, show mission type
+        titleText += ` [${atafZone}]`;
       }
       titleElement.textContent = titleText;
       
@@ -556,9 +565,6 @@
         // Table C: NATO Bombing Raid - show all three taskings
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
-        if (table.ordnanceNote) {
-          tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${table.ordnanceNote}</div>`;
-        }
         
         const taskings = ['CAP', 'SEAD', 'Bombing'];
         const dateVariant = scenarioDate;
@@ -615,15 +621,18 @@
           tableHTML += `</div>`;
         }
         
+        // Add ordnance note at bottom if present
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">SEAD flights may always carry ARM as well, if capable.</div>`;
+        tableHTML += `</div>`;
+        
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'D') {
         // Table D: NATO Deep Strike Raid - show all five taskings (no date variants)
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
-        if (table.ordnanceNote) {
-          tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${table.ordnanceNote}</div>`;
-        }
         
         const taskings = ['Escort Jamming', 'CAP', 'SEAD', 'Bombing', 'Recon'];
         
@@ -663,6 +672,13 @@
           tableHTML += `</div>`;
         }
         
+        // Add ordnance note at bottom
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">All SEAD or Bombing flights may carry any air-to-ground ordnance allowed for that aircraft type.</div>`;
+        tableHTML += `<div style="margin-left: 15px; margin-top: 4px;">Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.</div>`;
+        tableHTML += `</div>`;
+        
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'E') {
@@ -680,9 +696,6 @@
         
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
-        if (table.ordnanceNote) {
-          tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${table.ordnanceNote}</div>`;
-        }
         
         if (nationalityData) {
           for (const flightData of nationalityData.flights) {
@@ -709,6 +722,12 @@
           tableHTML += `<div class="error">Unknown nationality: ${atafZone}</div>`;
         }
         
+        // Add ordnance note at bottom
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">All flights tasked with Rescue Support may carry any ordnance allowed for the specific aircraft type.</div>`;
+        tableHTML += `</div>`;
+        
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'F') {
@@ -721,9 +740,6 @@
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
         if (missionData) {
-          if (missionData.ordnanceNote) {
-            tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${missionData.ordnanceNote}</div>`;
-          }
           //tableHTML += `<div class="mission-info">${missionData.flightCount} x {${missionData.flightSize}} [${missionData.name}], ${missionData.description}</div>`;
           
           // Sort nations by roll number
@@ -753,6 +769,14 @@
           }
         } else {
           tableHTML += `<div class="error">Unknown mission type: ${atafZone}</div>`;
+        }
+        
+        // Add ordnance note at bottom if present
+        if (missionData && missionData.ordnanceNote) {
+          tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+          tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+          tableHTML += `<div style="margin-left: 15px;">${missionData.ordnanceNote}</div>`;
+          tableHTML += `</div>`;
         }
         
         tableHTML += `</div>`;
@@ -811,9 +835,6 @@
         // Warsaw Pact Table I - nationality-based structure
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
-        if (table.ordnanceNote) {
-          tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${table.ordnanceNote}</div>`;
-        }
         tableHTML += `<div class="raid-nationality"><strong>Raid Nationality: 1-8 USSR, 9-10 GDR</strong></div>`;
         
         // Show both USSR and GDR sections
@@ -864,15 +885,18 @@
           tableHTML += `</div>`;
         }
         
+        // Add ordnance note at bottom
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">SEAD flights may always carry ARMs, if capable.</div>`;
+        tableHTML += `</div>`;
+        
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'J') {
         // Table J: USSR Deep Strike Raid - display exactly as reference shows
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
-        if (table.ordnanceNote) {
-          tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${table.ordnanceNote}</div>`;
-        }
         
         // Hard-coded reference data to match official rules exactly
         const referenceData = {
@@ -928,23 +952,22 @@
           tableHTML += `</div>`;
         }
         
+        // Add ordnance note at bottom
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">All Bombing flights may carry any air-to-ground ordnance allowed for the specified aircraft type.</div>`;
+        tableHTML += `<div style="margin-left: 15px; margin-top: 4px;">Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.</div>`;
+        tableHTML += `</div>`;
+        
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'K') {
         // Warsaw Pact Table K - nationality-based structure
         let tableHTML = `<div class="table-view-content">`;
         tableHTML += `<div class="table-description">${table.description}</div>`;
-        if (table.ordnanceNote) {
-          tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${table.ordnanceNote}</div>`;
-        }
         
         if (atafZone && table.nationalities[atafZone]) {
           const nationalityData = table.nationalities[atafZone];
-          
-          // Display nationality as header without extra wrapper section
-          tableHTML += `<div style="font-size: 18px; font-weight: bold; color: #ff9999; margin: 20px 0 15px 0;">
-            ${nationalityData.name}
-          </div>`;
           
           for (const flightType of nationalityData.flights) {
             tableHTML += `<div class="flight-type-section">`;
@@ -969,6 +992,12 @@
           tableHTML += `<div class="error">Unknown nationality: ${atafZone}</div>`;
         }
         
+        // Add ordnance note at bottom
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">All flights tasked with Rescue Support may carry any ordnance allowed for the specified aircraft type.</div>`;
+        tableHTML += `</div>`;
+        
         tableHTML += `</div>`;
         contentElement.innerHTML = tableHTML;
       } else if (tableId === 'L') {
@@ -981,10 +1010,6 @@
         tableHTML += `<div class="table-description">${table.description}</div>`;
         
         if (missionData) {
-          if (missionData.ordnanceNote) {
-            tableHTML += `<div class="ordnance-note" style="font-style: italic; color: #888; margin-top: 10px; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">Ordnance: ${missionData.ordnanceNote}</div>`;
-          }
-          
           // Show only the selected mission type
           tableHTML += `<div class="mission-section">`;
           const flightInfo = missionData.flightCount + ' x {' + missionData.flightSize + '}';
@@ -1041,6 +1066,14 @@
           tableHTML += `</div>`; // Close mission-section
         } else {
           tableHTML += `<div class="error-message">Mission type not found: ${selectedMissionType}</div>`;
+        }
+        
+        // Add ordnance note at bottom if present
+        if (missionData && missionData.ordnanceNote) {
+          tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+          tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+          tableHTML += `<div style="margin-left: 15px;">${missionData.ordnanceNote}</div>`;
+          tableHTML += `</div>`;
         }
         
         tableHTML += `</div>`;
@@ -1785,8 +1818,13 @@
       const ordnanceMatch = resultText.match(/\(([^)]+)\)/);
       if (ordnanceMatch) {
         const fullOrdnance = ordnanceMatch[1].trim();
-        // Extract only the additions after "Bombs/CBU/Rockets"
-        if (fullOrdnance.includes('+')) {
+        
+        // Check if this contains a note (e.g., "Note E:")
+        if (fullOrdnance.includes('Note ')) {
+          // Keep the entire text including the note
+          rolledOrdnance = fullOrdnance;
+        } else if (fullOrdnance.includes('+')) {
+          // Extract only the additions after "Bombs/CBU/Rockets"
           // Remove the base "Bombs/CBU/Rockets" part and keep only additions
           const parts = fullOrdnance.split('+');
           if (parts.length > 1) {
@@ -2310,6 +2348,11 @@
             <div class="ordnance-area-small">
               <div class="ordnance-label-small">Ordnance</div>
               ${rolledOrdnance ? (() => {
+                // Check if this contains a note (e.g., "Note E:")
+                if (rolledOrdnance.includes('Note ')) {
+                  // Display the entire text as-is for notes
+                  return `<div style="font-size: 5pt; padding: 1px 3px; text-align: left; line-height: 1.2;">${rolledOrdnance}</div>`;
+                }
                 // Split by '+' and create separate lines for each ordnance item
                 const items = rolledOrdnance.split('+').filter(item => item.trim().length > 0);
                 return items.map(item => `<div style="font-size: 6pt; padding: 1px 3px; text-align: left; line-height: 1.1;">+${item.trim()}</div>`).join('');

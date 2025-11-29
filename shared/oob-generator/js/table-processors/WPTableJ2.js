@@ -23,11 +23,12 @@ class WPTableJ2 extends BaseTableProcessor {
    * @returns {object} Result object with deep strike raid information
    */
   process(params) {
+    const taskingResults = [];
     const flights = [];
     const debugRolls = [];
     const taskingOrder = ['Escort Jamming', 'Close Escort', 'Deep Strike', 'Recon'];
 
-    // Process each tasking
+    // Process each tasking (one aircraft roll per tasking)
     for (const taskingName of taskingOrder) {
       const taskingData = this.tableData.taskings[taskingName];
       if (!taskingData) continue;
@@ -35,20 +36,28 @@ class WPTableJ2 extends BaseTableProcessor {
       const { flightSize, flightCount, nations } = taskingData;
       const nationData = nations['1-10']; // USSR only
 
-      // Generate flights for this tasking
-      for (let i = 1; i <= flightCount; i++) {
-        // Roll for aircraft
-        const aircraftResult = this.rollForAircraft(nationData.aircraft, `${taskingName} Flight ${i} Aircraft`);
-        if (aircraftResult.error) {
-          return {
-            text: `Error: ${aircraftResult.error}`,
-            error: aircraftResult.error
-          };
-        }
+      // Roll for aircraft ONCE per tasking
+      const aircraftResult = this.rollForAircraft(nationData.aircraft, `${taskingName} Aircraft`);
+      if (aircraftResult.error) {
+        return {
+          text: `Error: ${aircraftResult.error}`,
+          error: aircraftResult.error
+        };
+      }
 
-        // Roll for ordnance if this is Deep Strike
-        let ordnance = taskingName === 'Deep Strike' ? 'Bombs' : 'Air-to-Air';
-        if (taskingName === 'Deep Strike') {
+      const aircraftType = aircraftResult.aircraftType;
+      debugRolls.push(aircraftResult.aircraftRollDebug);
+
+      // Determine ordnance and build individual flight records
+      const flightLines = [];
+      for (let i = 1; i <= flightCount; i++) {
+        let ordnance = 'Air-to-Air';
+        
+        if (taskingName === 'Escort Jamming') {
+          ordnance = 'Jamming';
+        } else if (taskingName === 'Recon') {
+          ordnance = 'Air-to-Air Only';
+        } else if (taskingName === 'Deep Strike') {
           const ordnanceRolls = this.tableData.ordnanceRolls['Deep Strike'];
           if (ordnanceRolls) {
             const ordnanceResult = this.rollForOrdnance(ordnanceRolls, `${taskingName} Flight ${i} Ordnance`);
@@ -61,52 +70,48 @@ class WPTableJ2 extends BaseTableProcessor {
             ordnance = ordnanceResult.ordnanceType;
             debugRolls.push(ordnanceResult.ordnanceRollDebug);
           }
-        } else if (taskingName === 'Escort Jamming') {
-          ordnance = 'Jamming';
-        } else if (taskingName === 'Recon') {
-          ordnance = 'Air-to-Air Only';
         }
-
+        
+        // Build flight record for flight sheet generation
         flights.push({
           faction: 'WP',
           nationality: 'USSR',
-          aircraft: aircraftResult.aircraftType,
+          aircraft: aircraftType,
           flightSize: flightSize,
           tasking: taskingName === 'Deep Strike' ? 'Bombing' : taskingName,
           ordnance: ordnance,
-          sourceTable: 'J'
+          sourceTable: 'J2'
         });
 
-        debugRolls.push(aircraftResult.aircraftRollDebug);
+        // Build individual flight line with ordnance display
+        const taskingDisplay = taskingName === 'Deep Strike' ? 'Bombing' : taskingName;
+        const ordnanceDisplay = ordnance && ordnance !== 'Air-to-Air' && ordnance !== 'Jamming' && ordnance !== 'Air-to-Air Only'
+          ? ` (${ordnance})`
+          : '';
+        const flightLine = `1 x {${flightSize}} USSR ${aircraftType}, ${taskingDisplay}${ordnanceDisplay}`;
+        flightLines.push(flightLine);
       }
+
+      // Add all flight lines to results
+      flightLines.forEach(line => {
+        taskingResults.push({
+          tasking: taskingName === 'Deep Strike' ? 'Bombing' : taskingName,
+          text: line
+        });
+      });
     }
 
-    // Format result text
-    let resultText = `USSR Deep Strike Raid<br>`;
-    let currentTasking = '';
-    for (const flight of flights) {
-      if (flight.tasking !== currentTasking) {
-        currentTasking = flight.tasking;
-        const taskingFlights = flights.filter(f => f.tasking === currentTasking);
-        const displayTasking = currentTasking === 'Bombing' ? 'Deep Strike' : currentTasking;
-        resultText += `<br>${taskingFlights.length} x {${flight.flightSize}} [${displayTasking}], ${currentTasking}<br>`;
-      }
-      // Format: Aircraft (Ordnance) - matches RS table J format
-      // Show ordnance for Deep Strike (except plain 'Bombs'), Jamming, and Recon
-      if (flight.ordnance && flight.ordnance !== 'Air-to-Air' && flight.ordnance !== 'Bombs') {
-        resultText += `${flight.aircraft} (${flight.ordnance})<br>`;
-      } else {
-        resultText += `${flight.aircraft}<br>`;
-      }
-    }
+    // Combine all results with line breaks (like RS Table J)
+    const combinedText = taskingResults.map(r => r.text).join('<br>');
 
     return {
-      text: resultText,
+      text: combinedText,
       result: this.tableData.result,
       table: 'J2',
       tableName: this.tableData.name,
       faction: 'WP',
       nationality: 'USSR',
+      taskings: taskingResults,
       flights: flights,
       debugRolls: debugRolls,
       ordnanceNote: this.tableData.ordnanceNote || null,

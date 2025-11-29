@@ -39,6 +39,14 @@ class WPTableI extends BaseTableProcessor {
    * @returns {string} Ordnance description
    */
   getOrdnanceAvailability(roll, nationality, aircraftType, tasking) {
+    // GDR Note E: MiG-21 variants can only carry Bombs/CBU/Rockets
+    // This prevents advanced ordnance (EOGM, ARM, LGB, EOGB) from being rolled
+    // Only applies to air-to-ground taskings (SEAD, Bombing)
+    // Return with Note E text to remind players of the restriction
+    if (nationality === 'GDR' && aircraftType.includes('MiG-21') && (tasking === 'SEAD' || tasking === 'Bombing')) {
+      return "Bombs/CBU/Rockets (Note E: Only Bombs, AT CBU, or Rockets)";
+    }
+    
     // Apply aircraft-specific modifiers
     let modifiedRoll = roll;
     
@@ -121,7 +129,7 @@ class WPTableI extends BaseTableProcessor {
     // Handle ordnance based on tasking type
     if (taskingName === 'Close Escort') {
       // Close Escort: No ordnance, grouped
-      resultText = `${nationality}: ${taskingData.flightCount} x {${taskingData.flightSize}} ${finalAircraftType}, ${taskingName}`;
+      resultText = `${taskingData.flightCount} x {${taskingData.flightSize}} ${nationality} ${finalAircraftType}, ${taskingName}`;
     } else if (taskingName === 'SEAD' || taskingName === 'Bombing') {
       // SEAD and Bombing: Individual ordnance rolls per flight
       const individualFlights = [];
@@ -136,7 +144,7 @@ class WPTableI extends BaseTableProcessor {
         );
         
         ordnanceDebug.push(`Flight ${i} Ordnance: ${ordnanceRollResult.roll}`);
-        individualFlights.push(`${nationality}: 1 x {${taskingData.flightSize}} ${finalAircraftType}, ${taskingName} (${ordnance})`);
+        individualFlights.push(`1 x {${taskingData.flightSize}} ${nationality} ${finalAircraftType}, ${taskingName} (${ordnance})`);
       }
       
       resultText = individualFlights.join('<br>');

@@ -118,30 +118,56 @@ class NATOTableD3 extends BaseTableProcessor {
     const flights = [];
     const flightTexts = [];
 
-    // Process each predefined flight in the raid package
+    // Group flights by type, aircraft, flight size, and resolved nationality to avoid mixing overrides
+    const groupedFlights = {};
+    
     nationalityData.flights.forEach(flightDef => {
       const { type, flightSize, flightCount, aircraft } = flightDef;
+      const raidNationality = nationalityData.nationality;
+      const explicitNationality = flightDef.nationality;
+      const extractedNationality = explicitNationality || this.extractNationalityCode(aircraft, raidNationality);
+      const resolvedNationality = extractedNationality || raidNationality || 'Unknown';
       
-      // Extract nationality code for display
-      const nationality = this.extractNationalityCode(aircraft, nationalityData.nationality);
+      console.log('[D3 GROUPING] Aircraft:', aircraft, 'Raid nationality:', raidNationality, 'Resolved nationality:', resolvedNationality, 'Explicit:', explicitNationality);
       
-      // Generate grouped flight text like D2 format
-      const flightText = `${flightCount} x {${flightSize}} ${nationality} ${aircraft}, ${type}`;
+      const key = `${type}|${aircraft}|${flightSize}|${resolvedNationality}`;
+      if (!groupedFlights[key]) {
+        groupedFlights[key] = {
+          type,
+          aircraft,
+          flightSize,
+          displayNationality: raidNationality || resolvedNationality,
+          resolvedNationality,
+          count: 0
+        };
+        console.log('[D3 GROUPING] Created new group for nationality:', groupedFlights[key].displayNationality);
+      }
+      
+      groupedFlights[key].count += flightCount;
+    });
+
+    // Generate consolidated flight lines
+    Object.values(groupedFlights).forEach(group => {
+      const flightNationalityText = group.displayNationality || group.resolvedNationality;
+      const flightText = `${group.count} x {${group.flightSize}} ${flightNationalityText} ${group.aircraft}, ${group.type}`;
       flightTexts.push(flightText);
       
-      // Create flight object for printing (represents the group)
-      flights.push({
+      // Create flight object for printing
+      const flightObj = {
         text: flightText,
         result: flightText,
         table: 'D3',
         faction: 'NATO',
-        tasking: type,
-        nationality: nationality,
-        aircraftType: aircraft,
-        flightSize: flightSize,
-        flightCount: flightCount,
-        quantity: flightCount  // Number of flights in this group
-      });
+        tasking: group.type,
+        nationality: flightNationalityText,
+        actualNationality: group.resolvedNationality,
+        aircraftType: group.aircraft,
+        flightSize: group.flightSize,
+        flightCount: group.count
+      };
+      console.log('[D3 PROCESSOR] Creating flight object:', flightObj);
+      console.log('[D3 PROCESSOR] Flight nationality:', flightObj.nationality, 'actual nationality:', flightObj.actualNationality, 'for aircraft:', flightObj.aircraftType);
+      flights.push(flightObj);
     });
 
     return {
@@ -165,79 +191,127 @@ class NATOTableD3 extends BaseTableProcessor {
       aircraftDBKeys: window.aircraftNATO ? Object.keys(window.aircraftNATO).length : 0
     });
     
-    // Check if aircraft has nationality in parentheses like "F-16A (DK)"
-    const nationalityMatch = aircraft.match(/\(([^)]+)\)$/);
+    if (nationalityName === 'FRG/DK') {
+      const upperAircraft = aircraft ? aircraft.toUpperCase() : '';
+      const danishPatterns = ['F-16A', 'F-35XD', 'RF-35XD'];
+      const germanPatterns = ['BR.1150', 'TORNADO IDS', 'F-4F'];
+      if (danishPatterns.some(pattern => upperAircraft.includes(pattern))) {
+        console.log('D3: FRG/DK override nationality detected (Danish pattern):', upperAircraft);
+        return 'DK';
+      }
+      if (germanPatterns.some(pattern => upperAircraft.includes(pattern))) {
+        console.log('D3: FRG/DK override nationality detected (German pattern):', upperAircraft);
+        return 'FRG';
+      }
+      const overrideNation = this.getFrgDkNationality(aircraft);
+      if (overrideNation) {
+        console.log('D3: FRG/DK override nationality found via helper:', overrideNation,
+          'for aircraft:', aircraft);
+        return overrideNation;
+      }
+    }
+
+    // Try to resolve nationality directly from the aircraft database
+    const dbNation = this.getAircraftNationalityFromDB(aircraft);
+    if (dbNation) {
+      console.log('D3: Aircraft nation resolved from database:', dbNation);
+      return dbNation;
+    }
+
+    // Check if aircraft has nationality code in parentheses like "F-16A (DK)"
+    const nationalityMatch = aircraft.match(/\(([A-Z]{2,4})\)$/);
     if (nationalityMatch) {
-      console.log('D3: Found explicit nationality in parentheses:', nationalityMatch[1]);
-      return nationalityMatch[1];
+      const code = nationalityMatch[1];
+      // Only use if it's a valid nationality code, not a variant like "(Navy)"
+      if (['DK', 'FRG', 'UK', 'US', 'SE', 'POL', 'GDR', 'USSR'].includes(code)) {
+        console.log('D3: Found explicit nationality in parentheses:', code);
+        return code;
+      }
     }
     
-    // For multi-national raids, use aircraft database to determine nationality
+    // For multi-national raids, use known aircraft-to-nation mappings
     if (nationalityName === 'FRG/DK') {
-      // Get aircraft data to check its nation - try multiple name variations
-      const aircraftDB = window.aircraftNATO || {};
-      let aircraftData = null;
-      
-      console.log('D3: Attempting aircraft database lookup for:', aircraft);
-      
-      // Try exact match first
-      aircraftData = aircraftDB[aircraft];
-      console.log('D3: Exact match result for "' + aircraft + '":', aircraftData);
-      
-      // If not found, try adding common suffixes
-      if (!aircraftData) {
-        const commonSuffixes = [' Draken', ' Atlantic 2'];
-        for (const suffix of commonSuffixes) {
-          const extendedName = aircraft + suffix;
-          if (aircraftDB[extendedName]) {
-            aircraftData = aircraftDB[extendedName];
-            console.log('D3: Found aircraft with extended name:', extendedName, aircraftData);
-            break;
-          } else {
-            console.log('D3: Extended name not found:', extendedName);
-          }
-        }
-      }
-      
-      // If still not found, try removing common words/suffixes
-      if (!aircraftData) {
-        const simplifiedName = aircraft.replace(/\s+(Atlantic\s+\d+|Draken)$/i, '');
-        if (simplifiedName !== aircraft && aircraftDB[simplifiedName]) {
-          aircraftData = aircraftDB[simplifiedName];
-          console.log('D3: Found aircraft with simplified name:', simplifiedName, aircraftData);
-        } else {
-          console.log('D3: Simplified name not found or same as original:', simplifiedName);
-        }
-      }
-      
-      console.log('D3: Final aircraft database lookup result for', aircraft, ':', aircraftData);
-      
-      if (aircraftData && aircraftData.nation) {
-        // Check if the aircraft's nation matches one of the raid nations
-        const raidNations = ['FRG', 'DK'];
-        console.log('D3: Aircraft nation from DB:', aircraftData.nation, 'Raid nations:', raidNations);
-        if (raidNations.includes(aircraftData.nation)) {
-          console.log('D3: Using aircraft DB nation:', aircraftData.nation);
-          return aircraftData.nation;
-        }
-      }
-      
-      // Fallback: default to FRG for FRG/DK raids
-      console.log('D3: Defaulting to FRG for FRG/DK raid');
+      console.log('D3: No FRG/DK override found; defaulting to FRG for aircraft:', aircraft);
       return 'FRG';
     }
     
     // For single-nation raids, map nationality names to codes
     const nationalityMap = {
       'UK': 'UK',
+      'UK(RAF)': 'UK',
+      'UK(RN)': 'UK',
       'USAF': 'US',
       'USN': 'US',
       'USMC': 'US'
     };
     
     const result = nationalityMap[nationalityName] || nationalityName;
-    console.log('D3: Single-nation mapping result:', result);
+    console.log('D3: Single-nation mapping:', nationalityName, '->', result);
     return result;
+  }
+
+  /**
+   * Determine FRG/DK nationality overrides for specific aircraft
+   * @param {string} aircraft
+   * @returns {string|null}
+   */
+  getFrgDkNationality(aircraft) {
+    if (!aircraft) return null;
+    const overrides = {
+      'F-16A (DK)': 'DK',
+      'BR.1150 ATLANTIC 2': 'FRG',
+      'TORNADO IDS (NAVY)': 'FRG',
+      'F-35XD DRAKEN': 'DK',
+      'RF-35XD DRAKEN': 'DK',
+      'F-4F': 'FRG'
+    };
+    const normalized = this.normalizeAircraftKey(aircraft).toUpperCase();
+    console.log('[D3 OVERRIDE] normalize key:', normalized);
+    if (overrides[normalized]) {
+      console.log('[D3 OVERRIDE] override hit for', normalized, '->', overrides[normalized]);
+      return overrides[normalized];
+    }
+    console.log('[D3 OVERRIDE] no override for', normalized);
+    return null;
+  }
+
+  /**
+   * Normalize aircraft key for database lookup
+   * @param {string} aircraft
+   * @returns {string}
+   */
+  normalizeAircraftKey(aircraft) {
+    if (!aircraft) return '';
+    return aircraft
+      .replace(/<[^>]+>/g, '')
+      .trim()
+      .replace(/\s{2,}/g, ' ');
+  }
+
+  /**
+   * Try to deduce nationality from aircraft data file
+   * @param {string} aircraft
+   * @returns {string|null}
+   */
+  getAircraftNationalityFromDB(aircraft) {
+    const aircraftDB = window.aircraftNATO || {};
+    if (!aircraft) return null;
+    const baseKey = this.normalizeAircraftKey(aircraft);
+    const variations = new Set();
+    variations.add(baseKey);
+    variations.add(baseKey.replace(/\s*\([^)]*\)$/, '').trim());
+    variations.add(baseKey.replace(/\./g, '-'));
+    variations.add(baseKey.replace(/\./g, '-').replace(/\s*\([^)]*\)$/, '').trim());
+    variations.add(baseKey.replace(/^[A-Z]{2,4}\s+/, ''));
+    variations.add(baseKey.replace(/^[A-Z]{2,4}\s+/, '').replace(/\s*\([^)]*\)$/, '').trim());
+
+    for (const key of variations) {
+      if (!key) continue;
+      const aircraftData = aircraftDB[key];
+      if (aircraftData && aircraftData.nation) return aircraftData.nation;
+    }
+
+    return null;
   }
 }
 

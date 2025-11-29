@@ -145,7 +145,10 @@ class PrintGenerator {
       
       for (let i = 0; i < flightParts.length; i++) {
         const flightPart = flightParts[i];
-        const tempFlight = { ...flight, result: flightPart };
+        const derivedTaskingMatch = flightPart.match(/,\s*([^,<]+?)$/);
+        const derivedTasking = derivedTaskingMatch ? derivedTaskingMatch[1].trim() : flight.tasking;
+
+        const tempFlight = { ...flight, result: flightPart, tasking: derivedTasking };
         const isLastPart = i === flightParts.length - 1;
         const applyPageBreakToThisFlight = isLastNATOFlight && isLastPart;
         
@@ -170,63 +173,83 @@ class PrintGenerator {
     }
     
     // Single flight processing
+    // Priority: Use structured data from table processors, fallback to defaults
     let aircraftType = flight.aircraftType || 'Unknown';
-    let flightSize = 2;
-    let numFlights = 1;
-    let nationCode = '';
-    let tasking = '';
+    let flightSize = flight.flightSize || 2;
+    let numFlights = flight.flightCount || 1;
+    let nationCode = flight.actualNationality || flight.nationality || '';
     
-    // Detect and parse format
+    console.log('[FLIGHT CARD] Starting card generation for:', aircraftType);
+    console.log('[FLIGHT CARD] Initial nationality from flight.nationality:', nationCode);
+    console.log('[FLIGHT CARD] Full flight object:', flight);
+    let tasking = flight.tasking || '';
+    let rolledOrdnance = '';
+    
+    // Process ordnance from structured data - filter out base "Bombs/CBU/Rockets"
+    if (flight.ordnance) {
+      const fullOrdnance = flight.ordnance;
+      if (fullOrdnance.includes('+')) {
+        // Split on '+' and remove "Bombs/CBU/Rockets", keep additional ordnance
+        const parts = fullOrdnance.split('+').map(p => p.trim());
+        const additionalParts = parts.filter(part => part !== 'Bombs/CBU/Rockets' && part !== '');
+        if (additionalParts.length > 0) {
+          rolledOrdnance = '+' + additionalParts.join(' +');
+        }
+      } else if (fullOrdnance !== 'Bombs/CBU/Rockets' && fullOrdnance !== 'Air-to-Air') {
+        // Single ordnance that's not base load or air-to-air
+        rolledOrdnance = fullOrdnance;
+      }
+    }
+    
+    // Detect format for fallback parsing (only used if structured data is missing)
     let isBalticFormat = false;
     
-    // Check if this is Baltic Approaches format: "1 x 2 [QRA], CAP (DK: F-16A)" or "1 x 1 Maritime Patrol (US: P-3C)"
-    const balticMatch = resultText.match(/(\d+)\s*x\s*(\d+)\s*(?:\[[^\]]*\],\s*)?([^(]+)\s*\(([^:]+):\s*([^)]+)\)/);
+    // If structured data is incomplete, parse from text
+    const needsParsing = !aircraftType || aircraftType === 'Unknown' || !flightSize || !numFlights;
     
-    // Check if this is D2 format: "1 x {2} NE F-16A, SEAD ..."
-    const d2Match = resultText.match(/(\d+)\s*x\s*\{(\d+)\}\s*([A-Z]{2,4})\s+([^,]+),\s*([^(]+)/);
-    
-    if (balticMatch) {
-      // Baltic Approaches format
-      isBalticFormat = true;
-      numFlights = parseInt(balticMatch[1]);
-      flightSize = parseInt(balticMatch[2]);
-      tasking = balticMatch[3].trim();
-      nationCode = balticMatch[4].trim();
-      aircraftType = balticMatch[5].trim();
+    if (needsParsing) {
+      // Check if this is Baltic Approaches format: "1 x 2 [QRA], CAP (DK: F-16A)" or "1 x 1 Maritime Patrol (US: P-3C)"
+      const balticMatch = resultText.match(/(\d+)\s*x\s*(\d+)\s*(?:\[[^\]]*\],\s*)?([^(]+)\s*\(([^:]+):\s*([^)]+)\)/);
       
-      console.log(`Parsed Baltic format: ${numFlights}x{${flightSize}} ${nationCode} ${aircraftType}, ${tasking}`);
-      console.log('Aircraft type details:', typeof aircraftType, JSON.stringify(aircraftType));
-    } else if (d2Match) {
-      // D2 format: "1 x {2} NE F-16A, SEAD ..."
-      // D2 should use Baltic-style processing, but C2 should use Red Storm processing
-      const isD2Table = flight.table === 'D2';
-      isBalticFormat = isD2Table; // Only D2 gets Baltic treatment, not C2
-      numFlights = parseInt(d2Match[1]);
-      flightSize = parseInt(d2Match[2]);
-      nationCode = d2Match[3].trim();
-      aircraftType = d2Match[4].trim();
-      tasking = d2Match[5].trim();
+      // Check if this is D2 format: "1 x {2} NE F-16A, SEAD ..."
+      const d2Match = resultText.match(/(\d+)\s*x\s*\{(\d+)\}\s*([A-Z]{2,4})\s+([^,]+),\s*([^(]+)/);
       
-      console.log(`Parsed D2/C2 format (table: ${flight.table}, isBalticFormat: ${isBalticFormat}): ${numFlights}x{${flightSize}} ${nationCode} ${aircraftType}, ${tasking}`);
-      console.log('Aircraft type details:', typeof aircraftType, JSON.stringify(aircraftType));
-    } else {
-      // Red Storm format: "1 x {2} US F-15C, CAP"
-      // Extract flight multiplier and size
-      const flightSizeMatch = resultText.match(/(\d+)\s*x\s*\{(\d+)\}/);
-      if (flightSizeMatch) {
-        numFlights = parseInt(flightSizeMatch[1]);
-        flightSize = parseInt(flightSizeMatch[2]);
-      }
-      
-      // Extract aircraft type from text only if not provided in structured data
-      if (!flight.aircraftType) {
-        const aircraftMatch = resultText.match(/\}\s*([^,<]+)/);
-        if (aircraftMatch) {
-          aircraftType = aircraftMatch[1].trim();
+      if (balticMatch) {
+        // Baltic Approaches format
+        isBalticFormat = true;
+        if (!numFlights || numFlights === 1) numFlights = parseInt(balticMatch[1]);
+        if (!flightSize || flightSize === 2) flightSize = parseInt(balticMatch[2]);
+        if (!tasking) tasking = balticMatch[3].trim();
+        if (!nationCode) nationCode = balticMatch[4].trim();
+        if (!aircraftType || aircraftType === 'Unknown') aircraftType = balticMatch[5].trim();
+        
+        console.log(`Parsed Baltic format: ${numFlights}x{${flightSize}} ${nationCode} ${aircraftType}, ${tasking}`);
+      } else if (d2Match) {
+        // D2/D3 format: "1 x {2} NE F-16A, SEAD ..." or "4 x {2} DK F-16A (DK), CAP"
+        const isD2D3Table = flight.table === 'D2' || flight.table === 'D3';
+        isBalticFormat = isD2D3Table;
+        if (!numFlights || numFlights === 1) numFlights = parseInt(d2Match[1]);
+        if (!flightSize || flightSize === 2) flightSize = parseInt(d2Match[2]);
+        if (!nationCode) nationCode = d2Match[3].trim();
+        if (!aircraftType || aircraftType === 'Unknown') aircraftType = d2Match[4].trim();
+        if (!tasking) tasking = d2Match[5].trim();
+        
+        console.log(`Parsed D2/D3 format (table: ${flight.table}): ${numFlights}x{${flightSize}} ${nationCode} ${aircraftType}, ${tasking}`);
+      } else {
+        // Red Storm format: "1 x {2} US F-15C, CAP"
+        const flightSizeMatch = resultText.match(/(\d+)\s*x\s*\{(\d+)\}/);
+        if (flightSizeMatch) {
+          if (!numFlights || numFlights === 1) numFlights = parseInt(flightSizeMatch[1]);
+          if (!flightSize || flightSize === 2) flightSize = parseInt(flightSizeMatch[2]);
+        }
+        
+        if (!aircraftType || aircraftType === 'Unknown') {
+          const aircraftMatch = resultText.match(/\}\s*([^,<]+)/);
+          if (aircraftMatch) {
+            aircraftType = aircraftMatch[1].trim();
+          }
         }
       }
-      
-      console.log('Aircraft type details:', typeof aircraftType, JSON.stringify(aircraftType));
     }
     
     const originalAircraftType = aircraftType;
@@ -249,9 +272,14 @@ class PrintGenerator {
     if (!nationCode && (flight.nationality || flight.atafZone)) {
       const flightNation = flight.nationality || flight.atafZone;
       const validNationCodes = ['US', 'UK', 'FRG', 'CAN', 'BE', 'NE', 'DK', 'SE', 'USSR', 'GDR'];
+      console.log('[FLIGHT CARD] Checking nationality:', flightNation, 'Valid codes:', validNationCodes);
+      console.log('[FLIGHT CARD] Is valid?', validNationCodes.includes(flightNation));
       if (flightNation && validNationCodes.includes(flightNation)) {
         nationCode = flightNation;
+        console.log('[FLIGHT CARD] Set nationCode to:', nationCode);
       }
+    } else {
+      console.log('[FLIGHT CARD] Skipping nationality check, nationCode already set:', nationCode);
     }
     
     // Handle variant aircraft with nation in parentheses
@@ -260,23 +288,32 @@ class PrintGenerator {
       nationCode = variantNationMatch[2];
     }
     
-    // Extract tasking - use structured data if available, then format-specific parsing
-    if (flight.tasking) {
-      tasking = flight.tasking;
-    } else if (!isBalticFormat) {
-      const taskingMatch = resultText.match(/,\s*([^<(]+)/);
-      if (taskingMatch) {
-        tasking = taskingMatch[1].trim();
-      }
+    // Handle nationality with service branch prefix (e.g., "UK(RN) FGR2" or "US(MC) F-4")
+    const serviceBranchMatch = aircraftType.match(/^([A-Z]{2,4})\(([A-Z]+)\)\s+(.+)$/);
+    if (serviceBranchMatch) {
+      nationCode = serviceBranchMatch[1];
+      // serviceBranchMatch[2] is the service branch (RN, MC, etc.)
+      aircraftType = serviceBranchMatch[3]; // Extract just the aircraft name
+      console.log(`[AIRCRAFT LOOKUP] Extracted nationality "${nationCode}" and aircraft "${aircraftType}" from service branch format`);
     }
     
-    // Extract ordnance - check structured data first, then fallback to text parsing
-    let rolledOrdnance = '';
+    // Extract tasking if not provided (structured data takes priority)
+    if (!tasking) {
+      if (isBalticFormat) {
+        // Baltic format already extracted tasking above
+      } else {
+        const taskingMatch = resultText.match(/,\s*([^,<(]+?)$/);
+        if (taskingMatch) {
+          tasking = taskingMatch[1].trim();
+          console.log(`Parsed tasking from text: "${tasking}"`);
+        }
+      }
+    } else {
+      console.log(`Using structured tasking: "${tasking}"`);
+    }
     
-    // Use structured ordnance data if available (C2, etc.)
-    if (flight.ordnance) {
-      rolledOrdnance = flight.ordnance;
-    } else if (!isBalticFormat) {
+    // Extract ordnance if not provided (structured data takes priority)
+    if (!rolledOrdnance && !isBalticFormat) {
       // Red Storm format text parsing fallback
       const ordnanceMatch = resultText.match(/\(([^)]+)\)/);
       if (ordnanceMatch) {
@@ -322,10 +359,18 @@ class PrintGenerator {
     const aircraftDB = faction === 'NATO' ? aircraftNATO : aircraftWP;
     let rawAircraftData = null;
     
+    console.log(`[AIRCRAFT LOOKUP] Searching for: "${aircraftType}" (type: ${typeof aircraftType}) in ${faction} database`);
+    console.log(`[AIRCRAFT LOOKUP] Flight object keys:`, Object.keys(flight));
+    console.log(`[AIRCRAFT LOOKUP] Flight.aircraftType:`, flight.aircraftType);
+    console.log(`[AIRCRAFT LOOKUP] Flight.nationality:`, flight.nationality);
+    console.log(`[AIRCRAFT LOOKUP] Flight.tasking:`, flight.tasking);
+    
     // First try exact match by key
     if (aircraftDB[aircraftType]) {
       rawAircraftData = aircraftDB[aircraftType];
+      console.log(`[AIRCRAFT LOOKUP] ✓ Found exact match for "${aircraftType}"`);
     } else {
+      console.log(`[AIRCRAFT LOOKUP] No exact match, searching aliases...`);
       // Search by aliases
       for (const [key, data] of Object.entries(aircraftDB)) {
         if (key.startsWith('_')) continue;
@@ -333,6 +378,7 @@ class PrintGenerator {
         if (data.aliases && Array.isArray(data.aliases)) {
           if (data.aliases.includes(aircraftType)) {
             rawAircraftData = data;
+            console.log(`[AIRCRAFT LOOKUP] ✓ Found via alias "${aircraftType}" -> "${key}"`);
             break;
           }
         }
@@ -340,22 +386,26 @@ class PrintGenerator {
       
       // Fallback to partial match logic if still not found
       if (!rawAircraftData) {
+        console.log(`[AIRCRAFT LOOKUP] No alias match, trying partial matching...`);
         const aircraftKeys = Object.keys(aircraftDB)
           .filter(key => !key.startsWith('_'))
           .sort((a, b) => b.length - a.length);
         
         const normalizedSearch = aircraftType.replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
+        console.log(`[AIRCRAFT LOOKUP] Normalized search: "${normalizedSearch}"`);
         
         for (const key of aircraftKeys) {
           const normalizedKey = key.replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
           if (normalizedKey.includes(normalizedSearch) || normalizedSearch.includes(normalizedKey)) {
             rawAircraftData = aircraftDB[key];
+            console.log(`[AIRCRAFT LOOKUP] ✓ Found via partial match "${aircraftType}" -> "${key}"`);
             break;
           }
         }
         
         if (!rawAircraftData) {
-          console.error(`Aircraft not found: "${aircraftType}" in ${faction} database`);
+          console.error(`[AIRCRAFT LOOKUP] ✗ FAILED: Aircraft not found: "${aircraftType}" in ${faction} database`);
+          console.error(`[AIRCRAFT LOOKUP] Available aircraft in ${faction}:`, Object.keys(aircraftDB).filter(k => !k.startsWith('_')).slice(0, 10).join(', '), '...');
         }
       }
     }
@@ -524,7 +574,15 @@ class PrintGenerator {
       if (typeof jsonData.radar === 'object' && jsonData.radar.name) {
         // Radar is an object with air-to-air capabilities
         radarDisplay = jsonData.radar.name;
-        if (jsonData.radar.type) radarDisplay += ` ${jsonData.radar.type}`;
+        if (jsonData.radar.type) {
+          // For dual-mode radars, exclude "Surf" and any associated range from the air-to-air display
+          let airRadarType = jsonData.radar.type;
+          // Remove "Surf [number]" or just "Surf" from the type string
+          airRadarType = airRadarType.replace(/,?\s*Surf\s*\[\d+\]/gi, '').replace(/,?\s*Surf/gi, '');
+          // Clean up any trailing commas or extra spaces
+          airRadarType = airRadarType.replace(/,\s*$/, '').replace(/^\s*,/, '').trim();
+          if (airRadarType) radarDisplay += ` ${airRadarType}`;
+        }
         if (jsonData.radar.range) radarDisplay += ` [${jsonData.radar.range}]`;
         if (jsonData.radar.modifier) radarModifier = jsonData.radar.modifier;
         
@@ -728,8 +786,16 @@ class PrintGenerator {
     // Determine roundel image
     const roundelMap = this.moduleConfig?.print?.roundels || {
       'US': 'USAF.jpg',
+      'USAF': 'USAF.jpg',
+      'USN': 'USAF.jpg',
+      'USMC': 'USAF.jpg',
       'UK': 'UK.jpg',
+      'UK(RAF)': 'UK.jpg',
+      'UK(RN)': 'UK.jpg',
       'FRG': 'FRG.jpg',
+      'FRG/DK': 'FRG.jpg',  // Default for mixed raids
+      'DK': 'Denmark.jpg',
+      'SE': 'Sweden.jpg',
       'BEL': 'Belgium.jpg',
       'Belgium': 'Belgium.jpg',
       'BE': 'Belgium.jpg',
@@ -737,11 +803,17 @@ class PrintGenerator {
       'NE': 'Netherlands.jpg',
       'CAN': 'Canada.jpg',
       'Canada': 'Canada.jpg',
+      'POL': 'Poland.jpg',
       'USSR': 'USSR.jpg',
       'GDR': 'GDR.jpg'
     };
     
     const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
+    
+    console.log('[ROUNDEL] Nation code:', nationCode);
+    console.log('[ROUNDEL] Aircraft nation:', aircraftData.nation);
+    console.log('[ROUNDEL] Selected roundel:', roundelImage);
+    console.log('[ROUNDEL] Roundel map keys:', Object.keys(roundelMap));
     
     // Add page break style if this is the last NATO flight
     const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always;"' : '';
@@ -870,8 +942,9 @@ class PrintGenerator {
           if (alt === 'VH') {
             const cleanValues = aircraftData.speedsClean[alt];
             const ladenValues = aircraftData.speedsLaden[alt];
-            return !(cleanValues.combat === '-' && cleanValues.dash === '-' && cleanValues.maneuver === '-' &&
-                     ladenValues.combat === '-' && ladenValues.dash === '-' && ladenValues.maneuver === '-');
+            const isInvalid = (val) => val === '-' || val === 'N/A';
+            return !(isInvalid(cleanValues.combat) && isInvalid(cleanValues.dash) && isInvalid(cleanValues.maneuver) &&
+                     isInvalid(ladenValues.combat) && isInvalid(ladenValues.dash) && isInvalid(ladenValues.maneuver));
           }
           return true;
         }).map(alt => `
@@ -896,7 +969,8 @@ class PrintGenerator {
         </tr>
         ${Object.entries(aircraftData.speeds).filter(([alt, speeds]) => {
           if (alt === 'VH') {
-            return !(speeds.combat === '-' && speeds.dash === '-' && speeds.maneuver === '-');
+            const isInvalid = (val) => val === '-' || val === 'N/A';
+            return !(isInvalid(speeds.combat) && isInvalid(speeds.dash) && isInvalid(speeds.maneuver));
           }
           return true;
         }).map(([alt, speeds]) => `
@@ -982,8 +1056,14 @@ class PrintGenerator {
     
     const roundelMap = this.moduleConfig?.print?.roundels || {
       'US': 'USAF.jpg',
+      'USAF': 'USAF.jpg',
+      'USN': 'USAF.jpg',
+      'USMC': 'USAF.jpg',
       'UK': 'UK.jpg',
+      'UK(RAF)': 'UK.jpg',
+      'UK(RN)': 'UK.jpg',
       'FRG': 'FRG.jpg',
+      'FRG/DK': 'FRG.jpg',
       'DK': 'Denmark.jpg',
       'SE': 'Sweden.jpg',
       'BEL': 'Belgium.jpg',
@@ -1224,10 +1304,71 @@ class PrintGenerator {
    * @returns {Array} Processed flights
    */
   processFlights(results) {
-    return results.map(flight => ({
-      ...flight,
-      faction: flight.faction || 'NATO'
-    }));
+    const processedFlights = [];
+    
+    console.log(`[PROCESS FLIGHTS] Processing ${results.length} result(s)`);
+    
+    for (const flight of results) {
+      console.log(`[PROCESS FLIGHTS] Flight object:`, flight);
+      console.log(`[PROCESS FLIGHTS] Flight.taskings:`, flight.taskings);
+      console.log(`[PROCESS FLIGHTS] Flight.flights:`, flight.flights);
+      console.log(`[PROCESS FLIGHTS] Flight.result:`, flight.result);
+      console.log(`[PROCESS FLIGHTS] Flight.result.taskings:`, flight.result?.taskings);
+      console.log(`[PROCESS FLIGHTS] Flight.result.flights:`, flight.result?.flights);
+      
+      // Check if this result has a flights array (from tables like D3, J3, etc.)
+      const flightsArray = flight.flights || (flight.result && typeof flight.result === 'object' && flight.result.flights);
+      
+      // Check if this result has a taskings array (from tables like I2, D2, etc.)
+      // Check both flight.taskings and flight.result.taskings for compatibility
+      const taskingsArray = flight.taskings || (flight.result && typeof flight.result === 'object' && flight.result.taskings);
+      
+      console.log(`[PROCESS FLIGHTS] flightsArray:`, flightsArray);
+      console.log(`[PROCESS FLIGHTS] taskingsArray:`, taskingsArray);
+      
+      if (flightsArray && Array.isArray(flightsArray)) {
+        console.log(`[PROCESS FLIGHTS] Found flights array with ${flightsArray.length} items, flattening...`);
+        // Flatten flights array into individual flight entries
+        for (const individualFlight of flightsArray) {
+          console.log(`[PROCESS FLIGHTS] Processing individual flight:`, individualFlight);
+          console.log(`[PROCESS FLIGHTS] Individual flight nationality:`, individualFlight.nationality);
+          console.log(`[PROCESS FLIGHTS] Parent flight nationality:`, flight.nationality);
+          const processedFlight = {
+            ...flight,
+            ...individualFlight, // Spread flight properties (text, tasking, nationality, aircraftType, etc.)
+            result: individualFlight.text || individualFlight.result, // Use flight text as the result
+            faction: flight.faction || individualFlight.faction || 'NATO'
+          };
+          console.log(`[PROCESS FLIGHTS] Created processed flight with nationality:`, processedFlight.nationality);
+          console.log(`[PROCESS FLIGHTS] Full processed flight:`, processedFlight);
+          processedFlights.push(processedFlight);
+        }
+      } else if (taskingsArray && Array.isArray(taskingsArray)) {
+        console.log(`[PROCESS FLIGHTS] Found taskings array with ${taskingsArray.length} items, flattening...`);
+        // Flatten taskings array into individual flight entries
+        for (const tasking of taskingsArray) {
+          console.log(`[PROCESS FLIGHTS] Processing tasking:`, tasking);
+          const processedFlight = {
+            ...flight,
+            ...tasking, // Spread tasking properties (text, tasking, nationality, aircraftType, etc.)
+            result: tasking.text, // Use tasking text as the result
+            faction: flight.faction || tasking.faction || 'NATO'
+          };
+          console.log(`[PROCESS FLIGHTS] Created processed flight:`, processedFlight);
+          processedFlights.push(processedFlight);
+        }
+      } else {
+        console.log(`[PROCESS FLIGHTS] No taskings/flights array found, using flight as-is`);
+        // Regular flight without taskings array
+        processedFlights.push({
+          ...flight,
+          faction: flight.faction || 'NATO'
+        });
+      }
+    }
+    
+    console.log(`[PROCESS FLIGHTS] Returning ${processedFlights.length} processed flight(s)`);
+    return processedFlights;
   }
 
   /**

@@ -7,6 +7,7 @@
   <title>Baltic Approaches Order of Battle Generator</title>
   <link rel="stylesheet" href="../../../shared/css/red-storm.css">
   <link rel="stylesheet" href="../../../shared/oob-generator/css/oob-generator.css">
+  <link rel="stylesheet" href="css/ba-theme.css">
 </head>
 <body>
   <div class="container">
@@ -15,7 +16,10 @@
       <div class="subtitle">Order of Battle Generator</div>
     </div>
 
-    <a href="../index.html" class="back-link">← Back to Baltic Approaches Tools</a>
+    <div class="oob-back-nav oob-back-nav--ba">
+      <a href="../../../index.html" class="oob-back-link">← Back to Module Selection</a>
+      <a href="../index.html" class="oob-back-link">↺ Back to Baltic Approaches Hub</a>
+    </div>
 
     <!-- Debug Toggle - Hidden for production -->
     <div class="section" id="debugToggle" style="display: none; text-align: center; margin-bottom: 10px;">
@@ -83,6 +87,7 @@
             <button class="table-button warsaw-table" onclick="selectTable('H2', 'WP')">H2</button>
             <button class="table-button warsaw-table" onclick="selectTable('I2', 'WP')">I2</button>
             <button class="table-button warsaw-table" onclick="selectTable('J2', 'WP')">J2</button>
+            <button class="table-button warsaw-table" onclick="selectTable('J3', 'WP')">J3 </button>
             <button class="table-button warsaw-table" onclick="selectTable('K2', 'WP')">K2</button>
             <button class="table-button warsaw-table" onclick="selectTable('L2', 'WP')">L2</button>
           </div>
@@ -206,7 +211,7 @@
       <!-- Table Viewer Modal -->
       <div class="table-view-overlay" id="tableViewOverlay" style="display: none;" onclick="closeModalOnOverlayClick(event)">
         <div class="table-view-modal" onclick="event.stopPropagation()">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 15px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 15px;">
             <div class="section-title" id="tableViewTitle" style="margin: 0; flex: 1; min-width: 0;"></div>
             <button class="action-button cancel-button" onclick="hideTableView()" style="padding: 5px 10px; font-size: 12px; flex-shrink: 0;">✕ Close</button>
           </div>
@@ -380,7 +385,9 @@
         return;
       }
       
-      viewTableStructure(currentTable, null, null);
+      // Get current scenario date if available
+      const scenarioDate = state.scenarioDate || null;
+      viewTableStructure(currentTable, null, scenarioDate);
     }
 
     /**
@@ -395,9 +402,25 @@
         return;
       }
       
-      // For now, just show the table without parameters
-      // Parameters will be added in later implementation
-      viewTableStructure(currentTable, null, null);
+      // Get nationality for E2 and K2 tables
+      let nationality = null;
+      if (currentTable === 'E2' || currentTable === 'K2') {
+        const crewNationality = document.getElementById('crewNationality');
+        if (crewNationality && crewNationality.value) {
+          nationality = crewNationality.value;
+          
+          // For E2/FRG, also include hex type if present
+          if (currentTable === 'E2' && nationality === 'FRG') {
+            const hexTypeSelect = document.getElementById('hexType');
+            if (hexTypeSelect && hexTypeSelect.value) {
+              nationality = `${nationality}:${hexTypeSelect.value}`;
+            }
+          }
+          // K2 values are already "GDR" or "GDR Naval" - no transformation needed
+        }
+      }
+      
+      viewTableStructure(currentTable, nationality, null);
     }
 
     /**
@@ -422,36 +445,64 @@
         return;
       }
       
-      // Set title
-      titleElement.textContent = table.name || `Table ${tableId}`;
+      // Set title - use "Order of Battle Table X - Description" format
+      const tableName = table.name || `Table ${tableId}`;
+      // Extract description from name (e.g., "NATO Table F2 - Maritime Patrol" -> "Maritime Patrol")
+      const descriptionMatch = tableName.match(/(?:NATO|WP) Table [A-Z0-9-]+ - (.+)/);
+      const description = descriptionMatch ? descriptionMatch[1] : tableName;
+      let titleText = `Order of Battle Table ${tableId} - ${description}`;
+      
+      // Add nationality to title for E2 and K2
+      if (atafZone && (tableId === 'E2' || tableId === 'K2')) {
+        // Extract nationality name from atafZone (handles "FRG:land" format for E2)
+        const nationalityCode = atafZone.includes(':') ? atafZone.split(':')[0] : atafZone;
+        const nationalityNames = {
+          'FRG': 'FRG',
+          'DK': 'Denmark',
+          'SE': 'Sweden',
+          'GDR': 'GDR',
+          'GDR Naval': 'GDR Naval'
+        };
+        const nationalityName = nationalityNames[nationalityCode] || nationalityCode;
+        titleText += ` [${nationalityName}]`;
+      }
+      
+      // Add date to title if applicable and available
+      if (scenarioDate && ['A2', 'B2', 'C2', 'D3', 'G2', 'H2'].includes(tableId)) {
+        const dateRangeText = window.BA_DATE_RANGES[scenarioDate] || window.BA_DATE_RANGES_COMBINED_MAY[scenarioDate];
+        if (dateRangeText) {
+          titleText += ` [${dateRangeText}]`;
+        }
+      }
+      titleElement.textContent = titleText;
       
       // Apply faction-specific styling
       if (table.faction === 'NATO') {
-        modal.classList.add('nato-modal');
-        modal.classList.remove('wp-modal');
+        modal.classList.add('nato-table-view');
+        modal.classList.remove('wp-table-view');
       } else if (table.faction === 'WP') {
-        modal.classList.add('wp-modal');
-        modal.classList.remove('nato-modal');
+        modal.classList.add('wp-table-view');
+        modal.classList.remove('nato-table-view');
       }
       
       // Render table content based on table type
       let tableHTML = '';
       
-      // Simple tables: A2, B2, G2, H2 - show all date ranges
+      // Simple tables: A2, B2, G2, H2 - show date-filtered data if date selected
       if (['A2', 'B2', 'G2', 'H2'].includes(tableId)) {
-        tableHTML = renderSimpleTable(table, tableId);
+        tableHTML = renderSimpleTable(table, tableId, scenarioDate);
       } 
       // A2-SE special case - no date ranges
       else if (tableId === 'A2-SE') {
         tableHTML = renderA2SETable(table);
       }
-      // Complex tables with taskings: C2, D2, D3, I2, J2
-      else if (['C2', 'D2', 'D3', 'I2', 'J2'].includes(tableId)) {
-        tableHTML = renderTaskingTable(table, tableId);
+      // Complex tables with taskings: C2, D2, D3, I2, J2, J3
+      else if (['C2', 'D2', 'D3', 'I2', 'J2', 'J3'].includes(tableId)) {
+        tableHTML = renderTaskingTable(table, tableId, scenarioDate);
       }
       // Parameter-based tables: E2, F2, K2, L2
       else if (['E2', 'F2', 'K2', 'L2'].includes(tableId)) {
-        tableHTML = renderParameterTable(table, tableId);
+        tableHTML = renderParameterTable(table, tableId, atafZone);
       }
       else {
         tableHTML = `<div class="table-view-content"><div class="table-description">Table ${tableId} rendering not yet implemented</div></div>`;
@@ -462,11 +513,59 @@
     }
 
     /**
-     * Render simple tables (A2, B2, G2, H2) - show all date ranges, consolidating duplicates for display
+     * Helper function to render nations and aircraft data
+     * Used by both date-filtered and full table displays
      */
-    function renderSimpleTable(table, tableId) {
+    function renderNationsAndAircraft(dateData) {
+      let html = '';
+      
+      if (dateData.nations) {
+        const sortedNations = Object.entries(dateData.nations).sort((a, b) => {
+          const aMin = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+          const bMin = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+          return aMin - bMin;
+        });
+        
+        for (const [nationRange, nationData] of sortedNations) {
+          // Check if this nation has only one aircraft type (no aircraft roll needed)
+          const aircraftEntries = Object.entries(nationData.aircraft);
+          const hasSingleAircraft = aircraftEntries.length === 1 && aircraftEntries[0][0] === '1-10';
+          
+          if (hasSingleAircraft) {
+            // Simple format: nation and aircraft type in single lighter box
+            const aircraftType = aircraftEntries[0][1];
+            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 12px;">`;
+            html += `<span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}`;
+            html += `</div>`;
+          } else {
+            // Multi-aircraft format: nation header with aircraft rolls
+            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 12px;">`;
+            html += `<div style="font-weight: 600; margin-bottom: 4px;">${nationRange} ${nationData.name}:</div>`;
+            
+            // Sort aircraft by roll range
+            const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            for (const [range, type] of sortedAircraft) {
+              html += `<div style="margin-left: 10px; color: #ccc;">${range}: ${type}</div>`;
+            }
+            
+            html += `</div>`;
+          }
+        }
+      }
+      
+      return html;
+    }
+
+    /**
+     * Render simple tables (A2, B2, G2, H2) - show selected date's data or all if no date selected
+     */
+    function renderSimpleTable(table, tableId, scenarioDate) {
       let html = `<div class="table-view-content">`;
-      html += `<div class="table-description">${table.description || ''}</div>`;
       
       if (!table.dateRanges) {
         return html + `<div class="aircraft-item">No date ranges found</div></div>`;
@@ -474,93 +573,81 @@
       
       // Show flight result if available
       if (table.result) {
-        html += `<div class="aircraft-item" style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">${table.result}</div>`;
+        html += `<div style="background-color: rgba(255,255,255,0.15); padding: 10px; margin: 0 0 15px 0; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3); font-weight: bold; font-size: 14px; text-align: center;">${table.result}</div>`;
       }
       
-      // Group identical date ranges for display only
-      const dateRangeKeys = Object.keys(table.dateRanges);
-      const dateGroups = [];
-      
-      for (const dateRange of dateRangeKeys) {
-        const dateData = table.dateRanges[dateRange];
-        const dataJson = JSON.stringify(dateData);
-        
-        // Find if we already have this exact data
-        const existingGroup = dateGroups.find(g => g.dataJson === dataJson);
-        
-        if (existingGroup) {
-          existingGroup.ranges.push(dateRange);
-        } else {
-          dateGroups.push({
-            ranges: [dateRange],
-            data: dateData,
-            dataJson: dataJson
-          });
+      // If scenarioDate is provided, show only that date's data
+      if (scenarioDate) {
+        const dateRangeKey = window.BA_DATE_RANGES[scenarioDate];
+        if (dateRangeKey && table.dateRanges[dateRangeKey]) {
+          const dateData = table.dateRanges[dateRangeKey];
+          html += renderNationsAndAircraft(dateData);
         }
-      }
-      
-      // Sort groups chronologically by first range
-      dateGroups.sort((a, b) => {
+      } else {
+        // Show all dates with grouping for identical data
         const order = ['15-20 May', '21-31 May', '1-15 June'];
-        const aIdx = order.indexOf(a.ranges[0]);
-        const bIdx = order.indexOf(b.ranges[0]);
-        return aIdx - bIdx;
-      });
-      
-      // Render each unique data group
-      for (const group of dateGroups) {
-        const dateData = group.data;
+        const dateGroups = [];
         
-        // Create consolidated label: "21 May+" for combined 21-31 May + 1-15 June
-        let dateLabel;
-        if (group.ranges.length === 1) {
-          dateLabel = group.ranges[0];
-        } else if (group.ranges.includes('21-31 May') && group.ranges.includes('1-15 June')) {
-          dateLabel = '21 May+';
-        } else {
-          dateLabel = group.ranges.join(', ');
-        }
+        // Group date ranges with identical data using combined ranges
+        const dateRangesToCheck = window.BA_DATE_RANGES_COMBINED_MAY ? 
+          ['15-20 May', '21 May+'] : 
+          order;
         
-        // Date range header
-        html += `<div class="date-range-section" style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #5a6a5a;">`;
-        html += `<div class="date-range-header" style="font-weight: bold; font-size: 16px; color: #f4f4f4; margin-bottom: 10px; text-align: center; background-color: #4a5a4a; padding: 8px; border-radius: 6px;">${dateLabel}</div>`;
-        
-        if (dateData.nations) {
-          // Sort nations by roll range
-          const sortedNations = Object.entries(dateData.nations).sort((a, b) => {
-            const aMin = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
-            const bMin = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
-            return aMin - bMin;
-          });
+        for (const dateRange of dateRangesToCheck) {
+          const dateData = table.dateRanges[dateRange];
+          if (!dateData) continue;
           
-          for (const [nationRange, nationData] of sortedNations) {
-            // Check if this nation has only one aircraft type (no aircraft roll needed)
-            const aircraftEntries = Object.entries(nationData.aircraft);
-            const hasSingleAircraft = aircraftEntries.length === 1 && aircraftEntries[0][0] === '1-10';
-            
-            if (hasSingleAircraft) {
-              // Simple format: "1-3 DK: F-16A" (no aircraft roll range)
-              const aircraftType = aircraftEntries[0][1];
-              html += `<div class="aircraft-item"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}</div>`;
-            } else {
-              // Multi-aircraft format: concatenate all aircraft on one line
-              // Sort aircraft by roll range
-              const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
-                const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
-                const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
-                return aStart - bStart;
-              });
-              
-              // Build concatenated aircraft string: "1-6: F-15C, 7-10: F-4E"
-              const aircraftParts = sortedAircraft.map(([range, type]) => `${range}: ${type}`);
-              const aircraftString = aircraftParts.join(', ');
-              
-              html += `<div class="aircraft-item"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftString}</div>`;
-            }
+          // Check if this data matches any existing group
+          const existingGroup = dateGroups.find(g => 
+            JSON.stringify(g.data) === JSON.stringify(dateData)
+          );
+          
+          if (existingGroup) {
+            existingGroup.ranges.push(dateRange);
+          } else {
+            dateGroups.push({ data: dateData, ranges: [dateRange] });
           }
         }
         
-        html += `</div>`; // Close date-range-section
+        // Sort groups by first date appearance
+        dateGroups.sort((a, b) => {
+          const aIdx = order.indexOf(a.ranges[0]);
+          const bIdx = order.indexOf(b.ranges[0]);
+          return aIdx - bIdx;
+        });
+        
+        // Render each unique data group
+        for (let groupIdx = 0; groupIdx < dateGroups.length; groupIdx++) {
+          const group = dateGroups[groupIdx];
+          const dateData = group.data;
+          
+          // Create consolidated label: "21 May+" for combined 21-31 May + 1-15 June
+          let dateLabel;
+          if (group.ranges.length === 1) {
+            dateLabel = group.ranges[0];
+          } else if (group.ranges.includes('21-31 May') && group.ranges.includes('1-15 June')) {
+            dateLabel = '21 May+';
+          } else {
+            dateLabel = group.ranges.join(', ');
+          }
+          
+          // Date range header - only show border-top after first section
+          const borderStyle = groupIdx > 0 ? 'margin-top: 20px; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.2);' : 'margin-top: 0;';
+          html += `<div class="date-range-section" style="${borderStyle}">`;
+          html += `<div class="date-range-header">${dateLabel}</div>`;
+          
+          html += renderNationsAndAircraft(dateData);
+          
+          html += `</div>`; // Close date-range-section
+        }
+      }
+      
+      // Add Setup/Entry note if present
+      if (table.setupEntry && table.setupEntry.text) {
+        html += `<div style="margin-top: 20px; padding: 12px 15px; background-color: rgba(255,255,255,0.08); border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.2); font-size: 12px;">`;
+        html += `<div style="font-weight: 600; margin-bottom: 6px;">Setup/Entry:</div>`;
+        html += `<div style="color: #ccc;">${table.setupEntry.text}</div>`;
+        html += `</div>`;
       }
       
       html += `</div>`;
@@ -573,7 +660,6 @@
      */
     function renderA2SETable(table) {
       let html = `<div class="table-view-content">`;
-      html += `<div class="table-description">${table.description || ''}</div>`;
       
       if (table.nations) {
         const sortedNations = Object.entries(table.nations).sort((a, b) => {
@@ -582,16 +668,8 @@
           return aMin - bMin;
         });
         
-        // For A2-SE with only one nation, skip the nation header and just show aircraft
-        const isSingleNation = sortedNations.length === 1;
-        
+        // Show aircraft in highlighted boxes like D3
         for (const [nationRange, nationData] of sortedNations) {
-          if (!isSingleNation) {
-            html += `<div class="nation-section">`;
-            html += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
-            html += `<div class="aircraft-list">`;
-          }
-          
           if (nationData.aircraft) {
             const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
               const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
@@ -600,14 +678,20 @@
             });
             
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
-              html += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+              html += `${aircraftRange}: ${aircraftType}`;
+              html += `</div>`;
             }
           }
-          
-          if (!isSingleNation) {
-            html += `</div></div>`;
-          }
         }
+      }
+      
+      // Add Setup/Entry note if present
+      if (table.setupEntry && table.setupEntry.text) {
+        html += `<div style="margin-top: 20px; padding: 12px 15px; background-color: rgba(255,255,255,0.08); border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.2); font-size: 12px;">`;
+        html += `<div style="font-weight: 600; margin-bottom: 6px;">Setup/Entry:</div>`;
+        html += `<div style="color: #ccc;">${table.setupEntry.text}</div>`;
+        html += `</div>`;
       }
       
       html += `</div>`;
@@ -617,23 +701,28 @@
     /**
      * Render tables with taskings (C2, D2, D3, I2, J2)
      */
-    function renderTaskingTable(table, tableId) {
+    function renderTaskingTable(table, tableId, scenarioDate) {
       let html = `<div class="table-view-content">`;
-      html += `<div class="table-description">${table.description || ''}</div>`;
-      
-      // Add ordnance note if present
-      if (table.ordnanceNote) {
-        html += `<div style="font-style: italic; color: #bbb; margin: 10px 0; padding: 8px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 13px;">Ordnance Available: ${table.ordnanceNote}</div>`;
-      }
       
       // C2 has date ranges with taskings
       if (tableId === 'C2' && table.taskings) {
         const dateOrder = ['15-20 May', '21-31 May', '1-15 June'];
         const taskingNames = ['SEAD', 'Bombing'];
         
-        for (const dateRange of dateOrder) {
-          html += `<div class="date-range-section" style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #5a6a5a;">`;
-          html += `<div class="date-range-header" style="font-weight: bold; font-size: 16px; color: #f4f4f4; margin-bottom: 10px; text-align: center; background-color: #4a5a4a; padding: 8px; border-radius: 6px;">${dateRange}</div>`;
+        // Filter dates if scenarioDate is provided
+        const datesToShow = scenarioDate ? [window.BA_DATE_RANGES[scenarioDate]] : dateOrder;
+        
+        for (let dateIdx = 0; dateIdx < datesToShow.length; dateIdx++) {
+          const dateRange = datesToShow[dateIdx];
+          if (!dateRange) continue;
+          
+          const borderStyle = dateIdx > 0 ? 'margin-top: 20px; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.2);' : 'margin-top: 0;';
+          html += `<div class="date-range-section" style="${borderStyle}">`;
+          
+          // Only show date header if showing all dates
+          if (!scenarioDate) {
+            html += `<div class="date-range-header">${dateRange}</div>`;
+          }
           
           for (const taskingName of taskingNames) {
             if (!table.taskings[taskingName] || !table.taskings[taskingName].dateRanges[dateRange]) continue;
@@ -642,8 +731,9 @@
             const flightSize = taskingName === 'SEAD' ? 2 : 4;
             const flightCount = 3;
             
-            html += `<div style="margin-bottom: 12px;">`;
-            html += `<div style="font-weight: bold; margin-bottom: 6px; color: #fff; font-size: 13px;">${flightCount} x {${flightSize}} [${taskingName}], ${taskingName}<sup>1</sup></div>`;
+            // Tasking section header
+            html += `<div class="tasking-section">`;
+            html += `<div class="tasking-header">${taskingName} (${flightCount} x {${flightSize}})<sup>1</sup></div>`;
             
             const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
               const aMin = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
@@ -652,24 +742,29 @@
             });
             
             for (const [nationRange, nationData] of sortedNations) {
-              const aircraftEntries = Object.entries(nationData.aircraft);
-              const hasSingleAircraft = aircraftEntries.length === 1 && aircraftEntries[0][0] === '1-10';
+              html += `<div class="nation-section">`;
+              html += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+              html += `<div class="aircraft-list">`;
               
-              if (hasSingleAircraft) {
-                const aircraftType = aircraftEntries[0][1];
-                html += `<div class="aircraft-item" style="margin-left: 15px;"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}</div>`;
-              } else {
-                const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
-                  const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
-                  const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
-                  return aStart - bStart;
-                });
-                
-                const aircraftParts = sortedAircraft.map(([range, type]) => `${range}: ${type}`);
-                const aircraftString = aircraftParts.join('; ');
-                
-                html += `<div class="aircraft-item" style="margin-left: 15px;"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftString}</div>`;
+              const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+                const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+                const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+                return aStart - bStart;
+              });
+              
+              // Check if this nation has only one aircraft type (no aircraft roll needed)
+              const hasSingleAircraft = sortedAircraft.length === 1 && sortedAircraft[0][0] === '1-10';
+              
+              for (const [range, type] of sortedAircraft) {
+                if (hasSingleAircraft) {
+                  // Don't show the "1-10:" prefix for single aircraft types
+                  html += `<div class="aircraft-item">${type}</div>`;
+                } else {
+                  html += `<div class="aircraft-item">${range}: ${type}</div>`;
+                }
               }
+              
+              html += `</div></div>`;
             }
             
             html += `</div>`;
@@ -680,17 +775,111 @@
         
         // Add ordnance table at the end
         html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
-        html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available. Roll for each SEAD<sup>1</sup> or Bombing:</div>`;
+        html += `<div style="font-weight: bold; margin-bottom: 8px;">SEAD flights may change task to CAP as soon as all air-to-ground ordnance is expended or jettisoned.</div>`;
+        html += `<div style="font-weight: bold; margin-bottom: 8px; margin-top: 12px;">Ordnance Available. Roll for each SEAD<sup>1</sup> or Bombing:</div>`;
         html += `<div style="margin-left: 15px;">`;
         html += `<div>1-4: Bombs/CBU/Rockets</div>`;
         html += `<div>5-7: Above plus EOGM</div>`;
         html += `<div>8-10: Above plus LGB/EOGB</div>`;
         html += `</div>`;
         html += `<div style="margin-top: 10px; font-size: 10px; font-style: italic; color: #aaa; line-height: 1.4;">`;
-        html += `<div><sup>1</sup> SEAD flights may change task to CAP as soon as all air-to-ground ordnance is expended or jettisoned.</div>`;
-        html += `<div><sup>2</sup> If generated for SEAD, type may not also do Bombing mission</div>`;
-        html += `<div><sup>3</sup> SEAD flights may always carry ARMs, if capable.</div>`;
+        html += `<div><sup>1</sup> If generated for SEAD, type may not also do Bombing mission</div>`;
+        html += `<div><sup>2</sup> SEAD flights may always carry ARMs, if capable.</div>`;
         html += `</div>`;
+        html += `</div>`;
+      }
+      // I2 has nationality-based structure with taskings
+      else if (tableId === 'I2' && table.nationalities) {
+        html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 15px; color: #ddd;">Raid Nationality: 1-4 GDR, 5-8 POL, 9-10 USSR</div>`;
+        
+        let ordnanceRollsData = null;
+        
+        for (const [natCode, natData] of Object.entries(table.nationalities)) {
+          html += `<div style="margin-bottom: 20px;">`;
+          html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 15px; color: #ddd; font-size: 14px;">${natData.name}</div>`;
+          
+          for (const [taskingName, taskingData] of Object.entries(natData.taskings)) {
+            html += renderTaskingSection(taskingName, taskingData, table);
+          }
+          
+          // Store ordnance rolls data for later (all nationalities have the same ordnance)
+          if (natData.ordnanceRolls && !ordnanceRollsData) {
+            ordnanceRollsData = natData.ordnanceRolls;
+          }
+          
+          html += `</div>`;
+        }
+        
+        // Add ordnance rolls once at the bottom
+        if (ordnanceRollsData) {
+          html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+          html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available. Roll for each SEAD or Bombing:</div>`;
+          
+          for (const [taskType, rolls] of Object.entries(ordnanceRollsData)) {
+            html += `<div style="margin-bottom: 6px; font-weight: 600;">${taskType}:</div>`;
+            const sortedRolls = Object.entries(rolls).sort((a, b) => {
+              const aMin = parseInt(a[0].split('-')[0]);
+              const bMin = parseInt(b[0].split('-')[0]);
+              return aMin - bMin;
+            });
+            for (const [range, ordnance] of sortedRolls) {
+              html += `<div style="margin-left: 15px;">${range}: ${ordnance}</div>`;
+            }
+          }
+          html += `</div>`;
+        }
+      }
+      // J2 has direct taskings (USSR only)
+      else if (tableId === 'J2' && table.taskings) {
+        const taskingOrder = ['Escort Jamming', 'Close Escort', 'Bombing', 'Recon'];
+        for (const taskingName of taskingOrder) {
+          if (!table.taskings[taskingName]) continue;
+          html += renderTaskingSection(taskingName, table.taskings[taskingName], table);
+        }
+        
+        // Add ordnance note at bottom for J2
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        html += `<div style="margin-left: 15px;">All Bombing flights may carry any air-to-ground ordnance allowed for the specified aircraft type.</div>`;
+        html += `<div style="margin-left: 15px; margin-top: 4px;">Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.</div>`;
+        html += `</div>`;
+      }
+      // J3 has nationality-based structure with flights
+      else if (tableId === 'J3' && table.nationalities) {
+        html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 15px; color: #ddd;">Raid Nationality: 1-6 USSR, 7-8 GDR, 9-10 POL</div>`;
+        
+        for (const [natCode, natData] of Object.entries(table.nationalities)) {
+          html += `<div style="margin-bottom: 20px;">`;
+          html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 15px; color: #ddd; font-size: 14px;">${natData.name}</div>`;
+          
+          for (const flight of natData.flights) {
+            html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+            html += `${flight.flightCount} x {${flight.flightSize}} ${flight.type}`;
+            
+            if (flight.aircraft) {
+              const sortedAircraft = Object.entries(flight.aircraft).sort((a, b) => {
+                const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+                const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+                return aStart - bStart;
+              });
+              
+              html += `<br><span style="font-size: 11px; color: #bbb; font-weight: 600;">Aircraft:</span>`;
+              for (const [range, type] of sortedAircraft) {
+                html += `<br><span style="font-size: 11px; color: #bbb; margin-left: 15px;">${range}: ${type}</span>`;
+              }
+            }
+            
+            html += `</div>`;
+          }
+          
+          html += `</div>`;
+        }
+        
+        // Add ordnance note at bottom for J3
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        html += `<div style="margin-left: 15px;">All Bombing and SEAD flights may only carry Bombs, ARM, EOGM, EOGB, or LGB ordnance.</div>`;
+        html += `<div style="margin-left: 15px; margin-top: 4px;">Recon flights may only carry air-to-air missiles and guns.</div>`;
         html += `</div>`;
       }
       // D2 has direct taskings (no date ranges)
@@ -700,44 +889,90 @@
           if (!table.taskings[taskingName]) continue;
           html += renderTaskingSection(taskingName, table.taskings[taskingName], table);
         }
+        
+        // Add ordnance note at bottom for D2
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        html += `<div style="margin-left: 15px;">All aircraft use lower bomb point load, if applicable.</div>`;
+        html += `<div style="margin-left: 15px; margin-top: 4px;">Bombing and SEAD flights may only carry Bombs, ARM, EOGM, EOGB, LGB, or ASM ordnance.</div>`;
+        html += `<div style="margin-left: 15px; margin-top: 4px;">Recon flights may only carry air-to-air missiles and guns.</div>`;
+        html += `</div>`;
       }
       // D3 has nationality-based raids with date ranges
       else if (tableId === 'D3' && table.nationalityRolls) {
         const dateOrder = ['15-31 May', '1-15 June'];
-        for (const dateRange of dateOrder) {
+        
+        // Filter dates if scenarioDate is provided
+        // Map scenarioDate (1,2,3) to D3's date ranges
+        let datesToShow = dateOrder;
+        if (scenarioDate) {
+          // scenarioDate 1 or 2 maps to '15-31 May', scenarioDate 3 maps to '1-15 June'
+          datesToShow = scenarioDate === 3 ? ['1-15 June'] : ['15-31 May'];
+        }
+        
+        for (let dateIdx = 0; dateIdx < datesToShow.length; dateIdx++) {
+          const dateRange = datesToShow[dateIdx];
           if (!table.nationalityRolls[dateRange]) continue;
           
-          html += `<div class="date-range-section" style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #5a6a5a;">`;
-          html += `<div class="date-range-header" style="font-weight: bold; font-size: 16px; color: #f4f4f4; margin-bottom: 10px; text-align: center; background-color: #4a5a4a; padding: 8px; border-radius: 6px;">${dateRange}</div>`;
+          const borderStyle = dateIdx > 0 ? 'margin-top: 20px; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.2);' : 'margin-top: 0;';
+          html += `<div class="date-range-section" style="${borderStyle}">`;
+          
+          // Only show date header if showing all dates
+          if (!scenarioDate) {
+            html += `<div class="date-range-header">${dateRange}</div>`;
+          }
           
           const nationalityData = table.nationalityRolls[dateRange];
           
-          // Show nationality roll ranges
+          // Sort nationality ranges
           const sortedNationalities = Object.entries(nationalityData).sort((a, b) => {
             const aMin = parseInt(a[0].split('-')[0]);
             const bMin = parseInt(b[0].split('-')[0]);
             return aMin - bMin;
           });
           
-          const nationalityLabels = sortedNationalities.map(([range, data]) => `${range} ${data.nationality}`).join(', ');
-          html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 12px; color: #ddd;">Raid Nationality: ${nationalityLabels}</div>`;
-          
           // Render each nationality's raid
           for (const [range, natData] of sortedNationalities) {
-            html += `<div style="margin-bottom: 20px;">`;
-            html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 8px; color: #ccc; font-size: 14px;">${natData.nationality} Raid</div>`;
+            html += `<div class="tasking-section">`;
+            html += `<div class="tasking-header">${range}: ${natData.nationality} Raid</div>`;
             
+            // Group flights by type
+            const flightsByType = {};
             for (const flight of natData.flights) {
-              html += `<div class="aircraft-item" style="margin-left: 15px; margin-bottom: 3px;">`;
-              html += `${flight.flightCount} x {${flight.flightSize}} ${flight.aircraft}, ${flight.type}`;
+              const key = `${flight.type}|${flight.aircraft}|${flight.flightSize}`;
+              if (!flightsByType[key]) {
+                flightsByType[key] = {
+                  type: flight.type,
+                  aircraft: flight.aircraft,
+                  flightSize: flight.flightSize,
+                  count: 0
+                };
+              }
+              flightsByType[key].count += flight.flightCount;
+            }
+            
+            // Render grouped flights
+            html += `<div class="aircraft-list">`;
+            for (const grouped of Object.values(flightsByType)) {
+              html += `<div class="aircraft-item">`;
+              html += `${grouped.count} x {${grouped.flightSize}} ${grouped.aircraft}, ${grouped.type}`;
               html += `</div>`;
             }
+            html += `</div>`;
             
             html += `</div>`;
           }
           
           html += `</div>`;
         }
+        
+        // Add ordnance note at bottom for D3
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        html += `<div style="margin-left: 15px;">All aircraft use lower bomb point load, if applicable.</div>`;
+        html += `<div style="margin-left: 15px; margin-top: 4px;">Bombing and SEAD flights may only carry Bombs, ARM, EOGM, EOGB, LGB, or ASM ordnance.</div>`;
+        html += `<div style="margin-left: 15px; margin-top: 4px;">Recon flights may only carry air-to-air missiles and guns, if capable.</div>`;
+        html += `</div>`;
       }
       
       html += `</div>`;
@@ -748,18 +983,206 @@
      * Helper function to render a tasking section
      */
     function renderTaskingSection(taskingName, taskingData, table) {
-      let html = `<div style="margin-bottom: 15px;">`;
+      let html = `<div style="margin-bottom: 20px;">`;
       
-      // Tasking header with flight info
+      // Tasking header with flight info - using A2's highlighted box style
       const flightInfo = taskingData.flightCount && taskingData.flightSize 
         ? `${taskingData.flightCount} x {${taskingData.flightSize}}`
         : '';
-      const label = flightInfo ? `${taskingName} (${flightInfo})` : taskingName;
-      html += `<div style="font-weight: bold; margin-bottom: 8px; color: #fff; font-size: 14px;">${label}</div>`;
+      const label = flightInfo ? `${flightInfo} [${taskingName}], ${taskingName}` : taskingName;
+      html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3); font-weight: bold; font-size: 13px;">${label}</div>`;
       
-      // Render nations if present
+      // Render nations if present (D2/J2 style with nations containing aircraft)
       if (taskingData.nations) {
         const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
+          const aMin = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+          const bMin = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+          return aMin - bMin;
+        });
+        
+        // Wrap all aircraft entries in a highlighted box
+        html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin: 0 15px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3);">`;
+        
+        for (const [nationRange, nationData] of sortedNations) {
+          const aircraftEntries = Object.entries(nationData.aircraft);
+          const hasSingleAircraft = aircraftEntries.length === 1 && aircraftEntries[0][0] === '1-10';
+          
+          if (hasSingleAircraft) {
+            const aircraftType = aircraftEntries[0][1];
+            html += `<div style="margin-bottom: 4px; font-size: 12px;"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}</div>`;
+          } else {
+            const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            html += `<div style="margin-bottom: 8px; font-size: 12px;">`;
+            html += `<div style="font-weight: 600; margin-bottom: 2px;">${nationRange} ${nationData.name}:</div>`;
+            for (const [range, type] of sortedAircraft) {
+              html += `<div style="margin-left: 15px; color: #ccc;">${range}: ${type}</div>`;
+            }
+            html += `</div>`;
+          }
+        }
+        
+        html += `</div>`; // Close aircraft box
+      }
+      // Render aircraft if present directly (I2 style with aircraft at tasking level)
+      else if (taskingData.aircraft) {
+        const aircraftEntries = Object.entries(taskingData.aircraft);
+        const hasSingleAircraft = aircraftEntries.length === 1 && aircraftEntries[0][0] === '1-10';
+        
+        // Wrap aircraft entries in a highlighted box
+        html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin: 0 15px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3);">`;
+        
+        if (hasSingleAircraft) {
+          const aircraftType = aircraftEntries[0][1];
+          html += `<div style="margin-bottom: 4px; font-size: 12px; font-weight: 600;">Aircraft: ${aircraftType}</div>`;
+        } else {
+          const sortedAircraft = Object.entries(taskingData.aircraft).sort((a, b) => {
+            const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+            const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+            return aStart - bStart;
+          });
+          
+          html += `<div style="font-size: 12px;">`;
+          html += `<div style="font-weight: 600; margin-bottom: 2px;">Aircraft:</div>`;
+          for (const [range, type] of sortedAircraft) {
+            html += `<div style="margin-left: 15px; color: #ccc;">${range}: ${type}</div>`;
+          }
+          html += `</div>`;
+        }
+        
+        html += `</div>`; // Close aircraft box
+      }
+      
+      html += `</div>`;
+      return html;
+    }
+
+    /**
+     * Render parameter-based tables (E2, F2, K2, L2)
+     */
+    function renderParameterTable(table, tableId, atafZone) {
+      let html = `<div class="table-view-content">`;
+      
+      // Add setup/nationality note if present (skip for K2 as it will be shown at bottom)
+      if (table.setupEntry && table.setupEntry.text && tableId !== 'K2') {
+        html += `<div style="font-style: italic; color: #bbb; margin: 0 15px 10px 15px; padding: 8px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">${table.setupEntry.text}</div>`;
+      }
+      
+      // E2 has nationality-based structure - filter by selected nationality
+      if (tableId === 'E2' && table.nationalities) {
+        // If atafZone is provided, show only that nationality
+        if (atafZone) {
+          // Extract nationality code (handles "FRG:land" or "FRG:sea" format)
+          const nationalityCode = atafZone.includes(':') ? atafZone.split(':')[0] : atafZone;
+          const hexType = atafZone.includes(':') ? atafZone.split(':')[1] : null;
+          
+          const natData = table.nationalities[nationalityCode];
+          if (natData) {
+            for (const flight of natData.flights) {
+              // For FRG with hex type, filter aircraft if needed
+              let aircraftData = flight.aircraft;
+              if (nationalityCode === 'FRG' && hexType && typeof aircraftData === 'object') {
+                // If aircraft has land/sea variants, filter to the selected one
+                if (aircraftData.land && aircraftData.sea) {
+                  aircraftData = { [hexType]: aircraftData[hexType] };
+                }
+              }
+              
+              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+              html += `${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}`;
+              
+              if (flight.description) {
+                html += `<br><span style="font-size: 11px; color: #bbb;">${flight.description}</span>`;
+              } else if (aircraftData) {
+                // Show aircraft options
+                if (typeof aircraftData === 'object' && !Array.isArray(aircraftData)) {
+                  const sortedAircraft = Object.entries(aircraftData).sort((a, b) => {
+                    const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+                    const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+                    return aStart - bStart;
+                  });
+                  
+                  let aircraftDisplay = '';
+                  if (sortedAircraft.length > 1 && !sortedAircraft[0][0].includes('-')) {
+                    // Land/sea variants (shouldn't happen after filtering, but handle it)
+                    aircraftDisplay = sortedAircraft.map(([key, val]) => `${val} (${key})`).join('; ');
+                  } else if (sortedAircraft.length === 1 && sortedAircraft[0][0] === '1-10') {
+                    // Single aircraft type (no roll needed)
+                    aircraftDisplay = sortedAircraft[0][1];
+                  } else {
+                    // Die roll ranges
+                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
+                  }
+                  html += `<br><span style="font-size: 11px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
+                }
+              }
+              
+              html += `</div>`;
+            }
+          } else {
+            html += `<div class="error">Unknown nationality: ${nationalityCode}</div>`;
+          }
+        } else {
+          // Show all nationalities if no filter
+          const nationalityOrder = ['FRG', 'DK', 'SE'];
+          for (const natCode of nationalityOrder) {
+            if (!table.nationalities[natCode]) continue;
+            
+            const natData = table.nationalities[natCode];
+            html += `<div style="margin-bottom: 20px;">`;
+            html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 12px; color: #ddd; font-size: 14px;">${natData.name}</div>`;
+            
+            for (const flight of natData.flights) {
+              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+              html += `${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}`;
+              
+              if (flight.description) {
+                html += `<br><span style="font-size: 11px; color: #bbb;">${flight.description}</span>`;
+              } else if (flight.aircraft) {
+                // Show aircraft options
+                if (typeof flight.aircraft === 'object' && !Array.isArray(flight.aircraft)) {
+                  const sortedAircraft = Object.entries(flight.aircraft).sort((a, b) => {
+                    const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+                    const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+                    return aStart - bStart;
+                  });
+                  
+                  let aircraftDisplay = '';
+                  if (sortedAircraft.length > 1 && !sortedAircraft[0][0].includes('-')) {
+                    // Land/sea variants
+                    aircraftDisplay = sortedAircraft.map(([key, val]) => `${val} (${key})`).join('; ');
+                  } else {
+                    // Die roll ranges
+                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
+                  }
+                  html += `<br><span style="font-size: 11px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
+                }
+              }
+              
+              html += `</div>`;
+            }
+            
+            html += `</div>`;
+          }
+        }
+      }
+      // F2 has simple nation-based structure with single mission type
+      else if (tableId === 'F2' && table.nations) {
+        // Show flight composition (simplified format without redundant mission name)
+        if (table.result) {
+          // Extract just the flight info: "1 x {1} [Maritime Patrol], Maritime Patrol" -> "1 x {1} [Maritime Patrol]"
+          const simplifiedResult = table.result.replace(/],\s*[^,]+$/, ']');
+          html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin: 10px 15px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3); font-weight: bold; font-size: 13px;">`;
+          html += simplifiedResult;
+          html += `</div>`;
+        }
+        
+        // Show nations and aircraft in lighter nested boxes (subordinate styling)
+        const sortedNations = Object.entries(table.nations).sort((a, b) => {
           const aMin = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
           const bMin = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
           return aMin - bMin;
@@ -771,7 +1194,9 @@
           
           if (hasSingleAircraft) {
             const aircraftType = aircraftEntries[0][1];
-            html += `<div class="aircraft-item" style="margin-left: 15px;"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}</div>`;
+            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 12px;">`;
+            html += `<span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}`;
+            html += `</div>`;
           } else {
             const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
               const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
@@ -779,81 +1204,117 @@
               return aStart - bStart;
             });
             
-            const aircraftParts = sortedAircraft.map(([range, type]) => `${range}: ${type}`);
-            const aircraftString = aircraftParts.join(', ');
-            
-            html += `<div class="aircraft-item" style="margin-left: 15px;"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftString}</div>`;
+            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 12px;">`;
+            html += `<div style="font-weight: 600; margin-bottom: 4px;">${nationRange} ${nationData.name}:</div>`;
+            for (const [range, type] of sortedAircraft) {
+              html += `<div style="margin-left: 10px; color: #ccc;">${range}: ${type}</div>`;
+            }
+            html += `</div>`;
           }
         }
       }
-      
-      html += `</div>`;
-      return html;
-    }
-
-    /**
-     * Render parameter-based tables (E2, F2, K2, L2)
-     */
-    function renderParameterTable(table, tableId) {
-      let html = `<div class="table-view-content">`;
-      html += `<div class="table-description">${table.description || ''}</div>`;
-      
-      // Add setup/nationality note if present
-      if (table.setupEntry && table.setupEntry.text) {
-        html += `<div style="font-style: italic; color: #bbb; margin: 10px 0; padding: 8px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 13px;">${table.setupEntry.text}</div>`;
-      }
-      
-      // E2 has nationality-based structure
-      if (tableId === 'E2' && table.nationalities) {
-        const nationalityOrder = ['FRG', 'DK', 'SE'];
-        for (const natCode of nationalityOrder) {
-          if (!table.nationalities[natCode]) continue;
+      // K2 has nationality-based structure (GDR/GDR Naval) - filter by selected nationality
+      else if (tableId === 'K2' && table.nationalities) {
+        // If atafZone is provided, show only that nationality
+        if (atafZone) {
+          const natData = table.nationalities[atafZone];
           
-          const natData = table.nationalities[natCode];
-          html += `<div style="margin-bottom: 20px;">`;
-          html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 8px; color: #ccc; font-size: 14px;">${natData.name}:</div>`;
-          
-          for (const flight of natData.flights) {
-            html += `<div class="aircraft-item" style="margin-left: 15px; margin-bottom: 6px;">`;
-            html += `<span style="font-weight: 600;">${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}</span>`;
-            
-            if (flight.description) {
-              html += `<div style="margin-left: 15px; font-size: 11px; color: #aaa; font-style: italic; margin-top: 2px;">${flight.description}</div>`;
-            } else if (flight.aircraft) {
-              // Show aircraft options
-              if (typeof flight.aircraft === 'object' && !Array.isArray(flight.aircraft)) {
-                const sortedAircraft = Object.entries(flight.aircraft).sort((a, b) => {
-                  const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
-                  const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
-                  return aStart - bStart;
-                });
-                
-                html += `<div style="margin-left: 15px; margin-top: 3px;">`;
-                if (sortedAircraft.length > 1 && !sortedAircraft[0][0].includes('-')) {
-                  // Land/sea variants
-                  html += `<div style="font-size: 12px; color: #ddd;">Aircraft: ${sortedAircraft.map(([key, val]) => `${val} (${key})`).join('; ')}</div>`;
-                } else {
-                  // Die roll ranges
-                  html += `<div style="font-size: 12px; color: #ddd;">Aircraft: ${sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ')}</div>`;
+          if (natData) {
+            for (const flight of natData.flights) {
+              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+              html += `${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}`;
+              
+              if (flight.aircraft) {
+                // Show aircraft options
+                if (typeof flight.aircraft === 'object' && !Array.isArray(flight.aircraft)) {
+                  const sortedAircraft = Object.entries(flight.aircraft).sort((a, b) => {
+                    const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+                    const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+                    return aStart - bStart;
+                  });
+                  
+                  let aircraftDisplay = '';
+                  if (sortedAircraft.length === 1 && sortedAircraft[0][0] === '1-10') {
+                    // Single aircraft type (no roll needed)
+                    aircraftDisplay = sortedAircraft[0][1];
+                  } else {
+                    // Die roll ranges
+                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
+                  }
+                  html += `<br><span style="font-size: 11px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
                 }
-                html += `</div>`;
               }
+              
+              html += `</div>`;
+            }
+          } else {
+            html += `<div class="error">Unknown nationality: ${atafZone}</div>`;
+          }
+        } else {
+          // Show all nationalities if no filter
+          for (const [natCode, natData] of Object.entries(table.nationalities)) {
+            html += `<div style="margin-bottom: 20px;">`;
+            html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 12px; color: #ddd; font-size: 14px;">${natData.name}</div>`;
+            
+            for (const flight of natData.flights) {
+              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+              html += `${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}`;
+              
+              if (flight.aircraft) {
+                // Show aircraft options
+                if (typeof flight.aircraft === 'object' && !Array.isArray(flight.aircraft)) {
+                  const sortedAircraft = Object.entries(flight.aircraft).sort((a, b) => {
+                    const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+                    const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+                    return aStart - bStart;
+                  });
+                  
+                  let aircraftDisplay = '';
+                  if (sortedAircraft.length === 1 && sortedAircraft[0][0] === '1-10') {
+                    // Single aircraft type (no roll needed)
+                    aircraftDisplay = sortedAircraft[0][1];
+                  } else {
+                    // Die roll ranges
+                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
+                  }
+                  html += `<br><span style="font-size: 11px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
+                }
+              }
+              
+              html += `</div>`;
             }
             
             html += `</div>`;
           }
-          
-          html += `</div>`;
         }
+        
+        // Add ordnance note at bottom with nationality info
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        if (table.setupEntry && table.setupEntry.text) {
+          html += `<div style="margin-bottom: 8px;">${table.setupEntry.text}</div>`;
+        }
+        html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        html += `<div style="margin-left: 15px;">${table.ordnanceNote}</div>`;
+        if (table.additionalNote) {
+          html += `<div style="margin-left: 15px; margin-top: 8px;">${table.additionalNote}</div>`;
+        }
+        html += `</div>`;
       }
-      // F2 has mission-type based structure
-      else if (tableId === 'F2' && table.missionTypes) {
+      // L2 has mission-type based structure
+      else if (tableId === 'L2' && table.missionTypes) {
         for (const [missionName, missionData] of Object.entries(table.missionTypes)) {
           html += `<div style="margin-bottom: 20px;">`;
-          html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 8px; color: #ccc; font-size: 14px;">[${missionName}]</div>`;
-          html += `<div class="aircraft-item" style="margin-left: 15px; margin-bottom: 6px; font-weight: 600;">`;
+          html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 12px; color: #ddd; font-size: 14px;">${missionName}</div>`;
+          
+          // Show flight composition in highlighted box
+          html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
           html += `${missionData.flightCount} x {${missionData.flightSize}} [${missionName}], ${missionName}`;
-          html += `</div>`;
+          // Show ordnance note if present
+          if (missionData.ordnanceNote) {
+            html += `<br><span style="font-size: 11px; color: #bbb; font-style: italic;">${missionData.ordnanceNote}</span>`;
+          }
+          
+          html += `</div>`; // Close flight composition box
           
           // Show nations and aircraft
           if (missionData.nations) {
@@ -869,7 +1330,9 @@
               
               if (hasSingleAircraft) {
                 const aircraftType = aircraftEntries[0][1];
-                html += `<div class="aircraft-item" style="margin-left: 30px;"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}</div>`;
+                html += `<div style="background-color: rgba(255,255,255,0.08); padding: 4px 8px; margin: 3px 30px; border-radius: 3px; font-size: 11px;">`;
+                html += `<span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}`;
+                html += `</div>`;
               } else {
                 const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
                   const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
@@ -877,10 +1340,12 @@
                   return aStart - bStart;
                 });
                 
-                const aircraftParts = sortedAircraft.map(([range, type]) => `${range}: ${type}`);
-                const aircraftString = aircraftParts.join(', ');
-                
-                html += `<div class="aircraft-item" style="margin-left: 30px;"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftString}</div>`;
+                html += `<div style="background-color: rgba(255,255,255,0.08); padding: 4px 8px; margin: 3px 30px; border-radius: 3px; font-size: 11px;">`;
+                html += `<div style="font-weight: 600; margin-bottom: 2px;">${nationRange} ${nationData.name}:</div>`;
+                for (const [range, type] of sortedAircraft) {
+                  html += `<div style="margin-left: 10px; color: #ccc;">${range}: ${type}</div>`;
+                }
+                html += `</div>`;
               }
             }
           }
@@ -1036,14 +1501,26 @@
         }
         
         // Convert processor result to the expected format
-        return {
+        const formattedResult = {
           text: result.text || result.result,
           rolls: result.debugRolls || [],
           debugInfo: result.debugRolls || [],
           nationRoll: extractRollValue(result.debugRolls, 'Nation'),
           aircraftRoll: extractRollValue(result.debugRolls, 'Aircraft'),
-          result: result
+          result: result.text || result.result,  // Store text in result field for display
+          taskings: result.taskings,  // Preserve taskings array from WPTableI2
+          flights: result.flights,    // Preserve structured flights (D3, J3, etc.)
+          faction: result.faction,
+          nationality: result.nationality,
+          table: result.table,
+          scenarioDate: result.scenarioDate,
+          raidType: result.raidType
         };
+        
+        console.log(`[TABLE RESULT] Formatted result:`, formattedResult);
+        console.log(`[TABLE RESULT] result.taskings:`, result.taskings);
+        
+        return formattedResult;
         
       } catch (error) {
         console.error(`Error processing table ${tableId}:`, error);
@@ -1107,8 +1584,14 @@
         // Generate flight cards using Red Storm's designer layout
         let allCardsHTML = '';
         
+        // Determine if we need page break after NATO flights
+        const hasWPFlights = (wpRegular.length > 0 || wpCSAR.length > 0);
+        const totalNATOFlights = natoRegular.length + natoCSAR.length;
+        
         // Generate NATO regular flights first
-        for (const flight of natoRegular) {
+        for (let i = 0; i < natoRegular.length; i++) {
+          const flight = natoRegular[i];
+          const isLastNATOFlight = hasWPFlights && (i === natoRegular.length - 1) && (natoCSAR.length === 0);
           const cardHTML = await printGen.generateDesignerFlightCard(
             flight,
             dataFiles.aircraftNATO,
@@ -1116,7 +1599,7 @@
             dataFiles.noteRules,
             dataFiles.weapons,
             dataFiles.nameMapping,
-            false
+            isLastNATOFlight
           );
           allCardsHTML += cardHTML;
         }
@@ -1124,7 +1607,9 @@
         // Add NATO CSAR flights after NATO regular flights
         if (natoCSAR.length > 0) {
           allCardsHTML += '<div class="csar-container">';
-          for (const flight of natoCSAR) {
+          for (let i = 0; i < natoCSAR.length; i++) {
+            const flight = natoCSAR[i];
+            const isLastNATOFlight = hasWPFlights && (i === natoCSAR.length - 1);
             const cardHTML = await printGen.generateDesignerFlightCard(
               flight,
               dataFiles.aircraftNATO,
@@ -1132,7 +1617,7 @@
               dataFiles.noteRules,
               dataFiles.weapons,
               dataFiles.nameMapping,
-              false
+              isLastNATOFlight
             );
             // Remove the container wrapper that generateDesignerFlightCard adds
             let unwrappedHTML = cardHTML;
@@ -1145,12 +1630,7 @@
           allCardsHTML += '</div>';
         }
         
-        // Page break between NATO and WP
-        if (wpRegular.length > 0 || wpCSAR.length > 0) {
-          allCardsHTML += '</div><div style="page-break-after: always;"></div><div class="flight-grid">';
-        }
-        
-        // Generate WP regular flights
+        // Generate WP regular flights (no manual page break needed - handled by last NATO flight)
         for (const flight of wpRegular) {
           const cardHTML = await printGen.generateDesignerFlightCard(
             flight,

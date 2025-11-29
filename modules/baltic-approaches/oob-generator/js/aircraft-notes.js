@@ -539,6 +539,21 @@ function applyGDRNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundC
   // GDR Note E: Only Bombs, AT CBU, or Rockets allowed
   if (notes.includes('E') && isAirToGroundCapable) {
     modifiedData.specialRules.push('Only Bombs, AT CBU, or Rockets allowed.');
+    // Remove prohibited ordnance types as safety net
+    if (modifiedData.rolledOrdnance) {
+      modifiedData.rolledOrdnance = modifiedData.rolledOrdnance
+        .replace(/\s*\+\s*EOGM\/ARM/g, '')
+        .replace(/\s*\+\s*EOGM/g, '')
+        .replace(/\s*\+\s*ARM/g, '')
+        .replace(/\s*\+\s*LGB\/EOGB/g, '')
+        .replace(/\s*\+\s*EOGB\/LGB/g, '')
+        .replace(/\s*\+\s*LGB/g, '')
+        .replace(/\s*\+\s*EOGB/g, '')
+        .trim();
+      if (modifiedData.rolledOrdnance === '') {
+        modifiedData.rolledOrdnance = null;
+      }
+    }
   }
   
   // GDR Note F: Roll for 23mm Gun Pod
@@ -934,6 +949,21 @@ function applyPOL_Notes(modifiedData, notes, tasking, sourceTable, isAirToGround
   // POL Note E: Ordnance restrictions - PRINT ONLY
   if (notes.includes('E') && isAirToGroundCapable) {
     modifiedData.specialRules.push('Only Bombs, AT CBU, or Rocket Pods allowed.');
+    // Remove prohibited ordnance types as safety net
+    if (modifiedData.rolledOrdnance) {
+      modifiedData.rolledOrdnance = modifiedData.rolledOrdnance
+        .replace(/\s*\+\s*EOGM\/ARM/g, '')
+        .replace(/\s*\+\s*EOGM/g, '')
+        .replace(/\s*\+\s*ARM/g, '')
+        .replace(/\s*\+\s*LGB\/EOGB/g, '')
+        .replace(/\s*\+\s*EOGB\/LGB/g, '')
+        .replace(/\s*\+\s*LGB/g, '')
+        .replace(/\s*\+\s*EOGB/g, '')
+        .trim();
+      if (modifiedData.rolledOrdnance === '') {
+        modifiedData.rolledOrdnance = null;
+      }
+    }
   }
   
   // POL Note F: 23mm Gun Pod roll - MODIFICATION (with dice roll)

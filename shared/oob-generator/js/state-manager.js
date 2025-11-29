@@ -250,6 +250,14 @@ function selectTable(tableId, faction) {
       if (nationalitySelection) {
         nationalitySelection.style.display = hasNationality ? 'flex' : 'none';
         
+        // Update label for K2 (GDR land/sea selection)
+        const nationalityLabel = nationalitySelection.querySelector('label');
+        if (nationalityLabel && tableId === 'K2') {
+          nationalityLabel.textContent = 'Land or sea hex?';
+        } else if (nationalityLabel) {
+          nationalityLabel.textContent = 'Nationality of downed crew:';
+        }
+        
         // Populate nationality dropdown based on faction and module
         if (hasNationality) {
           const crewNationalitySelect = document.getElementById('crewNationality');
@@ -289,8 +297,8 @@ function selectTable(tableId, faction) {
                 } else {
                   // K2 - Combat Rescue (GDR only)
                   crewNationalitySelect.innerHTML = `
-                    <option value="GDR">GDR</option>
-                    <option value="GDR Naval">GDR Naval</option>
+                    <option value="GDR">Land Hex</option>
+                    <option value="GDR Naval">Sea Hex</option>
                   `;
                 }
               } else {

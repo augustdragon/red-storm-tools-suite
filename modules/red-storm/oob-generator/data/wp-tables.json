@@ -236,7 +236,7 @@
     "faction": "WP",
     "hasNationality": true,
     "hasDate": false,
-    "description": "WP Combat Rescue - Size of air battle and high number of losses would limit ability to conduct rescue",
+    "description": "Rescue missions for downed aircrew",
     "ordnanceNote": "All flights tasked with Rescue Support may carry any ordnance allowed for the specified aircraft type.",
     "nationalities": {
       "USSR": {

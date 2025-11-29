@@ -5,250 +5,509 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aircraft Notes Reference - Baltic Approaches</title>
   <link rel="stylesheet" href="../../../shared/css/red-storm.css">
+  <link rel="stylesheet" href="css/ba-theme.css">
   <style>
-    /* Override body to match OOB generator */
+    :root {
+      --ba-bg: #4a5d6d;
+      --ba-overlay: rgba(8, 16, 24, 0.7);
+      --ba-panel: rgba(18, 26, 38, 0.85);
+      --ba-panel-soft: rgba(34, 50, 64, 0.85);
+      --ba-border: rgba(122, 154, 170, 0.55);
+      --ba-border-strong: #7a9aaa;
+      --ba-text: #e6f0ff;
+      --ba-muted: #a9bed0;
+      --ba-accent: #9fd4ff;
+      --ba-highlight: #8fc1d8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-      background-color: #2d3d2d;
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ba-text);
+      background-color: var(--ba-bg);
+      background-image: url('../../../shared/assets/roundels/ba-cover.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+      padding-bottom: 40px;
     }
 
-    /* Custom styles for notes table */
-    .notes-table {
-      width: 100%;
-      background-color: #344034;
-      border-radius: 5px;
-      overflow: hidden;
-      border-collapse: collapse;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-color: rgba(6, 14, 22, 0.75);
+      backdrop-filter: blur(2px);
+      z-index: 0;
     }
 
-    .notes-table thead {
-      background-color: #3f4f3f;
+    body * {
+      position: relative;
+      z-index: 1;
     }
 
-    .notes-table th {
-      color: #e8f0e8;
-      padding: 10px;
-      text-align: left;
-      font-weight: bold;
-      font-size: 16px;
-      border-bottom: 2px solid #2d3a2d;
+    .nav-header {
+      background-color: rgba(12, 22, 34, 0.9);
+      border-bottom: 1px solid var(--ba-border);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
     }
 
-    .notes-table th:first-child {
-      width: 50px;
-      text-align: center;
+    .nav-header span {
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--ba-text);
     }
 
-    .notes-table tbody tr {
-      border-bottom: 1px solid #2d3a2d;
+    .nav-header a {
+      color: var(--ba-accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
     }
 
-    .notes-table tbody tr:nth-child(even) {
-      background-color: #3d4f3d;
+    .nav-header a:hover {
+      color: #ffffff;
     }
 
-    .notes-table tbody tr:hover {
-      background-color: #4a5a4a;
+    .page-content {
+      padding: 40px 20px 60px;
     }
 
-    .notes-table tbody tr:last-child {
-      border-bottom: none;
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
     }
 
-    .notes-table td {
-      color: #d8e4d8;
-      padding: 10px;
-      font-size: 14px;
-      line-height: 1.6;
-      vertical-align: top;
-      text-align: left;
-    }
-
-    .note-code-cell {
-      text-align: center;
-      font-weight: bold;
-      font-size: 17px;
-      color: #e8f0e8;
-    }
-
-    .note-description-cell {
-      color: #c8d8c8;
-    }
-
-    /* Override header to match OOB generator */
     .header {
-      margin-bottom: 20px;
+      text-align: center;
+      padding: 35px 30px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(76, 102, 122, 0.95), rgba(28, 44, 58, 0.95));
+      border: 1px solid var(--ba-border-strong);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+      margin-bottom: 30px;
     }
 
     .header .title {
-      font-size: 32px;
-      letter-spacing: 0;
-      margin-bottom: 5px;
-      color: #ffffff;
+      font-size: 36px;
+      letter-spacing: 1px;
+      margin: 0;
+      text-transform: uppercase;
     }
 
     .header .subtitle {
-      font-size: 16px;
-      letter-spacing: 0;
-      font-style: italic;
-      opacity: 0.9;
-      color: #ffffff;
+      font-size: 18px;
+      color: var(--ba-muted);
+      margin-top: 10px;
     }
 
-    /* Form controls container - two-column grid spanning full width */
+    .header .description {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #d5e3f0;
+      line-height: 1.6;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--ba-border-strong);
+      color: var(--ba-text);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 25px;
+      transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-link:hover {
+      background-color: rgba(122, 154, 170, 0.15);
+      border-color: #9fd4ff;
+      transform: translateY(-1px);
+    }
+
     .section {
-      background-color: transparent;
-      border: none;
-      padding: 0;
-      margin: 0 0 30px 0;
       display: grid;
-      grid-template-columns: 2fr 3fr;
-      gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 25px;
     }
 
     .controls-section {
-      background-color: #3a4a3a;
-      border-radius: 8px;
-      padding: 20px;
-      border: 1px solid #4a5a4a;
+      background-color: var(--ba-panel);
+      border-radius: 12px;
+      padding: 18px 20px;
+      border: 1px solid var(--ba-border);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
     }
 
     .controls-title {
-      color: #d4e4d4;
-      padding: 0 0 8px 0;
-      font-weight: bold;
+      color: var(--ba-muted);
+      font-weight: 700;
       font-size: 14px;
-      margin-bottom: 8px;
+      letter-spacing: 1.4px;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      border-bottom: 2px solid #4a5a4a;
+      margin-bottom: 10px;
     }
 
     .nation-select,
     .search-box {
       width: 100%;
-      padding: 10px 12px;
-      background-color: #2d3a2d;
-      color: #d4e4d4;
-      border: 2px solid #4a5a4a;
-      border-radius: 6px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(159, 212, 255, 0.35);
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--ba-text);
       font-size: 15px;
-      transition: all 0.3s;
-      box-sizing: border-box;
-    }
-
-    .nation-select {
-      cursor: pointer;
+      transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .nation-select:focus,
     .search-box:focus {
+      border-color: #9fd4ff;
       outline: none;
-      border-color: #7a8a7a;
-      background-color: #3a4a3a;
+      background-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 2px rgba(159, 212, 255, 0.25);
     }
 
     .search-box::placeholder {
-      color: #6a7a6a;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .notes-panel {
+      background-color: var(--ba-panel-soft);
+      border-radius: 16px;
+      border: 1px solid var(--ba-border);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .table-label {
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 1.4px;
+      color: var(--ba-muted);
+    }
+
+    .table-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .table-meta {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ba-muted);
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(122, 154, 170, 0.6);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .notes-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(13, 22, 34, 0.85);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .notes-table thead th {
+      background: linear-gradient(135deg, rgba(122, 154, 170, 0.35), rgba(72, 104, 126, 0.65));
+      color: #f5fbff;
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .notes-table th:first-child {
+      width: 110px;
+      text-align: center;
+    }
+
+    .notes-table td {
+      padding: 14px 16px;
+      font-size: 15px;
+      color: #e7eff8;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      line-height: 1.6;
+    }
+
+    .notes-table tbody tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.015);
+    }
+
+    .notes-table tbody tr:hover {
+      background-color: rgba(159, 212, 255, 0.08);
+    }
+
+    .notes-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .note-code-cell {
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--ba-accent);
+      font-size: 17px;
+    }
+
+    .note-description-cell {
+      color: #dce9f5;
+    }
+
+    .loading-state,
+    .empty-state {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--ba-muted);
+      font-size: 16px;
+    }
+
+    .empty-state .highlight-term {
+      color: var(--ba-accent);
+      font-weight: 700;
+    }
+
+    .empty-state button {
+      margin-top: 12px;
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--ba-border-strong);
+      background: transparent;
+      color: var(--ba-text);
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .empty-state button:hover {
+      background-color: rgba(122, 154, 170, 0.2);
+      border-color: #9fd4ff;
+    }
+
+    .empty-state.error-state {
+      color: #ffb3b3;
+    }
+
+    .site-footer {
+      text-align: center;
+      margin: 40px 0 0;
+      padding: 30px 20px;
+      color: var(--ba-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background-color: rgba(12, 22, 34, 0.85);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 25px 20px;
+      }
+
+      .header .title {
+        font-size: 28px;
+      }
+
+      .section {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media print {
+      body {
+        background: #ffffff none;
+        color: #000000;
+        padding: 0;
+      }
+
+      body::before,
+      .nav-header,
       .back-link,
-      .section:first-of-type {
+      .controls-section,
+      .header .description,
+      .site-footer {
         display: none;
       }
 
-      .notes-table {
-        page-break-inside: avoid;
+      .page-content {
+        padding: 0;
       }
 
-      .notes-table tbody tr {
-        page-break-inside: avoid;
+      .notes-panel {
+        box-shadow: none;
+        border: none;
+        background: #ffffff;
+      }
+
+      .notes-table {
+        background: #ffffff;
+      }
+
+      .notes-table thead th,
+      .notes-table td {
+        color: #000000;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="title">Baltic Approaches</div>
-      <div class="subtitle">Aircraft Notes Reference</div>
-    </div>
-
-    <a href="../index.html" class="back-link">← Back to Baltic Approaches Tools</a>
-
-    <div class="section">
-      <div class="controls-section">
-        <div class="controls-title">Select Nation</div>
-        <select id="nationSelect" class="nation-select">
-          <option value="USN/USMC">USN/USMC - United States Navy & Marine Corps</option>
-          <option value="NATO">NATO - NE / UK / FRG / DK</option>
-          <option value="USSR">USSR - Soviet Air Force & Navy</option>
-          <option value="POL">POL - Polish Air Force</option>
-          <option value="SE">SE - Swedish Air Force</option>
-        </select>
-      </div>
-
-      <div class="controls-section">
-        <div class="controls-title">Search Notes</div>
-        <input type="text" id="searchBox" class="search-box" placeholder="Search by note code or text...">
-      </div>
-    </div>
-
-    <div id="notesSection">
-      <!-- Notes table will be inserted here -->
-    </div>
+  <div class="nav-header">
+    <span>Red Storm Tools • Baltic Approaches Module</span>
+    <a href="../../../index.html">← Back to Module Selection</a>
   </div>
 
+  <main class="page-content">
+    <div class="container">
+      <div class="header">
+        <div class="title">Baltic Approaches</div>
+        <div class="subtitle">Aircraft Notes Reference</div>
+        <p class="description">
+          Searchable nation-specific notes for Baltic Approaches.
+        </p>
+      </div>
+
+      <a href="../index.html" class="back-link">← Back to Baltic Approaches Tools</a>
+
+      <div class="section">
+        <div class="controls-section">
+          <div class="controls-title">Select Nation</div>
+          <select id="nationSelect" class="nation-select">
+            <option value="USN/USMC">USN/USMC - United States Navy & Marine Corps</option>
+            <option value="NATO">NATO - NE / UK / FRG / DK</option>
+            <option value="USSR">USSR - Soviet Air Force & Navy</option>
+            <option value="POL">POL - Polish Air Force</option>
+            <option value="SE">SE - Swedish Air Force</option>
+          </select>
+        </div>
+
+        <div class="controls-section">
+          <div class="controls-title">Search Notes</div>
+          <input type="text" id="searchBox" class="search-box" placeholder="Search by note code or text...">
+        </div>
+      </div>
+
+      <div id="notesSection" class="notes-panel">
+        <div class="loading-state">Loading notes data...</div>
+      </div>
+    </div>
+  </main>
+
   <script>
-    // Load notes data from JSON file
-    let notesData = {};
-
-    fetch('data/aircraft-note-rules.json')
-      .then(response => response.json())
-      .then(data => {
-        // Convert nested structure to flat arrays for each nation
-        notesData['USN/USMC'] = Object.entries(data['USN/USMC'] || {})
-          .filter(([key]) => !key.startsWith('_'))
-          .map(([code, note]) => ({ code, desc: note.description }));
-        notesData['NATO'] = Object.entries(data['NATO'] || {})
-          .filter(([key]) => !key.startsWith('_'))
-          .map(([code, note]) => ({ code, desc: note.description }));
-        notesData['USSR'] = Object.entries(data['USSR'] || {})
-          .filter(([key]) => !key.startsWith('_'))
-          .map(([code, note]) => ({ code, desc: note.description }));
-        notesData['POL'] = Object.entries(data['POL'] || {})
-          .filter(([key]) => !key.startsWith('_'))
-          .map(([code, note]) => ({ code, desc: note.description }));
-        notesData['SE'] = Object.entries(data['SE'] || {})
-          .filter(([key]) => !key.startsWith('_'))
-          .map(([code, note]) => ({ code, desc: note.description }));
-        
-        renderNotes();
-      })
-      .catch(error => {
-        console.error('Error loading notes data:', error);
-        document.getElementById('notesSection').innerHTML = 
-          '<p style="color: #ff6666; padding: 20px;">Error loading notes data. Please check the console.</p>';
-      });
-
     const nationSelect = document.getElementById('nationSelect');
     const searchBox = document.getElementById('searchBox');
     const notesSection = document.getElementById('notesSection');
+    const selectableNations = Array.from(nationSelect.options).map(option => option.value);
 
-    let currentNation = 'USN/USMC';
+    let notesData = {};
+    let currentNation = nationSelect.value || selectableNations[0];
     let searchTerm = '';
+    let dataReady = false;
 
-    function renderNotes() {
+    const escapeHtml = (unsafe = '') => unsafe.replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[char] || char));
+
+    const formatDescription = (text = '') => escapeHtml(text).replace(/\n/g, '<br>');
+
+    const buildNoteList = (group = {}) => Object.entries(group)
+      .filter(([key]) => !key.startsWith('_'))
+      .map(([code, note]) => ({
+        code: (typeof code === 'string' ? code : String(code || '')).trim(),
+        desc: typeof note?.description === 'string' ? note.description.trim() : ''
+      }));
+
+    const renderPlaceholder = (message, classNames = 'empty-state') => {
+      notesSection.innerHTML = `<div class="${classNames}">${message}</div>`;
+    };
+
+    const attachClearSearchHandler = () => {
+      const clearButton = notesSection.querySelector('.clear-search');
+      if (clearButton) {
+        clearButton.addEventListener('click', () => {
+          searchTerm = '';
+          searchBox.value = '';
+          renderNotes();
+          searchBox.focus();
+        });
+      }
+    };
+
+    const renderNotes = () => {
+      if (!dataReady) {
+        renderPlaceholder('Loading notes data…', 'loading-state');
+        return;
+      }
+
       const notes = notesData[currentNation] || [];
-      const filtered = notes.filter(note => {
-        if (!searchTerm) return true;
-        const search = searchTerm.toLowerCase();
-        return note.code.toLowerCase().includes(search) || 
-               note.desc.toLowerCase().includes(search);
+      if (!notes.length) {
+        renderPlaceholder('No notes are defined for this nation yet.');
+        return;
+      }
+
+      const searchValue = searchTerm.trim().toLowerCase();
+      const filtered = notes.filter(({ code, desc }) => {
+        if (!searchValue) return true;
+        return code.toLowerCase().includes(searchValue) || desc.toLowerCase().includes(searchValue);
       });
 
-      const html = `
+      if (!filtered.length) {
+        renderPlaceholder(
+          `No notes found for <span class="highlight-term">${escapeHtml(searchTerm)}</span>.<br>` +
+          '<button type="button" class="clear-search">Clear search</button>'
+        );
+        attachClearSearchHandler();
+        return;
+      }
+
+      const rows = filtered.map(note => `
+        <tr>
+          <td class="note-code-cell">${escapeHtml(note.code)}</td>
+          <td class="note-description-cell">${formatDescription(note.desc)}</td>
+        </tr>
+      `).join('');
+
+      notesSection.innerHTML = `
+        <div class="table-header">
+          <div>
+            <div class="table-label">Nation</div>
+            <div class="table-title">${escapeHtml(currentNation)}</div>
+          </div>
+          <div class="table-meta">${filtered.length} ${filtered.length === 1 ? 'entry' : 'entries'}</div>
+        </div>
         <table class="notes-table">
           <thead>
             <tr>
@@ -256,37 +515,56 @@
               <th>Description</th>
             </tr>
           </thead>
-          <tbody>
-            ${filtered.map(note => `
-              <tr>
-                <td class="note-code-cell">${note.code}</td>
-                <td class="note-description-cell">${note.desc}</td>
-              </tr>
-            `).join('')}
-          </tbody>
+          <tbody>${rows}</tbody>
         </table>
       `;
+    };
 
-      notesSection.innerHTML = html;
-    }
+    const loadNotes = () => {
+      renderPlaceholder('Loading notes data…', 'loading-state');
 
-    nationSelect.addEventListener('change', (e) => {
-      currentNation = e.target.value;
+      fetch('data/aircraft-note-rules.json')
+        .then(response => response.json())
+        .then(data => {
+          selectableNations.forEach((nationKey) => {
+            notesData[nationKey] = buildNoteList(data[nationKey]);
+          });
+          dataReady = true;
+          renderNotes();
+        })
+        .catch(error => {
+          console.error('Error loading notes data:', error);
+          renderPlaceholder('Unable to load notes data. Please refresh and try again.', 'empty-state error-state');
+        });
+    };
+
+    nationSelect.addEventListener('change', (event) => {
+      currentNation = event.target.value;
       renderNotes();
     });
 
-    searchBox.addEventListener('input', (e) => {
-      searchTerm = e.target.value;
+    searchBox.addEventListener('input', (event) => {
+      searchTerm = event.target.value;
       renderNotes();
     });
+
+    searchBox.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && searchTerm) {
+        searchTerm = '';
+        searchBox.value = '';
+        renderNotes();
+      }
+    });
+
+    loadNotes();
   </script>
-  
-  <!-- Footer -->
-  <div style="text-align: center; margin-top: 60px; padding: 30px 20px; border-top: 1px solid #4a5a4a; opacity: 0.8; background-color: #1a2a1a;">
-    <p style="margin: 10px 0;">Red Storm Tools Suite | Baltic Approaches Module</p>
-    <p style="font-size: 0.85em; margin-top: 10px; opacity: 0.7;">
-      Red Storm: Baltic Approaches and all related game materials are © GMT Games. This is an unofficial fan-made tool suite not affiliated with or endorsed by the copyright holder.
+
+  <footer class="site-footer">
+    <p>Red Storm Tools Suite | Baltic Approaches Module</p>
+    <p>
+      Red Storm: Baltic Approaches and all related game materials are © GMT Games. This fan-made tool suite is not
+      affiliated with or endorsed by the copyright holder.
     </p>
-  </div>
+  </footer>
 </body>
 </html>

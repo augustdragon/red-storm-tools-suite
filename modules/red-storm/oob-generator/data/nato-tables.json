@@ -7,7 +7,7 @@
   "A": {
     "name": "NATO Table A - QRA Flight",
     "faction": "NATO",
-    "description": "NATO QRA Flight - Quick Reaction Alert flights on standby at designated airbases",
+    "description": "Quick Reaction Alert flights on standby at designated airbases",
     "result": "1 x {2} [QRA], CAP",
     "flightSize": 2,
     "hasATAF": true,
@@ -654,7 +654,7 @@
     "faction": "NATO",
     "hasNationality": true,
     "hasDate": false,
-    "description": "NATO Combat Rescue - Rescue missions for downed aircrew",
+    "description": "Rescue missions for downed aircrew",
     "ordnanceNote": "All flights tasked with Rescue Support may carry any ordnance allowed for the specific aircraft type.",
     "result": "Nationality determined rescue package",
     "nationalities": {

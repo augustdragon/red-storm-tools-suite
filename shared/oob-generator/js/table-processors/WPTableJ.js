@@ -31,26 +31,25 @@ class WPTableJ extends BaseTableProcessor {
    * @returns {object} Tasking result
    */
   processTasking(taskingName, taskingData) {
-    // Roll for nation (Table J has multiple nation ranges, not just USSR)
-    const nationResult = this.rollForNation(taskingData.nations, `${taskingName} Nation`);
+    // Table J is USSR-only, so skip nation roll and use USSR directly
+    const nationData = taskingData.nations['1-10'];
     
-    if (nationResult.error) {
+    if (!nationData) {
       return {
         tasking: taskingName,
-        text: `Error: ${nationResult.error}`,
+        text: `Error: No nation data for ${taskingName}`,
         debugText: ''
       };
     }
     
-    // Roll for aircraft using nationData.aircraft
-    const aircraftResult = this.rollForAircraft(nationResult.nationData.aircraft, `${taskingName} Aircraft`);
+    // Roll for aircraft
+    const aircraftResult = this.rollForAircraft(nationData.aircraft, `${taskingName} Aircraft`);
     
     if (aircraftResult.error) {
       return {
         tasking: taskingName,
         text: `Error: ${aircraftResult.error}`,
         debugText: this.buildDebugText({ 
-          nationRollDebug: nationResult.nationRollDebug,
           aircraftRollDebug: aircraftResult.aircraftRollDebug 
         })
       };
@@ -73,18 +72,18 @@ class WPTableJ extends BaseTableProcessor {
     }
     
     // Format result (no ordnance for Table J)
-    const resultText = `${taskingData.flightCount} x {${taskingData.flightSize}} ${finalAircraftType}, ${taskingName}`;
+    let $nationality = 'USSR';
+    const resultText = `${taskingData.flightCount} x {${taskingData.flightSize}} ${$nationality} ${finalAircraftType}, ${taskingName}`;
     
-    // Build debug text
-    let debugText = this.stripBrackets(nationResult.nationRollDebug);
-    debugText += ` | ${this.stripBrackets(aircraftResult.aircraftRollDebug)}`;
+    // Build debug text (no nation roll since it's always USSR)
+    let debugText = this.stripBrackets(aircraftResult.aircraftRollDebug);
     if (subRollDebug) {
       debugText += ` | ${this.stripBrackets(subRollDebug)}`;
     }
     
     return {
       tasking: taskingName,
-      nation: nationResult.nationName,
+      nation: 'USSR',
       text: resultText,
       debugText: debugText
     };
@@ -107,9 +106,8 @@ class WPTableJ extends BaseTableProcessor {
       const taskingData = this.tableData.taskings[taskingName];
       const taskingResult = this.processTasking(taskingName, taskingData);
       
-      // Format: "{Nation}: {count} x {size} {aircraft}, {tasking}"
-      const formattedResult = `${taskingResult.nation}: ${taskingResult.text}`;
-      taskingResults.push(formattedResult);
+      // Format: "{count} x {size} {aircraft}, {tasking}" (no nation prefix since it's always USSR)
+      taskingResults.push(taskingResult.text);
       debugParts.push(`${taskingName}: ${taskingResult.debugText}`);
     }
     

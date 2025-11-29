@@ -80,7 +80,8 @@ const MODULES = {
       },
       // Aircraft data conversion settings
       conversion: {
-        speedFormat: 'separated',  // 'separated' (VH/H/M/L) vs 'simple' (single values)
+        speedFormat: 'separated',  // 'separated' (L/M/H/VH) vs 'simple' (single values)
+        speedOrder: 'LMHVH',       // Red Storm uses L/M/H/VH order (same as Baltic Approaches)
         weaponFormat: 'complex',   // 'complex' (nested objects) vs 'simple' (direct properties)
         useNameMapping: true
       },

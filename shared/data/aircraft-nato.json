@@ -1925,7 +1925,7 @@
                          "radar":  {
                                        "name":  "PS-46/A",
                                        "type":  "LD, TS",
-                                       "range":  "[14]",
+                                       "range":  14,
                                        "modifier":  "12+: -1"
                                    },
                          "speeds":  {

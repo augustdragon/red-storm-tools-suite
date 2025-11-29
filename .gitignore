@@ -1,8 +1,10 @@
 # Dependencies
 node_modules/
+jspm_packages/
 
 # Expo
 .expo/
+.expo-shared/
 dist/
 web-build/
 
@@ -53,10 +55,6 @@ coverage/
 
 # nyc test coverage
 .nyc_output
-
-# Dependency directories
-node_modules/
-jspm_packages/
 
 # Optional npm cache directory
 .npm
@@ -112,3 +110,49 @@ local.properties
 .cxx/
 *.keystore
 !debug.keystore
+
+# ============================================
+# Red Storm Tools Suite - Project Specific
+# ============================================
+
+# Test and debug files
+**/*-test*.html
+**/*debug*.html
+**/comprehensive-test.html
+**/function-availability-test.html
+**/function-diagnostic.html
+**/module-loading-test.html
+d3-debug.html
+d3-full-test.html
+nationality-test.html
+
+# Exception: Keep active BA notes test (remove when complete)
+!modules/baltic-approaches/oob-generator/notes-test.html
+
+# Versioned and backup files
+**/*-backup*.html
+**/*-v[0-9]*.html
+**/*-v[0-9].[0-9]*.html
+
+# Development documentation (not user-facing)
+**/PHASE*.md
+**/DETAILED-*.md
+MULTI-MODULE-IMPLEMENTATION.md
+
+# Development scripts
+*.ps1
+!deploy.ps1
+
+# Orphaned/obsolete files
+production-index.html
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+*.swp
+
+# TODO files
+*.todo
+**/TODO.md
+**/*TODO*.txt

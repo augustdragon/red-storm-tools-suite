@@ -22,18 +22,21 @@ class WPTableJ3 extends BaseTableProcessor {
   /**
    * Process WP Table J3 - Naval Strike Raid
    * 
-   * @param {object} params - Processing parameters
-   * @param {string} params.nationality - Raid nationality (USSR, GDR, POL)
+   * @param {object} params - Processing parameters (no nationality param needed - it's rolled)
    * @returns {object} Result object with naval strike raid information
    */
   process(params) {
-    const { nationality } = params;
+    // Roll for nationality (1-6 USSR, 7-8 GDR, 9-10 POL)
+    const nationalityRoll = makeDebugRoll(10, 'J3 Nationality');
+    const roll = nationalityRoll.roll;
     
-    if (!nationality) {
-      return { 
-        text: 'Error: Nationality is required for Table J3',
-        error: 'Missing nationality parameter'
-      };
+    let nationality;
+    if (roll <= 6) {
+      nationality = 'USSR';
+    } else if (roll <= 8) {
+      nationality = 'GDR';
+    } else {
+      nationality = 'POL';
     }
 
     const nationalityData = this.tableData.nationalities[nationality];
@@ -45,29 +48,30 @@ class WPTableJ3 extends BaseTableProcessor {
     }
 
     const flights = [];
-    const debugRolls = [];
+    const debugRolls = [nationalityRoll.debugEntry];
 
-    // Process each flight type
+    // Process each flight type - roll aircraft ONCE per tasking, all flights get same aircraft
     for (const flightConfig of nationalityData.flights) {
       const { type, flightSize, flightCount, aircraft } = flightConfig;
 
-      // Generate flights for this type
-      for (let i = 1; i <= flightCount; i++) {
-        // Roll for aircraft
-        const aircraftResult = this.rollForAircraft(aircraft, `${type} Flight ${i} Aircraft`);
-        if (aircraftResult.error) {
-          return {
-            text: `Error: ${aircraftResult.error}`,
-            error: aircraftResult.error
-          };
-        }
+      // Roll for aircraft TYPE once for this tasking (not per flight)
+      const aircraftResult = this.rollForAircraft(aircraft, `${type} Aircraft`);
+      if (aircraftResult.error) {
+        return {
+          text: `Error: ${aircraftResult.error}`,
+          error: aircraftResult.error
+        };
+      }
+      debugRolls.push(aircraftResult.aircraftRollDebug);
 
-        // Roll for ordnance if this is SEAD or Naval Strike
+      // Create flight objects - one per line with same aircraft type
+      for (let i = 0; i < flightCount; i++) {
+        // Roll for ordnance per flight if this is SEAD or Naval Strike
         let ordnance = 'Air-to-Air';
         if (type === 'SEAD' || type === 'Naval Strike') {
           const ordnanceRolls = this.tableData.ordnanceRolls[type];
           if (ordnanceRolls) {
-            const ordnanceResult = this.rollForOrdnance(ordnanceRolls, `${type} Flight ${i} Ordnance`);
+            const ordnanceResult = this.rollForOrdnance(ordnanceRolls, `${type} Flight ${i + 1} Ordnance`);
             if (ordnanceResult.error) {
               return {
                 text: `Error: ${ordnanceResult.error}`,
@@ -91,25 +95,16 @@ class WPTableJ3 extends BaseTableProcessor {
           tasking: type,
           ordnance: ordnance
         });
-
-        debugRolls.push(aircraftResult.aircraftRollDebug);
       }
     }
 
-    // Format result text
+    // Format result text like D3 - one flight per line
     let resultText = `${nationality} Naval Strike Raid<br>`;
-    let currentTasking = '';
     for (const flight of flights) {
-      if (flight.tasking !== currentTasking) {
-        currentTasking = flight.tasking;
-        const taskingFlights = flights.filter(f => f.tasking === currentTasking);
-        resultText += `<br>${taskingFlights.length} x {${flight.flightSize}} [${currentTasking}], ${currentTasking}<br>`;
-      }
-      if (flight.ordnance && flight.ordnance !== 'Air-to-Air' && flight.ordnance !== 'None') {
-        resultText += `${flight.nationality}: ${flight.aircraft} (${flight.ordnance})<br>`;
-      } else {
-        resultText += `${flight.nationality}: ${flight.aircraft}<br>`;
-      }
+      const ordnanceDisplay = flight.ordnance && flight.ordnance !== 'Air-to-Air' && flight.ordnance !== 'None' && flight.ordnance !== 'Air-to-Air Only'
+        ? ` (${flight.ordnance})`
+        : '';
+      resultText += `1 x {${flight.flightSize}} ${nationality} ${flight.aircraft}, ${flight.tasking}${ordnanceDisplay}<br>`;
     }
 
     return {

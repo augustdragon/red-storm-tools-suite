@@ -58,50 +58,56 @@ class WPTableI2 extends BaseTableProcessor {
 
       const { flightSize, flightCount, aircraft } = taskingData;
 
-      // Generate flights for this tasking
-      for (let i = 1; i <= flightCount; i++) {
-        // Roll for aircraft
-        const aircraftResult = this.rollForAircraft(aircraft, `${taskingName} Flight ${i} Aircraft`);
-        if (aircraftResult.error) {
-          return {
-            text: `Error: ${aircraftResult.error}`,
-            error: aircraftResult.error
-          };
-        }
+      // Roll for aircraft ONCE per tasking (all flights use same aircraft type)
+      const aircraftResult = this.rollForAircraft(aircraft, `${taskingName} Aircraft`);
+      if (aircraftResult.error) {
+        return {
+          text: `Error: ${aircraftResult.error}`,
+          error: aircraftResult.error
+        };
+      }
+      
+      const aircraftType = aircraftResult.aircraftType;
+      debugRolls.push(aircraftResult.aircraftRollDebug);
 
+      // Generate flights for this tasking (all use same aircraft type)
+      for (let i = 1; i <= flightCount; i++) {
         // Roll for ordnance if this is SEAD or Bombing
         let ordnance = 'Air-to-Air';
         if (taskingName === 'SEAD' || taskingName === 'Bombing') {
           const ordnanceRolls = nationalityData.ordnanceRolls[taskingName];
           if (ordnanceRolls) {
-            const ordnanceResult = this.rollForOrdnance(ordnanceRolls, `${taskingName} Flight ${i} Ordnance`);
-            if (ordnanceResult.error) {
-              return {
-                text: `Error: ${ordnanceResult.error}`,
-                error: ordnanceResult.error
-              };
+            // Check for Note E restriction (GDR/POL MiG-21 variants can only carry basic ordnance)
+            if ((nationality === 'GDR' || nationality === 'POL') && aircraftType.includes('MiG-21')) {
+              ordnance = "Bombs/CBU/Rockets";
+            } else {
+              const ordnanceResult = this.rollForOrdnance(ordnanceRolls, `${taskingName} Flight ${i} Ordnance`);
+              if (ordnanceResult.error) {
+                return {
+                  text: `Error: ${ordnanceResult.error}`,
+                  error: ordnanceResult.error
+                };
+              }
+              ordnance = ordnanceResult.ordnanceType;
+              debugRolls.push(ordnanceResult.ordnanceRollDebug);
             }
-            ordnance = ordnanceResult.ordnanceType;
-            debugRolls.push(ordnanceResult.ordnanceRollDebug);
           }
         }
 
         flights.push({
           faction: 'WP',
           nationality: nationality,
-          aircraft: aircraftResult.aircraftType,
+          aircraft: aircraftType,
           flightSize: flightSize,
           tasking: taskingName,
           ordnance: ordnance
         });
-
-        debugRolls.push(aircraftResult.aircraftRollDebug);
       }
     }
 
     // Format result text to match RS Table I style
     const resultLines = [];
-    resultLines.push(`${nationality} Bombing Raid`);
+    //resultLines.push(`${nationality} Bombing Raid`);
     
     // Build tasking results for flight sheet compatibility
     const taskingResults = [];
@@ -115,13 +121,13 @@ class WPTableI2 extends BaseTableProcessor {
       if (taskingName === 'Close Escort') {
         // Close Escort: Grouped format like RS for display
         const aircraftList = taskingFlights.map(f => f.aircraft).join(', ');
-        resultLines.push(`${nationality}: ${taskingFlights.length} x {${flightSize}} ${aircraftList}, ${taskingName}`);
+        resultLines.push(`1 x {${flightSize}} ${nationality} ${aircraftList}, ${taskingName}`);
         
         // Add individual flights to taskings array for flight sheet generation
         for (const flight of taskingFlights) {
           taskingResults.push({
             tasking: taskingName,
-            text: `1 x {${flightSize}} ${nationality}, ${taskingName}`,
+            text: `1 x {${flightSize}} ${nationality} ${flight.aircraft}, ${taskingName}`,
             nationality: nationality,
             aircraftType: flight.aircraft,
             flightSize: flightSize,
@@ -129,20 +135,18 @@ class WPTableI2 extends BaseTableProcessor {
           });
         }
       } else {
-        // SEAD and Bombing: Individual flights with ordnance like RS
+        // SEAD and Bombing: Individual flights with ordnance, nationality prefix like Table C
         for (const flight of taskingFlights) {
-          if (flight.ordnance && flight.ordnance !== 'Air-to-Air') {
-            resultLines.push(`${flight.nationality}: 1 x {${flight.flightSize}} ${flight.aircraft}, ${taskingName} (${flight.ordnance})`);
-          } else {
-            resultLines.push(`${flight.nationality}: 1 x {${flight.flightSize}} ${flight.aircraft}, ${taskingName}`);
-          }
+          const flightText = flight.ordnance && flight.ordnance !== 'Air-to-Air' 
+            ? `1 x {${flight.flightSize}} ${flight.nationality} ${flight.aircraft}, ${taskingName} (${flight.ordnance})`
+            : `1 x {${flight.flightSize}} ${flight.nationality} ${flight.aircraft}, ${taskingName}`;
+          
+          resultLines.push(flightText);
           
           // Add each individual flight to taskings array
           taskingResults.push({
             tasking: taskingName,
-            text: flight.ordnance && flight.ordnance !== 'Air-to-Air' 
-              ? `1 x {${flight.flightSize}} ${flight.nationality}, ${taskingName} (${flight.ordnance})`
-              : `1 x {${flight.flightSize}} ${flight.nationality}, ${taskingName}`,
+            text: flightText,
             nationality: flight.nationality,
             aircraftType: flight.aircraft,
             flightSize: flight.flightSize,
