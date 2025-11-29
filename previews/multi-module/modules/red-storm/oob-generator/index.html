@@ -1,0 +1,3109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Red Storm Order of Battle Generator</title>
+  <!-- Updated: Table A implementation with nested roll system -->
+  <link rel="stylesheet" href="../../../shared/css/red-storm.css">
+  <link rel="stylesheet" href="../../../shared/oob-generator/css/oob-generator.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="title">Red Storm</div>
+      <div class="subtitle">Order of Battle Generator</div>
+      <!-- Version info hidden for production - uncomment to show: v2024.10.08-debug-26 -->
+    </div>
+
+    <div class="oob-back-nav oob-back-nav--rs">
+      <a href="../../../index.html" class="oob-back-link">← Back to Module Selection</a>
+      <a href="../index.html" class="oob-back-link">↺ Back to Red Storm Hub</a>
+    </div>
+
+    <!-- Debug Toggle - Hidden for production -->
+    <div class="section" id="debugToggle" style="display: none; text-align: center; margin-bottom: 10px;">
+      <button class="action-button" id="debugModeButton" onclick="toggleDebugMode()" style="background-color: #666; font-size: 12px; padding: 5px 10px;">
+        Debug Mode: OFF
+      </button>
+      <div id="debugStatus" style="font-size: 11px; color: #888; margin-top: 5px;">
+        Debug mode shows all die rolls for testing
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Scenario Date Toggle -->
+      <div class="section" id="scenarioToggle">
+        <div class="section-title">Scenario Date</div>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button class="scenario-date-button" id="preDate" onclick="setScenarioDate('pre')">
+            Pre-6/1/87
+          </button>
+          <button class="scenario-date-button" id="postDate" onclick="setScenarioDate('post')">
+            6/1/87 or later
+          </button>
+        </div>
+        <div class="scenario-status" id="scenarioStatus" style="margin-top: 10px; text-align: center; font-size: 14px; color: #b4c4b4;">
+          Select scenario date to enable table generation
+        </div>
+      </div>
+
+      <!-- Table Selection Section -->
+            <!-- Table Selection Section -->
+      <div class="section" id="tableSelection" style="opacity: 0.5; pointer-events: none;">
+        <div class="section-title">Select Order of Battle Table</div>
+        
+        <!-- Invisible width placeholder to maintain consistent layout -->
+        <div style="visibility: hidden; height: 0; overflow: hidden; margin-bottom: 0;">
+          <div style="background-color: #4a5a4a; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-weight: bold; margin-bottom: 5px;">NATO Table B - CAP Flight [4ATAF, 6/1/87+]</div>
+              <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">UK: 1 x {2} Tornado F2A, CAP (aircraft: 10)</div>
+            </div>
+            <button style="padding: 6px 12px; margin-left: 10px; flex-shrink: 0;">Remove</button>
+          </div>
+        </div>
+        
+        <div class="faction-section">
+          <div class="faction-header nato-header">NATO Tables</div>
+          <div class="table-grid">
+            <button class="table-button nato-table" onclick="selectTable('A', 'NATO')">A</button>
+            <button class="table-button nato-table" onclick="selectTable('B', 'NATO')">B</button>
+            <button class="table-button nato-table" onclick="selectTable('C', 'NATO')">C</button>
+            <button class="table-button nato-table" onclick="selectTable('D', 'NATO')">D</button>
+            <button class="table-button nato-table" onclick="selectTable('E', 'NATO')">E</button>
+            <button class="table-button nato-table" onclick="selectTable('F', 'NATO')">F</button>
+          </div>
+        </div>
+
+        <div class="faction-section">
+          <div class="faction-header warsaw-header">WP Tables</div>
+          <div class="table-grid">
+            <button class="table-button warsaw-table" onclick="selectTable('G', 'WP')">G</button>
+            <button class="table-button warsaw-table" onclick="selectTable('H', 'WP')">H</button>
+            <button class="table-button warsaw-table" onclick="selectTable('I', 'WP')">I</button>
+            <button class="table-button warsaw-table" onclick="selectTable('J', 'WP')">J</button>
+            <button class="table-button warsaw-table" onclick="selectTable('K', 'WP')">K</button>
+            <button class="table-button warsaw-table" onclick="selectTable('L', 'WP')">L</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Roll Input Section -->
+      <div class="roll-input-section" id="rollInputSection">
+        <div class="selected-table" id="selectedTableDisplay"></div>
+        
+        <div class="input-group">
+          <label for="rollCountBasic">Number of rolls:</label>
+          <input type="number" id="rollCountBasic" min="1" max="20" value="1" />
+        </div>
+        
+        <div class="action-buttons">
+          <button class="action-button roll-button" onclick="makeRolls()">Make Rolls</button>
+          <button class="action-button" style="background-color: #6d5d47;" onclick="viewTable()">View Table</button>
+          <button class="action-button cancel-button" onclick="cancelSelection()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Variable Selection Section -->
+      <div class="roll-input-section" id="variableSelectionSection">
+        <div class="selected-table" id="variableTableDisplay"></div>
+        
+        <!-- ATAF Zone Selection -->
+        <div class="input-group" id="atafSelection" style="display: none;">
+          <label>ATAF Zone:</label>
+          <select id="atafZone" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
+            <option value="2ATAF">2ATAF</option>
+            <option value="4ATAF">4ATAF</option>
+          </select>
+        </div>
+        
+        <!-- Nationality Selection for Combat Rescue -->
+        <div class="input-group" id="nationalitySelection" style="display: none;">
+          <label>Nationality of downed crew:</label>
+          <select id="crewNationality" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
+            <option value="US">US</option>
+            <option value="UK">UK/BE/NE</option>
+            <option value="FRG">FRG</option>
+            <option value="CAN">CAN (uses US rescue)</option>
+            <option value="USSR">USSR</option>
+            <option value="GDR">GDR</option>
+          </select>
+        </div>
+        
+        <!-- Mission Type Selection for Special Missions -->
+        <div class="input-group" id="missionTypeSelection" style="display: none;">
+          <label>Mission Type:</label>
+          <select id="missionType" onchange="handleMissionTypeChange()" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
+            <option value="Fast FAC">Fast FAC</option>
+            <option value="Standoff Jamming">Standoff Jamming</option>
+            <option value="Tactical Recon">Tactical Recon</option>
+          </select>
+        </div>
+        
+        <!-- Nation Selection for WP Table L Tactical Recon -->
+        <div class="input-group" id="tacticalReconNationSelection" style="display: none;">
+          <label>Nation:</label>
+          <select id="tacticalReconNation" style="padding: 8px 12px; border: 1px solid #6a7a6a; border-radius: 4px; background-color: #5a6a5a; color: #f4f4f4; font-size: 16px;">
+            <option value="USSR">USSR</option>
+            <option value="GDR">GDR</option>
+          </select>
+        </div>
+        
+        <!-- Scenario Date Context -->
+        <div class="input-group" id="dateContext" style="display: none;">
+          <div style="background-color: #2a3a2a; padding: 8px 12px; border-radius: 4px; font-size: 14px; color: #b4c4b4; text-align: center;">
+            <span id="dateContextMessage">Scenario Date Context: <span id="currentScenarioDate">Not set</span></span>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="rollCountVariable">Number of rolls:</label>
+          <input type="number" id="rollCountVariable" min="1" max="20" value="1" />
+        </div>
+        
+        <div class="action-buttons">
+          <button class="action-button roll-button" onclick="makeRollsWithVariables()">Make Rolls</button>
+          <button class="action-button" style="background-color: #6d5d47;" onclick="viewTableWithVariables()">View Table</button>
+          <button class="action-button cancel-button" onclick="cancelVariableSelection()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div class="section results-section" id="resultsSection" style="display: none;">
+        <div class="results-header">
+          <div class="section-title">Generated Results</div>
+          <div style="display: flex; gap: 10px;">
+            <button class="action-button" onclick="generatePrintableSheet()" style="background-color: #5a6a5a;">📄 Print Flight Sheet</button>
+            <button class="action-button clear-results" onclick="clearAllResults()">Clear All</button>
+          </div>
+        </div>
+        
+        <div class="results-list" id="resultsList">
+          <div class="empty-results">No results generated yet</div>
+        </div>
+      </div>
+
+      <!-- Table View Overlay -->
+      <div class="table-view-overlay" id="tableViewOverlay" style="display: none;" onclick="closeModalOnOverlayClick(event)">
+        <div class="table-view-modal" onclick="event.stopPropagation()">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 15px;">
+            <div class="section-title" id="tableViewTitle" style="margin: 0; flex: 1; min-width: 0;"></div>
+            <button class="action-button cancel-button" onclick="hideTableView()" style="padding: 5px 10px; font-size: 12px; flex-shrink: 0;">✕ Close</button>
+          </div>
+          <div id="tableViewContent"></div>
+          <div style="text-align: center; margin-top: 20px;">
+            <button class="action-button cancel-button" onclick="hideTableView()">Close Table View</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    console.log('=== MAIN SCRIPT STARTED ===');
+    
+    // Application state
+    // Global variables moved to modules:
+    // selectedTable, scenarioDate, results, hasGeneratedResults -> state-manager.js  
+    // debugMode -> dice-roller.js
+    // selectedFaction -> state-manager.js
+
+    // Functions moved to modules:
+    // toggleDebugMode -> dice-roller.js
+    // makeDebugRoll -> dice-roller.js  
+    // setScenarioDate -> state-manager.js
+    // selectTable -> state-manager.js
+    // All UI functions -> ui-controller.js
+    // All utility functions -> utils.js
+
+    // OOB Tables - Phase 3: Hybrid JSON + Embedded Data
+    // Tables A, B, C, D, E, F, G, H, I, L are now loaded from JSON files
+    // Tables J, K remain embedded until extracted in future phases
+    
+    const oobTables = {
+      // Temporary embedded fallback while debugging JSON loading
+      'A': {
+        name: "NATO Table A - QRA Flight",
+        faction: "NATO",
+        description: "NATO QRA Flight - Quick Reaction Alert flights",
+        _source: 'embedded-fallback'
+      },
+      'B': {
+        name: "NATO Table B - IAS Strikes",
+        faction: "NATO", 
+        description: "NATO IAS (Interdiction/Attack Squadrons) Strikes",
+        _source: 'embedded-fallback'
+      },
+      'C': {
+        name: "NATO Table C - Tactical Fighter Squadrons",
+        faction: "NATO",
+        description: "NATO Tactical Fighter Squadrons",
+        _source: 'embedded-fallback'
+      },
+      'D': {
+        name: "NATO Table D - Marine Aviation",
+        faction: "NATO",
+        description: "NATO Marine Aviation",
+        _source: 'embedded-fallback'
+      },
+      'E': {
+        name: "NATO Table E - Carrier Air Wing",
+        faction: "NATO",
+        description: "NATO Carrier Air Wing",
+        _source: 'embedded-fallback'
+      },
+      'F': {
+        name: "NATO Table F - AFCENT",
+        faction: "NATO",
+        description: "NATO AFCENT",
+        _source: 'embedded-fallback'
+      },
+      'G': {
+        name: "WP Table G - Air Defenses",
+        faction: "WP",
+        description: "Warsaw Pact Air Defense",
+        _source: 'embedded-fallback'
+      },
+      'H': {
+        name: "WP Table H - Fighter Aviation",
+        faction: "WP",
+        description: "Warsaw Pact Fighter Aviation",
+        _source: 'embedded-fallback'
+      },
+      'I': {
+        name: "WP Table I - Attack Aviation",
+        faction: "WP", 
+        description: "Warsaw Pact Attack Aviation",
+        _source: 'embedded-fallback'
+      },
+      'L': {
+        name: "WP Table L - Tactical Recon",
+        faction: "WP",
+        description: "Warsaw Pact Tactical Reconnaissance",
+        _source: 'embedded-fallback'
+      }
+    };
+
+    // OLD functions removed - functionality now in modules
+
+    function initializeParameterSelections() {
+      // Hide all parameter selection sections initially
+      const atafSelection = document.getElementById('atafSelection');
+      const nationalitySelection = document.getElementById('nationalitySelection');
+      const missionTypeSelection = document.getElementById('missionTypeSelection');
+      const tacticalReconNationSelection = document.getElementById('tacticalReconNationSelection');
+      
+      // Safely hide all dropdowns
+      if (atafSelection) atafSelection.style.display = 'none';
+      if (nationalitySelection) nationalitySelection.style.display = 'none';
+      if (missionTypeSelection) missionTypeSelection.style.display = 'none';
+      if (tacticalReconNationSelection) tacticalReconNationSelection.style.display = 'none';
+      
+      // Reset all dropdown values to defaults
+      const atafZone = document.getElementById('atafZone');
+      const crewNationality = document.getElementById('crewNationality');
+      const missionType = document.getElementById('missionType');
+      const tacticalReconNation = document.getElementById('tacticalReconNation');
+      
+      if (atafZone) atafZone.selectedIndex = 0;
+      if (crewNationality) crewNationality.selectedIndex = 0;
+      if (missionType) missionType.selectedIndex = 0;
+      if (tacticalReconNation) tacticalReconNation.selectedIndex = 0;
+      
+      // Reset all labels to their default state
+      const atafLabel = document.querySelector('label[for="atafZone"]');
+      if (atafLabel) atafLabel.textContent = 'ATAF Zone:';
+      
+      const nationalityLabel = document.querySelector('#nationalitySelection label');
+      if (nationalityLabel) nationalityLabel.textContent = 'Nationality of downed crew:';
+      
+      const missionTypeLabel = document.querySelector('#missionTypeSelection label');
+      if (missionTypeLabel) missionTypeLabel.textContent = 'Mission Type:';
+      
+      // Clear any previous active sections
+      document.getElementById('rollInputSection').classList.remove('active');
+      document.getElementById('variableSelectionSection').classList.remove('active');
+    }
+
+    /*
+    // REMOVED: OLD functions that conflict with state-manager.js
+    // These functions are replaced by the modular versions in state-manager.js
+    */
+
+    // Actual function definitions start here
+
+    window.viewTableWithVariables = function viewTableWithVariables() {
+      const currentTable = getSelectedTable();
+      if (!currentTable) return;
+      
+      const dataSource = getTableDataSource();
+      const table = dataSource[currentTable];
+      
+      if (!table) {
+        console.error(`Table ${currentTable} not found`);
+        alert(`Table ${currentTable} data not available`);
+        return;
+      }
+      
+      let atafZone = null;
+      
+      if (table.hasATAF) {
+        const atafElement = document.getElementById('atafZone');
+        atafZone = atafElement ? atafElement.value : null;
+      } else if (table.hasNationality) {
+        const nationalityElement = document.getElementById('crewNationality');
+        atafZone = nationalityElement ? nationalityElement.value : null;
+      } else if (table.hasMissionType) {
+        const missionElement = document.getElementById('missionType');
+        atafZone = missionElement ? missionElement.value : null;
+      }
+      
+      // Use global scenario date
+      const currentScenarioDate = getScenarioDate();
+      
+      viewTableStructure(currentTable, atafZone, currentScenarioDate);
+    }
+    console.log('viewTableWithVariables defined:', typeof window.viewTableWithVariables);
+
+    /**
+     * Main table processing function - uses Phase 5 processor architecture
+     * 
+     * This function now acts as a thin wrapper around the TableProcessorFactory,
+     * which routes each table to its dedicated processor class.
+     * 
+     * @param {string} tableId - Table identifier (A-L)
+     * @param {string} atafZone - ATAF zone, nationality, or mission type (depending on table)
+     * @param {string} scenarioDate - 'pre' or 'post' (for date-dependent tables)
+     * @returns {object} Processing result with text, rolls, and debug info
+     */
+    function getTableResultWithVariables(tableId, atafZone, scenarioDate) {
+      console.log(`getTableResultWithVariables called with tableId: ${tableId}, atafZone: ${atafZone}, scenarioDate: ${scenarioDate}`);
+      
+      // Get processor factory instance
+      const factory = getTableProcessorFactory();
+      
+      // Build parameters object based on table type
+      const params = {};
+      
+      // Tables A, B, C use atafZone and scenarioDate
+      if (['A', 'B', 'C'].includes(tableId)) {
+        params.atafZone = atafZone;
+        params.scenarioDate = scenarioDate;
+      }
+      // Tables E and K use nationality
+      else if (['E', 'K'].includes(tableId)) {
+        params.nationality = atafZone; // atafZone holds nationality for these tables
+      }
+      // Tables F and L use mission type
+      else if (['F', 'L'].includes(tableId)) {
+        // Handle combined mission type + nation for Table L Tactical Recon
+        if (atafZone && atafZone.includes('|')) {
+          const parts = atafZone.split('|');
+          params.missionType = parts[0];
+          params.tacticalReconNation = parts[1];
+        } else {
+          params.missionType = atafZone; // atafZone holds mission type for these tables
+        }
+      }
+      // Tables D, G, H, I, J don't need parameters
+      
+      // Process table using factory
+      const result = factory.processTable(tableId, params);
+      
+      console.log(`Processing result for ${tableId}:`, result);
+      
+      return result;
+    }
+    
+    // parseRange() function moved to utils.js
+
+    // updateResultsDisplay() function moved to ui-controller.js
+    // removeResult() function moved to state-manager.js
+
+    function clearAllResults() {
+      if (results.length === 0) return;
+      
+      if (confirm('Are you sure you want to clear all results?')) {
+        results = [];
+        hasGeneratedResults = false; // Mark that no results exist
+        updateDateButtonStates(); // Unlock date selection
+        updateResultsDisplay();
+      }
+    }
+
+    function viewTableStructure(tableId, atafZone, scenarioDate) {
+      const dataSource = getTableDataSource();
+      const table = dataSource[tableId];
+      
+      if (!table) {
+        alert(`Table ${tableId} not found`);
+        return;
+      }
+      
+      const titleElement = document.getElementById('tableViewTitle');
+      const contentElement = document.getElementById('tableViewContent');
+      const modalElement = document.querySelector('.table-view-modal');
+      
+      // Determine faction and apply appropriate styling
+      const isWarsaw = ['G', 'H', 'I', 'J', 'K', 'L'].includes(tableId);
+      modalElement.className = 'table-view-modal'; // Reset classes
+      
+      if (isWarsaw) {
+        modalElement.classList.add('wp-table-view');
+      } else {
+        modalElement.classList.add('nato-table-view');
+      }
+      
+      let titleText = table.name;
+      // Only add date/zone info for date-dependent tables (A, B, C)
+      if ((tableId === 'A' || tableId === 'B' || tableId === 'C') && atafZone && scenarioDate) {
+        const dateText = scenarioDate === 'pre' ? 'Pre-6/1/87' : '6/1/87 or later';
+        titleText += ` [${atafZone}, ${dateText}]`;
+      } else if ((tableId === 'A' || tableId === 'B') && atafZone) {
+        // For tables A/B, show zone even without date
+        titleText += ` [${atafZone}]`;
+      } else if (tableId === 'E' && atafZone) {
+        // For table E, show nationality
+        titleText += ` [${atafZone}]`;
+      } else if (tableId === 'F' && atafZone) {
+        // For table F, show mission type
+        titleText += ` [${atafZone}]`;
+      } else if (tableId === 'K' && atafZone) {
+        // For table K, show nationality
+        titleText += ` [${atafZone}]`;
+      } else if (tableId === 'L' && atafZone) {
+        // For table L, show mission type
+        titleText += ` [${atafZone}]`;
+      }
+      titleElement.textContent = titleText;
+      
+      if (tableId === 'A') {
+        const variant = table.variants[atafZone][scenarioDate];
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        // Show nation roll ranges and aircraft for this variant (sorted by roll number)
+        const sortedNations = Object.entries(variant.nations).sort((a, b) => {
+          const aMin = parseRange(a[0])[0];
+          const bMin = parseRange(b[0])[0];
+          return aMin - bMin;
+        });
+        
+        for (const [nationRange, nationData] of sortedNations) {
+          tableHTML += `<div class="nation-section">`;
+          tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+          tableHTML += `<div class="aircraft-list">`;
+          
+          // Sort aircraft ranges numerically
+          const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+            const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+            const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+            return aStart - bStart;
+          });
+          
+          for (const [aircraftRange, aircraftType] of sortedAircraft) {
+            // Use aircraft names exactly as defined in source data
+            const displayType = aircraftType;
+            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${displayType}</div>`;
+          }
+          
+          tableHTML += `</div></div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'B') {
+        // Check if required parameters are available
+        if (!atafZone || !scenarioDate) {
+          contentElement.innerHTML = `<div class="table-view-content"><div class="table-description">Error: ATAF Zone and Scenario Date are required to view Table B structure.</div></div>`;
+          titleElement.textContent = table.name;
+          document.querySelector('.table-view-modal').style.display = 'block';
+          return;
+        }
+        
+        if (!table.zones || !table.zones[atafZone] || !table.zones[atafZone][scenarioDate]) {
+          contentElement.innerHTML = `<div class="table-view-content"><div class="table-description">Error: Data not found for zone ${atafZone} and date ${scenarioDate}.</div></div>`;
+          titleElement.textContent = table.name;
+          document.querySelector('.table-view-modal').style.display = 'block';
+          return;
+        }
+        
+        const zoneData = table.zones[atafZone][scenarioDate];
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        // Show nation roll ranges and aircraft for this zone/date combination (sorted by roll number)
+        const sortedNations = Object.entries(zoneData.nations).sort((a, b) => {
+          const aMin = parseInt(a[0].split('-')[0]);
+          const bMin = parseInt(b[0].split('-')[0]);
+          return aMin - bMin;
+        });
+        
+        for (const [nationRange, nationData] of sortedNations) {
+          tableHTML += `<div class="nation-section">`;
+          tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+          tableHTML += `<div class="aircraft-list">`;
+          
+          // Sort aircraft ranges numerically
+          const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+            const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+            const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+            return aStart - bStart;
+          });
+          
+          for (const [aircraftRange, aircraftType] of sortedAircraft) {
+            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+          }
+          
+          tableHTML += `</div></div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'C') {
+        // Table C: NATO Bombing Raid - show all three taskings
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        const taskings = ['CAP', 'SEAD', 'Bombing'];
+        const dateVariant = scenarioDate;
+        
+        for (const tasking of taskings) {
+          const taskingData = table.taskings[tasking][dateVariant];
+          
+          tableHTML += `<div class="tasking-section">`;
+          tableHTML += `<div class="tasking-header">${tasking} (4 x {${tasking === 'Bombing' ? '4' : '2'}})</div>`;
+          
+          // Sort nations by roll number
+          const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
+            const aMin = parseInt(a[0].split('-')[0]);
+            const bMin = parseInt(b[0].split('-')[0]);
+            return aMin - bMin;
+          });
+          
+          for (const [nationRange, nationData] of sortedNations) {
+            tableHTML += `<div class="nation-section">`;
+            tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+            tableHTML += `<div class="aircraft-list">`;
+            
+            // Sort aircraft ranges numerically
+            const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            // Array to collect sub-roll notes for this nation
+            const nationSubRollNotes = [];
+            
+            for (const [aircraftRange, aircraftType] of sortedAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              
+              // Check for superscripted aircraft and add sub-roll explanations
+              if (aircraftType.includes('F-4²')) {
+                nationSubRollNotes.push('² Roll again: 1-5 F-4D; 6-10 F-4E');
+              }
+            }
+            
+            tableHTML += `</div>`;
+            
+            // Add sub-roll notes at the bottom of this nation section
+            if (nationSubRollNotes.length > 0) {
+              for (const note of nationSubRollNotes) {
+                tableHTML += `<div class="sub-roll-note" style="font-size: 11px; color: #666; margin-top: 8px; padding-left: 12px; font-style: italic;">${note}</div>`;
+              }
+            }
+            
+            tableHTML += `</div>`;
+          }
+          
+          tableHTML += `</div>`;
+        }
+        
+        // Add ordnance note at bottom if present
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">SEAD flights may always carry ARM as well, if capable.</div>`;
+        tableHTML += `</div>`;
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'D') {
+        // Table D: NATO Deep Strike Raid - show all five taskings (no date variants)
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        const taskings = ['Escort Jamming', 'CAP', 'SEAD', 'Bombing', 'Recon'];
+        
+        for (const tasking of taskings) {
+          const taskingData = table.taskings[tasking];
+          
+          tableHTML += `<div class="tasking-section">`;
+          const flightInfo = taskingData.flightCount + ' x {' + taskingData.flightSize + '}';
+          tableHTML += `<div class="tasking-header">${tasking} (${flightInfo})</div>`;
+          
+          // Sort nations by roll number
+          const sortedNations = Object.entries(taskingData.nations).sort((a, b) => {
+            const aMin = parseInt(a[0].split('-')[0]);
+            const bMin = parseInt(b[0].split('-')[0]);
+            return aMin - bMin;
+          });
+          
+          for (const [nationRange, nationData] of sortedNations) {
+            tableHTML += `<div class="nation-section">`;
+            tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+            tableHTML += `<div class="aircraft-list">`;
+            
+            // Sort aircraft ranges numerically
+            const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            for (const [aircraftRange, aircraftType] of sortedAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            }
+            
+            tableHTML += `</div></div>`;
+          }
+          
+          tableHTML += `</div>`;
+        }
+        
+        // Add ordnance note at bottom
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">All SEAD or Bombing flights may carry any air-to-ground ordnance allowed for that aircraft type.</div>`;
+        tableHTML += `<div style="margin-left: 15px; margin-top: 4px;">Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.</div>`;
+        tableHTML += `</div>`;
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'E') {
+        // Table E: NATO Combat Rescue - show nationality-based rescue raids
+        let selectedNationality = atafZone;
+        
+        // Handle nationality mapping
+        if (selectedNationality === 'UK' || selectedNationality === 'BE' || selectedNationality === 'NE') {
+          selectedNationality = 'UK';
+        } else if (selectedNationality === 'CAN') {
+          selectedNationality = 'US';
+        }
+        
+        const nationalityData = table.nationalities[selectedNationality];
+        
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        if (nationalityData) {
+          for (const flightData of nationalityData.flights) {
+            tableHTML += `<div class="tasking-section">`;
+            const flightInfo = flightData.flightCount + ' x {' + flightData.flightSize + '}';
+            tableHTML += `<div class="tasking-header">${flightData.type} (${flightInfo})</div>`;
+            
+            tableHTML += `<div class="aircraft-list">`;
+            
+            // Sort aircraft ranges numerically
+            const sortedAircraft = Object.entries(flightData.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            for (const [aircraftRange, aircraftType] of sortedAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            }
+            
+            tableHTML += `</div></div>`;
+          }
+        } else {
+          tableHTML += `<div class="error">Unknown nationality: ${atafZone}</div>`;
+        }
+        
+        // Add ordnance note at bottom
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">All flights tasked with Rescue Support may carry any ordnance allowed for the specific aircraft type.</div>`;
+        tableHTML += `</div>`;
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'F') {
+        // Table F: NATO Special Missions - show mission-type based structure
+        const selectedMissionType = atafZone; // Mission type passed via atafZone parameter
+        
+        const missionData = table.missionTypes[selectedMissionType];
+        
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        if (missionData) {
+          //tableHTML += `<div class="mission-info">${missionData.flightCount} x {${missionData.flightSize}} [${missionData.name}], ${missionData.description}</div>`;
+          
+          // Sort nations by roll number
+          const sortedNations = Object.entries(missionData.nations).sort((a, b) => {
+            const aMin = parseInt(a[0].split('-')[0]);
+            const bMin = parseInt(b[0].split('-')[0]);
+            return aMin - bMin;
+          });
+          
+          for (const [nationRange, nationData] of sortedNations) {
+            tableHTML += `<div class="nation-section">`;
+            tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+            tableHTML += `<div class="aircraft-list">`;
+            
+            // Sort aircraft ranges numerically
+            const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            for (const [aircraftRange, aircraftType] of sortedAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            }
+            
+            tableHTML += `</div></div>`;
+          }
+        } else {
+          tableHTML += `<div class="error">Unknown mission type: ${atafZone}</div>`;
+        }
+        
+        // Add ordnance note at bottom if present
+        if (missionData && missionData.ordnanceNote) {
+          tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+          tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+          tableHTML += `<div style="margin-left: 15px;">${missionData.ordnanceNote}</div>`;
+          tableHTML += `</div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'G' || tableId === 'H') {
+        // Warsaw Pact Tables G & H - simple nation/aircraft structure
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        // Show nation roll ranges and aircraft (sorted by roll number)
+        const sortedNations = Object.entries(table.nations).sort((a, b) => {
+          const aMin = parseRange(a[0])[0];
+          const bMin = parseRange(b[0])[0];
+          return aMin - bMin;
+        });
+        
+        for (const [nationRange, nationData] of sortedNations) {
+          tableHTML += `<div class="nation-section">`;
+          tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+          tableHTML += `<div class="aircraft-list">`;
+          
+          // Sort aircraft ranges numerically
+          const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+            const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+            const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+            return aStart - bStart;
+          });
+          
+          // Array to collect sub-roll notes for this nation
+          const nationSubRollNotes = [];
+          
+          for (const [aircraftRange, aircraftType] of sortedAircraft) {
+            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            
+            // Check for superscripted aircraft and add sub-roll explanations
+            if (aircraftType.includes('MiG-25PD/Su-27S¹')) {
+              nationSubRollNotes.push('¹ Roll again: 1-5 MiG-25PD; 6-10 Su-27S');
+            }
+          }
+          
+          tableHTML += `</div>`;
+          
+          // Add sub-roll notes at the bottom of this nation section
+          if (nationSubRollNotes.length > 0) {
+            for (const note of nationSubRollNotes) {
+              tableHTML += `<div class="sub-roll-note" style="font-size: 11px; color: #666; margin-top: 8px; padding-left: 12px; font-style: italic;">${note}</div>`;
+            }
+          }
+          
+          tableHTML += `</div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'I') {
+        // Warsaw Pact Table I - nationality-based structure
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        tableHTML += `<div class="raid-nationality"><strong>Raid Nationality: 1-8 USSR, 9-10 GDR</strong></div>`;
+        
+        // Show both USSR and GDR sections
+        for (const [nationalityName, nationalityData] of Object.entries(table.nationalities)) {
+          tableHTML += `<div class="nationality-section">`;
+          tableHTML += `<div class="nationality-header">${nationalityData.name}</div>`;
+          
+          // Show each tasking for this nationality
+          for (const [taskingName, taskingData] of Object.entries(nationalityData.taskings)) {
+            tableHTML += `<div class="tasking-section">`;
+            const flightInfo = taskingData.flightCount + ' x {' + taskingData.flightSize + '}';
+            tableHTML += `<div class="tasking-header">${taskingName} (${flightInfo})</div>`;
+            
+            tableHTML += `<div class="aircraft-list">`;
+            
+            // Sort aircraft ranges numerically and collect sub-roll notes
+            const sortedAircraft = Object.entries(taskingData.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            let subRollNotes = [];
+            
+            for (const [aircraftRange, aircraftType] of sortedAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              
+              // Check for superscripted aircraft and add sub-roll explanations
+              if (aircraftType.includes('MiG-23²')) {
+                subRollNotes.push('² Roll again: 1-4 MiG-23M; 5-8 MiG-23MF; 9-10 MiG-23ML');
+              } else if (aircraftType.includes('MiG-23MF/ML¹')) {
+                subRollNotes.push('¹ Roll again: 1-5 MiG-23MF; 6-10 MiG-23ML');
+              }
+            }
+            
+            tableHTML += `</div>`;
+            
+            // Add sub-roll notes at the bottom of this tasking section (within the tasking section)
+            if (subRollNotes.length > 0) {
+              for (const note of subRollNotes) {
+                tableHTML += `<div class="sub-roll-note" style="font-size: 11px; color: #666; margin-top: 8px; padding-left: 12px; font-style: italic;">${note}</div>`;
+              }
+            }
+            
+            tableHTML += `</div>`;
+          }
+          
+          tableHTML += `</div>`;
+        }
+        
+        // Add ordnance note at bottom
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">SEAD flights may always carry ARMs, if capable.</div>`;
+        tableHTML += `</div>`;
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'J') {
+        // Table J: USSR Deep Strike Raid - display exactly as reference shows
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        // Hard-coded reference data to match official rules exactly
+        const referenceData = {
+          'Escort Jamming': {
+            flightInfo: '3 x {1}',
+            aircraft: [
+              { range: '1-2', type: 'Su-24MP' },
+              { range: '3-5', type: 'MiG-25BM' },
+              { range: '6-8', type: 'Yak-28PP' },
+              { range: '9-10', type: 'Tu-22PD' }
+            ]
+          },
+          'Chaff Laying': {
+            flightInfo: '3 x {1}',
+            aircraft: [
+              { range: '1-5', type: 'MiG-21bis' },
+              { range: '6-10', type: 'MiG-23M' }
+            ]
+          },
+          'Close Escort': {
+            flightInfo: '4 x {4}',
+            aircraft: [
+              { range: '1-3', type: 'MiG-23MLA' },
+              { range: '4-7', type: 'MiG-23MLD' },
+              { range: '8-10', type: 'Su-27S' }
+            ]
+          },
+          'Bombing': {
+            flightInfo: '6 x {4}',
+            aircraft: [
+              { range: '1-4', type: 'Su-24M' },
+              { range: '5-8', type: 'Su-24M4' },
+              { range: '9-10', type: 'MiG-27K' }
+            ]
+          },
+          'Recon': {
+            flightInfo: '2 x {1}',
+            aircraft: [
+              { range: '1-5', type: 'Su-24MR' },
+              { range: '6-10', type: 'MiG-25RB' }
+            ]
+          }
+        };
+        
+        for (const [taskingName, taskingData] of Object.entries(referenceData)) {
+          tableHTML += `<div class="tasking-section">`;
+          tableHTML += `<div class="tasking-header">${taskingName} (${taskingData.flightInfo})</div>`;
+          
+          for (const aircraft of taskingData.aircraft) {
+            tableHTML += `<div class="aircraft-item">${aircraft.range}: ${aircraft.type}</div>`;
+          }
+          
+          tableHTML += `</div>`;
+        }
+        
+        // Add ordnance note at bottom
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">All Bombing flights may carry any air-to-ground ordnance allowed for the specified aircraft type.</div>`;
+        tableHTML += `<div style="margin-left: 15px; margin-top: 4px;">Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.</div>`;
+        tableHTML += `</div>`;
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'K') {
+        // Warsaw Pact Table K - nationality-based structure
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        if (atafZone && table.nationalities[atafZone]) {
+          const nationalityData = table.nationalities[atafZone];
+          
+          for (const flightType of nationalityData.flights) {
+            tableHTML += `<div class="flight-type-section">`;
+            const flightInfo = flightType.flightCount + ' x {' + flightType.flightSize + '}';
+            tableHTML += `<div class="flight-type-header">${flightType.type} (${flightInfo})</div>`;
+            tableHTML += `<div class="aircraft-list">`;
+            
+            // Sort aircraft ranges numerically
+            const sortedAircraft = Object.entries(flightType.aircraft).sort((a, b) => {
+              const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+              const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+              return aStart - bStart;
+            });
+            
+            for (const [aircraftRange, aircraftType] of sortedAircraft) {
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            }
+            
+            tableHTML += `</div></div>`;
+          }
+        } else {
+          tableHTML += `<div class="error">Unknown nationality: ${atafZone}</div>`;
+        }
+        
+        // Add ordnance note at bottom
+        tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+        tableHTML += `<div style="margin-left: 15px;">All flights tasked with Rescue Support may carry any ordnance allowed for the specified aircraft type.</div>`;
+        tableHTML += `</div>`;
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else if (tableId === 'L') {
+        // Warsaw Pact Table L - mission type-based structure - show selected mission type only
+        const selectedMissionType = atafZone; // Mission type passed via atafZone parameter
+        
+        const missionData = table.missionTypes[selectedMissionType];
+        
+        let tableHTML = `<div class="table-view-content">`;
+        tableHTML += `<div class="table-description">${table.description}</div>`;
+        
+        if (missionData) {
+          // Show only the selected mission type
+          tableHTML += `<div class="mission-section">`;
+          const flightInfo = missionData.flightCount + ' x {' + missionData.flightSize + '}';
+          tableHTML += `<div class="mission-header">${missionData.name} (${flightInfo})</div>`;
+          
+          if (missionData.requiresNationSelection) {
+            // For Tactical Recon, show available nations without die rolls
+            for (const [nationName, nationData] of Object.entries(missionData.nationData)) {
+              tableHTML += `<div class="nation-section">`;
+              tableHTML += `<div class="nation-header">${nationName}</div>`;
+              tableHTML += `<div class="aircraft-list">`;
+              
+              // Sort aircraft ranges numerically
+              const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+                const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+                const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+                return aStart - bStart;
+              });
+              
+              for (const [aircraftRange, aircraftType] of sortedAircraft) {
+                tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              }
+              
+              tableHTML += `</div></div>`;
+            }
+          } else {
+            // For Standoff Jamming, show nations with die roll ranges
+            const sortedNations = Object.entries(missionData.nations).sort((a, b) => {
+              const aMin = parseInt(a[0].split('-')[0]);
+              const bMin = parseInt(b[0].split('-')[0]);
+              return aMin - bMin;
+            });
+            
+            for (const [nationRange, nationData] of sortedNations) {
+              tableHTML += `<div class="nation-section">`;
+              tableHTML += `<div class="nation-header">${nationRange}: ${nationData.name}</div>`;
+              tableHTML += `<div class="aircraft-list">`;
+              
+              // Sort aircraft ranges numerically
+              const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
+                const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
+                const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
+                return aStart - bStart;
+              });
+              
+              for (const [aircraftRange, aircraftType] of sortedAircraft) {
+                tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              }
+              
+              tableHTML += `</div></div>`;
+            }
+          }
+          
+          tableHTML += `</div>`; // Close mission-section
+        } else {
+          tableHTML += `<div class="error-message">Mission type not found: ${selectedMissionType}</div>`;
+        }
+        
+        // Add ordnance note at bottom if present
+        if (missionData && missionData.ordnanceNote) {
+          tableHTML += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+          tableHTML += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
+          tableHTML += `<div style="margin-left: 15px;">${missionData.ordnanceNote}</div>`;
+          tableHTML += `</div>`;
+        }
+        
+        tableHTML += `</div>`;
+        contentElement.innerHTML = tableHTML;
+      } else {
+        contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${tableId}</div>`;
+      }
+      
+      document.getElementById('tableViewOverlay').style.display = 'flex';
+    }
+
+    function viewTable() {
+      if (!selectedTable) return;
+      
+      // Check if Table C and scenario date is required
+      if (selectedTable === 'C' && !scenarioDate) {
+        alert('Please select a scenario date first.');
+        return;
+      }
+      
+      // For tables without variables, use default values
+      if (selectedTable === 'A') {
+        // Default to 2ATAF, pre-6/1/87 for backward compatibility
+        viewTableStructure(selectedTable, '2ATAF', 'pre');
+      } else if (selectedTable === 'B') {
+        // Table B uses global scenario date and default ATAF zone
+        const defaultAtaf = '2ATAF';
+        const globalDate = scenarioDate || 'pre';
+        viewTableStructure(selectedTable, defaultAtaf, globalDate);
+      } else if (selectedTable === 'C') {
+        // Table C uses global scenario date for all taskings
+        const globalDate = scenarioDate || 'pre';
+        viewTableStructure(selectedTable, null, globalDate);
+      } else if (selectedTable === 'D') {
+        // Table D: No date dependency, so we can use any date value
+        viewTableStructure(selectedTable, null, null);
+      } else if (selectedTable === 'E') {
+        // Table E: Combat Rescue - default to US nationality for view
+        viewTableStructure(selectedTable, 'US', null);
+      } else if (selectedTable === 'F') {
+        // Table F: Special Missions - default to Fast FAC mission for view
+        viewTableStructure(selectedTable, 'Fast FAC', null);
+      } else if (selectedTable === 'G' || selectedTable === 'H') {
+        // Warsaw Pact Tables G & H - simple nation/aircraft structure
+        viewTableStructure(selectedTable, null, null);
+      } else if (selectedTable === 'I' || selectedTable === 'J') {
+        // Warsaw Pact Tables I & J - tasking-based, show all taskings
+        viewTableStructure(selectedTable, null, null);
+      } else if (selectedTable === 'K') {
+        // Warsaw Pact Table K - nationality-based, default to USSR
+        viewTableStructure(selectedTable, 'USSR', null);
+      } else if (selectedTable === 'L') {
+        // Warsaw Pact Table L - mission type-based, default to Standoff Jamming
+        viewTableStructure(selectedTable, 'Standoff Jamming', null);
+      } else {
+        // Handle other tables that don't have variables yet
+        const dataSource = getTableDataSource();
+        const table = dataSource[selectedTable];
+        
+        if (!table) {
+          alert(`Table ${selectedTable} not found`);
+          return;
+        }
+        
+        const titleElement = document.getElementById('tableViewTitle');
+        const contentElement = document.getElementById('tableViewContent');
+        
+        titleElement.textContent = table.name;
+        contentElement.innerHTML = `<div class="table-view-content">Table data not yet implemented for Table ${selectedTable}</div>`;
+        document.getElementById('tableViewOverlay').style.display = 'flex';
+      }
+    }
+
+    function hideTableView() {
+      document.getElementById('tableViewOverlay').style.display = 'none';
+    }
+
+    // Close modal when clicking outside the modal content
+    function closeModalOnOverlayClick(event) {
+      if (event.target === event.currentTarget) {
+        hideTableView();
+      }
+    }
+
+    // Close modal on Escape key press
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const overlay = document.getElementById('tableViewOverlay');
+        if (overlay && overlay.style.display === 'flex') {
+          hideTableView();
+        }
+      }
+    });
+
+    // Initialize shared PrintGenerator with Red Storm configuration
+    let printGenerator = null;
+    
+    // Function to get or create PrintGenerator instance
+    function getPrintGenerator() {
+      if (!printGenerator) {
+        // Get Red Storm module configuration
+        const redStormConfig = window.ModuleConfig ? window.ModuleConfig.getModuleConfig('red-storm') : null;
+        printGenerator = new PrintGenerator(redStormConfig);
+      }
+      return printGenerator;
+    }
+
+    // Generate Printable Flight Sheet - Red Storm Legacy Implementation
+    function generatePrintableSheet() {
+      // Use the results array directly instead of localStorage
+      if (results.length === 0) {
+        alert('No flights generated yet. Generate some flights first!');
+        return;
+      }
+
+      // Always use detailed flight sheet
+      generateDetailedFlightSheet();
+    }
+
+// Legacy inline printable sheet removed; generatePrintableSheet now delegates to generateDetailedFlightSheet()
+
+    // Generate Detailed Flight Sheet (Designer Style)
+    async function generateDetailedFlightSheet() {
+      const state = getAppState();
+      const results = state.results;
+      
+      if (results.length === 0) {
+        alert('No flights to generate. Please generate some flights first.');
+        return;
+      }
+      
+      // Sort flights by faction: NATO first, then WP
+      const sortedResults = [...results].sort((a, b) => {
+        if (a.faction === 'NATO' && b.faction === 'WP') return -1;
+        if (a.faction === 'WP' && b.faction === 'NATO') return 1;
+        return 0;
+      });
+      
+      // Load required data files
+      try {
+        const [aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData] = await Promise.all([
+          fetch('data/aircraft-nato.json').then(r => r.json()),
+          fetch('data/aircraft-wp.json').then(r => r.json()),
+          fetch('data/aircraft-note-rules.json').then(r => r.json()),
+          fetch('data/weapons.json').then(r => r.json()),
+          fetch('data/aircraft-name-mapping.json').then(r => r.json())
+        ]);
+        
+        // Create print window
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+          alert('Please allow pop-ups to generate flight sheets');
+          return;
+        }
+        
+        // Generate HTML for all flights using designer layout
+        // First, split any multi-flight results into individual flight objects
+        const allIndividualFlights = [];
+        
+        for (const flight of sortedResults) {
+          const resultText = flight.result || flight.text || '';
+          
+          // Check if this is a multi-flight result (contains <br>)
+          if (resultText.includes('<br>') || resultText.includes(';')) {
+            console.log('Multi-flight result detected, splitting before grouping...');
+            const separator = resultText.includes('<br>') ? '<br>' : ';';
+            const flightParts = resultText.split(separator).map(part => part.trim()).filter(part => part.length > 0);
+            
+            // Create separate flight objects for each part
+            for (const flightPart of flightParts) {
+              allIndividualFlights.push({
+                ...flight,
+                result: flightPart,
+                text: flightPart
+              });
+            }
+          } else {
+            // Single flight, add as-is
+            allIndividualFlights.push(flight);
+          }
+        }
+        
+        console.log(`Split ${sortedResults.length} results into ${allIndividualFlights.length} individual flights`);
+        
+        // Now separate NATO and WP flights, then separate CSAR from regular within each faction
+        const natoRegular = [];
+        const natoCSAR = [];
+        const wpRegular = [];
+        const wpCSAR = [];
+        
+        for (const flight of allIndividualFlights) {
+          // Extract tasking from result text to determine if CSAR
+          const resultText = flight.result || flight.text || '';
+          const taskingMatch = resultText.match(/,\s*([^,<]+?)$/);
+          const tasking = taskingMatch ? taskingMatch[1].trim() : '';
+          const isCSAR = tasking === 'CSAR';
+          
+          console.log(`Sorting flight: "${resultText.substring(0, 60)}" -> tasking="${tasking}", isCSAR=${isCSAR}`);
+          
+          if (flight.faction === 'NATO') {
+            if (isCSAR) {
+              natoCSAR.push(flight);
+            } else {
+              natoRegular.push(flight);
+            }
+          } else {
+            if (isCSAR) {
+              wpCSAR.push(flight);
+            } else {
+              wpRegular.push(flight);
+            }
+          }
+        }
+        
+        console.log(`Generating flight cards: NATO(${natoRegular.length} regular, ${natoCSAR.length} CSAR), WP(${wpRegular.length} regular, ${wpCSAR.length} CSAR)`);
+        
+        let flightCardsHTML = '';
+        
+        // Process NATO regular flights first
+        for (let i = 0; i < natoRegular.length; i++) {
+          const flight = natoRegular[i];
+          
+          console.log('Processing NATO regular flight:', flight.result || flight.text);
+          
+          try {
+            const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
+            if (cardHTML && cardHTML.trim()) {
+              flightCardsHTML += cardHTML;
+              console.log('✓ Generated NATO regular card for:', (flight.result || flight.text).substring(0, 50));
+            } else {
+              console.warn('⚠ Empty card generated for:', flight.result || flight.text);
+            }
+          } catch (error) {
+            console.error('✗ Error generating card for:', flight.result || flight.text, error);
+          }
+        }
+        
+        // Add NATO CSAR flights after NATO regular flights
+        if (natoCSAR.length > 0) {
+          flightCardsHTML += '<div class="csar-container">';
+          for (let i = 0; i < natoCSAR.length; i++) {
+            const flight = natoCSAR[i];
+            console.log('Processing NATO CSAR flight:', flight.result || flight.text);
+            
+            try {
+              const cardHTML = await getPrintGenerator().generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
+              if (cardHTML && cardHTML.trim()) {
+                flightCardsHTML += cardHTML;
+                console.log('✓ Generated NATO CSAR card for:', (flight.result || flight.text).substring(0, 50));
+              } else {
+                console.warn('⚠ Empty card generated for:', flight.result || flight.text);
+              }
+            } catch (error) {
+              console.error('✗ Error generating NATO CSAR card for:', flight.result || flight.text, error);
+            }
+          }
+          flightCardsHTML += '</div>';
+        }
+        
+        // Page break between NATO and WP
+        if (wpRegular.length > 0 || wpCSAR.length > 0) {
+          flightCardsHTML += '</div><div style="page-break-after: always;"></div><div class="flight-grid">';
+        }
+        
+        // Process WP regular flights
+        for (let i = 0; i < wpRegular.length; i++) {
+          const flight = wpRegular[i];
+          
+          console.log('Processing WP regular flight:', flight.result || flight.text);
+          
+          try {
+            const cardHTML = await getPrintGenerator().generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
+            if (cardHTML && cardHTML.trim()) {
+              flightCardsHTML += cardHTML;
+              console.log('✓ Generated WP regular card for:', (flight.result || flight.text).substring(0, 50));
+            } else {
+              console.warn('⚠ Empty card generated for:', flight.result || flight.text);
+            }
+          } catch (error) {
+            console.error('✗ Error generating card for:', flight.result || flight.text, error);
+          }
+        }
+        
+        // Add WP CSAR flights after WP regular flights
+        if (wpCSAR.length > 0) {
+          flightCardsHTML += '<div class="csar-container">';
+          for (let i = 0; i < wpCSAR.length; i++) {
+            const flight = wpCSAR[i];
+            console.log('Processing WP CSAR flight:', flight.result || flight.text);
+            
+            try {
+              const cardHTML = await getPrintGenerator().generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
+              if (cardHTML && cardHTML.trim()) {
+                flightCardsHTML += cardHTML;
+                console.log('✓ Generated WP CSAR card for:', (flight.result || flight.text).substring(0, 50));
+              } else {
+                console.warn('⚠ Empty card generated for:', flight.result || flight.text);
+              }
+            } catch (error) {
+              console.error('✗ Error generating WP CSAR card for:', flight.result || flight.text, error);
+            }
+          }
+          flightCardsHTML += '</div>';
+        }
+        
+        console.log(`Total cards generated: ${flightCardsHTML.length > 0 ? 'Success' : 'None'}`);
+        
+        // Write complete HTML document with designer styles
+        printWindow.document.write(getPrintGenerator().generateDesignerSheetHTML(flightCardsHTML));
+        printWindow.document.close();
+        
+      } catch (error) {
+        console.error('Error loading data:', error);
+        alert('Failed to load aircraft/weapons data. Check console for details.');
+      }
+    }
+
+    function getMaxFlightSize(results) {
+      let max = 2;
+      for (const flight of results) {
+        const flightSize = parseInt(flight.flightSize) || 2;
+        if (flightSize > max) max = flightSize;
+      }
+      return Math.min(max, 6); // Cap at 6 aircraft per row
+    }
+
+    function generateFlightCard(flight) {
+      // Parse the result text to extract aircraft and flight info
+      // Example result format: "FRG: 1 x {2} F-4F, CAP"
+      // For multi-flight results (Table C): Individual flights separated by <br> tags
+      const resultText = flight.result || '';
+      const nationName = flight.nationName || '';
+      const tableName = flight.tableName || '';
+      
+      // Check if this is a multi-flight result (contains <br> or semicolons)
+      if (resultText.includes('<br>') || resultText.includes(';')) {
+        // Split by <br> or semicolon and generate separate cards for each flight
+        const separator = resultText.includes('<br>') ? '<br>' : ';';
+        const flightParts = resultText.split(separator).map(part => part.trim()).filter(part => part.length > 0);
+        let allCards = '';
+        
+        for (const flightPart of flightParts) {
+          // Create a temporary flight object for each part
+          const tempFlight = {
+            ...flight,
+            result: flightPart
+          };
+          allCards += generateSingleFlightCard(tempFlight);
+        }
+        
+        return allCards;
+      } else {
+        // Single flight - process normally
+        return generateSingleFlightCard(flight);
+      }
+    }
+    
+    function generateSingleFlightCard(flight) {
+      const resultText = flight.result || '';
+      const nationName = flight.nationName || '';
+      const tableName = flight.tableName || '';
+      const faction = flight.faction || 'NATO';
+      
+      // Extract aircraft type from result text
+      let aircraft = 'Unknown';
+      let flightSize = 4; // Default aircraft per flight
+      let numFlights = 1; // Default number of flights
+      let tasking = '';
+      let ordnance = '';
+      
+      // Try to parse flight multiplier and size from "4 x {2}" pattern
+      const flightSizeMatch = resultText.match(/(\d+)\s*x\s*\{(\d+)\}/);
+      if (flightSizeMatch) {
+        numFlights = parseInt(flightSizeMatch[1]); // Number of flights (4)
+        flightSize = parseInt(flightSizeMatch[2]); // Aircraft per flight (2)
+      }
+      
+      // Extract ordnance if present (text in parentheses)
+      const ordnanceMatch = resultText.match(/\(([^)]+)\)/);
+      if (ordnanceMatch) {
+        ordnance = ordnanceMatch[1].trim();
+      }
+      
+      // Extract aircraft type (everything after the } up to comma, excluding ordnance in parens)
+      const aircraftMatch = resultText.match(/\}\s*([^,\(<]+)/);
+      if (aircraftMatch) {
+        aircraft = aircraftMatch[1].trim();
+      }
+      
+      // For Table C format: "1 x {2} US F-4G" - nation is in the aircraft string
+      // Extract nation from aircraft string if it starts with a nation code
+      let extractedNation = nationName;
+      const nationInAircraft = aircraft.match(/^(US|UK|FRG|CAN|HOL|BEL|USSR|DDR|POL|CZE)\s+(.+)/);
+      if (nationInAircraft) {
+        extractedNation = nationInAircraft[1];
+        aircraft = nationInAircraft[2];
+      }
+      
+      // Extract tasking (everything after comma, before ordnance parens or debug info)
+      const taskingMatch = resultText.match(/,\s*([^<\(]+)/);
+      if (taskingMatch) {
+        tasking = taskingMatch[1].trim();
+      } else {
+        // Fallback: use table name if no explicit tasking
+        tasking = tableName.split(' - ')[1] || tableName;
+      }
+      
+      // Format aircraft display with nation
+      const aircraftDisplay = extractedNation ? `${aircraft} (${extractedNation})` : aircraft;
+      
+      // Generate multiple flight cards if needed (for results like "4 x {2}")
+      let allCards = '';
+      for (let flightNum = 0; flightNum < numFlights; flightNum++) {
+        let card = `
+    <div class="flight-card">
+      <!-- Header: Aircraft Type, Callsign, Counter, Aggression -->
+      <div class="flight-header">
+        <div class="field">
+          <div class="field-value">${escapeHtml(aircraftDisplay)}</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Callsign</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Counter</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Aggression</div>
+        </div>
+      </div>
+      
+      <!-- Tasking and Fuel Row -->
+      <div class="tasking-fuel-row">
+        <div class="field">
+          <div class="field-value">${escapeHtml(tasking)}</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Crew</div>
+        </div>
+        <div class="fuel-section">
+          <div class="fuel-label">Fuel:</div>
+          <div class="fuel-grid">
+`;
+
+        // Generate 18 fuel boxes in 2 rows of 9
+        for (let i = 0; i < 18; i++) {
+          card += `            <div class="fuel-box"></div>\n`;
+        }
+
+        card += `
+          </div>
+        </div>
+      </div>
+      
+      <!-- Aircraft Section -->
+      <div class="aircraft-section">
+`;
+
+        // Generate individual aircraft cards for this flight
+        for (let i = 0; i < flightSize; i++) {
+          card += `
+        <div class="aircraft-card">
+          <!-- Aircraft row with silhouette, health checkboxes, and weapons -->
+          <div class="aircraft-row">
+            <div class="aircraft-left">
+        <div class="aircraft-silhouette" style="width:60px; height:50px; display:flex; align-items:center; justify-content:center; border:1px dashed #ccc; background:#f9f9f9; overflow:hidden;">
+       <img 
+         alt="${faction} Aircraft" 
+         style="max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block;"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+         src="https://augustdragon.github.io/red-storm-tools-suite/assets/${faction === 'NATO' ? 'nato' : 'wp'}.jpg?v=${Date.now()}"
+       >
+                <svg width="60" height="50" viewBox="0 0 60 50" style="width: 100%; height: 100%; display: none;">
+                  <!-- NATO aircraft silhouette (F-16 style) -->
+                  <g fill="#666" style="display: ${faction === 'NATO' ? 'block' : 'none'}">
+                    <ellipse cx="30" cy="25" rx="20" ry="3" />
+                    <rect x="28" y="15" width="4" height="20" />
+                    <polygon points="25,20 35,20 32,25 28,25" />
+                    <polygon points="20,22 40,22 42,28 18,28" />
+                    <polygon points="15,30 45,30 40,35 20,35" />
+                  </g>
+                  <!-- WP aircraft silhouette (MiG style) -->
+                  <g fill="#666" style="display: ${faction === 'WP' ? 'block' : 'none'}">
+                    <ellipse cx="30" cy="25" rx="18" ry="3" />
+                    <rect x="29" y="15" width="2" height="20" />
+                    <polygon points="27,20 33,20 31,25 29,25" />
+                    <polygon points="22,22 38,22 40,27 20,27" />
+                    <polygon points="18,30 42,30 38,34 22,34" />
+                    <circle cx="25" cy="28" r="2" />
+                    <circle cx="35" cy="28" r="2" />
+                  </g>
+                  <!-- Fallback if neither matches -->
+                  <text x="30" y="30" text-anchor="middle" font-size="12" fill="#666" style="display: ${faction !== 'NATO' && faction !== 'WP' ? 'block' : 'none'}">${faction}</text>
+                </svg>
+              </div>
+              
+              <!-- Health checkboxes stacked vertically -->
+              <div class="health-checkboxes">
+                <div class="checkbox">
+                  <span class="checkbox-box"></span>
+                  <span>Da</span>
+                </div>
+                <div class="checkbox">
+                  <span class="checkbox-box"></span>
+                  <span>Cr</span>
+                </div>
+                <div class="checkbox">
+                  <span class="checkbox-box"></span>
+                  <span>☠</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Air-to-air weapons stacked vertically on right -->
+            <div class="aircraft-weapons">
+              <div class="weapon-field">
+                <span class="weapon-label">Gun</span>
+                <span class="weapon-brackets">
+                  <span class="weapon-bracket">{</span><span class="weapon-bracket">}</span>
+                </span>
+              </div>
+              <div class="weapon-field">
+                <span class="weapon-label">IRM</span>
+                <span class="weapon-brackets">
+                  <span class="weapon-bracket">{</span><span class="weapon-bracket">}</span>
+                </span>
+              </div>
+              <div class="weapon-field">
+                <span class="weapon-label">RHM</span>
+                <span class="weapon-brackets">
+                  <span class="weapon-bracket">{</span><span class="weapon-bracket">}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Ordnance area -->
+          <div class="ordnance-area">
+            <div class="ordnance-label">Ordnance</div>
+          </div>
+        </div>
+`;
+        }
+
+        card += `
+      </div>
+    </div>
+`;
+        
+        allCards += card;
+      }
+
+      return allCards;
+    }
+
+    // escapeHtml() function moved to utils.js
+
+    // Initialize the app after modules load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wait a moment for modules to finish loading and DOM to be fully ready
+      setTimeout(function() {
+        console.log('Initializing app after DOM and modules are ready...');
+        
+        if (typeof updateResultsDisplay === 'function') {
+          updateResultsDisplay();
+        } else if (typeof window.updateResultsDisplay === 'function') {
+          window.updateResultsDisplay();
+        }
+        
+        if (typeof updateDateButtonStates === 'function') {
+          updateDateButtonStates();
+        } else if (typeof window.updateDateButtonStates === 'function') {
+          window.updateDateButtonStates();
+        }
+        
+        console.log('App initialization complete');
+      }, 200);
+    });
+  </script>
+  
+  <script>
+    // Phase 2 Data Integration Bridge
+    // This function bridges the JSON data with existing oobTables usage
+    
+    function getTableDataSource() {
+      // Phase 3: Enhanced data source selection
+      // Prefer JSON data, fallback to embedded data seamlessly
+      
+      if (window.oobTables && Object.keys(window.oobTables).length > 0) {
+        // Use the hybrid data source created by app.js
+        console.log('Using hybrid JSON + embedded data source');
+        return window.oobTables;
+      } else if (typeof oobTables !== 'undefined') {
+        console.log('Using embedded data source (fallback)');
+        return oobTables;
+      } else {
+        console.error('No data source available');
+        return {};
+      }
+    }
+    
+    /**
+     * Generate a single flight card using the designer layout
+     * @param {object} flight - Flight result object from OOB generator
+     * @param {object} aircraftNATO - NATO aircraft database
+     * @param {object} aircraftWP - WP aircraft database
+     * @param {object} noteRulesData - Aircraft note rules database
+     * @param {object} weaponsData - Weapons database
+     * @param {object} nameMappingData - Aircraft name mapping database
+     * @param {boolean} isLastNATOFlight - Whether this is the last NATO flight before WP (for page break)
+     * @returns {string} HTML for flight card with designer layout
+     */
+    async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, isLastNATOFlight = false) {
+      // Parse result text to extract flight info
+      const resultText = flight.result || flight.text || '';
+      const faction = flight.faction || 'NATO';
+      
+      // Check if this is a multi-flight result (contains <br> or semicolons)
+      // Table C (Bombing Raid) produces results like "4 x {2} US F-15C, CAP<br>1 x {2} US A-7D, SEAD<br>..."
+      if (resultText.includes('<br>') || resultText.includes(';')) {
+        console.log('Multi-flight result detected, splitting...');
+        // Split by <br> or semicolon and generate separate cards for each flight
+        const separator = resultText.includes('<br>') ? '<br>' : ';';
+        const flightParts = resultText.split(separator).map(part => part.trim()).filter(part => part.length > 0);
+        console.log(`Split into ${flightParts.length} individual flights:`, flightParts);
+        
+        let allCards = '';
+        for (let i = 0; i < flightParts.length; i++) {
+          const flightPart = flightParts[i];
+          // Create a temporary flight object for each part
+          const tempFlight = {
+            ...flight,
+            result: flightPart
+          };
+          // Debug: Check if nationality is being copied
+          console.log(`Split flight ${i}: nationality="${tempFlight.nationality}", original nationality="${flight.nationality}"`);
+          // Recursively call this function to generate card for single flight
+          // Only the last card of multi-flight NATO results gets the page break
+          const isLastCard = i === flightParts.length - 1;
+          const applyPageBreakToThisFlight = isLastNATOFlight && isLastCard;
+          allCards += await getPrintGenerator().generateDesignerFlightCard(tempFlight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, applyPageBreakToThisFlight);
+        }
+        
+        return allCards;
+      }
+      
+      // Single flight processing below
+      // Extract aircraft type, flight size, tasking from result text
+      // Format: "FRG: 1 x {2} F-4F, CAP" or "USSR: 4 x {2} MiG-29, SWEEP"
+      let aircraftType = 'Unknown';
+      let flightSize = 2;
+      let numFlights = 1;
+      let nationCode = '';
+      let tasking = '';
+      
+      // Extract flight multiplier and size from "4 x {2}" pattern
+      const flightSizeMatch = resultText.match(/(\d+)\s*x\s*\{(\d+)\}/);
+      if (flightSizeMatch) {
+        numFlights = parseInt(flightSizeMatch[1]);
+        flightSize = parseInt(flightSizeMatch[2]);
+      }
+      
+      // Extract aircraft type (everything after } up to comma)
+      const aircraftMatch = resultText.match(/\}\s*([^,<]+)/);
+      if (aircraftMatch) {
+        aircraftType = aircraftMatch[1].trim();
+      }
+      
+      // Save original aircraft type before any mapping happens
+      // This is needed for database lookups since databases use short keys like "NF-5A"
+      // while the mapping will convert to long names like "NF-5A Freedom Fighter"
+      const originalAircraftType = aircraftType;
+      
+      // Extract nation from result or aircraft string
+      const nationMatch = resultText.match(/^([A-Z]{2,4}):/);
+      if (nationMatch) {
+        nationCode = nationMatch[1];
+      } else {
+        // Check if nation is in aircraft string
+        const nationInAircraft = aircraftType.match(/^(US|UK|FRG|CAN|NE|BE|USSR}GDR)\s+(.+)/);
+        if (nationInAircraft) {
+          nationCode = nationInAircraft[1];
+          aircraftType = nationInAircraft[2];
+        }
+      }
+      
+      // If still no nation code, check if flight has a nationality property (from table processor)
+      // This is critical for helicopters where multiple nations use the same aircraft type (e.g., GDR and USSR both use Mi-8)
+      // Check both 'nationality' and 'atafZone' as different tables use different property names
+      // However, skip combined nations like "BE/NE" and ATAF zones like "2ATAF" - check aircraft database instead
+      if (!nationCode && (flight.nationality || flight.atafZone)) {
+        const flightNation = flight.nationality || flight.atafZone;
+        console.log(`Checking flight nation "${flightNation}" for "${aircraftType}"`);
+        // Valid nation codes: only playable nations in Red Storm
+        const validNationCodes = ['US', 'UK', 'FRG', 'CAN', 'BE', 'NE', 'USSR', 'GDR'];
+        if (flightNation && validNationCodes.includes(flightNation)) {
+          nationCode = flightNation;
+          console.log(`Using nationality "${nationCode}" from table result for "${aircraftType}"`);
+        } else {
+          console.log(`Skipping invalid/combined nation code "${flightNation}" - will check aircraft database`);
+        }
+      } else if (!nationCode) {
+        console.log(`No nationality found in flight object for "${aircraftType}"`, flight);
+      }
+      
+      // If still no nation code, try to infer from aircraft database as last resort
+      // This handles helicopters and other aircraft without nation prefixes
+      // Also handles cases where table result had combined nation codes like "BE/NE"
+      // Use originalAircraftType (before name mapping) for database lookup
+      if (!nationCode && originalAircraftType) {
+        console.log(`Checking aircraft database for "${originalAircraftType}"`);
+        // Check both databases to find which one contains this aircraft
+        if (aircraftNATO[originalAircraftType]) {
+          // Found in NATO database, use the aircraft's nation
+          nationCode = aircraftNATO[originalAircraftType].nation || '';
+          console.log(`Inferred nation "${nationCode}" for "${originalAircraftType}" from NATO database`);
+        } else if (aircraftWP[originalAircraftType]) {
+          // Found in WP database, use the aircraft's nation
+          nationCode = aircraftWP[originalAircraftType].nation || '';
+          console.log(`Inferred nation "${nationCode}" for "${originalAircraftType}" from WP database`);
+        }
+      }
+      
+      // Handle variant aircraft with nation in parentheses (e.g., F-16A(BE), F-16A(NE))
+      const variantNationMatch = aircraftType.match(/^(.+?)\((BE|NE)\)$/);
+      if (variantNationMatch) {
+        const baseAircraft = variantNationMatch[1];
+        const variantNation = variantNationMatch[2];
+        // Use variant codes directly (BE, NE) - they're already in the roundel map
+        nationCode = variantNation;
+        console.log(`Detected variant aircraft: ${aircraftType} -> nation: ${nationCode}, base: ${baseAircraft}`);
+      }
+      
+      // Extract tasking (after comma, before ordnance parentheses)
+      const taskingMatch = resultText.match(/,\s*([^<(]+)/);
+      if (taskingMatch) {
+        tasking = taskingMatch[1].trim();
+      }
+      
+      // Extract ordnance if present (text in parentheses)
+      let rolledOrdnance = '';
+      const ordnanceMatch = resultText.match(/\(([^)]+)\)/);
+      if (ordnanceMatch) {
+        const fullOrdnance = ordnanceMatch[1].trim();
+        
+        // Check if this contains a note (e.g., "Note E:")
+        if (fullOrdnance.includes('Note ')) {
+          // Keep the entire text including the note
+          rolledOrdnance = fullOrdnance;
+        } else if (fullOrdnance.includes('+')) {
+          // Extract only the additions after "Bombs/CBU/Rockets"
+          // Remove the base "Bombs/CBU/Rockets" part and keep only additions
+          const parts = fullOrdnance.split('+');
+          if (parts.length > 1) {
+            // Join all parts after the first one with '+'
+            rolledOrdnance = '+' + parts.slice(1).map(p => p.trim()).join('+');
+          }
+        }
+      }
+      
+      // Apply name mapping if available (handles abbreviations and variants)
+      const factionKey = faction === 'NATO' ? 'NATO' : 'WP';
+      if (nameMappingData && nameMappingData[factionKey]) {
+        let mappedName = null;
+        
+        // For WP, check nation-specific mappings first (e.g., USSR vs GDR variants)
+        if (factionKey === 'WP' && nationCode && nameMappingData[factionKey][nationCode]) {
+          mappedName = nameMappingData[factionKey][nationCode][aircraftType];
+          if (mappedName) {
+            console.log(`Mapped "${aircraftType}" to "${mappedName}" via ${nationCode}-specific lookup`);
+          }
+        }
+        
+        // Fall back to faction-level mapping if no nation-specific mapping found
+        if (!mappedName && nameMappingData[factionKey][aircraftType]) {
+          mappedName = nameMappingData[factionKey][aircraftType];
+          console.log(`Mapped "${aircraftType}" to "${mappedName}" via faction-level lookup`);
+        }
+        
+        if (mappedName) {
+          aircraftType = mappedName;
+        }
+      }
+      
+      // Get aircraft data from appropriate database
+      const aircraftDB = faction === 'NATO' ? aircraftNATO : aircraftWP;
+      let rawAircraftData = null;
+      
+      // Aircraft are stored as keys in the JSON object, not in an array
+      // Try exact match first
+      if (aircraftDB[aircraftType]) {
+        rawAircraftData = aircraftDB[aircraftType];
+      } else {
+        // Try partial match with improved logic
+        // Sort keys by length (longest first) to prefer more specific matches
+        const aircraftKeys = Object.keys(aircraftDB)
+          .filter(key => !key.startsWith('_')) // Skip metadata keys
+          .sort((a, b) => b.length - a.length); // Longest first
+        
+        // Normalize search term for better matching
+        const normalizedSearch = aircraftType.replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
+        
+        for (const key of aircraftKeys) {
+          const normalizedKey = key.replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
+          
+          // Check if normalized forms match (handles "FGR2" vs "Phantom FGR.2")
+          if (normalizedKey.includes(normalizedSearch) || normalizedSearch.includes(normalizedKey)) {
+            rawAircraftData = aircraftDB[key];
+            console.log(`Matched "${aircraftType}" to database key "${key}"`);
+            break;
+          }
+        }
+        
+        // If still no match, log error for debugging
+        if (!rawAircraftData) {
+          console.error(`Aircraft not found: "${aircraftType}" in ${faction} database`);
+          console.error(`Result text: "${resultText}"`);
+          console.error(`Available aircraft keys:`, Object.keys(aircraftDB).filter(k => !k.startsWith('_')).slice(0, 10));
+        }
+      }
+      
+      // If aircraft not found, return empty string
+      if (!rawAircraftData) {
+        console.warn(`Skipping flight card generation - aircraft "${aircraftType}" not found`);
+        return '';
+      }
+      
+      // Convert to designer format
+      let aircraftData = getPrintGenerator().convertAircraftData(rawAircraftData, nationCode, weaponsData);
+      
+      // Apply note rules if available
+      if (noteRulesData && nationCode) {
+        const sourceTable = flight.table || '';
+        aircraftData = applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode, sourceTable, weaponsData);
+      }
+      
+      // Generate cards for each flight in the result (e.g., "4 x {2}" = 4 flights)
+      let allCardsHTML = '';
+      for (let flightNum = 0; flightNum < numFlights; flightNum++) {
+        // Only apply page break to the very last card of the last NATO flight
+        const isLastCard = flightNum === numFlights - 1;
+        const applyPageBreak = isLastNATOFlight && isLastCard;
+        
+        // Check if this is a CSAR helicopter - route to compact card generator
+        const isCSAR = aircraftData.capabilities && aircraftData.capabilities.includes('CSAR');
+        
+        if (isCSAR) {
+          allCardsHTML += generateCompactCSARCard(
+            aircraftType,
+            aircraftData,
+            flightSize,
+            nationCode,
+            tasking,
+            faction,
+            applyPageBreak
+          );
+        } else {
+          allCardsHTML += generateSingleDesignerCard(
+            aircraftType,
+            aircraftData,
+            flightSize,
+            nationCode,
+            tasking,
+            faction,
+            applyPageBreak,
+            rolledOrdnance
+          );
+        }
+      }
+      
+      return allCardsHTML;
+    }
+    
+    /**
+     * Convert JSON aircraft data to designer display format
+     * @param {object} jsonData - Raw aircraft JSON from database
+     * @param {string} nationCode - Nation code for display
+     * @param {object} weaponsData - Weapons database with ratings
+     * @returns {object} Designer-formatted aircraft data
+     */
+    function convertAircraftData(jsonData, nationCode, weaponsData) {
+      if (!jsonData) return null;
+      
+      // Helper function to extract speed for a specific altitude band
+      function extractSpeedForBand(speedString, index) {
+        if (!speedString || speedString === 'N/A') return 'N/A';
+        const values = speedString.split('/');
+        return values[index] || 'N/A';
+      }
+      
+      // Helper function to look up weapon ratings
+      function getWeaponRatings(weaponName, weaponClass) {
+        if (!weaponName || !weaponsData) return { stdRtg: 0, bvrRtg: null };
+        
+        // Search in appropriate weapons category
+        const category = weaponClass === 'Gun' ? weaponsData.guns : weaponsData.missiles;
+        if (!category) return { stdRtg: 0, bvrRtg: null };
+        
+        // Find weapon by exact name match
+        const weapon = category[weaponName];
+        if (weapon) {
+          return { stdRtg: weapon.stdRtg || 0, bvrRtg: weapon.bvrRtg };
+        }
+        
+        // If not found, return defaults
+        return { stdRtg: 0, bvrRtg: null };
+      }
+      
+      // Build weapon display strings from JSON format
+      let gunDisplay = '';
+      if (jsonData.weapons && jsonData.weapons.gun && jsonData.weapons.gunDepletion) {
+        // Look up gun rating from weapons database
+        const { stdRtg } = getWeaponRatings(jsonData.weapons.gun, 'Gun');
+        gunDisplay = `+${stdRtg} {${jsonData.weapons.gunDepletion}}`;
+      }
+      
+      let irmDisplay = '';
+      if (jsonData.weapons && jsonData.weapons.irm && jsonData.weapons.irmDepletion) {
+        // Look up IRM ratings from weapons database
+        const { stdRtg, bvrRtg } = getWeaponRatings(jsonData.weapons.irm, 'IRM');
+        const bvrStr = bvrRtg !== null ? `/${bvrRtg >= 0 ? '+' : ''}${bvrRtg}` : '/NA';
+        irmDisplay = `+${stdRtg}${bvrStr} {${jsonData.weapons.irmDepletion}}`;
+      }
+      
+      let rhmDisplay = '';
+      if (jsonData.weapons && jsonData.weapons.rhm && jsonData.weapons.rhmDepletion) {
+        // Look up RHM ratings from weapons database
+        const { stdRtg, bvrRtg } = getWeaponRatings(jsonData.weapons.rhm, 'RHM');
+        const bvrStr = bvrRtg !== null ? `/${bvrRtg >= 0 ? '+' : ''}${bvrRtg}` : '';
+        rhmDisplay = `+${stdRtg}${bvrStr} {${jsonData.weapons.rhmDepletion}}`;
+      }
+      
+      // Build radar display
+      let radarDisplay = null;
+      let radarModifier = null;
+      if (jsonData.radar && jsonData.radar.name) {
+        radarDisplay = jsonData.radar.name;
+        if (jsonData.radar.type) radarDisplay += ` ${jsonData.radar.type}`;
+        if (jsonData.radar.range) radarDisplay += ` [${jsonData.radar.range}]`;
+        if (jsonData.radar.modifier) radarModifier = jsonData.radar.modifier;
+      }
+      
+      // RWR and Jam - filter out dash-only values
+      const rwrDisplay = (jsonData.rwr && jsonData.rwr !== '-' && jsonData.rwr !== '-/-') ? jsonData.rwr : null;
+      const jamDisplay = (jsonData.jam && jsonData.jam !== '-' && jsonData.jam !== '-/-') ? jsonData.jam : null;
+      
+      // Build ordnance string
+      const ordnanceStr = jsonData.ordnance && jsonData.ordnance.length > 0
+        ? jsonData.ordnance.map(o => o.quantity ? `${o.type}(${o.quantity})` : o.type).join(', ')
+        : '';
+      
+      // Build capabilities string
+      const capabilitiesStr = jsonData.capabilities && jsonData.capabilities.length > 0
+        ? jsonData.capabilities.join(', ')
+        : '';
+      
+      // Extract speeds for each altitude band
+      const speeds = {};
+      if (jsonData.speeds && jsonData.speeds.clean) {
+        const altitudeBands = ['VH', 'H', 'M', 'L/D'];
+        const indices = { 'VH': 3, 'H': 2, 'M': 1, 'L/D': 0 };
+        
+        altitudeBands.forEach(band => {
+          const idx = indices[band];
+          speeds[band] = {
+            combat: extractSpeedForBand(jsonData.speeds.clean.combat, idx),
+            dash: extractSpeedForBand(jsonData.speeds.clean.dash, idx),
+            maneuver: extractSpeedForBand(jsonData.speeds.clean.maneuver, idx)
+          };
+        });
+      }
+      
+      // Extract laden speeds if present
+      let speedsLaden = null;
+      if (jsonData.speeds && jsonData.speeds.laden) {
+        speedsLaden = {};
+        const altitudeBands = ['VH', 'H', 'M', 'L/D'];
+        const indices = { 'VH': 3, 'H': 2, 'M': 1, 'L/D': 0 };
+        
+        altitudeBands.forEach(band => {
+          const idx = indices[band];
+          speedsLaden[band] = {
+            combat: extractSpeedForBand(jsonData.speeds.laden.combat, idx),
+            dash: extractSpeedForBand(jsonData.speeds.laden.dash, idx),
+            maneuver: extractSpeedForBand(jsonData.speeds.laden.maneuver, idx)
+          };
+        });
+      }
+      
+      return {
+        model: jsonData.name || jsonData.model,
+        nation: nationCode || jsonData.nation,
+        crew: jsonData.crew,
+        rwy: jsonData.runway || jsonData.rwy,
+        fuel: jsonData.fuel,
+        notes: jsonData.notes,
+        gun: gunDisplay,
+        irm: irmDisplay,
+        rhm: rhmDisplay,
+        rwr: rwrDisplay,
+        jam: jamDisplay,
+        standoffJammingStrength: jsonData.standoffJammingStrength,
+        ordnance: ordnanceStr,
+        aam: jsonData.aam,
+        bomb: jsonData.bomb,
+        sight: jsonData.sight,
+        capabilities: capabilitiesStr,
+        speeds: speeds,
+        speedsClean: speeds,
+        speedsLaden: speedsLaden,
+        radar: radarDisplay,
+        radarModifier: radarModifier
+      };
+    }
+    
+    /**
+     * Generate a single flight card using exact designer layout
+     * @param {string} aircraftType - Aircraft name
+     * @param {object} aircraftData - Designer-formatted aircraft data
+     * @param {number} flightSize - Number of aircraft in flight
+     * @param {string} nationCode - Nation code (FRG, USSR, etc.)
+     * @param {string} tasking - Mission tasking
+     * @param {string} faction - NATO or WP
+     * @param {boolean} applyPageBreak - Whether to apply page-break-before to this card
+     * @param {string} rolledOrdnance - Ordnance additions from table roll (e.g., "+EOGM+ARM")
+     * @returns {string} HTML for single flight card
+     */
+    function generateSingleDesignerCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction, applyPageBreak = false, rolledOrdnance = '') {
+      // Use default data if aircraft not found
+      if (!aircraftData) {
+        aircraftData = {
+          model: aircraftType,
+          crew: '?',
+          rwy: '?',
+          fuel: 18,
+          notes: '',
+          gun: '',
+          irm: '',
+          rhm: '',
+          speeds: {}
+        };
+      }
+      
+      // Determine if laden values should be shown (after notes have been applied)
+      // Only show laden if: 1) aircraft has speedsLaden data, 2) has air-to-ground ordnance, AND 3) tasking allows air-to-ground
+      const airToGroundNoneTasks = ['CAP', 'Close Escort', 'Recon', 'Escort Jamming', 'Standoff Jamming', 'CSAR', 'Transport', 'Laser Designation', 'Chaff Laying', 'Fast FAC'];
+      const hasAirToGroundOrdnance = (aircraftData.ordnance && aircraftData.ordnance.length > 0) || 
+                                     (aircraftData.bomb && aircraftData.bomb !== '-');
+      const showLaden = aircraftData.speedsLaden && hasAirToGroundOrdnance && !airToGroundNoneTasks.includes(tasking);
+      
+      // Determine roundel image
+      const roundelMap = {
+        'US': 'USAF.jpg',
+        'UK': 'UK.jpg',
+        'FRG': 'FRG.jpg',
+        'BEL': 'Belgium.jpg',
+        'Belgium': 'Belgium.jpg',
+        'BE': 'Belgium.jpg',
+        'BE/NE': 'Netherlands.jpg', // BE/NE combined entry defaults to Netherlands
+        'NE': 'Netherlands.jpg',
+        'CAN': 'Canada.jpg',
+        'Canada': 'Canada.jpg',
+        'USSR': 'USSR.jpg',
+        'GDR': 'GDR.jpg'
+      };
+      // Debug: Log roundel selection
+      console.log(`Roundel selection for "${aircraftType}": nationCode="${nationCode}", aircraftData.nation="${aircraftData.nation}", result="${roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg'}"`);
+      const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
+      
+      // Add page break style if this is the last NATO flight (breaks after, not before)
+      const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always;"' : '';
+      
+      let html = `
+    <div class="flight-card"${pageBreakStyle}>
+      <!-- Flight-level information -->
+      <div class="flight-info-section">
+        <div class="flight-header">
+          <div class="roundel-box-header">
+            <img src="../../../shared/assets/roundels/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
+          </div>
+          <div class="field">
+            <div class="field-label">Aircraft</div>
+            <div class="field-value">${aircraftData.model || aircraftType}</div>
+          </div>
+          <div class="field">
+            <div class="field-label">Callsign</div>
+            <div class="field-value"></div>
+          </div>
+          <div class="field">
+            <div class="field-label">Counter</div>
+            <div class="field-value"></div>
+          </div>
+          <div class="field">
+            <div class="field-label">Aggr.</div>
+            <div class="field-value"></div>
+          </div>
+        </div>
+        
+        <div class="tasking-fuel-row">
+          <div class="field">
+            <div class="field-label">Tasking</div>
+            <div class="field-value">${tasking}</div>
+          </div>
+          ${aircraftData.capabilities && aircraftData.capabilities.includes('CSAR') ? `
+          <div class="field">
+            <div class="field-label">Fuel</div>
+            <div class="field-value"></div>
+          </div>
+          ` : `
+          <div class="fuel-box">
+            <div class="fuel-label-value">
+              <span class="field-label">Fuel</span>
+              <span class="fuel-value">${aircraftData.fuel || 18}</span>
+            </div>
+            <div class="fuel-circles-container">
+              ${typeof aircraftData.fuel === 'number' ? `
+              <div class="fuel-circles-row">
+                ${Array(Math.ceil(aircraftData.fuel / 2)).fill(0).map(() => 
+                  `<div class="fuel-circle"></div>`
+                ).join('')}
+              </div>
+              <div class="fuel-circles-row">
+                ${Array(Math.floor(aircraftData.fuel / 2)).fill(0).map(() => 
+                  `<div class="fuel-circle"></div>`
+                ).join('')}
+              </div>
+              ` : ''}
+            </div>
+          </div>
+          `}
+          <div class="field">
+            <div class="field-label">Notes</div>
+            <div class="field-value">${aircraftData.notes || ''}</div>
+          </div>
+        </div>
+        
+        <div class="flight-weapons-row">
+          <div class="weapons-display">
+            ${aircraftData.gun ? `<div class="weapon-item">
+              <span class="weapon-label">Gun:</span>
+              <span>${aircraftData.gun}</span>
+            </div>` : ''}
+            ${aircraftData.irm ? `<div class="weapon-item">
+              <span class="weapon-label">IRM:</span>
+              <span>${aircraftData.irm}</span>
+            </div>` : ''}
+            ${aircraftData.rhm ? `<div class="weapon-item">
+              <span class="weapon-label">RHM:</span>
+              <span>${aircraftData.rhm}</span>
+            </div>` : ''}
+          </div>
+          ${aircraftData.crew || aircraftData.rwy ? `<div style="display: flex; gap: 10px; font-size: 7pt;">
+            ${aircraftData.crew ? `<div><strong>Crew:</strong> ${aircraftData.crew}</div>` : ''}
+            ${aircraftData.rwy ? `<div><strong>Rwy:</strong> ${aircraftData.rwy}</div>` : ''}
+          </div>` : ''}
+        </div>
+        
+        ${aircraftData.ordnance || aircraftData.aam || aircraftData.bomb || (aircraftData.sight && aircraftData.sight !== '-') ? `<div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px; line-height: 1.05;">
+          ${aircraftData.aam ? `<strong>AAM:</strong> ${aircraftData.aam}` : ''}${(aircraftData.aam && aircraftData.ordnance && !airToGroundNoneTasks.includes(tasking)) ? ' | ' : ''}${aircraftData.ordnance && !airToGroundNoneTasks.includes(tasking) ? `<strong>Ordnance:</strong> ${aircraftData.ordnance}` : ''}${((aircraftData.aam || aircraftData.ordnance) && aircraftData.bomb && !airToGroundNoneTasks.includes(tasking)) ? ' | ' : ''}${aircraftData.bomb && !airToGroundNoneTasks.includes(tasking) ? `<strong>Bomb:</strong> ${aircraftData.bomb}` : ''}${((aircraftData.aam || aircraftData.ordnance || aircraftData.bomb) && aircraftData.sight && aircraftData.sight !== '-' && !airToGroundNoneTasks.includes(tasking)) ? ' | ' : ''}${aircraftData.sight && aircraftData.sight !== '-' && !airToGroundNoneTasks.includes(tasking) ? `<strong>Sight:</strong> ${aircraftData.sight}` : ''}
+        </div>` : ''}
+        
+        ${aircraftData.radar || aircraftData.rwr || aircraftData.jam || aircraftData.standoffJammingStrength ? `<div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px; line-height: 1.05;">
+          ${aircraftData.radar ? `<strong>Radar:</strong> ${aircraftData.radar} ${aircraftData.radarModifier || ''}` : ''}
+          ${aircraftData.radar && aircraftData.rwr ? ' | ' : ''}
+          ${aircraftData.rwr ? `<strong>RWR:</strong> ${aircraftData.rwr}` : ''}
+          ${(aircraftData.radar || aircraftData.rwr) && aircraftData.jam ? ' | ' : ''}
+          ${aircraftData.jam ? `<strong>Jam:</strong> ${aircraftData.jam}` : ''}
+          ${(aircraftData.radar || aircraftData.rwr || aircraftData.jam) && aircraftData.standoffJammingStrength ? ' | ' : ''}
+          ${aircraftData.standoffJammingStrength ? `<strong>Standoff Jamming:</strong> ${aircraftData.standoffJammingStrength}` : ''}
+        </div>` : ''}
+        
+        ${aircraftData.capabilities || (aircraftData.specialRules && aircraftData.specialRules.length > 0) ? `<div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px; line-height: 1.05;">
+          ${aircraftData.capabilities ? `<strong>Capabilities:</strong> ${aircraftData.capabilities}` : ''}${aircraftData.capabilities && aircraftData.specialRules && aircraftData.specialRules.length > 0 ? ' | ' : ''}${aircraftData.specialRules && aircraftData.specialRules.length > 0 ? `<strong>Notes:</strong> ${aircraftData.specialRules.join('; ')}` : ''}
+        </div>` : ''}
+        
+        ${showLaden ? `
+        <table class="speed-table">
+          <tr>
+            <th rowspan="2">Alt</th>
+            <th colspan="3">Clean</th>
+            <th colspan="3">Laden</th>
+          </tr>
+          <tr>
+            <th>C</th>
+            <th>D</th>
+            <th>M</th>
+            <th>C</th>
+            <th>D</th>
+            <th>M</th>
+          </tr>
+          ${Object.keys(aircraftData.speedsClean).filter(alt => {
+            // Skip VH row if all values are "-"
+            if (alt === 'VH') {
+              const cleanValues = aircraftData.speedsClean[alt];
+              const ladenValues = aircraftData.speedsLaden[alt];
+              return !(cleanValues.combat === '-' && cleanValues.dash === '-' && cleanValues.maneuver === '-' &&
+                       ladenValues.combat === '-' && ladenValues.dash === '-' && ladenValues.maneuver === '-');
+            }
+            return true;
+          }).map(alt => `
+            <tr>
+              <td><strong>${alt}</strong></td>
+              <td>${aircraftData.speedsClean[alt].combat}</td>
+              <td>${aircraftData.speedsClean[alt].dash}</td>
+              <td>${aircraftData.speedsClean[alt].maneuver}</td>
+              <td>${aircraftData.speedsLaden[alt].combat}</td>
+              <td>${aircraftData.speedsLaden[alt].dash}</td>
+              <td>${aircraftData.speedsLaden[alt].maneuver}</td>
+            </tr>
+          `).join('')}
+        </table>
+        ` : aircraftData.speeds && Object.keys(aircraftData.speeds).length > 0 ? `
+        <table class="speed-table">
+          <tr>
+            <th>Alt</th>
+            <th>C</th>
+            <th>D</th>
+            <th>M</th>
+          </tr>
+          ${Object.entries(aircraftData.speeds).filter(([alt, speeds]) => {
+            // Skip VH row if all values are "-"
+            if (alt === 'VH') {
+              return !(speeds.combat === '-' && speeds.dash === '-' && speeds.maneuver === '-');
+            }
+            return true;
+          }).map(([alt, speeds]) => `
+            <tr>
+              <td><strong>${alt}</strong></td>
+              <td>${speeds.combat}</td>
+              <td>${speeds.dash}</td>
+              <td>${speeds.maneuver}</td>
+            </tr>
+          `).join('')}
+        </table>
+        ` : ''}
+      </div>
+      
+      <!-- Individual aircraft boxes -->
+      <div class="aircraft-grid">
+        ${Array(parseInt(flightSize)).fill(0).map((_, i) => `
+          <div class="aircraft-box">
+            <div class="aircraft-header">
+              <div class="aircraft-number">${i + 1}</div>
+              <div class="damage-boxes">
+                <div class="damage-column">
+                  ${aircraftData.capabilities && aircraftData.capabilities.includes('CSAR') ? `
+                  <div class="damage-row">
+                    <div class="damage-label">Damaged</div>
+                    <div class="damage-checkbox"></div>
+                  </div>
+                  <div class="damage-row">
+                    <div class="damage-label">Shot down</div>
+                    <div class="damage-checkbox"></div>
+                  </div>
+                  ` : `
+                  <div class="damage-row">
+                    <div class="damage-label">Damaged</div>
+                    <div class="damage-checkbox"></div>
+                  </div>
+                  <div class="damage-row">
+                    <div class="damage-label">Crippled</div>
+                    <div class="damage-checkbox"></div>
+                  </div>
+                  <div class="damage-row">
+                    <div class="damage-label">Destroyed</div>
+                    <div class="damage-checkbox"></div>
+                  </div>
+                  `}
+                </div>
+              </div>
+            </div>
+            <div class="ordnance-area-small">
+              <div class="ordnance-label-small">Ordnance</div>
+              ${rolledOrdnance ? (() => {
+                // Check if this contains a note (e.g., "Note E:")
+                if (rolledOrdnance.includes('Note ')) {
+                  // Display the entire text as-is for notes
+                  return `<div style="font-size: 5pt; padding: 1px 3px; text-align: left; line-height: 1.2;">${rolledOrdnance}</div>`;
+                }
+                // Split by '+' and create separate lines for each ordnance item
+                const items = rolledOrdnance.split('+').filter(item => item.trim().length > 0);
+                return items.map(item => `<div style="font-size: 6pt; padding: 1px 3px; text-align: left; line-height: 1.1;">+${item.trim()}</div>`).join('');
+              })() : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+      `;
+      
+      return html;
+    }
+    
+    /**
+     * Generate a compact half-width card for CSAR helicopters
+     * @param {string} aircraftType - Aircraft model name
+     * @param {object} aircraftData - Aircraft data from database
+     * @param {number} flightSize - Number of aircraft in flight (1-4)
+     * @param {string} nationCode - Nation code for roundel
+     * @param {string} tasking - Mission tasking (should be 'CSAR')
+     * @param {string} faction - NATO or WP
+     * @param {boolean} applyPageBreak - Whether to apply page break after this card
+     * @returns {string} HTML for compact CSAR card
+     */
+    function generateCompactCSARCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction, applyPageBreak = false) {
+      // Use default data if aircraft not found
+      if (!aircraftData) {
+        aircraftData = {
+          model: aircraftType,
+          capabilities: 'CSAR'
+        };
+      }
+      
+      // Determine roundel image
+      const roundelMap = {
+        'US': 'USAF.jpg',
+        'UK': 'UK.jpg',
+        'FRG': 'FRG.jpg',
+        'BEL': 'Belgium.jpg',
+        'Belgium': 'Belgium.jpg',
+        'BE': 'Belgium.jpg',
+        'BE/NE': 'Netherlands.jpg', // BE/NE combined entry defaults to Netherlands
+        'NE': 'Netherlands.jpg',
+        'NE': 'Netherlands.jpg',
+        'CAN': 'Canada.jpg',
+        'Canada': 'Canada.jpg',
+        'USSR': 'USSR.jpg',
+        'GDR': 'GDR.jpg'
+      };
+      console.log(`CSAR Roundel selection for "${aircraftType}": nationCode="${nationCode}", aircraftData.nation="${aircraftData.nation}"`);
+      const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
+      
+      // Add page break style if needed
+      const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always;"' : '';
+      
+      let html = `
+    <div class="compact-csar-card"${pageBreakStyle}>
+      <!-- Compact CSAR header -->
+      <div class="compact-csar-header">
+        <div class="roundel-box-compact">
+          <img src="../../../shared/assets/roundels/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
+        </div>
+        <div class="field">
+          <div class="field-label">Aircraft</div>
+          <div class="field-value">${aircraftData.model || aircraftType}</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Callsign</div>
+          <div class="field-value"></div>
+        </div>
+      </div>
+      
+      <div class="compact-csar-info">
+        <div class="field">
+          <div class="field-label">Tasking</div>
+          <div class="field-value">${tasking}</div>
+        </div>
+      </div>
+      
+      <!-- Compact aircraft boxes with damage underneath -->
+      <div class="compact-aircraft-grid">
+        ${Array(flightSize).fill(0).map((_, i) => `
+          <div class="compact-aircraft-box">
+            <div class="aircraft-number-compact">${i + 1}</div>
+            <div class="compact-damage-checks">
+              <div class="compact-damage-item">
+                <span class="compact-damage-label">Damaged</span>
+                <div class="damage-checkbox-compact"></div>
+              </div>
+              <div class="compact-damage-item">
+                <span class="compact-damage-label">Shot down</span>
+                <div class="damage-checkbox-compact"></div>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+      `;
+      
+      return html;
+    }
+    
+    /**
+     * Apply aircraft note rules to modify aircraft data
+     * @param {object} aircraftData - Original aircraft data
+     * @param {string} tasking - Mission tasking
+     * @param {object} noteRulesData - Note rules database
+     * @param {string} nationCode - Nation code
+     * @returns {object} Modified aircraft data
+     */
+    function applyNoteRules(aircraftData, tasking, noteRulesData, nationCode) {
+      if (!aircraftData.notes || !noteRulesData) return aircraftData;
+      
+      // Create a deep copy to avoid modifying original
+      const modifiedData = JSON.parse(JSON.stringify(aircraftData));
+      
+      // Get rules for this nation
+      const nationRules = noteRulesData[nationCode];
+      if (!nationRules) return modifiedData;
+      
+      // Parse notes string into array (e.g., "A,C,L,M,P" -> ["A","C","L","M","P"])
+      const noteIds = aircraftData.notes.split(',').map(n => n.trim());
+      
+      // Apply each note's rules
+      for (const noteId of noteIds) {
+        const rule = nationRules.find(r => r.id === noteId);
+        if (!rule) continue;
+        
+        // Check if rule applies to this tasking
+        let applies = true;
+        if (rule.condition) {
+          if (rule.condition.startsWith('!')) {
+            // Negative condition (e.g., "!SEAD" means applies when NOT SEAD)
+            const excludedTasking = rule.condition.substring(1);
+            applies = !tasking.toUpperCase().includes(excludedTasking.toUpperCase());
+          } else {
+            // Positive condition (must match tasking)
+            applies = tasking.toUpperCase().includes(rule.condition.toUpperCase());
+          }
+        }
+        
+        if (!applies) continue;
+        
+        // Apply rule effects based on type
+        switch (rule.type) {
+          case 'weaponModification':
+            if (rule.effect.aamDepletion) {
+              const change = rule.effect.aamDepletion;
+              if (change < 0) {
+                // Reduce weapons
+                modifiedData.irm = Math.max(0, (modifiedData.irm || 0) + change);
+                modifiedData.rhm = Math.max(0, (modifiedData.rhm || 0) + change);
+              }
+            }
+            break;
+            
+          case 'weaponRestriction':
+            if (rule.effect.removeWeapon) {
+              const weaponToRemove = rule.effect.removeWeapon.toLowerCase();
+              if (weaponToRemove.includes('irm')) modifiedData.irm = 0;
+              if (weaponToRemove.includes('rhm')) modifiedData.rhm = 0;
+              if (weaponToRemove.includes('gun')) modifiedData.gun = 0;
+            }
+            if (rule.effect.removeWeapons) {
+              rule.effect.removeWeapons.forEach(weapon => {
+                const w = weapon.toLowerCase();
+                if (w.includes('irm')) modifiedData.irm = 0;
+                if (w.includes('rhm')) modifiedData.rhm = 0;
+                if (w.includes('gun')) modifiedData.gun = 0;
+              });
+            }
+            break;
+            
+          case 'capabilityModification':
+            if (rule.effect.jamRating !== undefined) {
+              modifiedData.jamRating = rule.effect.jamRating;
+            }
+            break;
+        }
+      }
+      
+      return modifiedData;
+    }
+    
+    /**
+     * Generate complete HTML document with designer styles for flight sheets
+     * @param {string} flightCardsHTML - HTML for all flight cards
+     * @returns {string} Complete HTML document
+     */
+    function generateDesignerSheetHTML(flightCardsHTML) {
+      return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Red Storm - Flight Sheets</title>
+  <style>
+    /* ========== Base / Reset ========== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #000;
+      font-family: Arial, sans-serif;
+    }
+    
+    body {
+      padding: 5px;
+      background: #f5f5f5;
+    }
+    
+    @page {
+      size: letter;
+      margin: 0.25in;
+    }
+    
+    /* Avoid page breaks inside a card when printing */
+    @media print {
+      .flight-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+    
+    .page-title {
+      text-align: center;
+      font-size: 12pt;
+      font-weight: bold;
+      margin-bottom: 6px;
+      border-bottom: 2px solid black;
+      padding-bottom: 2px;
+      color: black;
+    }
+    
+    .flight-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3px;
+      margin-bottom: 3px;
+    }
+    
+    /* ========== Flight Card Shell ========== */
+    .flight-card {
+      border: 2px solid black;
+      padding: 4px;
+      background: white;
+      color: black;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 3px;
+      height: 240pt; /* Fixed height for 2x3 layout (6 cards per page) */
+      gap: 3px; /* consistent vertical rhythm between sections */
+    }
+    
+    /* Compact CSAR Card Styles - Quarter size (50% of regular card width × 50% height, 4 per row aligning with 2 regular cards) */
+    .csar-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3px;
+      margin-bottom: 3px;
+      grid-column: 1 / -1; /* Span all columns of parent grid to use full page width */
+    }
+    
+    .compact-csar-card {
+      border: 2px solid black;
+      padding: 4px;
+      page-break-inside: avoid;
+      background: white;
+      color: black;
+      display: flex; /* Use flex to allow aircraft grid to grow */
+      flex-direction: column;
+      width: 100%; /* Fill grid cell */
+      height: 125pt; /* Half height of regular card (250pt / 2) */
+      box-sizing: border-box;
+      font-size: 7pt; /* Reset font size for content */
+      line-height: normal; /* Reset line height for content */
+    }
+    
+    .compact-csar-header {
+      display: grid;
+      grid-template-columns: 30px 1fr 1fr;
+      gap: 2px;
+      margin-bottom: 2px;
+      align-items: stretch; /* Make all items stretch to same height */
+    }
+    
+    .compact-csar-header .field {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%; /* Fill available height in grid */
+      font-size: 6pt; /* Smaller font for compact header */
+    }
+    
+    .roundel-box-compact {
+      border: none;
+      padding: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      width: 30px;
+      height: 30px;
+      overflow: hidden;
+    }
+    
+    .roundel-box-compact img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    
+    .compact-csar-info {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 2px;
+      border-bottom: 1px solid #666;
+      padding-bottom: 2px;
+    }
+    
+    .compact-csar-info .field {
+      flex: 1;
+      font-size: 6pt;
+    }
+    
+    .compact-aircraft-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      padding: 0;
+      flex: 1; /* Grow to fill remaining space in CSAR card */
+    }
+    
+    .compact-aircraft-box {
+      border: 1px solid #666;
+      padding: 1px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      height: 100%; /* Fill grid cell height */
+    }
+    
+    .aircraft-number-compact {
+      font-size: 6pt;
+      font-weight: bold;
+      text-align: center;
+      padding: 1px 2px;
+      border: 1px solid #666;
+      min-width: 15px;
+    }
+    
+    .compact-damage-checks {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1; /* Grow to fill remaining space in aircraft box */
+      justify-content: flex-start; /* Align to top instead of center */
+      padding-top: 2px; /* Small padding from aircraft number */
+    }
+    
+    .compact-damage-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2px;
+    }
+    
+    .compact-damage-label {
+      font-size: 6pt; /* Increased from 4pt to 6pt for better readability */
+      line-height: 1.1;
+      text-align: left;
+      white-space: normal; /* Allow wrapping for "Shot down" */
+      word-wrap: break-word;
+    }
+    
+    .damage-checkbox-compact {
+      min-width: 10px;
+      min-height: 10px;
+      width: 10px;
+      height: 10px;
+      border: 1px solid #666;
+      background: white;
+      flex-shrink: 0;
+    }
+    
+    .flight-info-section {
+      border-bottom: 2px solid black;
+      padding-bottom: 3px;
+      margin-bottom: 3px;
+    }
+    
+    .flight-header {
+      display: grid;
+      grid-template-columns: 50px auto 1.2fr 50px 0.8fr;
+      gap: 3px;
+      margin-bottom: 3px;
+      align-items: stretch;
+    }
+    
+    .roundel-box-header {
+      border: none;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      min-height: 18px;
+      max-height: 28px;
+    }
+    
+    .roundel-box-header img {
+      max-width: 100%;
+      height: 28px;
+      width: auto;
+      object-fit: contain;
+    }
+    
+    .flight-weapons-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
+      padding: 2px;
+      background: #f5f5f5;
+    }
+    
+    .weapons-display {
+      display: flex;
+      gap: 15px;
+      font-size: 7pt;
+    }
+    
+    .weapon-item {
+      display: flex;
+      gap: 3px;
+    }
+    
+    .weapon-item .weapon-label {
+      font-weight: bold;
+    }
+    
+    /* ========== Flexible Aircraft Area (exactly four boxes) ========== */
+    .aircraft-grid {
+      /* key bits */
+      flex: 1 1 auto; /* occupy the remaining vertical space */
+      min-height: 0; /* allow shrinking when info grows */
+      padding-bottom: 3px; /* fixed inner gap from card bottom */
+      
+      /* grid of four aircraft boxes */
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* exactly 4 columns */
+      gap: 3px;
+      
+      /* keep content contained if something overflows */
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    
+    /* Individual aircraft tiles */
+    .aircraft-box {
+      border: 1px solid #666;
+      padding: 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      box-sizing: border-box;
+      overflow: hidden; /* never exceed bounds */
+    }
+    
+    .aircraft-header {
+      display: flex;
+      flex-direction: row;
+      gap: 3px;
+      margin-bottom: 3px;
+      width: 100%;
+    }
+    
+    .aircraft-number {
+      border: 1px solid #666;
+      width: 16px;
+      height: 16px;
+      background: white;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7pt;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
+    .damage-boxes {
+      display: flex;
+      flex-direction: row;
+      gap: 2px;
+    }
+    
+    .damage-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    
+    .damage-row {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+    
+    .damage-label {
+      border: 1px solid #666;
+      padding: 1px 3px;
+      height: 16px;
+      font-size: 6pt;
+      background: white;
+      display: flex;
+      align-items: center;
+      min-width: 50px;
+      box-sizing: border-box;
+    }
+    
+    .damage-checkbox {
+      border: 1px solid #666;
+      width: 16px;
+      height: 16px;
+      background: white;
+      box-sizing: border-box;
+    }
+    
+    .ordnance-area-small {
+      border: none;
+      border-top: 1px solid #666;
+      padding: 6px 0 4px 0; /* Top padding 6px, bottom padding 4px for spacing from card border */
+      min-height: 24px; /* Reduced minimum to allow more flexibility */
+      width: 100%;
+      background: white;
+      flex: 1; /* Grow to fill remaining vertical space */
+      overflow: hidden; /* Prevent content from overflowing card border */
+      font-size: 7pt; /* Smaller font size for additional ordnance items */
+    }
+    
+    .ordnance-label-small {
+      font-size: 7pt;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .fuel-box {
+      border: 1px solid #666;
+      padding: 2px 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .fuel-circles-row {
+      display: flex;
+      gap: 2px;
+    }
+    
+    .fuel-circle {
+      width: 10px;
+      height: 10px;
+      border: 1px solid #666;
+      border-radius: 50%;
+      background: white;
+    }
+    
+    .field {
+      border: 1px solid #666;
+      padding: 2px 4px;
+      min-height: 18px;
+      max-height: 28px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    
+    .field-label {
+      font-size: 7pt;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .field-value {
+      font-weight: bold;
+      font-size: 7pt;
+    }
+    
+    .tasking-fuel-row {
+      display: grid;
+      grid-template-columns: 0.7fr 0.9fr 0.8fr;
+      gap: 3px;
+      margin-bottom: 3px;
+      align-items: stretch;
+    }
+    
+    .tasking-fuel-row .field {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+    
+    .fuel-label-value {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      font-size: 7pt;
+      white-space: nowrap;
+    }
+    
+    .fuel-label-value .field-label {
+      margin: 0;
+    }
+    
+    .fuel-label-value .fuel-value {
+      font-weight: bold;
+      font-size: 7pt;
+    }
+    
+    .fuel-circles-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+    
+    .speed-table {
+      border: 1px solid #666;
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 6pt;
+      margin-top: 2px;
+    }
+    
+    .speed-table th,
+    .speed-table td {
+      border: 1px solid #666;
+      padding: 1px 2px;
+      text-align: center;
+    }
+    
+    .speed-table th {
+      background: #e0e0e0;
+      font-weight: bold;
+    }
+    
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      
+      .flight-card {
+        page-break-inside: avoid;
+        margin-bottom: 5px;
+      }
+      
+      .flight-grid {
+        page-break-inside: auto;
+      }
+      
+      .page-break-after {
+        page-break-after: always;
+      }
+      
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="flight-grid">
+    ${flightCardsHTML}
+  </div>
+  <div class="no-print" style="text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 12px;">
+    <p>Red Storm Tools Suite - Flight Sheets</p>
+    <p>Generated: ${new Date().toLocaleString()}</p>
+    <button onclick="window.print()" style="margin-top: 10px; padding: 8px 20px; font-size: 14px; cursor: pointer;">Print Flight Sheets</button>
+  </div>
+</body>
+</html>`;
+    }
+  </script>
+  
+  <!-- Module Configuration -->
+  <script src="../../../shared/js/module-config.js"></script>
+  
+  <!-- Load modules after DOM is ready -->
+  <script src="../../../shared/oob-generator/js/utils.js"></script>
+  <script src="../../../shared/oob-generator/js/dice-roller.js"></script>
+  <script src="../../../shared/oob-generator/js/state-manager.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processor.js"></script>
+  <script src="../../../shared/oob-generator/js/ui-controller.js"></script>
+  <script src="../../../shared/oob-generator/js/print-generator.js"></script>
+  <script src="../../../shared/oob-generator/js/aircraft-notes.js"></script>
+  <script src="../../../shared/oob-generator/js/app.js"></script>
+  
+  <!-- Table Processor Classes -->
+  <script src="../../../shared/oob-generator/js/table-processors/BaseTableProcessor.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableA.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableB.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableC.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableD.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableE.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/NATOTableF.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableG.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableH.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableI.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableJ.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableK.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/WPTableL.js"></script>
+  <script src="../../../shared/oob-generator/js/table-processors/TableProcessorFactory.js"></script>
+  
+  <!-- Footer -->
+  <div style="text-align: center; margin-top: 60px; padding: 30px 20px; border-top: 1px solid #4a5a4a; opacity: 0.8; background-color: #1a2a1a;">
+    <p style="margin: 10px 0;">Red Storm Tools Suite | Version 1.0.0</p>
+    <p style="font-size: 0.85em; margin-top: 10px; opacity: 0.7;">
+      Red Storm and all related game materials are © GMT Games. This is an unofficial fan-made tool suite not affiliated with or endorsed by the copyright holder.
+    </p>
+    <p style="font-size: 0.95em; margin-top: 20px;">
+      If you like this project and want to help support its development, you can donate here.
+    </p>
+    <div style="margin-top: 20px;">
+      <form action="https://www.paypal.com/donate" method="post" target="_top">
+        <input type="hidden" name="business" value="ZXPFSDHKU5HKC" />
+        <input type="hidden" name="no_recurring" value="0" />
+        <input type="hidden" name="currency_code" value="USD" />
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+      </form>
+    </div>
+    <a href="https://github.com/augustdragon/red-storm-tools-suite" style="display: inline-block; margin-top: 20px; color: #d4e4d4; text-decoration: none; padding: 10px 20px; border: 1px solid #4a5a4a; border-radius: 6px;" target="_blank">
+      📂 View on GitHub
+    </a>
+  </div>
+</body>
+</html>

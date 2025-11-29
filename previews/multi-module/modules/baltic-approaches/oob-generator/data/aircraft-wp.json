@@ -1,0 +1,612 @@
+{
+  "_comment": "Baltic Approaches Warsaw Pact Aircraft Database - USSR, GDR, Poland",
+  "_version": "1.0.0",
+  "_created": "2025-11-18",
+  "_description": "Aircraft specifications for Baltic Approaches Warsaw Pact forces. Speed values format: L/M/H/VH altitude bands.",
+  
+  "Su-17M3": {
+    "name": "Su-17M3 Fitter H",
+    "model": "Su-17M3 Fitter H",
+    "nation": "USSR",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 8,
+    "notes": "B, E, F",
+    "weapons": {
+      "gun": "30mm",
+      "gunDepletion": 4,
+      "irm": "R-60",
+      "irmDepletion": 6,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "3/2",
+    "sight": "+1",
+    "rwr": "A",
+    "jam": "2n",
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5/-",
+        "dash": "4/5/7/-",
+        "maneuver": "4/5/5/-"
+      },
+      "laden": {
+        "combat": "3/3/3/-",
+        "dash": "4/4/4/-",
+        "maneuver": "2/2/2/-"
+      }
+    },
+    "ordnance": [
+      { "type": "EOGM", "quantity": 1 },
+      { "type": "EOGM(F)", "quantity": 1 }
+    ],
+    "capabilities": [],
+    "aam": "R-60"
+  },
+  
+  "Tu-22RD": {
+    "name": "Tu-22RD Blinder C",
+    "model": "Tu-22RD Blinder C",
+    "nation": "USSR",
+    "crew": 3,
+    "rwy": 5,
+    "fuel": "U",
+    "notes": "A, C, G",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "A",
+    "jam": "2n",
+    "radar": "Surf",
+    "speeds": {
+      "clean": {
+        "combat": "2/3/4/-",
+        "dash": "4/4/6/-",
+        "maneuver": "1/1/1/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Recon", "Night"],
+    "aam": null
+  },
+  
+  "Tu-22M2": {
+    "name": "Tu-22M2 Backfire B",
+    "model": "Tu-22M2 Backfire B",
+    "nation": "USSR",
+    "crew": 4,
+    "rwy": 5,
+    "fuel": "U",
+    "notes": "A, G, H",
+    "weapons": {
+      "gun": "Rear Gun",
+      "gunDepletion": 3,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "10",
+    "sight": "+2",
+    "rwr": "B",
+    "jam": "3d",
+    "radar": "Surf",
+    "speeds": {
+      "clean": {
+        "combat": "2/4/5/-",
+        "dash": "4/6/7/-",
+        "maneuver": "1/1/1/-"
+      },
+      "laden": {
+        "combat": "2/3/4/-",
+        "dash": "4/6/7/-",
+        "maneuver": "1/1/1/-"
+      }
+    },
+    "ordnance": [
+      { "type": "AS-4", "quantity": 2 }
+    ],
+    "capabilities": ["Radar", "Night"],
+    "aam": null
+  },
+  
+  "Tu-95RT": {
+    "name": "Tu-95RT Bear D",
+    "model": "Tu-95RT Bear D",
+    "nation": "USSR",
+    "crew": 9,
+    "rwy": 5,
+    "fuel": "U",
+    "notes": "A, C, G",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "A",
+    "jam": null,
+    "radar": "Surf",
+    "speeds": {
+      "clean": {
+        "combat": "2/2/2/-",
+        "dash": "-/-/-/-",
+        "maneuver": "1/1/1/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Night"],
+    "aam": null
+  },
+  
+  "IL-38": {
+    "name": "IL-38 May",
+    "model": "IL-38 May",
+    "nation": "USSR",
+    "crew": 12,
+    "rwy": 4,
+    "fuel": "U",
+    "notes": "A, D, C",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "A",
+    "jam": null,
+    "radar": "Surf",
+    "speeds": {
+      "clean": {
+        "combat": "2/2/2/-",
+        "dash": "-/-/-/-",
+        "maneuver": "1/1/1/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Night"],
+    "aam": null
+  },
+  
+  "Ka-25T": {
+    "name": "Ka-25T Hormone B",
+    "model": "Ka-25T Hormone B",
+    "nation": "USSR",
+    "crew": 5,
+    "rwy": 0,
+    "fuel": "U",
+    "notes": "D",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "A",
+    "jam": null,
+    "radar": "Surf",
+    "speeds": {
+      "clean": {
+        "combat": "1/-/-/-",
+        "dash": "-/-/-/-",
+        "maneuver": "2/-/-/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Night"],
+    "aam": null
+  },
+  
+  "An-12B": {
+    "name": "An-12B Cub A",
+    "model": "An-12B Cub A",
+    "nation": "USSR",
+    "crew": 6,
+    "rwy": 2,
+    "fuel": "U",
+    "notes": "A",
+    "weapons": {
+      "gun": "Rear Gun",
+      "gunDepletion": 3,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "A",
+    "jam": null,
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "2/2/-/-",
+        "dash": "2/2/-/-",
+        "maneuver": "1/1/-/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Night"],
+    "aam": "Rear Gun (3)"
+  },
+  
+  "AS-4": {
+    "name": "AS-4 Kitchen",
+    "model": "AS-4 Kitchen",
+    "nation": "USSR",
+    "crew": 0,
+    "rwy": null,
+    "fuel": null,
+    "notes": null,
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "2",
+    "sight": "+0",
+    "rwr": null,
+    "jam": null,
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "-/4/13/-",
+        "dash": "-/4/4/-",
+        "maneuver": "-/-/2/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Night"],
+    "aam": null
+  },
+  
+  "MiG-21PFM": {
+    "name": "MiG-21PFM Fishbed F",
+    "model": "MiG-21PFM Fishbed F",
+    "nation": "POL",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 6,
+    "notes": "A, D, E, F, J",
+    "weapons": {
+      "gun": "23mm Pod",
+      "gunDepletion": 4,
+      "irm": "R-13M",
+      "irmDepletion": 6,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": ".5",
+    "sight": "+0",
+    "rwr": "A",
+    "jam": null,
+    "radar": {
+      "name": "RP-21M",
+      "type": "No LD",
+      "range": "[4]",
+      "modifier": null
+    },
+    "speeds": {
+      "clean": {
+        "combat": "3/3/5/-",
+        "dash": "4/5/8/-",
+        "maneuver": "5/6/7/-"
+      },
+      "laden": {
+        "combat": "2/3/3/-",
+        "dash": "3/4/4/-",
+        "maneuver": "2/2/3/-"
+      }
+    },
+    "ordnance": [
+      { "type": "Chaff", "quantity": null }
+    ],
+    "capabilities": ["Night(Ltd)"],
+    "aam": "R-13M"
+  },
+  
+  "MiG-21RF": {
+    "name": "MiG-21RF Fishbed H",
+    "model": "MiG-21RF Fishbed H",
+    "nation": "POL",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 9,
+    "notes": null,
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": "A",
+    "jam": "2n",
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5/-",
+        "dash": "4/5/7/-",
+        "maneuver": "5/6/7/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Recon", "Night(Ltd)"],
+    "aam": null
+  },
+  
+  "MiG-21MF": {
+    "name": "MiG-21MF Fishbed J",
+    "model": "MiG-21MF Fishbed J",
+    "nation": "POL",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 6,
+    "notes": "A, D, E, J",
+    "weapons": {
+      "gun": "23mm Gun",
+      "gunDepletion": 4,
+      "irm": "R-13M",
+      "irmDepletion": 3,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "1",
+    "sight": "+0",
+    "rwr": "A",
+    "jam": null,
+    "radar": {
+      "name": "RP-21MA",
+      "type": "No LD",
+      "range": "[4]",
+      "modifier": null
+    },
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5/-",
+        "dash": "4/5/7/-",
+        "maneuver": "5/6/7/-"
+      },
+      "laden": {
+        "combat": "3/3/3/-",
+        "dash": "4/4/4/-",
+        "maneuver": "2/2/3/-"
+      }
+    },
+    "ordnance": [],
+    "capabilities": ["Night(Ltd)","IRST"],
+    "aam": "R-13M"
+  },
+  
+  "MiG-21bis": {
+    "name": "MiG-21bis Fishbed L",
+    "model": "MiG-21bis Fishbed L",
+    "nation": "POL",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 6,
+    "notes": "A, B, E, J",
+    "weapons": {
+      "gun": "23mm",
+      "gunDepletion": 4,
+      "irm": "R-13M/R-60",
+      "irmDepletion": 6,
+      "rhm": "R-3R",
+      "rhmDepletion": 6
+    },
+    "bomb": "1",
+    "sight": "+0",
+    "rwr": "A",
+    "jam": null,
+    "radar": {
+      "name": "RP-22M",
+      "type": "No LD",
+      "range": "[5]",
+      "modifier": null
+    },
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5/-",
+        "dash": "4/5/7/-",
+        "maneuver": "5/6/7/-"
+      },
+      "laden": {
+        "combat": "3/3/3/-",
+        "dash": "4/4/4/-",
+        "maneuver": "2/2/3/-"
+      }
+    },
+    "ordnance": [],
+    "capabilities": ["Night(Ltd)"],
+    "aam": "R-13M/R60, R-3R,"
+  },
+  
+  "MiG-23MF": {
+    "name": "MiG-23MF Flogger B",
+    "model": "MiG-23MF Flogger B",
+    "nation": "POL",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 6,
+    "notes": "A, C, E, J",
+    "weapons": {
+      "gun": "23mm",
+      "gunDepletion": 4,
+      "irm": "R-60",
+      "irmDepletion": 6,
+      "rhm": "R-23",
+      "rhmDepletion": 6
+    },
+    "bomb": "2/1",
+    "sight": "+0",
+    "rwr": "A",
+    "jam": null,
+    "radar": {
+      "name": "S-23E",
+      "type": "No LD",
+      "range": "[8]",
+      "modifier": " 6+: -2"
+    },
+    "speeds": {
+      "clean": {
+        "combat": "4/4/5/-",
+        "dash": "5/6/8/-",
+        "maneuver": "4/5/5/-"
+      },
+      "laden": {
+        "combat": "3/3/4/-",
+        "dash": "4/5/5/-",
+        "maneuver": "2/3/3/-"
+      }
+    },
+    "ordnance": [],
+    "capabilities": ["Night(Ltd)", "IRST"],
+    "aam": "R-60, R-23"
+  },
+  
+  "Su-20MK": {
+    "name": "Su-20MK Fitter C",
+    "model": "Su-20MK Fitter C",
+    "nation": "POL",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 8,
+    "notes": "A, C, E, G",
+    "weapons": {
+      "gun": "30mm",
+      "gunDepletion": 4,
+      "irm": "R-13M",
+      "irmDepletion": 6,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "2/1",
+    "sight": "+1",
+    "rwr": "A",
+    "jam": "2n",
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "3/4/4/-",
+        "dash": "4/5/6/-",
+        "maneuver": "4/5/5/-"
+      },
+      "laden": {
+        "combat": "3/3/3/-",
+        "dash": "4/4/4/-",
+        "maneuver": "2/2/2/-"
+      }
+    },
+    "ordnance": [],
+    "capabilities": [],
+    "aam": "R-13M"
+  },
+  
+  "Su-22M4": {
+    "name": "Su-22M4 Fitter K",
+    "model": "Su-22M4 Fitter K",
+    "nation": "POL",
+    "crew": 1,
+    "rwy": 2,
+    "fuel": 8,
+    "notes": "C, G, K",
+    "weapons": {
+      "gun": "30mm",  
+      "gunDepletion": 4,
+      "irm": "R-60",
+      "irmDepletion": 6,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": "3/2",
+    "sight": "+1",
+    "rwr": "B",
+    "jam": "2n",
+    "radar": null,
+    "speeds": {
+      "clean": {
+        "combat": "3/4/5-",
+        "dash": "5/5/7/-",
+        "maneuver": "4/5/5/-"
+      },
+      "laden": {
+        "combat": "3/3/3/-",
+        "dash": "4/4/4/-",
+        "maneuver": "2/2/2/-"
+      }
+    },
+    "ordnance": [
+      { "type": "EOGM", "quantity": 1 }
+    ],
+    "capabilities": ["Recon"],
+    "aam": "R-60"
+  },
+  
+  "Mi-14PL": {
+    "name": "Mi-14PL Haze A",
+    "model": "Mi-14PL Haze A",
+    "nation": "POL",
+    "crew": 4,
+    "rwy": 0,
+    "fuel": "U",
+    "notes": "H, I",
+    "weapons": {
+      "gun": null,
+      "gunDepletion": null,
+      "irm": null,
+      "irmDepletion": null,
+      "rhm": null,
+      "rhmDepletion": null
+    },
+    "bomb": null,
+    "sight": null,
+    "rwr": null,
+    "jam": null,
+    "radar": "Surf",
+    "speeds": {
+      "clean": {
+        "combat": "1/-/-/-",
+        "dash": "-/-/-/-",
+        "maneuver": "2/-/-/-"
+      },
+      "laden": null
+    },
+    "ordnance": [],
+    "capabilities": ["Night"],
+    "aam": null
+  }
+}
+

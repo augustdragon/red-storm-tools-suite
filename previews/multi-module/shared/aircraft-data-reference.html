@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Storm Tools - Aircraft Data Reference</title>
+    <style>
+        :root {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: white;
+            --bg-controls: white;
+            --text-primary: #2c3e50;
+            --text-secondary: #34495e;
+            --border-color: #ecf0f1;
+            --border-light: #95a5a6;
+            --hover-bg: #f8f9fa;
+            --row-even-bg: #f9f9f9;
+            --shadow: rgba(0,0,0,0.1);
+            --null-text: #999;
+        }
+        
+        body.dark-theme {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-controls: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #c0c0c0;
+            --border-color: #404040;
+            --border-light: #505050;
+            --hover-bg: #3a3a3a;
+            --row-even-bg: #333333;
+            --shadow: rgba(0,0,0,0.3);
+            --null-text: #666;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        h1 {
+            color: var(--text-primary);
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: var(--text-secondary);
+            margin-top: 30px;
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 5px;
+        }
+        #natoSection h2 {
+            color: #2980b9;
+            border-bottom: 2px solid #3498db;
+            background-color: #d6eaf8;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        body.dark-theme #natoSection h2 {
+            color: #5dade2;
+            background-color: transparent;
+            border-bottom: 2px solid #505050;
+        }
+        #wpSection h2 {
+            color: #c0392b;
+            border-bottom: 2px solid #e74c3c;
+            background-color: #fadbd8;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        body.dark-theme #wpSection h2 {
+            color: #ff6b6b;
+            background-color: transparent;
+            border-bottom: 2px solid #505050;
+        }
+        .controls {
+            background: var(--bg-controls);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+        .controls label {
+            margin-right: 20px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        .controls input, .controls select {
+            margin-right: 20px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 5px;
+            border-radius: 3px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--bg-secondary);
+            box-shadow: 0 2px 4px var(--shadow);
+            margin-bottom: 30px;
+            font-size: 0.85em;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 6px;
+            text-align: left;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        #wpTable th {
+            background-color: #c0392b;
+        }
+        td {
+            padding: 8px 6px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+            color: var(--text-primary);
+        }
+        tr:hover {
+            background-color: var(--hover-bg);
+        }
+        tr:nth-child(even) {
+            background-color: var(--row-even-bg);
+        }
+        .nato-row {
+            border-left: 4px solid #3498db;
+        }
+        .wp-row {
+            border-left: 4px solid #e74c3c;
+        }
+        .hidden {
+            display: none;
+        }
+        .speed-block {
+            line-height: 1.3;
+        }
+        .ordnance-list {
+            margin: 0;
+            padding-left: 15px;
+        }
+        .null-value {
+            color: var(--null-text);
+            font-style: italic;
+        }
+        .note-letter {
+            display: inline-block;
+            margin: 0 2px;
+            padding: 2px 4px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 3px;
+            font-weight: bold;
+            cursor: help;
+            position: relative;
+        }
+        .note-letter:hover {
+            background-color: #2980b9;
+        }
+        .note-tooltip {
+            visibility: hidden;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: normal;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .note-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #2c3e50;
+        }
+        .note-letter:hover .note-tooltip {
+            visibility: visible;
+        }
+        .nav-header {
+            background-color: #3498db;
+            padding: 15px 30px;
+            border-bottom: 2px solid #2980b9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: -20px -20px 20px -20px;
+        }
+        .nav-header span {
+            color: white;
+            font-weight: bold;
+        }
+        .nav-header a {
+            color: #e8f4f8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .nav-header a:hover {
+            color: white;
+        }
+        .theme-toggle {
+            background: rgb(41, 128, 185);
+            border: 1px solid #2c3e50;
+            color: #2c3e50;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-left: 20px;
+        }
+        body.dark-theme .theme-toggle {
+            background: none;
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+        }
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 1);
+            border-color: #1a252f;
+        }
+        body.dark-theme .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-header">
+        <span>Aircraft Data Reference</span>
+        <div>
+            <a href="/">← Back to Module Selection</a>
+        </div>
+    </div>
+    <h1>Red Storm Tools - Aircraft Data Reference
+        <button id="themeToggle" class="theme-toggle" title="Toggle dark mode" style="float: right; margin-top: -5px;">🌙</button>
+    </h1>
+    
+    <div class="controls">
+        <label>Filter by Module:</label>
+        <select id="moduleFilter">
+            <option value="all">All Modules</option>
+            <option value="RS">Red Storm</option>
+            <option value="BA">Baltic Approaches</option>
+        </select>
+        
+        <label>Filter by Nation:</label>
+        <select id="nationFilter">
+            <option value="all">All Nations</option>
+            <option value="US">US</option>
+            <option value="UK">UK</option>
+            <option value="FRG">FRG</option>
+            <option value="DK">DK</option>
+            <option value="NE">NE</option>
+            <option value="SE">SE</option>
+            <option value="USSR">USSR</option>
+            <option value="POL">POL</option>
+            <option value="GDR">GDR</option>
+        </select>
+        
+        <label>Search:</label>
+        <input type="text" id="searchBox" placeholder="Search aircraft name...">
+    </div>
+
+    <div id="natoSection">
+        <h2>NATO Aircraft</h2>
+        <table id="natoTable">
+            <thead>
+                <tr>
+                    <th>Aircraft</th>
+                    <th>Module</th>
+                    <th>Nation</th>
+                    <th>Crew</th>
+                    <th>Rwy</th>
+                    <th>Fuel</th>
+                    <th>Bomb</th>
+                    <th>Sight</th>
+                    <th>RWR</th>
+                    <th>Jam</th>
+                    <th>Radar</th>
+                    <th>Speeds (Clean)<br>C/D/M</th>
+                    <th>Speeds (Laden)<br>C/D/M</th>
+                    <th>Ordnance</th>
+                    <th>Capabilities</th>
+                    <th>Air-to-Air</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody id="natoBody">
+                <!-- Data will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="wpSection">
+        <h2>Warsaw Pact Aircraft</h2>
+        <table id="wpTable">
+            <thead>
+                <tr>
+                    <th>Aircraft</th>
+                    <th>Module</th>
+                    <th>Nation</th>
+                    <th>Crew</th>
+                    <th>Rwy</th>
+                    <th>Fuel</th>
+                    <th>Bomb</th>
+                    <th>Sight</th>
+                    <th>RWR</th>
+                    <th>Jam</th>
+                    <th>Radar</th>
+                    <th>Speeds (Clean)<br>L/M/H/V</th>
+                    <th>Speeds (Laden)<br>L/M/H/V</th>
+                    <th>Ordnance</th>
+                    <th>Capabilities</th>
+                    <th>Air-to-Air</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody id="wpBody">
+                <!-- Data will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Note: To use this file, serve it via a local web server (e.g., python -m http.server)
+        // This version reads from the shared data directory
+        
+        // Use the same notes data structure as aircraft-notes-all.html
+        const allNotesData = {
+            "USAF": { "module": "RS", "name": "USAF - United States Air Force" },
+            "UK": { "module": "RS", "name": "UK - Royal Air Force" },
+            "FRG": { "module": "RS", "name": "FRG - West German Air Force" },
+            "BE/CA/NE": { "module": "RS", "name": "Belgium / Canada / Netherlands" },
+            "USSR_RS": { "module": "RS", "name": "USSR - Soviet Air Force (Red Storm)" },
+            "GDR": { "module": "RS", "name": "GDR - East German Air Force" },
+            "USN/USMC": { "module": "BA", "name": "USN/USMC - United States Navy & Marine Corps" },
+            "NATO": { "module": "BA", "name": "NATO - NE / UK / FRG / DK" },
+            "USSR_BA": { "module": "BA", "name": "USSR - Soviet Air Force & Navy (Baltic Approaches)" },
+            "POL": { "module": "BA", "name": "POL - Polish Air Force" },
+            "SE": { "module": "BA", "name": "SE - Swedish Air Force" }
+        };
+        
+        let surfaceRadarData = {};
+        
+        function loadData() {
+            // Load from shared data directory including aircraft notes from JSON file and surface radar data
+            Promise.all([
+                fetch('data/aircraft-nato.json').then(r => r.json()).catch(() => null),
+                fetch('data/aircraft-wp.json').then(r => r.json()).catch(() => null),
+                fetch('data/aircraft-note-rules.json').then(r => r.json()).catch(() => null),
+                fetch('data/surface-search-radars.json').then(r => r.json()).catch(() => null)
+            ]).then(([natoData, wpData, notesJson, surfRadar]) => {
+                // Load notes from the shared JSON file and organize by nation
+                if (notesJson) {
+                    Object.keys(allNotesData).forEach(nationKey => {
+                        if (notesJson[nationKey]) {
+                            allNotesData[nationKey].notes = {};
+                            // notesJson[nationKey] is an object with note codes as keys
+                            Object.keys(notesJson[nationKey]).forEach(noteCode => {
+                                const noteData = notesJson[nationKey][noteCode];
+                                allNotesData[nationKey].notes[noteCode] = noteData.description || noteData;
+                            });
+                        }
+                    });
+                }
+                
+                // Store surface radar lookup data
+                if (surfRadar && surfRadar.radars) {
+                    surfRadar.radars.forEach(entry => {
+                        surfaceRadarData[entry.aircraft] = entry;
+                    });
+                }
+                if (natoData) {
+                    const tbody = document.getElementById('natoBody');
+                    const sortedKeys = Object.keys(natoData)
+                        .filter(key => !key.startsWith('_'))
+                        .sort((a, b) => a.localeCompare(b));
+                    sortedKeys.forEach(key => {
+                        const aircraft = natoData[key];
+                        const row = createAircraftRow(key, aircraft, 'nato-row');
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    document.getElementById('natoBody').innerHTML = '<tr><td colspan="17" style="text-align:center; padding:20px;">ERROR: Could not load NATO aircraft data.<br>Please serve this HTML file via a local web server or open it in a browser that allows local file access.</td></tr>';
+                }
+                
+                if (wpData) {
+                    const tbody = document.getElementById('wpBody');
+                    const sortedKeys = Object.keys(wpData)
+                        .filter(key => !key.startsWith('_'))
+                        .sort((a, b) => a.localeCompare(b));
+                    sortedKeys.forEach(key => {
+                        const aircraft = wpData[key];
+                        const row = createAircraftRow(key, aircraft, 'wp-row');
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    document.getElementById('wpBody').innerHTML = '<tr><td colspan="17" style="text-align:center; padding:20px;">ERROR: Could not load WP aircraft data.<br>Please serve this HTML file via a local web server or open it in a browser that allows local file access.</td></tr>';
+                }
+            });
+        }
+        
+        // Load data when page loads
+        window.addEventListener('DOMContentLoaded', loadData);
+
+        function createAircraftRow(key, aircraft, cssClass) {
+            const row = document.createElement('tr');
+            row.className = cssClass;
+            row.dataset.nation = aircraft.nation || '';
+            const displayName = (aircraft.name && String(aircraft.name).trim()) ? String(aircraft.name) : key;
+            row.dataset.name = displayName.toLowerCase();
+            row.dataset.module = aircraft.module || '';
+
+            const formatValue = (val) => val === null || val === undefined ? '<span class="null-value">—</span>' : val;
+            
+            const speedsClean = aircraft.speeds?.clean ? 
+                `<div class="speed-block">C: ${aircraft.speeds.clean.combat}<br>D: ${aircraft.speeds.clean.dash}<br>M: ${aircraft.speeds.clean.maneuver}</div>` : 
+                '<span class="null-value">—</span>';
+            
+            const speedsLaden = aircraft.speeds?.laden ? 
+                `<div class="speed-block">C: ${aircraft.speeds.laden.combat}<br>D: ${aircraft.speeds.laden.dash}<br>M: ${aircraft.speeds.laden.maneuver}</div>` : 
+                '<span class="null-value">—</span>';
+
+            const ordnance = aircraft.ordnance && aircraft.ordnance.length > 0 ?
+                aircraft.ordnance.map(o => `${o.type}${o.quantity ? ` (${o.quantity})` : ''}`).join('<br>') :
+                '<span class="null-value">—</span>';
+
+            const capabilities = aircraft.capabilities && aircraft.capabilities.length > 0 ?
+                `<span class="capabilities">${aircraft.capabilities.join(', ')}</span>` :
+                '<span class="null-value">—</span>';
+
+            const radarType = (() => {
+                if (aircraft.radar && typeof aircraft.radar === 'object') {
+                    const { name, type, range, modifier } = aircraft.radar;
+                    
+                    // Check if this radar has both air-to-air and surface search capabilities
+                    const surfRadarLookup = surfaceRadarData[key];
+                    const hasBothCapabilities = surfRadarLookup && type && type.includes('Surf');
+                    
+                    if (hasBothCapabilities) {
+                        // Build air-to-air line - remove 'Surf' from type
+                        const airParts = [];
+                        airParts.push(name);
+                        const airType = type.split(',').map(t => t.trim()).filter(t => t !== 'Surf').join(', ');
+                        if (airType) airParts.push(airType);
+                        if (range !== null && range !== undefined && range !== '') {
+                            const rangeStr = `[${range}]`;
+                            if (modifier) {
+                                airParts.push(`${rangeStr}, ${modifier}`);
+                            } else {
+                                airParts.push(rangeStr);
+                            }
+                        } else if (modifier) {
+                            airParts.push(modifier);
+                        }
+                        const airLine = airParts.join(' • ');
+                        
+                        // Build surface search line from lookup
+                        const surfParts = [`Surf: Col ${surfRadarLookup.col}`, surfRadarLookup.detect];
+                        if (surfRadarLookup.arcs) surfParts.push(`Arcs ${surfRadarLookup.arcs}`);
+                        const surfLine = surfParts.join(' • ');
+                        
+                        return `${airLine}<br>${surfLine}`;
+                    }
+                    
+                    // Regular air-to-air radar display
+                    const parts = [];
+                    parts.push(name);
+                    if (type) parts.push(type);
+                    if (range !== null && range !== undefined && range !== '') {
+                        const rangeStr = `[${range}]`;
+                        if (modifier) {
+                            parts.push(`${rangeStr}, ${modifier}`);
+                        } else {
+                            parts.push(rangeStr);
+                        }
+                    } else if (modifier) {
+                        parts.push(modifier);
+                    }
+                    return parts.join(' • ');
+                }
+
+                // Check for surface-only radars using lookup
+                const surfRadarLookup = surfaceRadarData[key];
+                const hasSurfaceRadar = surfRadarLookup && (aircraft.radar === 'Surf' || aircraft.radar === 'surf');
+                if (hasSurfaceRadar) {
+                    const detailParts = [];
+                    if (surfRadarLookup.col) detailParts.push(`Col ${surfRadarLookup.col}`);
+                    if (surfRadarLookup.range !== null && surfRadarLookup.range !== undefined && surfRadarLookup.range !== '') detailParts.push(`Range ${surfRadarLookup.range}`);
+                    if (surfRadarLookup.detect) detailParts.push(surfRadarLookup.detect);
+                    if (surfRadarLookup.notes) detailParts.push(surfRadarLookup.notes);
+                    if (surfRadarLookup.arcs) detailParts.push(`Arcs ${surfRadarLookup.arcs}`);
+                    const details = detailParts.length ? `<br><span>${detailParts.join(' • ')}</span>` : '';
+                    return `Surf: ${surfRadarLookup.radar || 'Surf'}${details}`;
+                }
+
+                if (aircraft.radar === 'Surf' || aircraft.radar === 'surf') {
+                    return 'Surf';
+                }
+                return formatValue(aircraft.radar);
+            })();
+
+            const moduleTag = aircraft.module ? `<span style="background-color: ${aircraft.module === 'RS' ? '#e74c3c' : '#3498db'}; color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold;">${aircraft.module}</span>` : '<span class="null-value">—</span>';
+            
+            // Process notes with tooltips using unified notes data
+            const notesWithTooltips = (() => {
+                if (!aircraft.notes) return '<span class="null-value">—</span>';
+                const noteLetters = aircraft.notes.split(',').map(n => n.trim());
+                
+                // Map aircraft nation to notes data key
+                const getNationKey = (nation, module) => {
+                    if (nation === 'US') {
+                        return module === 'BA' ? 'USN/USMC' : 'USAF';
+                    }
+                    if (['BE', 'CA', 'NE', 'Belgium'].includes(nation)) {
+                        return module === 'BA' ? 'NATO' : 'BE/CA/NE';
+                    }
+                    if (nation === 'USSR') return module === 'BA' ? 'USSR_BA' : 'USSR_RS';
+                    if (nation === 'SE') return 'SE';
+                    if (nation === 'POL') return 'POL';
+                    // For BA module, NE, UK, FRG, DK all use NATO notes
+                    if (module === 'BA' && ['UK', 'FRG', 'DK', 'NE'].includes(nation)) {
+                        return 'NATO';
+                    }
+                    // For RS module, use nation directly
+                    return nation;
+                };
+                
+                const nationKey = getNationKey(aircraft.nation, aircraft.module);
+                const nationNotes = allNotesData[nationKey]?.notes || {};
+                
+                return noteLetters.map(letter => {
+                    const noteText = nationNotes[letter] || 'No description available';
+                    return `<span class="note-letter">${letter}<span class="note-tooltip">${noteText}</span></span>`;
+                }).join(' ');
+            })();
+            
+            // Format AAM field with depletion values from weapons object, including gun
+            const aamDisplay = (() => {
+                const normalizeList = (value) => {
+                    if (value === null || value === undefined) return [];
+                    if (Array.isArray(value)) {
+                        return value.map(item => String(item).trim()).filter(Boolean);
+                    }
+                    const strValue = typeof value === 'string' ? value : String(value);
+                    return strValue.split(',').map(item => item.trim()).filter(Boolean);
+                };
+
+                const hasWeaponData = Boolean(
+                    aircraft.weapons && (
+                        aircraft.weapons.gun ||
+                        aircraft.weapons.irm ||
+                        aircraft.weapons.rhm
+                    )
+                );
+
+                if (!aircraft.aam && !hasWeaponData) {
+                    return '<span class="null-value">—</span>';
+                }
+                
+                // If weapons object has irm/rhm with depletion values, combine them
+                if (aircraft.weapons) {
+                    const { irm, irmDepletion, rhm, rhmDepletion, gun, gunDepletion } = aircraft.weapons;
+                    const aamParts = [];
+                    
+                    const irmWeapons = normalizeList(irm);
+                    if (irmWeapons.length) {
+                        const irmDepletions = normalizeList(irmDepletion);
+                        if (irmDepletions.length && irmDepletions.length === irmWeapons.length) {
+                            irmWeapons.forEach((weapon, index) => {
+                                aamParts.push(`${weapon} {${irmDepletions[index]}}`);
+                            });
+                        } else if (irmDepletions.length) {
+                            const sharedDepletion = irmDepletions[0];
+                            irmWeapons.forEach(weapon => {
+                                aamParts.push(`${weapon} {${sharedDepletion}}`);
+                            });
+                        } else if (irmDepletion !== null && irmDepletion !== undefined) {
+                            irmWeapons.forEach(weapon => {
+                                aamParts.push(`${weapon} {${irmDepletion}}`);
+                            });
+                        } else {
+                            aamParts.push(...irmWeapons);
+                        }
+                    }
+                    
+                    const rhmWeapons = normalizeList(rhm);
+                    if (rhmWeapons.length) {
+                        const rhmDepletions = normalizeList(rhmDepletion);
+                        if (rhmDepletions.length && rhmDepletions.length === rhmWeapons.length) {
+                            rhmWeapons.forEach((weapon, index) => {
+                                aamParts.push(`${weapon} {${rhmDepletions[index]}}`);
+                            });
+                        } else if (rhmDepletions.length) {
+                            const sharedDepletion = rhmDepletions[0];
+                            rhmWeapons.forEach(weapon => {
+                                aamParts.push(`${weapon} {${sharedDepletion}}`);
+                            });
+                        } else if (rhmDepletion !== null && rhmDepletion !== undefined) {
+                            rhmWeapons.forEach(weapon => {
+                                aamParts.push(`${weapon} {${rhmDepletion}}`);
+                            });
+                        } else {
+                            aamParts.push(...rhmWeapons);
+                        }
+                    }
+                    
+                    if (!rhmWeapons.length && rhm) {
+                        aamParts.push(String(rhm));
+                    }
+                    
+                    // Add gun if present - extract caliber only (e.g., "20mm M61" -> "20mm")
+                    if (gun && gunDepletion) {
+                        const gunCaliber = gun.includes('mm') ? gun.split(/\s+/)[0] : gun;
+                        const gunLabel = gun.toLowerCase().includes('gun') ? gunCaliber : `${gunCaliber} Gun`;
+                        aamParts.push(`${gunLabel} {${gunDepletion}}`);
+                    } else if (gun) {
+                        const gunCaliber = gun.includes('mm') ? gun.split(/\s+/)[0] : gun;
+                        const gunLabel = gun.toLowerCase().includes('gun') ? gun : `${gunCaliber} Gun`;
+                        aamParts.push(gunLabel);
+                    }
+                    
+                    if (aamParts.length > 0) {
+                        return aamParts.join('<br>');
+                    }
+                }
+                
+                // Fallback to raw aam field if weapons data not available
+                return aircraft.aam || '<span class="null-value">—</span>';
+            })();
+            
+            row.innerHTML = `
+                <td><strong>${key}</strong><br><small>${displayName}</small></td>
+                <td>${moduleTag}</td>
+                <td>${aircraft.nation}</td>
+                <td>${aircraft.crew}</td>
+                <td>${formatValue(aircraft.rwy)}</td>
+                <td>${aircraft.fuel}</td>
+                <td>${formatValue(aircraft.bomb)}</td>
+                <td>${formatValue(aircraft.sight)}</td>
+                <td>${formatValue(aircraft.rwr)}</td>
+                <td>${formatValue(aircraft.jam)}</td>
+                <td>${radarType}</td>
+                <td>${speedsClean}</td>
+                <td>${speedsLaden}</td>
+                <td>${ordnance}</td>
+                <td>${capabilities}</td>
+                <td>${aamDisplay}</td>
+                <td>${notesWithTooltips}</td>
+            `;
+
+            return row;
+        }
+
+        // Filter functionality
+        document.getElementById('moduleFilter').addEventListener('change', filterTable);
+        document.getElementById('nationFilter').addEventListener('change', filterTable);
+        document.getElementById('searchBox').addEventListener('input', filterTable);
+
+        function filterTable() {
+            const moduleFilter = document.getElementById('moduleFilter').value;
+            const nationFilter = document.getElementById('nationFilter').value;
+            const searchText = document.getElementById('searchBox').value.toLowerCase();
+            
+            const allRows = document.querySelectorAll('#natoBody tr, #wpBody tr');
+            
+            // Define NATO and WP nations
+            const natoNations = ['US', 'UK', 'FRG', 'DK', 'NE', 'SE'];
+            const wpNations = ['USSR', 'POL', 'GDR'];
+            
+            let hasVisibleNATO = false;
+            let hasVisibleWP = false;
+            
+            allRows.forEach(row => {
+                const matchesModule = moduleFilter === 'all' || row.dataset.module === moduleFilter;
+                const matchesNation = nationFilter === 'all' || row.dataset.nation === nationFilter;
+                const matchesSearch = searchText === '' || row.dataset.name.includes(searchText);
+                
+                if (matchesModule && matchesNation && matchesSearch) {
+                    row.classList.remove('hidden');
+                    // Track which sections have visible rows
+                    if (row.closest('#natoBody')) {
+                        hasVisibleNATO = true;
+                    } else {
+                        hasVisibleWP = true;
+                    }
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+            
+            // Hide/show section headers based on nation filter
+            const natoSection = document.getElementById('natoSection');
+            const wpSection = document.getElementById('wpSection');
+            
+            if (nationFilter === 'all') {
+                // Show both sections if they have visible rows
+                natoSection.style.display = hasVisibleNATO ? 'block' : 'none';
+                wpSection.style.display = hasVisibleWP ? 'block' : 'none';
+            } else if (wpNations.includes(nationFilter)) {
+                // Hide NATO section when WP nation selected
+                natoSection.style.display = 'none';
+                wpSection.style.display = hasVisibleWP ? 'block' : 'none';
+            } else if (natoNations.includes(nationFilter)) {
+                // Hide WP section when NATO nation selected
+                natoSection.style.display = hasVisibleNATO ? 'block' : 'none';
+                wpSection.style.display = 'none';
+            }
+        }
+    </script>
+    
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Load saved theme preference or default to light
+        const savedTheme = localStorage.getItem('aircraft-data-theme') || 'light';
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.textContent = '☀️';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            const isDark = body.classList.contains('dark-theme');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('aircraft-data-theme', isDark ? 'dark' : 'light');
+        });
+    </script>
+</body>
+</html>

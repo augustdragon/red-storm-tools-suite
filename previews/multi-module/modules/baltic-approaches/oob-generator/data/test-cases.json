@@ -1,0 +1,380 @@
+{
+  "_comment": "Test cases for Baltic Approaches aircraft notes implementation",
+  "_structure": "Each nation contains test cases organized by note letter",
+  
+  "NATO": {
+    "A": [
+      {
+        "description": "F-16A (DK) with Bombing - AIM-9 depletion should become {6}",
+        "aircraft": {
+          "name": "F-16A (DK)",
+          "nation": "DK",
+          "irm": "AIM-9L {3}",
+          "bomb": "3/2",
+          "notes": "A, C, G",
+          "module": "BA"
+        },
+        "tasking": "Bombing",
+        "sourceTable": "D",
+        "expectedModifications": {
+          "irm": "AIM-9L {6}",
+          "bomb": "2"
+        },
+        "expectedSpecialRules": []
+      },
+      {
+        "description": "F-16A (DK) with CAP - AIM-9 depletion should remain {3}",
+        "aircraft": {
+          "name": "F-16A (DK)",
+          "nation": "DK",
+          "irm": "AIM-9L {3}",
+          "notes": "A, C, G",
+          "module": "BA"
+        },
+        "tasking": "CAP",
+        "sourceTable": "A",
+        "expectedModifications": {
+          "irm": "AIM-9L {3}"
+        },
+        "expectedSpecialRules": []
+      }
+    ],
+    "C": [
+      {
+        "description": "F-16A (DK) with Deep Strike - Use lower bomb load",
+        "aircraft": {
+          "name": "F-16A (DK)",
+          "nation": "DK",
+          "bomb": "3/2",
+          "notes": "A, C, G",
+          "module": "BA"
+        },
+        "tasking": "Bombing",
+        "sourceTable": "D",
+        "expectedModifications": {
+          "bomb": "2"
+        },
+        "expectedSpecialRules": []
+      },
+      {
+        "description": "F-16A (DK) with Bombing (not Deep Strike) - Keep higher bomb load",
+        "aircraft": {
+          "name": "F-16A (DK)",
+          "nation": "DK",
+          "bomb": "3/2",
+          "notes": "A, C, G",
+          "module": "BA"
+        },
+        "tasking": "Bombing",
+        "sourceTable": "B",
+        "expectedModifications": {
+          "bomb": "3/2"
+        },
+        "expectedSpecialRules": []
+      }
+    ],
+    "F": [
+      {
+        "description": "Sea Harrier FRS.1 with Bombing - Remove AIM-9",
+        "aircraft": {
+          "name": "Sea Harrier FRS.1",
+          "nation": "UK",
+          "irm": "AIM-9L {8}",
+          "notes": "F, J, K",
+          "module": "BA"
+        },
+        "tasking": "Bombing",
+        "sourceTable": "D",
+        "expectedModifications": {
+          "irm": null
+        },
+        "expectedSpecialRules": []
+      }
+    ],
+    "H": [
+      {
+        "description": "F-35XD Draken with SEAD - Remove AIM-9",
+        "aircraft": {
+          "name": "F-35XD Draken",
+          "nation": "DK",
+          "irm": "AIM-9N {3}",
+          "notes": "H",
+          "module": "BA"
+        },
+        "tasking": "SEAD",
+        "sourceTable": "C",
+        "expectedModifications": {
+          "irm": null
+        },
+        "expectedSpecialRules": []
+      }
+    ]
+  },
+  
+  "USN_USMC": {
+    "A": [
+      {
+        "description": "F/A-18A with Deep Strike - Use lower bomb load",
+        "aircraft": {
+          "name": "F/A-18A Hornet",
+          "nation": "US",
+          "bomb": "4/2",
+          "notes": "A, E, H",
+          "module": "BA"
+        },
+        "tasking": "Bombing",
+        "sourceTable": "D",
+        "expectedModifications": {
+          "bomb": "2"
+        },
+        "expectedSpecialRules": []
+      }
+    ],
+    "H": [
+      {
+        "description": "F/A-18A with Recon - AIM-7 depletion {6}",
+        "aircraft": {
+          "name": "F/A-18A Hornet",
+          "nation": "US",
+          "rhm": "AIM-7M {3}",
+          "notes": "A, E, H",
+          "module": "BA"
+        },
+        "tasking": "Recon",
+        "sourceTable": "A",
+        "expectedModifications": {
+          "rhm": "AIM-7M {6}"
+        },
+        "expectedSpecialRules": []
+      }
+    ],
+    "K": [
+      {
+        "description": "F-14A with Recon - Both missile depletions {6}",
+        "aircraft": {
+          "name": "F-14A Tomcat",
+          "nation": "US",
+          "irm": "AIM-9L {3}",
+          "rhm": "AIM-7M {3}",
+          "notes": "I, K, L",
+          "module": "BA"
+        },
+        "tasking": "Recon",
+        "sourceTable": "A",
+        "expectedModifications": {
+          "irm": "AIM-9L {6}",
+          "rhm": "AIM-7M {6}"
+        },
+        "expectedSpecialRules": []
+      }
+    ]
+  },
+  
+  "USSR_BA": {
+    "B": [
+      {
+        "description": "Su-24 Fencer with Deep Strike - Use lower bomb load",
+        "aircraft": {
+          "name": "Su-24 Fencer",
+          "nation": "USSR",
+          "bomb": "6/4",
+          "notes": "B",
+          "module": "BA"
+        },
+        "tasking": "Bombing",
+        "sourceTable": "J",
+        "expectedModifications": {
+          "bomb": "4"
+        },
+        "expectedSpecialRules": []
+      },
+      {
+        "description": "Su-24 Fencer with Bombing (not Deep Strike) - Keep higher bomb load",
+        "aircraft": {
+          "name": "Su-24 Fencer",
+          "nation": "USSR",
+          "bomb": "6/4",
+          "notes": "B",
+          "module": "BA"
+        },
+        "tasking": "Bombing",
+        "sourceTable": "H",
+        "expectedModifications": {
+          "bomb": "6/4"
+        },
+        "expectedSpecialRules": []
+      }
+    ]
+  },
+  
+  "POL": {
+    "A": [
+      {
+        "description": "MiG-21 with Bombing - Remove IRM and RHM",
+        "aircraft": {
+          "name": "MiG-21MF Fishbed",
+          "nation": "POL",
+          "irm": "R-60 {3}",
+          "rhm": "R-3R {3}",
+          "notes": "A, B",
+          "module": "BA"
+        },
+        "tasking": "Bombing",
+        "sourceTable": "H",
+        "expectedModifications": {
+          "irm": null,
+          "rhm": null
+        },
+        "expectedSpecialRules": []
+      }
+    ],
+    "B": [
+      {
+        "description": "MiG-21 with CAP - Roll for IRM type (dice roll test)",
+        "aircraft": {
+          "name": "MiG-21MF Fishbed",
+          "nation": "POL",
+          "irm": "R-13M/R-60 {3}",
+          "aam": "R-13M/R-60",
+          "notes": "B",
+          "module": "BA"
+        },
+        "tasking": "CAP",
+        "sourceTable": "A",
+        "expectedModifications": {
+          "irm_pattern": "^(R-13M|R-60) \\{3\\}$",
+          "aam_pattern": "^(R-13M|R-60)$"
+        },
+        "expectedSpecialRules": [],
+        "requiresDiceRoll": true,
+        "diceRollNote": "1-5 = R-13M, 6-10 = R-60"
+      }
+    ],
+    "C": [
+      {
+        "description": "Su-22M4 with Deep Strike - Use lower bomb load",
+        "aircraft": {
+          "name": "Su-22M4 Fitter",
+          "nation": "POL",
+          "bomb": "3/2",
+          "notes": "C",
+          "module": "BA"
+        },
+        "tasking": "Bombing",
+        "sourceTable": "J",
+        "expectedModifications": {
+          "bomb": "2"
+        },
+        "expectedSpecialRules": []
+      }
+    ],
+    "F": [
+      {
+        "description": "MiG-21 - Roll for 23mm Gun Pod (dice roll test)",
+        "aircraft": {
+          "name": "MiG-21MF Fishbed",
+          "nation": "POL",
+          "gun": null,
+          "notes": "F",
+          "module": "BA"
+        },
+        "tasking": "CAP",
+        "sourceTable": "A",
+        "expectedModifications": {
+          "gun_pattern": "^(23mm Gun Pod \\+\\d \\{4\\}|null)$"
+        },
+        "expectedSpecialRules": [],
+        "requiresDiceRoll": true,
+        "diceRollNote": "1-6 = Gun Pod added, 7-10 = No Gun Pod"
+      }
+    ]
+  },
+  
+  "SE": {
+    "A": [
+      {
+        "description": "J-35F2 Draken with Bombing - Remove IRM",
+        "aircraft": {
+          "name": "J-35F2 Draken",
+          "nation": "SE",
+          "irm": "AIM-9J {3}",
+          "notes": "A, B, D",
+          "module": "BA"
+        },
+        "tasking": "Bombing",
+        "sourceTable": "H",
+        "expectedModifications": {
+          "irm": null
+        },
+        "expectedSpecialRules": []
+      }
+    ],
+    "C": [
+      {
+        "description": "JA-37 Viggen with CAP - Note E rolls for AIM-9 type, Note C not applicable for CAP",
+        "aircraft": {
+          "name": "JA-37 Viggen",
+          "nation": "SE",
+          "irm": "AIM-9P/L {3}",
+          "aam": "AIM-9P/L, Skyflash",
+          "rhm": "Skyflash {3}",
+          "bomb": "1",
+          "notes": "C, D, E, H",
+          "module": "BA"
+        },
+        "tasking": "CAP",
+        "sourceTable": "A",
+        "expectedModifications": {
+          "irm_pattern": "^(AIM-9P|AIM-9L) \\{3\\}$",
+          "aam_pattern": "^(AIM-9P|AIM-9L), Skyflash$"
+        },
+        "expectedSpecialRules": [],
+        "requiresDiceRoll": true,
+        "diceRollNote": "Note E: 1-6 = AIM-9P, 7-10 = AIM-9L (Note C doesn't apply for CAP tasking)"
+      }
+    ],
+    "E": [
+      {
+        "description": "JA-37 Viggen with CAP - Roll for AIM-9 type (dice roll test)",
+        "aircraft": {
+          "name": "JA-37 Viggen",
+          "nation": "SE",
+          "irm": "AIM-9P/L {3}",
+          "aam": "AIM-9P/L, Skyflash",
+          "notes": "C, D, E, H",
+          "module": "BA"
+        },
+        "tasking": "CAP",
+        "sourceTable": "A",
+        "expectedModifications": {
+          "irm_pattern": "^(AIM-9P|AIM-9L) \\{3\\}$",
+          "aam_pattern": "^(AIM-9P|AIM-9L), Skyflash$"
+        },
+        "expectedSpecialRules": [],
+        "requiresDiceRoll": true,
+        "diceRollNote": "1-6 = AIM-9P, 7-10 = AIM-9L"
+      }
+    ]
+  },
+  
+  "_testSummary": {
+    "totalTests": 18,
+    "modificationTests": 14,
+    "diceRollTests": 3,
+    "printOnlyTests": 1,
+    "nations": {
+      "NATO": 4,
+      "USN_USMC": 3,
+      "USSR_BA": 2,
+      "POL": 4,
+      "SE": 3
+    },
+    "notesCovered": {
+      "NATO": ["A", "C", "F", "H"],
+      "USN_USMC": ["A", "H", "K"],
+      "USSR_BA": ["B"],
+      "POL": ["A", "B", "C", "F"],
+      "SE": ["A", "C", "E"]
+    }
+  }
+}

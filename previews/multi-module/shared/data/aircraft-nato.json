@@ -1,0 +1,3090 @@
+{
+    "Alpha Jet A":  {
+                        "name":  "Alpha Jet A",
+                        "model":  "Alpha Jet A",
+                        "aliases":  ["Alpha Jet"],
+                        "nation":  "FRG",
+                        "crew":  2,
+                        "rwy":  3,
+                        "fuel":  4,
+                        "notes":  "B, C, I",
+                        "weapons":  {
+                                        "gun":  "27mm",
+                                        "gunDepletion":  4,
+                                        "irm":  null,
+                                        "irmDepletion":  null,
+                                        "rhm":  null,
+                                        "rhmDepletion":  null
+                                    },
+                        "bomb":  "1",
+                        "sight":  "+1",
+                        "rwr":  "-/-",
+                        "jam":  null,
+                        "radar":  null,
+                        "speeds":  {
+                                       "clean":  {
+                                                     "combat":  "2/2/2/-",
+                                                     "dash":  "3/3/3/-",
+                                                     "maneuver":  "5/4/4/-"
+                                                 },
+                                       "laden":  {
+                                                     "combat":  "2/2/2/-",
+                                                     "dash":  "3/3/3/-",
+                                                     "maneuver":  "2/2/2/-"
+                                                 }
+                                   },
+                        "ordnance":  [
+
+                                     ],
+                        "capabilities":  [
+
+                                         ],
+                        "aam":  null,
+                        "module":  "RS"
+                    },
+    "Tornado GR.1A":  {
+                          "name":  "Tornado GR.1A",
+                          "model":  "Tornado GR.1A",
+                          "nation":  "UK",
+                          "crew":  2,
+                          "rwy":  3,
+                          "fuel":  14,
+                          "notes":  "K",
+                          "weapons":  {
+                                          "gun":  null,
+                                          "gunDepletion":  null,
+                                          "irm":  "AIM-9L",
+                                          "irmDepletion":  6,
+                                          "rhm":  null,
+                                          "rhmDepletion":  null
+                                      },
+                          "bomb":  null,
+                          "sight":  null,
+                          "rwr":  "C/3d",
+                          "jam":  null,
+                          "radar":  null,
+                          "speeds":  {
+                                         "clean":  {
+                                                       "combat":  "4/4/5/-",
+                                                       "dash":  "5/6/7/-",
+                                                       "maneuver":  "4/5/6/-"
+                                                   },
+                                         "laden":  null
+                                     },
+                          "ordnance":  [
+
+                                       ],
+                          "capabilities":  [
+                                               "Recon",
+                                               "TFR",
+                                               "Night"
+                                           ],
+                          "aam":  "AIM-9L",
+                          "module":  "RS"
+                      },
+    "BGM-109G":  {
+                     "name":  "BGM-109G GLCM",
+                     "model":  "BGM-109G",
+                     "nation":  "US",
+                     "crew":  0,
+                     "rwy":  null,
+                     "fuel":  "U",
+                     "notes":  null,
+                     "weapons":  {
+                                     "gun":  null,
+                                     "gunDepletion":  null,
+                                     "irm":  null,
+                                     "irmDepletion":  null,
+                                     "rhm":  null,
+                                     "rhmDepletion":  null
+                                 },
+                     "bomb":  null,
+                     "sight":  null,
+                     "rwr":  null,
+                     "jam":  "2d",
+                     "radar":  null,
+                     "speeds":  {
+                                    "clean":  {
+                                                  "combat":  "3/-/-/-",
+                                                  "dash":  "-/-/-/-",
+                                                  "maneuver":  "1/-/-/-"
+                                              },
+                                    "laden":  null
+                                },
+                     "ordnance":  [
+
+                                  ],
+                     "capabilities":  [
+                                          "TFR",
+                                          "Night"
+                                      ],
+                     "aam":  null,
+                     "module":  "RS"
+                 },
+    "Mirage 5BA":  {
+                       "name":  "Mirage 5BA",
+                       "model":  "Mirage 5BA",
+                       "nation":  "Belgium",
+                       "crew":  1,
+                       "rwy":  2,
+                       "fuel":  6,
+                       "notes":  "B",
+                       "weapons":  {
+                                       "gun":  "30mm",
+                                       "gunDepletion":  4,
+                                       "irm":  "AIM-9F",
+                                       "irmDepletion":  6,
+                                       "rhm":  null,
+                                       "rhmDepletion":  null
+                                   },
+                       "bomb":  "2",
+                       "sight":  "+1",
+                       "rwr":  "C/3d",
+                       "jam":  null,
+                       "radar":  null,
+                       "speeds":  {
+                                      "clean":  {
+                                                    "combat":  "3/4/5/-",
+                                                    "dash":  "5/6/7/-",
+                                                    "maneuver":  "5/6/6/-"
+                                                },
+                                      "laden":  {
+                                                    "combat":  "3/3/4/-",
+                                                    "dash":  "4/5/5/-",
+                                                    "maneuver":  "2/3/3/-"
+                                                }
+                                  },
+                       "ordnance":  [
+
+                                    ],
+                       "capabilities":  [
+                                            "Night(Ltd)"
+                                        ],
+                       "aam":  "AIM-9F",
+                       "module":  "RS"
+                   },
+    "Lynx HAS.3":  {
+                       "name":  "Lynx HAS.3",
+                       "model":  "Lynx HAS.3",
+                       "nation":  "UK",
+                       "crew":  2,
+                       "rwy":  0,
+                       "fuel":  "U",
+                       "notes":  "C",
+                       "weapons":  {
+                                       "gun":  null,
+                                       "gunDepletion":  null,
+                                       "irm":  null,
+                                       "irmDepletion":  null,
+                                       "rhm":  null,
+                                       "rhmDepletion":  null
+                                   },
+                       "bomb":  null,
+                       "sight":  null,
+                       "rwr":  "C",
+                       "jam":  null,
+                       "radar":  "Surf",
+                       "speeds":  {
+                                      "clean":  {
+                                                    "combat":  "1/-/-/-",
+                                                    "dash":  "-/-/-/-",
+                                                    "maneuver":  "2/-/-/-"
+                                                },
+                                      "laden":  null
+                                  },
+                       "ordnance":  [
+                                        {
+                                            "type":  "EOGM",
+                                            "quantity":  1
+                                        }
+                                    ],
+                       "capabilities":  [
+                                            "Night"
+                                        ],
+                       "aam":  null,
+                       "module":  "BA"
+                   },
+    "BGM-74C":  {
+                    "name":  "BGM-74C Chukar III",
+                    "model":  "BGM-74C",
+                    "nation":  "US",
+                    "crew":  0,
+                    "rwy":  null,
+                    "fuel":  "U",
+                    "notes":  null,
+                    "weapons":  {
+                                    "gun":  null,
+                                    "gunDepletion":  null,
+                                    "irm":  null,
+                                    "irmDepletion":  null,
+                                    "rhm":  null,
+                                    "rhmDepletion":  null
+                                },
+                    "bomb":  null,
+                    "sight":  null,
+                    "rwr":  null,
+                    "jam":  "-",
+                    "radar":  null,
+                    "speeds":  {
+                                   "clean":  {
+                                                 "combat":  "-/3/-/-",
+                                                 "dash":  "-/-/-/-",
+                                                 "maneuver":  "-/1/-/-"
+                                             },
+                                   "laden":  null
+                               },
+                    "ordnance":  [
+
+                                 ],
+                    "capabilities":  [
+                                         "Night"
+                                     ],
+                    "aam":  null,
+                    "module":  "RS"
+                },
+    "EC-130H":  {
+                    "name":  "EC-130H Compass Call",
+                    "model":  "EC-130H",
+                    "nation":  "US",
+                    "crew":  13,
+                    "rwy":  2,
+                    "fuel":  "U",
+                    "notes":  "E, F, Q",
+                    "standoffJammingStrength":  "18/36/70",
+                    "weapons":  {
+                                    "gun":  null,
+                                    "gunDepletion":  null,
+                                    "irm":  null,
+                                    "irmDepletion":  null,
+                                    "rhm":  null,
+                                    "rhmDepletion":  null
+                                },
+                    "bomb":  null,
+                    "sight":  null,
+                    "rwr":  "B",
+                    "jam":  "-",
+                    "radar":  null,
+                    "speeds":  {
+                                   "clean":  {
+                                                 "combat":  "2/2/-/-",
+                                                 "dash":  "-/-/-/-",
+                                                 "maneuver":  "1/1/-/-"
+                                             },
+                                   "laden":  null
+                               },
+                    "ordnance":  [
+
+                                 ],
+                    "capabilities":  [
+                                         "Night",
+                                         "Standoff, Spot"
+                                     ],
+                    "aam":  null,
+                    "module":  "RS"
+                },
+    "Sea Harrier FRS.1":  {
+                              "name":  "Sea Harrier FRS.1",
+                              "model":  "Sea Harrier FRS.1",
+                              "nation":  "UK",
+                              "crew":  1,
+                              "rwy":  0,
+                              "fuel":  5,
+                              "notes":  "F, J, K",
+                              "weapons":  {
+                                              "gun":  "30mm",
+                                              "gunDepletion":  4,
+                                              "irm":  "AIM-9L",
+                                              "irmDepletion":  6,
+                                              "rhm":  null,
+                                              "rhmDepletion":  null
+                                          },
+                              "bomb":  "1.5",
+                              "sight":  "+1",
+                              "rwr":  "A",
+                              "jam":  null,
+                              "radar":  {
+                                            "name":  "Blue Fox",
+                                            "type":  "No LD, Surf",
+                                            "range":  null,
+                                            "modifier":  "[6] 4+: -1"
+                                        },
+                              "speeds":  {
+                                             "clean":  {
+                                                           "combat":  "3/3/2/-",
+                                                           "dash":  "4/4/3/-",
+                                                           "maneuver":  "6/5/4/-"
+                                                       },
+                                             "laden":  {
+                                                           "combat":  "2/2/2/-",
+                                                           "dash":  "3/3/3/-",
+                                                           "maneuver":  "3/3/2/-"
+                                                       }
+                                         },
+                              "ordnance":  [
+                                               {
+                                                   "type":  "Rockets",
+                                                   "quantity":  null
+                                               },
+                                               {
+                                                   "type":  "Sea Eagle",
+                                                   "quantity":  2
+                                               }
+                                           ],
+                              "capabilities":  [
+                                                   "Radar",
+                                                   "Night(Ltd)"
+                                               ],
+                              "aam":  "AIM-9L",
+                              "module":  "BA"
+                          },
+    "F-15C":  {
+                  "name":  "F-15C Eagle",
+                  "model":  "F-15C Eagle",
+                  "nation":  "US",
+                  "crew":  1,
+                  "rwy":  3,
+                  "fuel":  12,
+                  "notes":  "B, O",
+                  "weapons":  {
+                                  "gun":  "20mm M61",
+                                  "gunDepletion":  2,
+                                  "irm":  "AIM-9M",
+                                  "irmDepletion":  3,
+                                  "rhm":  "AIM-7M",
+                                  "rhmDepletion":  3
+                              },
+                  "bomb":  null,
+                  "sight":  null,
+                  "rwr":  "C",
+                  "jam":  "3d",
+                  "radar":  {
+                                "name":  "APG-63PSP",
+                                "type":  "LD, TS",
+                                "range":  30,
+                                "modifier":  "24+: -1"
+                            },
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "4/4/5/-",
+                                               "dash":  "5/6/8/-",
+                                               "maneuver":  "8/9/9/-"
+                                           },
+                                 "laden":  null
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "Night"
+                                   ],
+                  "aam":  "AIM-9M, AIM-7M",
+                  "module":  "RS"
+              },
+    "HFB 320":  {
+                    "name":  "HFB 320 Hansa Jet",
+                    "model":  "HFB 320 Hansa Jet",
+                    "nation":  "FRG",
+                    "crew":  5,
+                    "rwy":  4,
+                    "fuel":  "U",
+                    "notes":  "D, I",
+                    "standoffJammingStrength":  "6/12/24",
+                    "weapons":  {
+                                    "gun":  null,
+                                    "gunDepletion":  null,
+                                    "irm":  null,
+                                    "irmDepletion":  null,
+                                    "rhm":  null,
+                                    "rhmDepletion":  null
+                                },
+                    "bomb":  null,
+                    "sight":  null,
+                    "rwr":  "B/-",
+                    "jam":  null,
+                    "radar":  null,
+                    "speeds":  {
+                                   "clean":  {
+                                                 "combat":  "2/2/3/-",
+                                                 "dash":  "-/-/-/-",
+                                                 "maneuver":  "1/1/2/-"
+                                             },
+                                   "laden":  null
+                               },
+                    "ordnance":  [
+
+                                 ],
+                    "capabilities":  [
+                                         "Night",
+                                         "Standoff, Spot"
+                                     ],
+                    "aam":  null,
+                    "module":  "RS"
+                },
+    "CF-5A":  {
+                  "name":  "CF-5A Freedom Fighter",
+                  "model":  "CF-5A",
+                  "nation":  "Canada",
+                  "crew":  1,
+                  "rwy":  3,
+                  "fuel":  4,
+                  "notes":  "B, D",
+                  "weapons":  {
+                                  "gun":  "20mm M39A2",
+                                  "gunDepletion":  2,
+                                  "irm":  "AIM-9L",
+                                  "irmDepletion":  3,
+                                  "rhm":  null,
+                                  "rhmDepletion":  null
+                              },
+                  "bomb":  "1",
+                  "sight":  "+0",
+                  "rwr":  "-/-",
+                  "jam":  null,
+                  "radar":  null,
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "3/3/4/-",
+                                               "dash":  "4/5/5/-",
+                                               "maneuver":  "5/6/7/-"
+                                           },
+                                 "laden":  {
+                                               "combat":  "2/2/3/-",
+                                               "dash":  "3/3/4/-",
+                                               "maneuver":  "2/3/3/-"
+                                           }
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+
+                                   ],
+                  "aam":  "AIM-9L",
+                  "module":  "RS"
+              },
+    "AJ-37 Viggen":  {
+                         "name":  "AJ-37 Viggen",
+                         "model":  "AJ-37 Viggen",
+                         "nation":  "SE",
+                         "crew":  1,
+                         "rwy":  2,
+                         "fuel":  8,
+                         "notes":  "H",
+                         "weapons":  {
+                                         "gun":  "30mm",
+                                         "gunDepletion":  4,
+                                         "irm":  null,
+                                         "irmDepletion":  null,
+                                         "rhm":  null,
+                                         "rhmDepletion":  null
+                                     },
+                         "bomb":  "2",
+                         "sight":  "+2",
+                         "rwr":  "B",
+                         "jam":  "3d",
+                         "radar":  "Surf",
+                         "speeds":  {
+                                        "clean":  {
+                                                      "combat":  "3/4/5/-",
+                                                      "dash":  "5/6/7/-",
+                                                      "maneuver":  "5/5/6/-"
+                                                  },
+                                        "laden":  {
+                                                      "combat":  "3/3/4/-",
+                                                      "dash":  "4/4/5/-",
+                                                      "maneuver":  "3/3/3/-"
+                                                  }
+                                    },
+                         "ordnance":  [
+                                          {
+                                              "type":  "EOGM",
+                                              "quantity":  1
+                                          },
+                                          {
+                                              "type":  "RB.04E",
+                                              "quantity":  2
+                                          },
+                                          {
+                                              "type":  "Rockets",
+                                              "quantity":  null
+                                          }
+                                      ],
+                         "capabilities":  [
+                                              "Night",
+                                              "Radar"
+                                          ],
+                         "aam":  "AIM-9P",
+                         "module":  "BA"
+                     },
+    "J-35F2 Draken":  {
+                          "name":  "J-35F2 Draken",
+                          "model":  "J-35F2 Draken",
+                          "nation":  "SE",
+                          "crew":  1,
+                          "rwy":  2,
+                          "fuel":  6,
+                          "notes":  "A, B, D",
+                          "weapons":  {
+                                          "gun":  "30mm",
+                                          "gunDepletion":  4,
+                                          "irm":  "AIM-9P",
+                                          "irmDepletion":  3,
+                                          "rhm":  "AIM-4F",
+                                          "rhmDepletion":  6
+                                      },
+                          "bomb":  "1",
+                          "sight":  "+1",
+                          "rwr":  null,
+                          "jam":  null,
+                          "radar":  {
+                                        "name":  "PS-011/A",
+                                        "type":  "No LD",
+                                        "range":  null,
+                                        "modifier":  "[6]"
+                                    },
+                          "speeds":  {
+                                         "clean":  {
+                                                       "combat":  "3/4/5/-",
+                                                       "dash":  "4/5/7/-",
+                                                       "maneuver":  "4/5/6/-"
+                                                   },
+                                         "laden":  {
+                                                       "combat":  "3/3/4/-",
+                                                       "dash":  "4/4/5/-",
+                                                       "maneuver":  "2/3/3/-"
+                                                   }
+                                     },
+                          "ordnance":  [
+                                           {
+                                               "type":  "Rockets",
+                                               "quantity":  null
+                                           }
+                                       ],
+                          "capabilities":  [
+                                               "Night",
+                                               "IRST"
+                                           ],
+                          "aam":  "AIM-9P, AIM-4F",
+                          "module":  "BA"
+                      },
+    "F-111D/E":  {
+                     "name":  "F-111D/E Aardvark",
+                     "model":  "F-111D/E Aardvark",
+                     "nation":  "US",
+                     "crew":  2,
+                     "rwy":  4,
+                     "fuel":  15,
+                     "notes":  "C",
+                     "weapons":  {
+                                     "gun":  null,
+                                     "gunDepletion":  null,
+                                     "irm":  null,
+                                     "irmDepletion":  null,
+                                     "rhm":  null,
+                                     "rhmDepletion":  null
+                                 },
+                     "bomb":  "6/4",
+                     "sight":  "+3",
+                     "rwr":  "C",
+                     "jam":  "3d",
+                     "radar":  null,
+                     "speeds":  {
+                                    "clean":  {
+                                                  "combat":  "3/4/5/-",
+                                                  "dash":  "5/6/7/-",
+                                                  "maneuver":  "4/5/5/-"
+                                              },
+                                    "laden":  {
+                                                  "combat":  "3/3/3/-",
+                                                  "dash":  "4/4/5/-",
+                                                  "maneuver":  "2/3/3/-"
+                                              }
+                                },
+                     "ordnance":  [
+                                      {
+                                          "type":  "Durandal",
+                                          "quantity":  null
+                                      }
+                                  ],
+                     "capabilities":  [
+                                          "Radar",
+                                          "TFR",
+                                          "Night"
+                                      ],
+                     "aam":  "AIM-9P(8)",
+                     "module":  "RS"
+                 },
+    "Puma":  {
+                 "name":  "Puma",
+                 "model":  "Puma",
+                 "nation":  "UK",
+                 "crew":  0,
+                 "rwy":  0,
+                 "fuel":  0,
+                 "notes":  null,
+                 "weapons":  {
+
+                             },
+                 "speeds":  {
+
+                            },
+                 "ordnance":  [
+
+                              ],
+                 "capabilities":  [
+                                      "CSAR"
+                                  ],
+                 "aam":  null,
+                 "module":  "RS"
+             },
+    "RF-4B":  {
+                  "name":  "RF-4B Phantom II",
+                  "model":  "RF-4B Phantom II",
+                  "nation":  "US",
+                  "crew":  2,
+                  "rwy":  3,
+                  "fuel":  10,
+                  "notes":  null,
+                  "weapons":  {
+                                  "gun":  null,
+                                  "gunDepletion":  null,
+                                  "irm":  null,
+                                  "irmDepletion":  null,
+                                  "rhm":  null,
+                                  "rhmDepletion":  null
+                              },
+                  "bomb":  null,
+                  "sight":  null,
+                  "rwr":  "A",
+                  "jam":  "3d",
+                  "radar":  null,
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "4/4/4/-",
+                                               "dash":  "5/5/7/-",
+                                               "maneuver":  "5/6/6/-"
+                                           },
+                                 "laden":  null
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "Recon",
+                                       "TFR",
+                                       "Night"
+                                   ],
+                  "aam":  null,
+                  "module":  "BA"
+              },
+    "F-16A BE/CA/NE":  {
+                           "name":  "F-16A Fighting Falcon",
+                           "model":  "F-16A Falcon",
+                           "nation":  "Belgium",
+                           "nationOptions":  [
+                                                 "Belgium",
+                                                 "Canada",
+                                                 "Netherlands"
+                                             ],
+                           "crew":  1,
+                           "rwy":  2,
+                           "fuel":  6,
+                           "notes":  "A, E",
+                           "weapons":  {
+                                           "gun":  "20mm M61",
+                                           "gunDepletion":  3,
+                                           "irm":  "AIM-9L",
+                                           "irmDepletion":  3,
+                                           "rhm":  null,
+                                           "rhmDepletion":  null
+                                       },
+                           "bomb":  "3",
+                           "sight":  "+3",
+                           "rwr":  "B",
+                           "jam":  null,
+                           "radar":  {
+                                         "name":  "APG-66",
+                                         "type":  "LD",
+                                         "range":  14,
+                                         "modifier":  "12+: -1"
+                                     },
+                           "speeds":  {
+                                          "clean":  {
+                                                        "combat":  "4/4/5/-",
+                                                        "dash":  "5/6/8/-",
+                                                        "maneuver":  "9/9/9/-"
+                                                    },
+                                          "laden":  {
+                                                        "combat":  "3/3/4/-",
+                                                        "dash":  "4/5/5/-",
+                                                        "maneuver":  "4/5/5/-"
+                                                    }
+                                      },
+                           "ordnance":  [
+
+                                        ],
+                           "capabilities":  [
+                                                "Radar",
+                                                "Recon",
+                                                "Night(Ltd)"
+                                            ],
+                           "aam":  "AIM-9L",
+                           "module":  "RS"
+                       },
+    "RF-35XD Draken":  {
+                           "name":  "RF-35XD Draken",
+                           "model":  "RF-35XD Draken",
+                           "nation":  "DK",
+                           "crew":  1,
+                           "rwy":  3,
+                           "fuel":  8,
+                           "notes":  null,
+                           "weapons":  {
+                                           "gun":  null,
+                                           "gunDepletion":  null,
+                                           "irm":  null,
+                                           "irmDepletion":  null,
+                                           "rhm":  null,
+                                           "rhmDepletion":  null
+                                       },
+                           "bomb":  null,
+                           "sight":  null,
+                           "rwr":  "B",
+                           "jam":  "3d",
+                           "radar":  null,
+                           "speeds":  {
+                                          "clean":  {
+                                                        "combat":  "3/4/5/-",
+                                                        "dash":  "4/5/7/-",
+                                                        "maneuver":  "4/5/6/-"
+                                                    },
+                                          "laden":  {
+                                                        "combat":  "3/3/4",
+                                                        "dash":  "4/4/5/",
+                                                        "maneuver":  "2/3/3/"
+                                                    }
+                                      },
+                           "ordnance":  [
+
+                                        ],
+                           "capabilities":  [
+                                                "Recon"
+                                            ],
+                           "aam":  null,
+                           "module":  "BA"
+                       },
+    "EF-111A":  {
+                    "name":  "EF-111A Raven",
+                    "model":  "EF-111A Raven",
+                    "nation":  "US",
+                    "crew":  2,
+                    "rwy":  4,
+                    "fuel":  15,
+                    "notes":  "F",
+                    "standoffJammingStrength":  "16/32/64",
+                    "weapons":  {
+                                    "gun":  null,
+                                    "gunDepletion":  null,
+                                    "irm":  null,
+                                    "irmDepletion":  null,
+                                    "rhm":  null,
+                                    "rhmDepletion":  null
+                                },
+                    "bomb":  null,
+                    "sight":  null,
+                    "rwr":  "D",
+                    "jam":  "4d",
+                    "radar":  null,
+                    "speeds":  {
+                                   "clean":  {
+                                                 "combat":  "3/4/5/-",
+                                                 "dash":  "5/6/7/-",
+                                                 "maneuver":  "4/5/5/-"
+                                             },
+                                   "laden":  null
+                               },
+                    "ordnance":  [
+
+                                 ],
+                    "capabilities":  [
+                                         "TFR",
+                                         "Night",
+                                         "Standoff, Spot"
+                                     ],
+                    "aam":  null,
+                    "module":  "RS"
+                },
+    "A-7E":  {
+                 "name":  "A-7E Corsair II",
+                 "model":  "A-7E Corsair II",
+                 "nation":  "US",
+                 "crew":  1,
+                 "rwy":  2,
+                 "fuel":  8,
+                 "notes":  "C, F",
+                 "weapons":  {
+                                 "gun":  "20mm",
+                                 "gunDepletion":  3,
+                                 "irm":  "AIM-9L",
+                                 "irmDepletion":  6,
+                                 "rhm":  null,
+                                 "rhmDepletion":  null
+                             },
+                 "bomb":  "3",
+                 "sight":  "+3",
+                 "rwr":  "A",
+                 "jam":  "3d",
+                 "radar":  "Surf",
+                 "speeds":  {
+                                "clean":  {
+                                              "combat":  "2/3/3/-",
+                                              "dash":  "3/4/4/-",
+                                              "maneuver":  "5/4/3/-"
+                                          },
+                                "laden":  {
+                                              "combat":  "2/3/3/-",
+                                              "dash":  "3/3/3/-",
+                                              "maneuver":  "2/2/2/-"
+                                          }
+                            },
+                 "ordnance":  [
+                                  {
+                                      "type":  "LGB",
+                                      "quantity":  1
+                                  },
+                                  {
+                                      "type":  "EOGB",
+                                      "quantity":  1
+                                  },
+                                  {
+                                      "type":  "Shrike",
+                                      "quantity":  1
+                                  },
+                                  {
+                                      "type":  "HARM",
+                                      "quantity":  2
+                                  }
+                              ],
+                 "capabilities":  [
+                                      "Radar",
+                                      "FLIR",
+                                      "Night"
+                                  ],
+                 "aam":  "AIM-9L",
+                 "module":  "BA"
+             },
+    "S-3A":  {
+                 "name":  "S-3A Viking",
+                 "model":  "S-3A Viking",
+                 "nation":  "US",
+                 "crew":  4,
+                 "rwy":  2,
+                 "fuel":  10,
+                 "notes":  "F",
+                 "weapons":  {
+                                 "gun":  null,
+                                 "gunDepletion":  null,
+                                 "irm":  null,
+                                 "irmDepletion":  null,
+                                 "rhm":  null,
+                                 "rhmDepletion":  null
+                             },
+                 "bomb":  "2",
+                 "sight":  "+1",
+                 "rwr":  "C",
+                 "jam":  null,
+                 "radar":  "Surf",
+                 "speeds":  {
+                                "clean":  {
+                                              "combat":  "2/3/3/-",
+                                              "dash":  "3/4/4/-",
+                                              "maneuver":  "4/3/2/-"
+                                          },
+                                "laden":  {
+                                              "combat":  "2/2/2/-",
+                                              "dash":  "3/3/3/-",
+                                              "maneuver":  "2/2/2/-"
+                                          }
+                            },
+                 "ordnance":  [
+                                  {
+                                      "type":  "Harpoon",
+                                      "quantity":  2
+                                  }
+                              ],
+                 "capabilities":  [
+                                      "FLIR",
+                                      "Night"
+                                  ],
+                 "aam":  null,
+                 "module":  "BA"
+             },
+    "Nimrod MR.2":  {
+                        "name":  "Nimrod MR.2",
+                        "model":  "Nimrod MR.2",
+                        "nation":  "UK",
+                        "crew":  13,
+                        "rwy":  4,
+                        "fuel":  "U",
+                        "notes":  "B, I",
+                        "weapons":  {
+                                        "gun":  null,
+                                        "gunDepletion":  null,
+                                        "irm":  null,
+                                        "irmDepletion":  null,
+                                        "rhm":  null,
+                                        "rhmDepletion":  null
+                                    },
+                        "bomb":  null,
+                        "sight":  null,
+                        "rwr":  "C",
+                        "jam":  null,
+                        "radar":  "Surf",
+                        "speeds":  {
+                                       "clean":  {
+                                                     "combat":  "2/3/3/-",
+                                                     "dash":  "-/-/-/-",
+                                                     "maneuver":  "1/1/1/-"
+                                                 },
+                                       "laden":  null
+                                   },
+                        "ordnance":  [
+
+                                     ],
+                        "capabilities":  [
+                                             "Night"
+                                         ],
+                        "aam":  null,
+                        "module":  "BA"
+                    },
+    "C-141B":  {
+                   "name":  "C-141B Starlifter",
+                   "model":  "C-141B",
+                   "nation":  "US",
+                   "crew":  4,
+                   "rwy":  4,
+                   "fuel":  "U",
+                   "notes":  "E, Q",
+                   "weapons":  {
+                                   "gun":  null,
+                                   "gunDepletion":  null,
+                                   "irm":  null,
+                                   "irmDepletion":  null,
+                                   "rhm":  null,
+                                   "rhmDepletion":  null
+                               },
+                   "bomb":  null,
+                   "sight":  null,
+                   "rwr":  null,
+                   "jam":  "-/-",
+                   "radar":  null,
+                   "speeds":  {
+                                  "clean":  {
+                                                "combat":  "2/3/3/-",
+                                                "dash":  "-/-/-/-",
+                                                "maneuver":  "1/1/1/-"
+                                            },
+                                  "laden":  null
+                              },
+                   "ordnance":  [
+
+                                ],
+                   "capabilities":  [
+                                        "Night"
+                                    ],
+                   "aam":  null,
+                   "module":  "RS"
+               },
+    "Harrier GR.3":  {
+                         "name":  "Harrier GR.3",
+                         "model":  "Harrier GR.3",
+                         "nation":  "UK",
+                         "crew":  1,
+                         "rwy":  1,
+                         "fuel":  5,
+                         "notes":  "A, B, E, F, I",
+                         "weapons":  {
+                                         "gun":  "30mm",
+                                         "gunDepletion":  4,
+                                         "irm":  "AIM-9G",
+                                         "irmDepletion":  8,
+                                         "rhm":  null,
+                                         "rhmDepletion":  null
+                                     },
+                         "bomb":  "1.5",
+                         "sight":  "+1",
+                         "rwr":  "A",
+                         "jam":  null,
+                         "radar":  null,
+                         "speeds":  {
+                                        "clean":  {
+                                                      "combat":  "3/3/2/-",
+                                                      "dash":  "4/4/3/-",
+                                                      "maneuver":  "6/5/4/-"
+                                                  },
+                                        "laden":  {
+                                                      "combat":  "2/2/2/-",
+                                                      "dash":  "3/3/3/-",
+                                                      "maneuver":  "2/2/2/-"
+                                                  }
+                                    },
+                         "ordnance":  [
+                                          {
+                                              "type":  "LGB",
+                                              "quantity":  1
+                                          }
+                                      ],
+                         "capabilities":  [
+                                              "Recon",
+                                              "Night(ltd)"
+                                          ],
+                         "aam":  "AIM-9G",
+                         "module":  "RS"
+                     },
+    "F-15A":  {
+                  "name":  "F-15A Eagle",
+                  "model":  "F-15A Eagle",
+                  "nation":  "US",
+                  "crew":  1,
+                  "rwy":  3,
+                  "fuel":  10,
+                  "notes":  "B, J",
+                  "weapons":  {
+                                  "gun":  "20mm M61",
+                                  "gunDepletion":  2,
+                                  "irm":  "AIM-9L/M",
+                                  "irmDepletion":  3,
+                                  "rhm":  "AIM-7F/M",
+                                  "rhmDepletion":  3
+                              },
+                  "bomb":  null,
+                  "sight":  null,
+                  "rwr":  "B",
+                  "jam":  "3d",
+                  "radar":  {
+                                "name":  "APG-63",
+                                "type":  "LD, TS",
+                                "range":  25,
+                                "modifier":  "20+: -1"
+                            },
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "4/4/5/-",
+                                               "dash":  "5/6/8/-",
+                                               "maneuver":  "8/9/9/-"
+                                           },
+                                 "laden":  null
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "Night"
+                                   ],
+                  "aam":  "AIM-9L/M, AIM-7F/M",
+                  "module":  "RS"
+              },
+    "F-14A":  {
+                  "name":  "F-14A Tomcat",
+                  "model":  "F-14A Tomcat",
+                  "nation":  "US",
+                  "crew":  2,
+                  "rwy":  3,
+                  "fuel":  12,
+                  "notes":  "I, K, L",
+                  "weapons":  {
+                                  "gun":  "20mm",
+                                  "gunDepletion":  3,
+                                  "irm":  "AIM-9L",
+                                  "irmDepletion":  6,
+                                  "rhm":  ["AIM-7M", "AIM-54C"],
+                                  "rhmDepletion":  [6, 3]
+                              },
+                  "bomb":  null,
+                  "sight":  null,
+                  "rwr":  "A",
+                  "jam":  "3d",
+                  "radar":  {
+                                "name":  "AWG-9",
+                                "type":  "LD",
+                                "range":  24,
+                                "modifier":  "18+: -1"
+                            },
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "3/4/5/-",
+                                               "dash":  "5/6/8/-",
+                                               "maneuver":  "6/7/7/-"
+                                           },
+                                 "laden":  null
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "Night",
+                                       "Recon",
+                                       "AAX-1"
+                                   ],
+                  "aam":  "AIM-9L, AIM-7M, AIM-54C",
+                  "module":  "BA"
+              },
+    "NF-5A":  {
+                  "name":  "NF-5A Freedom Fighter",
+                  "model":  "NF-5A",
+                  "nation":  "NE",
+                  "crew":  1,
+                  "rwy":  3,
+                  "fuel":  4,
+                  "notes":  "D",
+                  "weapons":  {
+                                  "gun":  "20mm M39A2",
+                                  "gunDepletion":  2,
+                                  "irm":  "AIM-9L",
+                                  "irmDepletion":  3,
+                                  "rhm":  null,
+                                  "rhmDepletion":  null
+                              },
+                  "bomb":  "1",
+                  "sight":  "+0",
+                  "rwr":  "B/-",
+                  "jam":  null,
+                  "radar":  null,
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "3/3/4/-",
+                                               "dash":  "4/5/5/-",
+                                               "maneuver":  "5/6/7/-"
+                                           },
+                                 "laden":  {
+                                               "combat":  "2/2/3/-",
+                                               "dash":  "3/3/4/-",
+                                               "maneuver":  "2/3/3/-"
+                                           }
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+
+                                   ],
+                  "aam":  "AIM-9L",
+                  "module":  "RS"
+              },
+    "J-32E Lansen":  {
+                         "name":  "J-32E Lansen",
+                         "model":  "J-32E Lansen",
+                         "nation":  "SE",
+                         "crew":  2,
+                         "rwy":  2,
+                         "fuel":  6,
+                         "notes":  "F, G",
+                         "standoffJammingStrength":  "7/14/28",
+                         "weapons":  {
+                                         "gun":  null,
+                                         "gunDepletion":  null,
+                                         "irm":  null,
+                                         "irmDepletion":  null,
+                                         "rhm":  null,
+                                         "rhmDepletion":  null
+                                     },
+                         "bomb":  null,
+                         "sight":  null,
+                         "rwr":  "C",
+                         "jam":  null,
+                         "radar":  null,
+                         "speeds":  {
+                                        "clean":  {
+                                                      "combat":  "3/3/3/-",
+                                                      "dash":  "4/4/4/-",
+                                                      "maneuver":  "4/4/4/-"
+                                                  },
+                                        "laden":  null
+                                    },
+                         "ordnance":  [
+
+                                      ],
+                         "capabilities":  [
+                                              "Night"
+                                          ],
+                         "aam":  null,
+                         "module":  "BA"
+                     },
+    "A-6E":  {
+                 "name":  "A-6E Intruder",
+                 "model":  "A-6E Intruder",
+                 "nation":  "US",
+                 "crew":  2,
+                 "rwy":  3,
+                 "fuel":  10,
+                 "notes":  "F",
+                 "weapons":  {
+                                 "gun":  null,
+                                 "gunDepletion":  null,
+                                 "irm":  null,
+                                 "irmDepletion":  null,
+                                 "rhm":  null,
+                                 "rhmDepletion":  null
+                             },
+                 "bomb":  "4",
+                 "sight":  "+3",
+                 "rwr":  "A",
+                 "jam":  "3d",
+                 "radar":  "Surf",
+                 "speeds":  {
+                                "clean":  {
+                                              "combat":  "3/3/3/-",
+                                              "dash":  "4/4/4/-",
+                                              "maneuver":  "5/4/3/-"
+                                          },
+                                "laden":  {
+                                              "combat":  "2/2/2/-",
+                                              "dash":  "3/3/3/-",
+                                              "maneuver":  "2/2/2/-"
+                                          }
+                            },
+                 "ordnance":  [
+                                  {
+                                      "type":  "LGB",
+                                      "quantity":  1
+                                  },
+                                  {
+                                      "type":  "EOGB",
+                                      "quantity":  1
+                                  },
+                                  {
+                                      "type":  "Harpoon",
+                                      "quantity":  2
+                                  },
+                                  {
+                                      "type":  "Shrike",
+                                      "quantity":  1
+                                  }
+                              ],
+                 "capabilities":  [
+                                      "Radar",
+                                      "FLIR",
+                                      "TFR",
+                                      "Night"
+                                  ],
+                 "aam":  null,
+                 "module":  "BA"
+             },
+    "A-10A":  {
+                  "name":  "A-10A Thunderbolt II",
+                  "model":  "A-10A Thunderbolt II",
+                  "nation":  "US",
+                  "crew":  1,
+                  "rwy":  2,
+                  "fuel":  11,
+                  "notes":  "G, Q, R",
+                  "weapons":  {
+                                  "gun":  "30mm",
+                                  "gunDepletion":  2,
+                                  "irm":  "AIM-9L",
+                                  "irmDepletion":  6,
+                                  "rhm":  null,
+                                  "rhmDepletion":  null
+                              },
+                  "bomb":  "3",
+                  "sight":  "+1",
+                  "rwr":  "B",
+                  "jam":  "3d",
+                  "radar":  null,
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "2/2/2/-",
+                                               "dash":  "3/3/3/-",
+                                               "maneuver":  "5/5/4/-"
+                                           },
+                                 "laden":  {
+                                               "combat":  "2/2/2/-",
+                                               "dash":  "2/2/2/-",
+                                               "maneuver":  "3/3/2/-"
+                                           }
+                             },
+                  "ordnance":  [
+                                   {
+                                       "type":  "EOGM",
+                                       "quantity":  2
+                                   },
+                                   {
+                                       "type":  "LGB",
+                                       "quantity":  1
+                                   }
+                               ],
+                  "capabilities":  [
+
+                                   ],
+                  "aam":  "AIM-9L",
+                  "module":  "RS"
+              },
+    "F-117A":  {
+                   "name":  "F-117A Nighthawk",
+                   "model":  "F-117A Nighthawk",
+                   "nation":  "US",
+                   "crew":  1,
+                   "rwy":  3,
+                   "fuel":  12,
+                   "notes":  "H, Q",
+                   "weapons":  {
+                                   "gun":  null,
+                                   "gunDepletion":  null,
+                                   "irm":  null,
+                                   "irmDepletion":  null,
+                                   "rhm":  null,
+                                   "rhmDepletion":  null
+                               },
+                   "bomb":  null,
+                   "sight":  "+4",
+                   "rwr":  "B",
+                   "jam":  "8d",
+                   "radar":  null,
+                   "speeds":  {
+                                  "clean":  {
+                                                "combat":  "3/3/3/-",
+                                                "dash":  "4/4/4/-",
+                                                "maneuver":  "3/3/3/-"
+                                            },
+                                  "laden":  null
+                              },
+                   "ordnance":  [
+                                    {
+                                        "type":  "LGB",
+                                        "quantity":  1
+                                    }
+                                ],
+                   "capabilities":  [
+                                        "Night",
+                                        "FLIR"
+                                    ],
+                   "aam":  null,
+                   "module":  "RS"
+               },
+    "F-16A (DK)":  {
+                       "name":  "F-16A Fighting Falcon",
+                       "model":  "F-16A Fighting Falcon",
+                       "nation":  "DK",
+                       "nationOptions":  [
+                                             "DK",
+                                             "NE"
+                                         ],
+                       "crew":  1,
+                       "rwy":  2,
+                       "fuel":  6,
+                       "notes":  "A, C, G",
+                       "weapons":  {
+                                       "gun":  "20mm",
+                                       "gunDepletion":  3,
+                                       "irm":  "AIM-9L",
+                                       "irmDepletion":  3,
+                                       "rhm":  null,
+                                       "rhmDepletion":  null
+                                   },
+                       "bomb":  "3/2",
+                       "sight":  "+3",
+                       "rwr":  "B/-",
+                       "jam":  null,
+                       "radar":  {
+                                     "name":  "APG-66",
+                                     "type":  "LD",
+                                     "range":  12,
+                                     "modifier":  "10+: -1"
+                                 },
+                       "speeds":  {
+                                      "clean":  {
+                                                    "combat":  "4/4/5/-",
+                                                    "dash":  "5/6/8/-",
+                                                    "maneuver":  "9/8/9/-"
+                                                },
+                                      "laden":  {
+                                                    "combat":  "3/3/4/-",
+                                                    "dash":  "4/5/5/-",
+                                                    "maneuver":  "4/5/5/-"
+                                                }
+                                  },
+                       "ordnance":  [
+
+                                    ],
+                       "capabilities":  [
+                                            "Radar",
+                                            "Night(Ltd)"
+                                        ],
+                       "aam":  "AIM-9L",
+                       "module":  "BA"
+                   },
+    "P-3C":  {
+                 "name":  "P-3C Orion",
+                 "model":  "P-3C Orion",
+                 "nation":  "US",
+                 "crew":  11,
+                 "rwy":  4,
+                 "fuel":  "U",
+                 "notes":  "F, J, M",
+                 "weapons":  {
+                                 "gun":  null,
+                                 "gunDepletion":  null,
+                                 "irm":  null,
+                                 "irmDepletion":  null,
+                                 "rhm":  null,
+                                 "rhmDepletion":  null
+                             },
+                 "bomb":  null,
+                 "sight":  null,
+                 "rwr":  "C",
+                 "jam":  null,
+                 "radar":  "Surf",
+                 "speeds":  {
+                                "clean":  {
+                                              "combat":  "2/2/2/-",
+                                              "dash":  "-/-/-/-",
+                                              "maneuver":  "1/1/1/-"
+                                          },
+                                "laden":  {
+                                              "combat":  "2/2/2/-",
+                                              "dash":  "-/-/-/-",
+                                              "maneuver":  "1/1/1/-"
+                                          }
+                            },
+                 "ordnance":  [
+                                  {
+                                      "type":  "Harpoon",
+                                      "quantity":  2
+                                  }
+                              ],
+                 "capabilities":  [
+                                      "Night"
+                                  ],
+                 "aam":  null,
+                 "module":  "BA"
+             },
+    "H-53":  {
+                 "name":  "H-53",
+                 "model":  "H-53",
+                 "nation":  "US",
+                 "crew":  0,
+                 "rwy":  0,
+                 "fuel":  0,
+                 "notes":  null,
+                 "weapons":  {
+
+                             },
+                 "speeds":  {
+
+                            },
+                 "ordnance":  [
+
+                              ],
+                 "capabilities":  [
+                                      "CSAR"
+                                  ],
+                 "aam":  null,
+                 "module":  "RS"
+             },
+    "Phantom FGR.2":  {
+                          "name":  "Phantom FGR.2",
+                          "model":  "Phantom FGR.2",
+                          "nation":  "UK",
+                          "crew":  2,
+                          "rwy":  3,
+                          "fuel":  10,
+                          "notes":  "D",
+                          "weapons":  {
+                                          "gun":  null,
+                                          "gunDepletion":  null,
+                                          "irm":  "AIM-9L",
+                                          "irmDepletion":  3,
+                                          "rhm":  "Skyflash",
+                                          "rhmDepletion":  3
+                                      },
+                          "bomb":  null,
+                          "sight":  null,
+                          "rwr":  "B",
+                          "jam":  null,
+                          "radar":  {
+                                        "name":  "AWG-12",
+                                        "type":  "LD",
+                                        "range":  16,
+                                        "modifier":  "14+: -1"
+                                    },
+                          "speeds":  {
+                                         "clean":  {
+                                                       "combat":  "4/4/5/-",
+                                                       "dash":  "5/6/7/-",
+                                                       "maneuver":  "5/6/6/-"
+                                                   },
+                                         "laden":  null
+                                     },
+                          "ordnance":  [
+
+                                       ],
+                          "capabilities":  [
+                                               "Night"
+                                           ],
+                          "aam":  "AIM-9L, Skyflash",
+                          "module":  "RS"
+                      },
+    "F/A-18A":  {
+                    "name":  "F/A-18A Hornet",
+                    "model":  "F/A-18A Hornet",
+                    "nation":  "US",
+                    "crew":  1,
+                    "rwy":  3,
+                    "fuel":  8,
+                    "notes":  "A, E, H",
+                    "weapons":  {
+                                    "gun":  "20mm",
+                                    "gunDepletion":  3,
+                                    "irm":  "AIM-9M",
+                                    "irmDepletion":  8,
+                                    "rhm":  "AIM-7M",
+                                    "rhmDepletion":  3
+                                },
+                    "bomb":  "4/2",
+                    "sight":  "+3",
+                    "rwr":  "C",
+                    "jam":  "3d",
+                    "radar":  {
+                                  "name":  "APG-65",
+                                  "type":  "LD, TS, Surf",
+                                  "range":  20,
+                                  "modifier":  "16+: -1"
+                              },
+                    "speeds":  {
+                                   "clean":  {
+                                                 "combat":  "4/4/5/-",
+                                                 "dash":  "5/6/8/-",
+                                                 "maneuver":  "7/7/8/-"
+                                             },
+                                   "laden":  {
+                                                 "combat":  "3/3/4/-",
+                                                 "dash":  "4/5/5/-",
+                                                 "maneuver":  "4/5/5/-"
+                                             }
+                               },
+                    "ordnance":  [
+                                     {
+                                         "type":  "LGB",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "type":  "EOGB",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "type":  "Harpoon",
+                                         "quantity":  1
+                                     },
+                                     {
+                                         "type":  "HARM",
+                                         "quantity":  1
+                                     }
+                                 ],
+                    "capabilities":  [
+                                         "Radar",
+                                         "TFR",
+                                         "Night"
+                                     ],
+                    "aam":  "AIM-9M, AIM-7M",
+                    "module":  "BA"
+                },
+    "Mirage 5BR":  {
+                       "name":  "Mirage 5BR",
+                       "model":  "Mirage 5BR",
+                       "nation":  "Belgium",
+                       "crew":  1,
+                       "rwy":  2,
+                       "fuel":  6,
+                       "notes":  null,
+                       "weapons":  {
+                                       "gun":  "30mm",
+                                       "gunDepletion":  4,
+                                       "irm":  null,
+                                       "irmDepletion":  null,
+                                       "rhm":  null,
+                                       "rhmDepletion":  null
+                                   },
+                       "bomb":  null,
+                       "sight":  null,
+                       "rwr":  "C/3d",
+                       "jam":  null,
+                       "radar":  null,
+                       "speeds":  {
+                                      "clean":  {
+                                                    "combat":  "3/4/5/-",
+                                                    "dash":  "5/6/7/-",
+                                                    "maneuver":  "5/6/6/-"
+                                                },
+                                      "laden":  null
+                                  },
+                       "ordnance":  [
+
+                                    ],
+                       "capabilities":  [
+                                            "Recon",
+                                            "Night"
+                                        ],
+                       "aam":  null,
+                       "module":  "RS"
+                   },
+    "F-35XD Draken":  {
+                          "name":  "F-35XD Draken",
+                          "model":  "F-35XD Draken",
+                          "nation":  "DK",
+                          "crew":  1,
+                          "rwy":  3,
+                          "fuel":  6,
+                          "notes":  "H",
+                          "weapons":  {
+                                          "gun":  "30mm",
+                                          "gunDepletion":  4,
+                                          "irm":  null,
+                                          "irmDepletion":  null,
+                                          "rhm":  null,
+                                          "rhmDepletion":  null
+                                      },
+                          "bomb":  "1.5",
+                          "sight":  "+2",
+                          "rwr":  "B",
+                          "jam":  "3d",
+                          "radar":  null,
+                          "speeds":  {
+                                         "clean":  {
+                                                       "combat":  "3/4/5/-",
+                                                       "dash":  "4/5/7/-",
+                                                       "maneuver":  "4/5/6/-"
+                                                   },
+                                         "laden":  {
+                                                       "combat":  "3/3/4/-",
+                                                       "dash":  "4/4/5/-",
+                                                       "maneuver":  "2/3/3/-"
+                                                   }
+                                     },
+                          "ordnance":  [
+                                           {
+                                               "type":  "Rockets",
+                                               "quantity":  null
+                                           }
+                                       ],
+                          "capabilities":  [
+
+                                           ],
+                          "aam":  "AIM-9N",
+                          "module":  "BA"
+                      },
+    "F-4F":  {
+                 "name":  "F-4F Phantom II",
+                 "model":  "F-4F Phantom",
+                 "nation":  "FRG",
+                 "crew":  2,
+                 "rwy":  3,
+                 "fuel":  8,
+                 "notes":  "A, E, H",
+                 "weapons":  {
+                                 "gun":  "20mm M61",
+                                 "gunDepletion":  3,
+                                 "irm":  "AIM-9L",
+                                 "irmDepletion":  3,
+                                 "rhm":  null,
+                                 "rhmDepletion":  null
+                             },
+                 "bomb":  "3/2",
+                 "sight":  "+1",
+                 "rwr":  "B",
+                 "jam":  "3d",
+                 "radar":  {
+                               "name":  "APQ-120",
+                               "type":  "LD (LTD)",
+                               "range":  14,
+                               "modifier":  "12+: -1"
+                           },
+                 "speeds":  {
+                                "clean":  {
+                                              "combat":  "4/4/5/-",
+                                              "dash":  "5/6/7/-",
+                                              "maneuver":  "6/6/6/-"
+                                          },
+                                "laden":  {
+                                              "combat":  "3/3/3/-",
+                                              "dash":  "4/4/5/-",
+                                              "maneuver":  "2/3/3/-"
+                                          }
+                            },
+                 "ordnance":  [
+                                  {
+                                      "type":  "EOGM",
+                                      "quantity":  1
+                                  }
+                              ],
+                 "capabilities":  [
+                                      "Radar",
+                                      "Night"
+                                  ],
+                 "aam":  "AIM-9L",
+                 "module":  "RS"
+             },
+    "_modules":  [
+                     "RS",
+                     "BA"
+                 ],
+    "B-52G":  {
+                  "name":  "B-52G Stratofortress",
+                  "model":  "B-52G",
+                  "nation":  "US",
+                  "crew":  6,
+                  "rwy":  5,
+                  "fuel":  "U",
+                  "notes":  "E, N, Q",
+                  "weapons":  {
+                                  "gun":  "Rear Gun",
+                                  "gunDepletion":  null,
+                                  "irm":  null,
+                                  "irmDepletion":  null,
+                                  "rhm":  null,
+                                  "rhmDepletion":  null
+                              },
+                  "bomb":  "20",
+                  "sight":  "+3",
+                  "rwr":  "B",
+                  "jam":  "5d",
+                  "radar":  null,
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "2/3/3/-",
+                                               "dash":  "3/3/3/-",
+                                               "maneuver":  "1/1/1/-"
+                                           },
+                                 "laden":  {
+                                               "combat":  "2/3/3/-",
+                                               "dash":  "3/3/3/-",
+                                               "maneuver":  "1/1/1/-"
+                                           }
+                             },
+                  "ordnance":  [
+                                   {
+                                       "type":  "SRAM",
+                                       "quantity":  4
+                                   }
+                               ],
+                  "capabilities":  [
+                                       "Radar",
+                                       "TFR",
+                                       "Night"
+                                   ],
+                  "aam":  null,
+                  "module":  "RS"
+              },
+    "F-104G":  {
+                   "name":  "F-104G Starfighter",
+                   "model":  "F-104G Starfighter",
+                   "nation":  "FRG",
+                   "crew":  1,
+                   "rwy":  3,
+                   "fuel":  5,
+                   "notes":  "B, G, H",
+                   "weapons":  {
+                                   "gun":  "20mm M61",
+                                   "gunDepletion":  3,
+                                   "irm":  "AIM-9F",
+                                   "irmDepletion":  6,
+                                   "rhm":  null,
+                                   "rhmDepletion":  null
+                               },
+                   "bomb":  "1",
+                   "sight":  "+1",
+                   "rwr":  "A",
+                   "jam":  null,
+                   "radar":  {
+                                 "name":  "F15A-41B",
+                                 "type":  "No LD",
+                                 "range":  4,
+                                 "modifier":  null
+                             },
+                   "speeds":  {
+                                  "clean":  {
+                                                "combat":  "4/4/5/-",
+                                                "dash":  "5/6/8/-",
+                                                "maneuver":  "4/5/6/-"
+                                            },
+                                  "laden":  {
+                                                "combat":  "3/4/4/-",
+                                                "dash":  "4/5/5/-",
+                                                "maneuver":  "2/3/3/-"
+                                            }
+                              },
+                   "ordnance":  [
+
+                                ],
+                   "capabilities":  [
+                                        "Radar",
+                                        "Night(Ltd)"
+                                    ],
+                   "aam":  "AIM-9F",
+                   "module":  "RS"
+               },
+    "AGM-69A":  {
+                    "name":  "AGM-69A SRAM",
+                    "model":  "AGM-69A",
+                    "nation":  "US",
+                    "crew":  0,
+                    "rwy":  null,
+                    "fuel":  "U",
+                    "notes":  null,
+                    "weapons":  {
+                                    "gun":  null,
+                                    "gunDepletion":  null,
+                                    "irm":  null,
+                                    "irmDepletion":  null,
+                                    "rhm":  null,
+                                    "rhmDepletion":  null
+                                },
+                    "bomb":  null,
+                    "sight":  null,
+                    "rwr":  null,
+                    "jam":  "2d",
+                    "radar":  null,
+                    "speeds":  {
+                                   "clean":  {
+                                                 "combat":  "8/-/15/-",
+                                                 "dash":  "-/-/-/-",
+                                                 "maneuver":  "4/-/6/-"
+                                             },
+                                   "laden":  null
+                               },
+                    "ordnance":  [
+
+                                 ],
+                    "capabilities":  [
+                                         "Night"
+                                     ],
+                    "aam":  null,
+                    "module":  "RS"
+                },
+    "MK-41 Sea King":  {
+                           "name":  "MK-41 Sea King",
+                           "model":  "MK-41 Sea King",
+                           "aliases":  ["Mk41 Sea King", "Sea King"],
+                           "nation":  "FRG",
+                           "crew":  4,
+                           "rwy":  0,
+                           "fuel":  "U",
+                           "notes":  null,
+                           "weapons":  {
+                                           "gun":  null,
+                                           "gunDepletion":  null,
+                                           "irm":  null,
+                                           "irmDepletion":  null,
+                                           "rhm":  null,
+                                           "rhmDepletion":  null
+                                       },
+                           "bomb":  null,
+                           "sight":  null,
+                           "rwr":  "B",
+                           "jam":  null,
+                           "radar":  "Surf",
+                           "speeds":  {
+                                          "clean":  {
+                                                        "combat":  "1/-/-/-",
+                                                        "dash":  "-/-/-/-",
+                                                        "maneuver":  "2/-/-/-"
+                                                    },
+                                          "laden":  null
+                                      },
+                           "ordnance":  [
+                                            {
+                                                "type":  "EOGM",
+                                                "quantity":  1
+                                            }
+                                        ],
+                           "capabilities":  [
+                                                "Night"
+                                            ],
+                           "aam":  null,
+                           "module":  "BA"
+                       },
+    "JA-37 Viggen":  {
+                         "name":  "JA-37 Viggen",
+                         "model":  "JA-37 Viggen",
+                         "nation":  "SE",
+                         "crew":  1,
+                         "rwy":  2,
+                         "fuel":  7,
+                         "notes":  "C, D, E, H",
+                         "weapons":  {
+                                         "gun":  "30mm",
+                                         "gunDepletion":  4,
+                                         "irm":  null,
+                                         "irmDepletion":  null,
+                                         "rhm":  null,
+                                         "rhmDepletion":  null
+                                     },
+                         "bomb":  1,
+                         "sight":  "+2",
+                         "rwr":  "B",
+                         "jam":  null,
+                         "radar":  {
+                                       "name":  "PS-46/A",
+                                       "type":  "LD, TS",
+                                       "range":  14,
+                                       "modifier":  "12+: -1"
+                                   },
+                         "speeds":  {
+                                        "clean":  {
+                                                      "combat":  "3/4/5/-",
+                                                      "dash":  "5/6/7/-",
+                                                      "maneuver":  "6/6/7/-"
+                                                  },
+                                        "laden":  {
+                                                      "combat":  "3/3/4/-",
+                                                      "dash":  "4/4/5/-",
+                                                      "maneuver":  "3/3/3/-"
+                                                  }
+                                    },
+                         "ordnance":  [
+                                          {
+                                              "type":  "Rockets",
+                                              "quantity":  null
+                                          }
+                                      ],
+                         "capabilities":  [
+                                              "Night"
+                                          ],
+                         "aam":  "AIM-9P/L, Skyflash",
+                         "module":  "BA"
+                     },
+    "F-4D":  {
+                 "name":  "F-4D Phantom II",
+                 "model":  "F-4D Phantom",
+                 "nation":  "US",
+                 "crew":  2,
+                 "rwy":  3,
+                 "fuel":  10,
+                 "notes":  "A, C, I, P, S",
+                 "weapons":  {
+                                 "gun":  null,
+                                 "gunDepletion":  null,
+                                 "irm":  "AIM-9J",
+                                 "irmDepletion":  3,
+                                 "rhm":  "AIM-7E-2",
+                                 "rhmDepletion":  3
+                             },
+                 "bomb":  "3/2",
+                 "sight":  "+1",
+                 "rwr":  "A",
+                 "jam":  "2n",
+                 "radar":  {
+                               "name":  "APQ-109",
+                               "type":  "No LD",
+                               "range":  12,
+                               "modifier":  "10+: -1"
+                           },
+                 "speeds":  {
+                                "clean":  {
+                                              "combat":  "3/4/4/-",
+                                              "dash":  "5/5/6/-",
+                                              "maneuver":  "5/5/6/-"
+                                          },
+                                "laden":  {
+                                              "combat":  "2/3/3/-",
+                                              "dash":  "3/4/5/-",
+                                              "maneuver":  "2/3/3/-"
+                                          }
+                            },
+                 "ordnance":  [
+                                  {
+                                      "type":  "EOGM",
+                                      "quantity":  1
+                                  },
+                                  {
+                                      "type":  "LGB",
+                                      "quantity":  1
+                                  },
+                                  {
+                                      "type":  "EOGB",
+                                      "quantity":  1
+                                  }
+                              ],
+                 "capabilities":  [
+                                      "Radar",
+                                      "Night"
+                                  ],
+                 "aam":  "AIM-9J/P, AIM-7E-2",
+                 "module":  "RS"
+             },
+    "F-111F":  {
+                   "name":  "F-111F Aardvark",
+                   "model":  "F-111F Aardvark",
+                   "nation":  "US",
+                   "crew":  2,
+                   "rwy":  4,
+                   "fuel":  15,
+                   "notes":  "C, I",
+                   "weapons":  {
+                                   "gun":  null,
+                                   "gunDepletion":  null,
+                                   "irm":  null,
+                                   "irmDepletion":  null,
+                                   "rhm":  null,
+                                   "rhmDepletion":  null
+                               },
+                   "bomb":  "6/4",
+                   "sight":  "+4",
+                   "rwr":  "C",
+                   "jam":  "3d",
+                   "radar":  null,
+                   "speeds":  {
+                                  "clean":  {
+                                                "combat":  "4/4/5/-",
+                                                "dash":  "5/6/8/-",
+                                                "maneuver":  "4/5/5/-"
+                                            },
+                                  "laden":  {
+                                                "combat":  "3/3/3/-",
+                                                "dash":  "4/5/5/-",
+                                                "maneuver":  "2/3/3/-"
+                                            }
+                              },
+                   "ordnance":  [
+                                    {
+                                        "type":  "LGB",
+                                        "quantity":  2
+                                    },
+                                    {
+                                        "type":  "EOGB",
+                                        "quantity":  4
+                                    }
+                                ],
+                   "capabilities":  [
+                                        "Radar",
+                                        "FLIR",
+                                        "TFR",
+                                        "Night"
+                                    ],
+                   "aam":  "AIM-9P(8)",
+                   "module":  "RS"
+               },
+    "Tornado IDS":  {
+                        "name":  "Tornado IDS (Navy)",
+                        "model":  "IDS",
+                        "nation":  "FRG",
+                        "crew":  2,
+                        "rwy":  3,
+                        "fuel":  9,
+                        "notes":  "E",
+                        "weapons":  {
+                                        "gun":  "27mm",
+                                        "gunDepletion":  4,
+                                        "irm":  "AIM-9L",
+                                        "irmDepletion":  6,
+                                        "rhm":  null,
+                                        "rhmDepletion":  null
+                                    },
+                        "bomb":  "4/2",
+                        "sight":  "+4",
+                        "rwr":  "B",
+                        "jam":  "3d",
+                        "radar":  "Surf",
+                        "speeds":  {
+                                       "clean":  {
+                                                     "combat":  "4/4/5/-",
+                                                     "dash":  "5/6/7/-",
+                                                     "maneuver":  "4/5/6/-"
+                                                 },
+                                       "laden":  {
+                                                     "combat":  "3/3/3/-",
+                                                     "dash":  "4/4/5/-",
+                                                     "maneuver":  "2/3/3/-"
+                                                 }
+                                   },
+                        "ordnance":  [
+                                         {
+                                             "type":  "Kormoran",
+                                             "quantity":  2
+                                         }
+                                     ],
+                        "capabilities":  [
+                                             "Radar",
+                                             "Recon",
+                                             "TFR",
+                                             "Night"
+                                         ],
+                        "aam":  "AIM-9L",
+                        "module":  "BA"
+                    },
+    "F-16C":  {
+                  "name":  "F-16C Fighting Falcon",
+                  "model":  "F-16C Falcon",
+                  "nation":  "US",
+                  "crew":  1,
+                  "rwy":  2,
+                  "fuel":  6,
+                  "notes":  "A, C, L, M, P",
+                  "weapons":  {
+                                  "gun":  "20mm M61",
+                                  "gunDepletion":  3,
+                                  "irm":  "AIM-9M",
+                                  "irmDepletion":  3,
+                                  "rhm":  null,
+                                  "rhmDepletion":  null
+                              },
+                  "bomb":  "3/2",
+                  "sight":  "+3",
+                  "rwr":  "C",
+                  "jam":  "3d",
+                  "radar":  {
+                                "name":  "APG-68",
+                                "type":  "LD, TS",
+                                "range":  16,
+                                "modifier":  "14+: -1"
+                            },
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "4/4/5/-",
+                                               "dash":  "5/6/8/-",
+                                               "maneuver":  "8/9/9/-"
+                                           },
+                                 "laden":  {
+                                               "combat":  "3/3/4/-",
+                                               "dash":  "4/5/5/-",
+                                               "maneuver":  "4/5/5/-"
+                                           }
+                             },
+                  "ordnance":  [
+                                   {
+                                       "type":  "EOGM",
+                                       "quantity":  1
+                                   },
+                                   {
+                                       "type":  "HARM",
+                                       "quantity":  1
+                                   },
+                                   {
+                                       "type":  "Shrike",
+                                       "quantity":  1
+                                   }
+                               ],
+                  "capabilities":  [
+                                       "Radar",
+                                       "TFR",
+                                       "Night"
+                                   ],
+                  "aam":  "AIM-9M",
+                  "module":  "RS"
+              },
+    "SH-37 Viggen":  {
+                         "name":  "SH-37 Viggen",
+                         "model":  "SH-37 Viggen",
+                         "nation":  "SE",
+                         "crew":  1,
+                         "rwy":  2,
+                         "fuel":  8,
+                         "notes":  null,
+                         "weapons":  {
+                                         "gun":  null,
+                                         "gunDepletion":  null,
+                                         "irm":  null,
+                                         "irmDepletion":  null,
+                                         "rhm":  null,
+                                         "rhmDepletion":  null
+                                     },
+                         "bomb":  null,
+                         "sight":  null,
+                         "rwr":  "B",
+                         "jam":  "3d",
+                         "radar":  "Surf",
+                         "speeds":  {
+                                        "clean":  {
+                                                      "combat":  "3/4/5/-",
+                                                      "dash":  "5/6/7/-",
+                                                      "maneuver":  "5/5/6/-"
+                                                  },
+                                        "laden":  null
+                                    },
+                         "ordnance":  [
+
+                                      ],
+                         "capabilities":  [
+                                              "Recon",
+                                              "Night"
+                                          ],
+                         "aam":  "AIM-9P",
+                         "module":  "BA"
+                     },
+    "Tornado GR.1":  {
+                         "name":  "Tornado GR.1",
+                         "model":  "Tornado GR.1",
+                         "nation":  "UK",
+                         "crew":  2,
+                         "rwy":  3,
+                         "fuel":  11,
+                         "notes":  "H",
+                         "weapons":  {
+                                         "gun":  "27mm",
+                                         "gunDepletion":  4,
+                                         "irm":  "AIM-9L",
+                                         "irmDepletion":  6,
+                                         "rhm":  null,
+                                         "rhmDepletion":  null
+                                     },
+                         "bomb":  "4/2",
+                         "sight":  "+4",
+                         "rwr":  "C",
+                         "jam":  "3d",
+                         "radar":  null,
+                         "speeds":  {
+                                        "clean":  {
+                                                      "combat":  "4/4/5/-",
+                                                      "dash":  "5/6/7/-",
+                                                      "maneuver":  "4/5/6/-"
+                                                  },
+                                        "laden":  {
+                                                      "combat":  "3/3/3/-",
+                                                      "dash":  "4/4/5/-",
+                                                      "maneuver":  "2/3/3/-"
+                                                  }
+                                    },
+                         "ordnance":  [
+                                          {
+                                              "type":  "JP233",
+                                              "quantity":  null
+                                          }
+                                      ],
+                         "capabilities":  [
+                                              "Radar",
+                                              "TFR",
+                                              "Night"
+                                          ],
+                         "aam":  "AIM-9L",
+                         "module":  "RS"
+                     },
+    "Tornado F.2A":  {
+                         "name":  "Tornado F.2A",
+                         "model":  "Tornado F.2A",
+                         "nation":  "UK",
+                         "crew":  2,
+                         "rwy":  2,
+                         "fuel":  10,
+                         "notes":  "M",
+                         "weapons":  {
+                                         "gun":  null,
+                                         "gunDepletion":  null,
+                                         "irm":  "AIM-9L",
+                                         "irmDepletion":  6,
+                                         "rhm":  "Skyflash",
+                                         "rhmDepletion":  3
+                                     },
+                         "bomb":  null,
+                         "sight":  null,
+                         "rwr":  "C",
+                         "jam":  null,
+                         "radar":  {
+                                       "name":  "Foxhunter",
+                                       "type":  "LD",
+                                       "range":  25,
+                                       "modifier":  "20+: -1"
+                                   },
+                         "speeds":  {
+                                        "clean":  {
+                                                      "combat":  "4/4/5/-",
+                                                      "dash":  "5/6/8/-",
+                                                      "maneuver":  "4/5/6/-"
+                                                  },
+                                        "laden":  null
+                                    },
+                         "ordnance":  [
+
+                                      ],
+                         "capabilities":  [
+                                              "Night"
+                                          ],
+                         "aam":  "AIM-9L, Skyflash",
+                         "module":  "RS"
+                     },
+    "Falcon 20F":  {
+                       "name":  "Falcon 20F",
+                       "model":  "Falcon 20F",
+                       "nation":  "UK",
+                       "crew":  5,
+                       "rwy":  4,
+                       "fuel":  "U",
+                       "notes":  "G, O",
+                       "standoffJammingStrength":  "10/20/40",
+                       "weapons":  {
+                                       "gun":  null,
+                                       "gunDepletion":  null,
+                                       "irm":  null,
+                                       "irmDepletion":  null,
+                                       "rhm":  null,
+                                       "rhmDepletion":  null
+                                   },
+                       "bomb":  null,
+                       "sight":  null,
+                       "rwr":  "C",
+                       "jam":  null,
+                       "radar":  null,
+                       "speeds":  {
+                                      "clean":  {
+                                                    "combat":  "2/2/3/-",
+                                                    "dash":  "-/-/-/-",
+                                                    "maneuver":  "1/1/1/-"
+                                                },
+                                      "laden":  null
+                                  },
+                       "ordnance":  [
+
+                                    ],
+                       "capabilities":  [
+                                            "Night",
+                                            "Standoff, Spot"
+                                        ],
+                       "aam":  null,
+                       "module":  "RS"
+                   },
+    "Jaguar GR.1A":  {
+                         "name":  "Jaguar GR.1A",
+                         "model":  "Jaguar GR.1A",
+                         "nation":  "UK",
+                         "crew":  1,
+                         "rwy":  2,
+                         "fuel":  7,
+                         "notes":  "B, F, L, N",
+                         "weapons":  {
+                                         "gun":  "30mm",
+                                         "gunDepletion":  4,
+                                         "irm":  "AIM-9G",
+                                         "irmDepletion":  8,
+                                         "rhm":  null,
+                                         "rhmDepletion":  null
+                                     },
+                         "bomb":  "2",
+                         "sight":  "+2",
+                         "rwr":  "A",
+                         "jam":  "2n",
+                         "radar":  null,
+                         "speeds":  {
+                                        "clean":  {
+                                                      "combat":  "3/4/4/-",
+                                                      "dash":  "5/5/6/-",
+                                                      "maneuver":  "5/4/3/-"
+                                                  },
+                                        "laden":  {
+                                                      "combat":  "2/3/3/-",
+                                                      "dash":  "3/4/4/-",
+                                                      "maneuver":  "2/2/2/-"
+                                                  }
+                                    },
+                         "ordnance":  [
+                                          {
+                                              "type":  "LGB",
+                                              "quantity":  1
+                                          }
+                                      ],
+                         "capabilities":  [
+                                              "Recon",
+                                              "Night(ltd)"
+                                          ],
+                         "aam":  "AIM-9G",
+                         "module":  "RS"
+                     },
+    "RF-4C":  {
+                  "name":  "RF-4C Phantom II",
+                  "model":  "RF-4C Phantom",
+                  "nation":  "US",
+                  "crew":  2,
+                  "rwy":  3,
+                  "fuel":  12,
+                  "notes":  "K",
+                  "weapons":  {
+                                  "gun":  null,
+                                  "gunDepletion":  null,
+                                  "irm":  null,
+                                  "irmDepletion":  null,
+                                  "rhm":  null,
+                                  "rhmDepletion":  null
+                              },
+                  "bomb":  null,
+                  "sight":  null,
+                  "rwr":  "B",
+                  "jam":  "3d",
+                  "radar":  {
+                                "name":  null,
+                                "type":  null,
+                                "range":  null,
+                                "modifier":  null
+                            },
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "3/4/4/-",
+                                               "dash":  "5/5/6/-",
+                                               "maneuver":  "5/6/6/-"
+                                           },
+                                 "laden":  null
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "Recon",
+                                       "TFR",
+                                       "Night"
+                                   ],
+                  "aam":  null,
+                  "module":  "RS"
+              },
+    "F-4G":  {
+                 "name":  "F-4G Wild Weasel V",
+                 "model":  "F-4G Wild Weasel",
+                 "nation":  "US",
+                 "crew":  2,
+                 "rwy":  3,
+                 "fuel":  10,
+                 "notes":  "L, M",
+                 "weapons":  {
+                                 "gun":  "null",
+                                 "gunDepletion":  null,
+                                 "irm":  null,
+                                 "irmDepletion":  null,
+                                 "rhm":  "AIM-7F",
+                                 "rhmDepletion":  6
+                             },
+                 "bomb":  2,
+                 "sight":  "+1",
+                 "rwr":  "D",
+                 "jam":  "3d",
+                 "radar":  {
+                               "name":  "APQ-120",
+                               "type":  "LD (LTD)",
+                               "range":  14,
+                               "modifier":  "12+: -1"
+                           },
+                 "speeds":  {
+                                "clean":  {
+                                              "combat":  "4/4/5/-",
+                                              "dash":  "5/6/7/-",
+                                              "maneuver":  "6/6/6/-"
+                                          },
+                                "laden":  {
+                                              "combat":  "3/3/3/-",
+                                              "dash":  "4/4/5/-",
+                                              "maneuver":  "2/3/3/-"
+                                          }
+                            },
+                 "ordnance":  [
+                                  {
+                                      "type":  "EOGM",
+                                      "quantity":  1
+                                  },
+                                  {
+                                      "type":  "HARM",
+                                      "quantity":  2
+                                  },
+                                  {
+                                      "type":  "Shrike",
+                                      "quantity":  1
+                                  }
+                              ],
+                 "capabilities":  [
+                                      "Radar, Night"
+                                  ],
+                 "aam":  "AIM-7F",
+                 "module":  "RS"
+             },
+    "P-3C Orion (NE)":  {
+                            "name":  "P-3C Orion",
+                            "model":  "P-3C Orion",
+                            "nation":  "NE",
+                            "crew":  13,
+                            "rwy":  4,
+                            "fuel":  "U",
+                            "notes":  "B, I",
+                            "weapons":  {
+                                            "gun":  null,
+                                            "gunDepletion":  null,
+                                            "irm":  "AIM-9L",
+                                            "irmDepletion":  8,
+                                            "rhm":  null,
+                                            "rhmDepletion":  null
+                                        },
+                            "bomb":  null,
+                            "sight":  null,
+                            "rwr":  "C",
+                            "jam":  null,
+                            "radar":  "Surf",
+                            "speeds":  {
+                                           "clean":  {
+                                                         "combat":  "3/3/2/-",
+                                                         "dash":  "-/-/-/-",
+                                                         "maneuver":  "1/1/1/-"
+                                                     },
+                                           "laden":  null
+                                       },
+                            "ordnance":  [
+
+                                         ],
+                            "capabilities":  [
+                                                 "Night"
+                                             ],
+                            "aam":  "AIM-9L",
+                            "module":  "BA"
+                        },
+    "A-7D":  {
+                 "name":  "A-7D Corsair II",
+                 "model":  "A-7D Corsair II",
+                 "nation":  "US",
+                 "crew":  1,
+                 "rwy":  2,
+                 "fuel":  8,
+                 "notes":  "G, Q, R",
+                 "weapons":  {
+                                 "gun":  "20mm M39",
+                                 "gunDepletion":  2,
+                                 "irm":  "AIM-9J",
+                                 "irmDepletion":  6,
+                                 "rhm":  null,
+                                 "rhmDepletion":  null
+                             },
+                 "bomb":  "3",
+                 "sight":  "+3",
+                 "rwr":  "A",
+                 "jam":  "2n",
+                 "radar":  null,
+                 "speeds":  {
+                                "clean":  {
+                                              "combat":  "2/3/3/-",
+                                              "dash":  "3/4/4/-",
+                                              "maneuver":  "5/4/3/-"
+                                          },
+                                "laden":  {
+                                              "combat":  "2/2/-/-",
+                                              "dash":  "3/3/3/-",
+                                              "maneuver":  "2/2/2/-"
+                                          }
+                            },
+                 "ordnance":  [
+                                  {
+                                      "type":  "EOGM",
+                                      "quantity":  2
+                                  },
+                                  {
+                                      "type":  "LGB",
+                                      "quantity":  1
+                                  }
+                              ],
+                 "capabilities":  [
+                                      "Radar",
+                                      "Night"
+                                  ],
+                 "aam":  "AIM-9J",
+                 "module":  "RS"
+             },
+    "RF-4E":  {
+                  "name":  "RF-4E Phantom II",
+                  "model":  "RF-4E Phantom",
+                  "nation":  "FRG",
+                  "crew":  2,
+                  "rwy":  3,
+                  "fuel":  10,
+                  "notes":  "F",
+                  "weapons":  {
+                                  "gun":  null,
+                                  "gunDepletion":  null,
+                                  "irm":  null,
+                                  "irmDepletion":  null,
+                                  "rhm":  null,
+                                  "rhmDepletion":  null
+                              },
+                  "bomb":  null,
+                  "sight":  null,
+                  "rwr":  "B",
+                  "jam":  "3d",
+                  "radar":  null,
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "4/4/5/-",
+                                               "dash":  "5/6/7/-",
+                                               "maneuver":  "6/6/6/-"
+                                           },
+                                 "laden":  null
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "Recon",
+                                       "Night"
+                                   ],
+                  "aam":  null,
+                  "module":  "RS"
+              },
+    "CH-53":  {
+                  "name":  "CH-53",
+                  "model":  "CH-53",
+                  "nation":  "FRG",
+                  "crew":  0,
+                  "rwy":  0,
+                  "fuel":  0,
+                  "notes":  null,
+                  "weapons":  {
+
+                              },
+                  "speeds":  {
+
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "CSAR"
+                                   ],
+                  "aam":  null,
+                  "module":  "RS"
+              },
+    "S-61":  {
+                  "name":  "S-61",
+                  "model":  "S-61",
+                  "aliases":  [],
+                  "nation":  "DK",
+                  "crew":  0,
+                  "rwy":  0,
+                  "fuel":  0,
+                  "notes":  null,
+                  "weapons":  {
+
+                              },
+                  "speeds":  {
+
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "CSAR"
+                                   ],
+                  "aam":  null,
+                  "module":  "BA"
+              },
+    "HKP-4D":  {
+                  "name":  "HKP-4D",
+                  "model":  "HKP-4D",
+                  "aliases":  [],
+                  "nation":  "SE",
+                  "crew":  0,
+                  "rwy":  0,
+                  "fuel":  0,
+                  "notes":  null,
+                  "weapons":  {
+
+                              },
+                  "speeds":  {
+
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "CSAR"
+                                   ],
+                  "aam":  null,
+                  "module":  "BA"
+              },
+    "EA-6B":  {
+                  "name":  "EA-6B Prowler",
+                  "model":  "EA-6B Prowler",
+                  "nation":  "US",
+                  "crew":  4,
+                  "rwy":  3,
+                  "fuel":  10,
+                  "notes":  "B, D, F",
+                  "standoffJammingStrength":  "11/23/45",
+                  "weapons":  {
+                                  "gun":  null,
+                                  "gunDepletion":  null,
+                                  "irm":  null,
+                                  "irmDepletion":  null,
+                                  "rhm":  null,
+                                  "rhmDepletion":  null
+                              },
+                  "bomb":  null,
+                  "sight":  null,
+                  "rwr":  "D",
+                  "jam":  "4d",
+                  "radar":  "Surf",
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "3/3/3/-",
+                                               "dash":  "4/4/4/-",
+                                               "maneuver":  "5/4/3/-"
+                                           },
+                                 "laden":  null
+                             },
+                  "ordnance":  [
+                                   {
+                                       "type":  "HARM",
+                                       "quantity":  1
+                                   }
+                               ],
+                  "capabilities":  [
+                                       "Night",
+                                       "Standoff, Spot"
+                                   ],
+                  "aam":  null,
+                  "module":  "BA"
+              },
+    "Tornado IDS (Navy)":  {
+                               "name":  "Tornado IDS (Navy)",
+                               "model":  "Tornado IDS (Navy)",
+                               "nation":  "UK",
+                               "crew":  2,
+                               "rwy":  3,
+                               "fuel":  9,
+                               "notes":  "C",
+                               "weapons":  {
+                                               "gun":  "27mm",
+                                               "gunDepletion":  4,
+                                               "irm":  "AIM-9L",
+                                               "irmDepletion":  8,
+                                               "rhm":  null,
+                                               "rhmDepletion":  null
+                                           },
+                               "bomb":  "4/2",
+                               "sight":  "+4",
+                               "rwr":  "B",
+                               "jam":  "3d",
+                               "radar":  "Surf",
+                               "speeds":  {
+                                              "clean":  {
+                                                            "combat":  "4/4/5/-",
+                                                            "dash":  "5/6/7/-",
+                                                            "maneuver":  "4/5/6/-"
+                                                        },
+                                              "laden":  {
+                                                            "combat":  "3/3/3/-",
+                                                            "dash":  "4/4/5/-",
+                                                            "maneuver":  "2/3/3/-"
+                                                        }
+                                          },
+                               "ordnance":  [
+                                                {
+                                                    "type":  "Kormoran",
+                                                    "quantity":  2
+                                                }
+                                            ],
+                               "capabilities":  [
+                                                    "Radar",
+                                                    "Recon",
+                                                    "TFR",
+                                                    "Night"
+                                                ],
+                               "aam":  "AIM-9L",
+                               "module":  "BA"
+                           },
+    "Buccaneer S.2B":  {
+                           "name":  "Buccaneer S.2B",
+                           "model":  "Buccaneer S.2B",
+                           "nation":  "UK",
+                           "crew":  2,
+                           "rwy":  3,
+                           "fuel":  12,
+                           "notes":  "D, E, I",
+                           "weapons":  {
+                                           "gun":  null,
+                                           "gunDepletion":  null,
+                                           "irm":  null,
+                                           "irmDepletion":  null,
+                                           "rhm":  null,
+                                           "rhmDepletion":  null
+                                       },
+                           "bomb":  "2",
+                           "sight":  "+1",
+                           "rwr":  "B",
+                           "jam":  "2n",
+                           "radar":  "Surf",
+                           "speeds":  {
+                                          "clean":  {
+                                                        "combat":  "3/3/2/-",
+                                                        "dash":  "4/4/3/-",
+                                                        "maneuver":  "4/3/3/-"
+                                                    },
+                                          "laden":  {
+                                                        "combat":  "2/2/2/-",
+                                                        "dash":  "3/3/3/-",
+                                                        "maneuver":  "2/2/2/-"
+                                                    }
+                                      },
+                           "ordnance":  [
+                                            {
+                                                "type":  "LGB",
+                                                "quantity":  1
+                                            },
+                                            {
+                                                "type":  "EOGB",
+                                                "quantity":  1
+                                            },
+                                            {
+                                                "type":  "Sea Eagle",
+                                                "quantity":  2
+                                            },
+                                            {
+                                                "type":  "AS.37",
+                                                "quantity":  1
+                                            }
+                                        ],
+                           "capabilities":  [
+                                                "TFR",
+                                                "Night"
+                                            ],
+                           "aam":  "AIM-9L (8)",
+                           "module":  "BA"
+                       },
+    "_comment":  "Merged NATO Aircraft Database - Red Storm + Baltic Approaches",
+    "_created":  "2025-11-21",
+    "_description":  "Combined aircraft specifications for all NATO forces across modules",
+    "F-16A":  {
+                  "name":  "F-16A Fighting Falcon",
+                  "model":  "F-16A Falcon",
+                  "nation":  "US",
+                  "crew":  1,
+                  "rwy":  2,
+                  "fuel":  6,
+                  "notes":  "A, C, M, P",
+                  "weapons":  {
+                                  "gun":  "20mm M61",
+                                  "gunDepletion":  3,
+                                  "irm":  "AIM-9L",
+                                  "irmDepletion":  3,
+                                  "rhm":  null,
+                                  "rhmDepletion":  null
+                              },
+                  "bomb":  "3/2",
+                  "sight":  "+3",
+                  "rwr":  "B",
+                  "jam":  "3d",
+                  "radar":  {
+                                "name":  "APG-66",
+                                "type":  "LD",
+                                "range":  14,
+                                "modifier":  "12+: -1"
+                            },
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "4/4/5/-",
+                                               "dash":  "5/6/8/-",
+                                               "maneuver":  "9/9/9/-"
+                                           },
+                                 "laden":  {
+                                               "combat":  "3/3/4/-",
+                                               "dash":  "4/5/5/-",
+                                               "maneuver":  "4/5/5/-"
+                                           }
+                             },
+                  "ordnance":  [
+                                   {
+                                       "type":  "EOGM",
+                                       "quantity":  1
+                                   }
+                               ],
+                  "capabilities":  [
+                                       "Radar",
+                                       "Night"
+                                   ],
+                  "aam":  "AIM-9L",
+                  "module":  "RS"
+              },
+    "AV-8B":  {
+                  "name":  "AV-8B Harrier II",
+                  "model":  "AV-8B Harrier II",
+                  "nation":  "US",
+                  "crew":  1,
+                  "rwy":  1,
+                  "fuel":  5,
+                  "notes":  "C, E, G",
+                  "weapons":  {
+                                  "gun":  "25mm",
+                                  "gunDepletion":  3,
+                                  "irm":  "AIM-9L",
+                                  "irmDepletion":  8,
+                                  "rhm":  null,
+                                  "rhmDepletion":  null
+                              },
+                  "bomb":  "1.5",
+                  "sight":  "+2",
+                  "rwr":  "B",
+                  "jam":  null,
+                  "radar":  null,
+                  "speeds":  {
+                                 "clean":  {
+                                               "combat":  "3/3/2/-",
+                                               "dash":  "4/4/3/-",
+                                               "maneuver":  "6/5/4/-"
+                                           },
+                                 "laden":  {
+                                               "combat":  "1/1/1/-",
+                                               "dash":  "3/3/-/-",
+                                               "maneuver":  "3/3/-/-"
+                                           }
+                             },
+                  "ordnance":  [
+                                   {
+                                       "type":  "LGB",
+                                       "quantity":  1
+                                   },
+                                   {
+                                       "type":  "EOGM",
+                                       "quantity":  1
+                                   }
+                               ],
+                  "capabilities":  [
+
+                                   ],
+                  "aam":  "AIM-9L",
+                  "module":  "BA"
+              },
+    "BR.1150 Atlantic 2":  {
+                              "name":  "BR.1150 Atlantic 2",
+                              "model":  "BR.1150 Atlantic 2",
+                              "nation":  "FRG",
+                              "crew":  10,
+                              "rwy":  4,
+                              "fuel":  "U",
+                              "notes":  "B, I",
+                              "weapons":  {
+                                              "gun":  null,
+                                              "gunDepletion":  null,
+                                              "irm":  null,
+                                              "irmDepletion":  null,
+                                              "rhm":  null,
+                                              "rhmDepletion":  null
+                                          },
+                              "bomb":  null,
+                              "sight":  null,
+                              "rwr":  "C",
+                              "jam":  null,
+                              "radar":  "Surf",
+                              "speeds":  {
+                                             "clean":  {
+                                                           "combat":  "2/2/-/-",
+                                                           "dash":  "-/-/-/-",
+                                                           "maneuver":  "1/1/-/-"
+                                                       },
+                                             "laden":  null
+                                         },
+                              "ordnance":  [
+
+                                           ],
+                              "capabilities":  [
+                                                   "Night"
+                                               ],
+                              "aam":  null,
+                              "module":  "BA"
+                          },
+    "F-4E":  {
+                 "name":  "F-4E Phantom II",
+                 "model":  "F-4E Phantom",
+                 "nation":  "US",
+                 "crew":  2,
+                 "rwy":  3,
+                 "fuel":  10,
+                 "notes":  "A, C, D, I, P",
+                 "weapons":  {
+                                 "gun":  "20mm M39",
+                                 "gunDepletion":  3,
+                                 "irm":  "AIM-9L",
+                                 "irmDepletion":  3,
+                                 "rhm":  "AIM-7F",
+                                 "rhmDepletion":  3
+                             },
+                 "bomb":  "3/2",
+                 "sight":  "+1",
+                 "rwr":  "A",
+                 "jam":  "3d",
+                 "radar":  {
+                               "name":  "APQ-120",
+                               "type":  "LD (LTD)",
+                               "range":  14,
+                               "modifier":  "12+: -1"
+                           },
+                 "speeds":  {
+                                "clean":  {
+                                              "combat":  "4/4/5/-",
+                                              "dash":  "5/6/7/-",
+                                              "maneuver":  "6/6/6/-"
+                                          },
+                                "laden":  {
+                                              "combat":  "3/3/3/-",
+                                              "dash":  "4/4/5/-",
+                                              "maneuver":  "2/3/3/-"
+                                          }
+                            },
+                 "ordnance":  [
+                                  {
+                                      "type":  "EOGM",
+                                      "quantity":  1
+                                  },
+                                  {
+                                      "type":  "LGB",
+                                      "quantity":  1
+                                  },
+                                  {
+                                      "type":  "EOGB",
+                                      "quantity":  1
+                                  }
+                              ],
+                 "capabilities":  [
+                                      "Radar",
+                                      "Night"
+                                  ],
+                 "aam":  "AIM-9L, AIM-7F",
+                 "module":  "RS"
+             },
+    "_version":  "1.0.0",
+    "CF-18A":  {
+                   "name":  "CF-18A Hornet",
+                   "model":  "CF-18A Hornet",
+                   "nation":  "Canada",
+                   "crew":  1,
+                   "rwy":  3,
+                   "fuel":  6,
+                   "notes":  "A, B, C, E",
+                   "weapons":  {
+                                   "gun":  "20mm M61",
+                                   "gunDepletion":  3,
+                                   "irm":  "AIM-9L",
+                                   "irmDepletion":  3,
+                                   "rhm":  "AIM-7M",
+                                   "rhmDepletion":  6
+                               },
+                   "bomb":  "4/2",
+                   "sight":  "+3",
+                   "rwr":  "B/3d",
+                   "jam":  null,
+                   "radar":  {
+                                 "name":  "APG-65",
+                                 "type":  "LD, TS",
+                                 "range":  20,
+                                 "modifier":  "16+: -1"
+                             },
+                   "speeds":  {
+                                  "clean":  {
+                                                "combat":  "4/4/5/-",
+                                                "dash":  "5/6/6/-",
+                                                "maneuver":  "7/7/8/-"
+                                            },
+                                  "laden":  {
+                                                "combat":  "3/3/4/-",
+                                                "dash":  "4/5/5/-",
+                                                "maneuver":  "4/5/5/-"
+                                            }
+                              },
+                   "ordnance":  [
+
+                                ],
+                   "capabilities":  [
+                                        "Radar",
+                                        "TFR",
+                                        "Night"
+                                    ],
+                   "aam":  "AIM-9L, AIM-7M",
+                   "module":  "RS"
+               }
+}
+

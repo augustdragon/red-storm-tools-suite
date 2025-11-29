@@ -1,0 +1,105 @@
+{
+  "_comment": "Aircraft name mapping from OOB tables to aircraft database keys",
+  "_description": "Maps abbreviated or variant names from OOB generation to full aircraft database keys",
+  "_version": "1.1.0",
+  "_created": "2025-11-03",
+  "_updated": "2025-11-03",
+  
+  "NATO": {
+    "_comment": "Exact match entries first, then abbreviations and variants",
+    
+    "A-10A": "A-10A",
+    "A-7D": "A-7D",
+    "Alpha Jet": "Alpha Jet",
+    "CF-18A": "CF-18A Hornet",
+    "CF-5A": "CF-5A Freedom Fighter",
+    "CH-53": "CH-53",
+    "EC-130H": "EC-130H",
+    "EF-111A": "EF-111A Raven",
+    "F-104G": "F-104G Starfighter",
+    "F-111F": "F-111F",
+    "F-15A": "F-15A Eagle",
+    "F-15C": "F-15C Eagle",
+    "F-16A": "F-16A Fighting Falcon",
+    "F-16A(BE)": "F-16A Fighting Falcon",
+    "F-16A(NE)": "F-16A Fighting Falcon",
+    "F-16C": "F-16C Fighting Falcon",
+    "F-16C(R)": "F-16C Fighting Falcon",
+    "F-4D": "F-4D",
+    "F-4E": "F-4E",
+    "F-4F": "F-4F",
+    "F-4G": "F-4G",
+    "FGR2": "Phantom FGR.2",
+    "H-53": "H-53",
+    "Harrier GR3": "Harrier GR.3",
+    "Jaguar GR1A": "Jaguar GR.1A",
+    "Mirage 5BA": "Mirage 5BA",
+    "Mirage 5BR": "Mirage 5BR",
+    "NF-5A": "NF-5A Freedom Fighter",
+    "Puma": "Puma",
+    "RF-4C": "RF-4C",
+    "RF-4E": "RF-4E",
+    "Torn GR1": "Tornado GR.1",
+    "Torn GR1A": "Tornado GR.1A",
+    "Torn IDS": "Tornado IDS",
+    "Tornado F2A": "Tornado F.2A",
+    "Tornado GR1": "Tornado GR.1",
+    "Tornado GR1A": "Tornado GR.1A",
+    "Tornado IDS": "Tornado IDS",
+    
+    "_comment_variants": "Superscripted aircraft (F-4²) should be resolved by OOB processor via sub-roll"
+  },
+  
+  "WP": {
+    "_comment": "Warsaw Pact aircraft name mappings - check nation-specific first, then common",
+    
+    "USSR": {
+      "_comment": "USSR-specific mappings",
+      "MiG-21bis": "MiG-21bisN"
+    },
+    
+    "GDR": {
+      "_comment": "GDR-specific mappings",
+      "MiG-21bis": "MiG-21bisL"
+    },
+    
+    "_comment_common": "Common WP aircraft mappings (used if no nation-specific mapping found)",
+    
+    "An-12": "An-12",
+    "Mi-24D": "Mi-24D Hind D",
+    "Mi-24V": "Mi-24V Hind E",
+    "Mi-8": "Mi-8 Hip",
+    "MiG-21M": "MiG-21M Fishbed J",
+    "MiG-21MF": "MiG-21MF Fishbed J",
+    "MiG-21SPS Fishbed F": "MiG-21SPS Fishbed F",
+    "MiG-23BN": "MiG-23BN Flogger H",
+    "MiG-23M": "MiG-23M",
+    "MiG-23MF": "MiG-23MF",
+    "MiG-23ML": "MiG-23ML Flogger G",
+    "MiG-23MLA": "MiG-23MLA Flogger G",
+    "MiG-23MLD": "MiG-23MLD Flogger K",
+    "MiG-25BM": "MiG-25BM Foxbat",
+    "MiG-25PD": "MiG-25PD",
+    "MiG-25RB": "MiG-25RB Foxbat B",
+    "MiG-27": "MiG-27 Flogger D",
+    "MiG-27D": "MiG-27D Flogger J",
+    "MiG-27K": "MiG-27K Flogger J2",
+    "MiG-29": "MiG-29",
+    "Su-17M3": "Su-17M3 Fitter H",
+    "Su-17M4": "Su-17M4 Fitter K",
+    "Su-22": "Su-22 Fitter J",
+    "Su-22M4": "Su-22M4 Fitter K",
+    "Su-24M": "Su-24M Fencer D",
+    "Su-24M4": "Su-24M Fencer D",
+    "Su-24MP": "Su-24MP",
+    "Su-24MR": "Su-24MR Fencer E",
+    "Su-25": "Su-25 Frogfoot A",
+    "Su-27S": "Su-27S",
+    "Tu-16": "Tu-16 Badger",
+    "Tu-22M": "Tu-22M",
+    "Tu-22PD": "Tu-22PD",
+    "Yak-28PP": "Yak-28PP Brewer E",
+    
+    "_comment_variants": "Superscripted variants (MiG-23², MiG-25PD/Su-27S¹) resolved by processor"
+  }
+}

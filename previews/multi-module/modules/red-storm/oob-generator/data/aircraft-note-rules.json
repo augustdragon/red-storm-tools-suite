@@ -1,0 +1,323 @@
+{
+  "USAF": {
+    "A": {
+      "description": "AIM-9 and/or AIM-7 depletions are (6) if tasked with Bombing or SEAD",
+      "type": "weaponModification",
+      "conditions": {
+        "tasking": ["Bombing", "SEAD"]
+      },
+      "effects": {
+        "aamDepletion": 6
+      }
+    },
+    "C": {
+      "description": "Use lower bomb point load for Deep Strike Raids",
+      "type": "loadoutModification",
+      "conditions": {
+        "tasking": ["Deep Strike"]
+      },
+      "effects": {
+        "bombLoadModifier": "lower"
+      }
+    },
+    "J": {
+      "description": "Roll to determine AIM-9 model for each flight: 1-4 AIM-9L, 5+ AIM-9M. Roll to determine AIM-7 model for each flight: 1-6 AIM-7F, 7+ AIM-7M",
+      "type": "weaponVariant",
+      "effects": {
+        "aim9Variants": [
+          {"range": [1, 4], "weapon": "AIM-9L"},
+          {"range": [5, 10], "weapon": "AIM-9M"}
+        ],
+        "aim7Variants": [
+          {"range": [1, 6], "weapon": "AIM-7F"},
+          {"range": [7, 10], "weapon": "AIM-7M"}
+        ]
+      }
+    },
+    "L": {
+      "description": "May carry Shrike or HARM, not both. If loaded with Shrikes, aircraft may still carry a normal bomb point load as well",
+      "type": "loadoutOption",
+      "effects": {
+        "armOptions": ["Shrike", "HARM"],
+        "shrikeAllowsBombs": true
+      }
+    },
+    "S": {
+      "description": "SUU-23 Gun Pod. Roll for each flight: 1-5 add 20mm (4), 6+ no effect",
+      "type": "weaponVariant",
+      "effects": {
+        "gunPodRoll": [
+          {"range": [1, 5], "weapon": "20mm", "depletion": 4},
+          {"range": [6, 10], "effect": "none"}
+        ]
+      }
+    }
+  },
+  "UK": {
+    "A": {
+      "description": "AIM-9 not allowed if tasked with Bombing, SEAD, or Rescue Support",
+      "type": "weaponRestriction",
+      "conditions": {
+        "tasking": ["Bombing", "SEAD", "Rescue Support"]
+      },
+      "effects": {
+        "removeWeapon": "AIM-9"
+      }
+    },
+    "D": {
+      "description": "ADEN 30mm Gun. Roll for each flight: 1-3 Normal, 4-7 Reduce to {2}, 8+ -2",
+      "type": "weaponVariant",
+      "effects": {
+        "gunDepletionRoll": [
+          {"range": [1, 3], "effect": "normal"},
+          {"range": [4, 7], "depletion": 2},
+          {"range": [8, 10], "modifier": -2}
+        ]
+      }
+    },
+    "H": {
+      "description": "Use lower bomb point load for Deep Strike Raids",
+      "type": "loadoutModification",
+      "conditions": {
+        "tasking": ["Deep Strike"]
+      },
+      "effects": {
+        "bombLoadModifier": "lower"
+      }
+    },
+    "M": {
+      "description": "Roll to determine radar capability for each flight: 1-3 Normal, 4-7 Reduce to {2}, 8+ -2",
+      "type": "capabilityVariant",
+      "effects": {
+        "radarRoll": [
+          {"range": [1, 3], "effect": "normal"},
+          {"range": [4, 7], "reduction": 2},
+          {"range": [8, 10], "modifier": -2}
+        ]
+      }
+    },
+    "N": {
+      "description": "If tasked with Recon, no AIM-9",
+      "type": "weaponRestriction",
+      "conditions": {
+        "tasking": ["Recon"]
+      },
+      "effects": {
+        "removeWeapon": "AIM-9"
+      }
+    }
+  },
+  "FRG": {
+    "A": {
+      "description": "AIM-9 depletion is {6} if tasked with Bombing, SEAD, or Rescue Support",
+      "type": "weaponModification",
+      "conditions": {
+        "tasking": ["Bombing", "SEAD", "Rescue Support"]
+      },
+      "effects": {
+        "aamDepletion": 6
+      }
+    },
+    "E": {
+      "description": "Use lower bomb point load for Deep Strike Raids",
+      "type": "loadoutModification",
+      "conditions": {
+        "tasking": ["Deep Strike"]
+      },
+      "effects": {
+        "bombLoadModifier": "lower"
+      }
+    },
+    "G": {
+      "description": "AIM-9 not allowed if tasked with Bombing, SEAD, or Rescue Support",
+      "type": "weaponRestriction",
+      "conditions": {
+        "tasking": ["Bombing", "SEAD", "Rescue Support"]
+      },
+      "effects": {
+        "removeWeapon": "AIM-9"
+      }
+    }
+  },
+  "BE/CA/NE": {
+    "A": {
+      "description": "AIM-9 depletion number is {6} if tasked with Bombing or SEAD",
+      "type": "weaponModification",
+      "conditions": {
+        "tasking": ["Bombing", "SEAD"]
+      },
+      "effects": {
+        "aamDepletion": 6
+      }
+    },
+    "C": {
+      "description": "Use lower bomb point load for Deep Strike Raids",
+      "type": "loadoutModification",
+      "conditions": {
+        "tasking": ["Deep Strike"]
+      },
+      "effects": {
+        "bombLoadModifier": "lower"
+      }
+    },
+    "D": {
+      "description": "No AIM-9 if tasked with Bombing",
+      "type": "weaponRestriction",
+      "conditions": {
+        "tasking": ["Bombing"]
+      },
+      "effects": {
+        "removeWeapon": "AIM-9"
+      }
+    }
+  },
+  "USSR": {
+    "A": {
+      "description": "No IRM/R-27 if tasked with Bombing, SEAD, Rescue Support, or Chaff Laying",
+      "type": "weaponRestriction",
+      "conditions": {
+        "tasking": ["Bombing", "SEAD", "Rescue Support", "Chaff Laying"]
+      },
+      "effects": {
+        "removeWeapon": "IRM"
+      }
+    },
+    "B": {
+      "description": "If tasked with Bombing or SEAD, Jam rating is 2h",
+      "type": "capabilityModification",
+      "conditions": {
+        "tasking": ["Bombing", "SEAD"]
+      },
+      "effects": {
+        "jamRating": "2h"
+      }
+    },
+    "D": {
+      "description": "Roll to determine IRM load for each flight. 1-4 R-60, 5-10 R-60M",
+      "type": "weaponVariant",
+      "effects": {
+        "irmVariants": [
+          {"range": [1, 4], "weapon": "R-60"},
+          {"range": [5, 10], "weapon": "R-60M"}
+        ]
+      }
+    },
+    "G": {
+      "description": "May carry AS-6(2) or Kh-28(2), not both",
+      "type": "loadoutOption",
+      "effects": {
+        "armOptions": ["AS-6", "Kh-28"],
+        "mutuallyExclusive": true
+      }
+    },
+    "H": {
+      "description": "Roll to determine IRM load for each flight. 1-5 R-60M, 6-10 R-73",
+      "type": "weaponVariant",
+      "effects": {
+        "irmVariants": [
+          {"range": [1, 5], "weapon": "R-60M"},
+          {"range": [6, 10], "weapon": "R-73"}
+        ]
+      }
+    },
+    "I": {
+      "description": "Use lower bomb point load for Deep Strike Raids",
+      "type": "loadoutModification",
+      "conditions": {
+        "tasking": ["Deep Strike"]
+      },
+      "effects": {
+        "bombLoadModifier": "lower"
+      }
+    },
+    "N": {
+      "description": "Kh-25MP, Kh-28M, or Kh-58 only allowed if tasked with SEAD",
+      "type": "weaponRestriction",
+      "conditions": {
+        "tasking": ["!SEAD"]
+      },
+      "effects": {
+        "removeWeapons": ["Kh-25MP", "Kh-28M", "Kh-58"]
+      }
+    },
+    "P": {
+      "description": "Bomb load NA if tasked with Recon",
+      "type": "weaponRestriction",
+      "conditions": {
+        "tasking": ["Recon"]
+      },
+      "effects": {
+        "removeWeapon": "Bombs"
+      }
+    },
+    "U": {
+      "description": "No R-27 if tasked with Bombing, SEAD, or Rescue Support",
+      "type": "weaponRestriction",
+      "conditions": {
+        "tasking": ["Bombing", "SEAD", "Rescue Support"]
+      },
+      "effects": {
+        "removeWeapon": "R-27"
+      }
+    }
+  },
+  "GDR": {
+    "A": {
+      "description": "No IRM / RHM if tasked with Bombing, SEAD, or Chaff Laying",
+      "type": "weaponRestriction",
+      "conditions": {
+        "tasking": ["Bombing", "SEAD", "Chaff Laying"]
+      },
+      "effects": {
+        "removeWeapons": ["IRM", "RHM"]
+      }
+    },
+    "C": {
+      "description": "Roll to determine IRM load for each flight: 1-5 R-60, 6-10 R-60M",
+      "type": "weaponVariant",
+      "effects": {
+        "irmVariants": [
+          {"range": [1, 5], "weapon": "R-60"},
+          {"range": [6, 10], "weapon": "R-60M"}
+        ]
+      }
+    },
+    "D": {
+      "description": "Use lower bomb point load for Deep Strike Raids",
+      "type": "loadoutModification",
+      "conditions": {
+        "tasking": ["Deep Strike"]
+      },
+      "effects": {
+        "bombLoadModifier": "lower"
+      }
+    },
+    "E": {
+      "description": "Only Bombs, AT CBU, or Rockets allowed",
+      "type": "weaponRestriction",
+      "effects": {
+        "allowedWeapons": ["Bombs", "AT CBU", "Rockets"]
+      }
+    },
+    "F": {
+      "description": "Roll for 23mm Gun {4} Pod for each flight: 1-6 Pod, 7-10 No Pod",
+      "type": "weaponVariant",
+      "effects": {
+        "gunPodRoll": [
+          {"range": [1, 6], "weapon": "23mm", "depletion": 4},
+          {"range": [7, 10], "effect": "none"}
+        ]
+      }
+    },
+    "I": {
+      "description": "If tasked with Bombing or SEAD, Jam rating is 2n",
+      "type": "capabilityModification",
+      "conditions": {
+        "tasking": ["Bombing", "SEAD"]
+      },
+      "effects": {
+        "jamRating": "2n"
+      }
+    }
+  }
+}

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aircraft Notes Reference - Red Storm</title>
+  <link rel="stylesheet" href="../../../shared/css/red-storm.css">
+  <style>
+    :root {
+      --rs-bg: #2d3d2d;
+      --rs-overlay: rgba(10, 18, 10, 0.8);
+      --rs-panel: rgba(30, 42, 30, 0.9);
+      --rs-panel-soft: rgba(50, 66, 50, 0.9);
+      --rs-border: rgba(110, 145, 110, 0.5);
+      --rs-border-strong: #7ea87e;
+      --rs-text: #f3fff3;
+      --rs-muted: #bfcebf;
+      --rs-accent: #a9f0a9;
+      --rs-highlight: #8bd48b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      color: var(--rs-text);
+      background-color: var(--rs-bg);
+      background-image: url('../../../shared/assets/roundels/cover.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+      padding-bottom: 40px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-color: var(--rs-overlay);
+      backdrop-filter: blur(2px);
+      z-index: 0;
+    }
+
+    body * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-header {
+      background-color: rgba(20, 34, 20, 0.95);
+      border-bottom: 1px solid var(--rs-border);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-header span {
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-header a {
+      color: var(--rs-accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .nav-header a:hover {
+      color: #ffffff;
+    }
+
+    .page-content {
+      padding: 40px 20px 60px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      padding: 35px 30px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(36, 56, 36, 0.95), rgba(16, 30, 16, 0.95));
+      border: 1px solid var(--rs-border-strong);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+      margin-bottom: 30px;
+    }
+
+    .header .title {
+      font-size: 36px;
+      letter-spacing: 1px;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .header .subtitle {
+      font-size: 18px;
+      color: var(--rs-muted);
+      margin-top: 10px;
+    }
+
+    .header .description {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #e6f3e6;
+      line-height: 1.6;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--rs-border-strong);
+      color: var(--rs-text);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 25px;
+      transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-link:hover {
+      background-color: rgba(126, 168, 126, 0.15);
+      border-color: #b4ecb4;
+      transform: translateY(-1px);
+    }
+
+    .section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .controls-section {
+      background-color: var(--rs-panel);
+      border-radius: 12px;
+      padding: 18px 20px;
+      border: 1px solid var(--rs-border);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .controls-title {
+      color: var(--rs-muted);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .nation-select,
+    .search-box {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(180, 236, 180, 0.35);
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--rs-text);
+      font-size: 15px;
+      transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .nation-select:focus,
+    .search-box:focus {
+      border-color: #b4ecb4;
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 2px rgba(180, 236, 180, 0.25);
+    }
+
+    .nation-select option {
+      background-color: rgba(18, 30, 18, 0.95);
+      color: var(--rs-text);
+    }
+
+    .search-box::placeholder {
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .notes-panel {
+      background-color: var(--rs-panel-soft);
+      border-radius: 16px;
+      border: 1px solid var(--rs-border);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .table-label {
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 1.4px;
+      color: var(--rs-muted);
+    }
+
+    .table-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .table-meta {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--rs-muted);
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(126, 168, 126, 0.6);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .notes-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(12, 20, 12, 0.9);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .notes-table thead th {
+      background: linear-gradient(135deg, rgba(126, 168, 126, 0.35), rgba(56, 86, 56, 0.65));
+      color: #f5fff5;
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .notes-table th:first-child {
+      width: 110px;
+      text-align: center;
+    }
+
+    .notes-table td {
+      padding: 14px 16px;
+      font-size: 15px;
+      color: #e4f0e4;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      line-height: 1.6;
+    }
+
+    .notes-table tbody tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .notes-table tbody tr:hover {
+      background-color: rgba(169, 240, 169, 0.08);
+    }
+
+    .notes-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .note-code-cell {
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--rs-accent);
+      font-size: 17px;
+    }
+
+    .note-description-cell {
+      color: #dcefdc;
+    }
+
+    .loading-state,
+    .empty-state {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--rs-muted);
+      font-size: 16px;
+    }
+
+    .empty-state .highlight-term {
+      color: var(--rs-accent);
+      font-weight: 700;
+    }
+
+    .empty-state button {
+      margin-top: 12px;
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--rs-border-strong);
+      background: transparent;
+      color: var(--rs-text);
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .empty-state button:hover {
+      background-color: rgba(126, 168, 126, 0.2);
+      border-color: #b4ecb4;
+    }
+
+    .empty-state.error-state {
+      color: #ffbebe;
+    }
+
+    .site-footer {
+      text-align: center;
+      margin: 40px 0 0;
+      padding: 30px 20px;
+      color: var(--rs-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background-color: rgba(16, 26, 16, 0.9);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .donation-card {
+      margin: 20px auto 0;
+      max-width: 480px;
+      background-color: rgba(32, 48, 32, 0.95);
+      border: 1px solid rgba(126, 168, 126, 0.4);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .donation-card p {
+      margin-bottom: 12px;
+    }
+
+    .donation-card form {
+      margin: 12px 0;
+    }
+
+    .donation-card button {
+      padding: 10px 24px;
+      border-radius: 999px;
+      border: 1px solid var(--rs-border-strong);
+      background-color: rgba(126, 168, 126, 0.15);
+      color: var(--rs-text);
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .donation-card button:hover {
+      background-color: rgba(126, 168, 126, 0.3);
+      border-color: #b4ecb4;
+    }
+
+    .github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(126, 168, 126, 0.4);
+      color: var(--rs-text);
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .github-link:hover {
+      background-color: rgba(126, 168, 126, 0.15);
+      border-color: #b4ecb4;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 25px 20px;
+      }
+
+      .header .title {
+        font-size: 28px;
+      }
+
+      .section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff none;
+        color: #000000;
+        padding: 0;
+      }
+
+      body::before,
+      .nav-header,
+      .back-link,
+      .controls-section,
+      .header .description,
+      .site-footer,
+      .donation-card,
+      .github-link {
+        display: none;
+      }
+
+      .page-content {
+        padding: 0;
+      }
+
+      .notes-panel {
+        box-shadow: none;
+        border: none;
+        background: #ffffff;
+      }
+
+      .notes-table {
+        background: #ffffff;
+      }
+
+      .notes-table thead th,
+      .notes-table td {
+        color: #000000;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-header">
+    <span>Red Storm Tools Suite</span>
+    <a href="../../../index.html">← Back to Module Selection</a>
+  </div>
+
+  <main class="page-content">
+    <div class="container">
+      <div class="header">
+        <div class="title">Red Storm</div>
+        <div class="subtitle">Aircraft Notes Reference</div>
+        <p class="description">
+          Searchable nation-specific notes for Red Storm.
+        </p>
+      </div>
+
+      <a href="../index.html" class="back-link">← Back to Red Storm Tools</a>
+
+      <div class="section">
+        <div class="controls-section">
+          <div class="controls-title">Select Nation</div>
+          <select id="nationSelect" class="nation-select">
+            <option value="USAF">USAF - United States Air Force</option>
+            <option value="UK">UK - Royal Air Force</option>
+            <option value="FRG">FRG - West German Air Force</option>
+            <option value="BE/CA/NE">Belgium / Canada / Netherlands</option>
+            <option value="USSR">USSR - Soviet Air Force</option>
+            <option value="GDR">GDR - East German Air Force</option>
+          </select>
+        </div>
+
+        <div class="controls-section">
+          <div class="controls-title">Search Notes</div>
+          <input type="text" id="searchBox" class="search-box" placeholder="Search by note code or text...">
+        </div>
+      </div>
+
+      <div id="notesSection" class="notes-panel">
+        <div class="loading-state">Loading notes data...</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const nationSelect = document.getElementById('nationSelect');
+    const searchBox = document.getElementById('searchBox');
+    const notesSection = document.getElementById('notesSection');
+    const selectableNations = Array.from(nationSelect.options).map(option => option.value);
+
+    let notesData = {};
+    let currentNation = nationSelect.value || selectableNations[0];
+    let searchTerm = '';
+    let dataReady = false;
+
+    const escapeHtml = (unsafe = '') => unsafe.replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[char] || char));
+
+    const formatDescription = (text = '') => escapeHtml(text).replace(/\n/g, '<br>');
+
+    const buildNoteList = (group = {}) => Object.entries(group)
+      .map(([code, note]) => {
+        const description = typeof note?.description === 'string' ? note.description.trim() : '';
+        if (!description) return null;
+        return {
+          code: (typeof code === 'string' ? code : String(code || '')).trim(),
+          desc: description
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.code.localeCompare(b.code));
+
+    const renderPlaceholder = (message, classNames = 'empty-state') => {
+      notesSection.innerHTML = `<div class="${classNames}">${message}</div>`;
+    };
+
+    const attachClearSearchHandler = () => {
+      const clearButton = notesSection.querySelector('.clear-search');
+      if (clearButton) {
+        clearButton.addEventListener('click', () => {
+          searchTerm = '';
+          searchBox.value = '';
+          renderNotes();
+          searchBox.focus();
+        });
+      }
+    };
+
+    const renderNotes = () => {
+      if (!dataReady) {
+        renderPlaceholder('Loading notes data…', 'loading-state');
+        return;
+      }
+
+      const notes = notesData[currentNation] || [];
+      if (!notes.length) {
+        renderPlaceholder('No notes are defined for this nation yet.');
+        return;
+      }
+
+      const searchValue = searchTerm.trim().toLowerCase();
+      const filtered = notes.filter(({ code, desc }) => {
+        if (!searchValue) return true;
+        return code.toLowerCase().includes(searchValue) || desc.toLowerCase().includes(searchValue);
+      });
+
+      if (!filtered.length) {
+        renderPlaceholder(
+          `No notes found for <span class="highlight-term">${escapeHtml(searchTerm)}</span>.<br>` +
+          '<button type="button" class="clear-search">Clear search</button>'
+        );
+        attachClearSearchHandler();
+        return;
+      }
+
+      const rows = filtered.map(note => `
+        <tr>
+          <td class="note-code-cell">${escapeHtml(note.code)}</td>
+          <td class="note-description-cell">${formatDescription(note.desc)}</td>
+        </tr>
+      `).join('');
+
+      notesSection.innerHTML = `
+        <div class="table-header">
+          <div>
+            <div class="table-label">Nation</div>
+            <div class="table-title">${escapeHtml(currentNation)}</div>
+          </div>
+          <div class="table-meta">${filtered.length} ${filtered.length === 1 ? 'entry' : 'entries'}</div>
+        </div>
+        <table class="notes-table">
+          <thead>
+            <tr>
+              <th>Note</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    };
+
+    const dataSources = [
+      '../../../shared/data/aircraft-note-rules.json',
+      'data/aircraft-note-rules.json'
+    ];
+
+    const loadNotes = () => {
+      renderPlaceholder('Loading notes data…', 'loading-state');
+
+      Promise.allSettled(
+        dataSources.map((src) => fetch(src).then((response) => {
+          if (!response.ok) {
+            throw new Error(`Failed to load ${src}`);
+          }
+          return response.json();
+        }))
+      ).then((results) => {
+        const mergedData = {};
+
+        results.forEach((result) => {
+          if (result.status !== 'fulfilled') {
+            console.warn(result.reason);
+            return;
+          }
+
+          selectableNations.forEach((nationKey) => {
+            const group = result.value?.[nationKey];
+            if (!group) return;
+            mergedData[nationKey] = {
+              ...(mergedData[nationKey] || {}),
+              ...group
+            };
+          });
+        });
+
+        const hasData = Object.keys(mergedData).some((nationKey) => Object.keys(mergedData[nationKey] || {}).length);
+        if (!hasData) {
+          throw new Error('No aircraft notes data found for selected nations');
+        }
+
+        selectableNations.forEach((nationKey) => {
+          notesData[nationKey] = buildNoteList(mergedData[nationKey] || {});
+        });
+
+        dataReady = true;
+        renderNotes();
+      }).catch((error) => {
+        console.error('Error loading notes data:', error);
+        renderPlaceholder('Unable to load notes data. Please refresh and try again.', 'empty-state error-state');
+      });
+    };
+
+    nationSelect.addEventListener('change', (event) => {
+      currentNation = event.target.value;
+      renderNotes();
+    });
+
+    searchBox.addEventListener('input', (event) => {
+      searchTerm = event.target.value;
+      renderNotes();
+    });
+
+    searchBox.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && searchTerm) {
+        searchTerm = '';
+        searchBox.value = '';
+        renderNotes();
+      }
+    });
+
+    loadNotes();
+  </script>
+
+  <footer class="site-footer">
+    <p>Red Storm Tools Suite | Fan-made utility</p>
+    <p>
+      Red Storm and all related game materials are © GMT Games. This project is an unofficial community tool and is
+      not affiliated with or endorsed by the publisher.
+    </p>
+    <div class="donation-card">
+      <p>Enjoying these tools? Help keep them online and add new features.</p>
+      <form action="https://www.paypal.com/donate" method="post" target="_top">
+        <input type="hidden" name="business" value="ZXPFSDHKU5HKC" />
+        <input type="hidden" name="no_recurring" value="0" />
+        <input type="hidden" name="currency_code" value="USD" />
+        <button type="submit">Support via PayPal</button>
+      </form>
+      <a class="github-link" href="https://github.com/augustdragon/red-storm-tools-suite" target="_blank" rel="noreferrer noopener">
+        📂 View on GitHub
+      </a>
+    </div>
+  </footer>
+</body>
+</html>
