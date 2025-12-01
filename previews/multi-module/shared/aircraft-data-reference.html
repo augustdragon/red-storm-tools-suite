@@ -449,7 +449,7 @@
                     const { name, type, range, modifier } = aircraft.radar;
                     
                     // Check if this radar has both air-to-air and surface search capabilities
-                    const surfRadarLookup = surfaceRadarData[key];
+                    const surfRadarLookup = surfaceRadarData[aircraft.name] || surfaceRadarData[aircraft.model] || surfaceRadarData[key];
                     const hasBothCapabilities = surfRadarLookup && type && type.includes('Surf');
                     
                     if (hasBothCapabilities) {
@@ -496,7 +496,7 @@
                 }
 
                 // Check for surface-only radars using lookup
-                const surfRadarLookup = surfaceRadarData[key];
+                const surfRadarLookup = surfaceRadarData[aircraft.name] || surfaceRadarData[aircraft.model] || surfaceRadarData[key];
                 const hasSurfaceRadar = surfRadarLookup && (aircraft.radar === 'Surf' || aircraft.radar === 'surf');
                 if (hasSurfaceRadar) {
                     const detailParts = [];

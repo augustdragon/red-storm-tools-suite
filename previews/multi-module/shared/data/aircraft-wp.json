@@ -400,8 +400,8 @@
                  "radar":  null,
                  "speeds":  {
                                 "clean":  {
-                                              "combat":  "-/4/13/-",
-                                              "dash":  "-/4/4/-",
+                                              "combat":  "-/-/13/-",
+                                              "dash":  "-/-/-/-",
                                               "maneuver":  "-/-/2/-"
                                           },
                                 "laden":  null
