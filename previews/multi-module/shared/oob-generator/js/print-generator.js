@@ -358,6 +358,7 @@ class PrintGenerator {
     // Get aircraft data - check by key, then by aliases
     const aircraftDB = faction === 'NATO' ? aircraftNATO : aircraftWP;
     let rawAircraftData = null;
+    let matchedAircraftKey = null;
     
     console.log(`[AIRCRAFT LOOKUP] Searching for: "${aircraftType}" (type: ${typeof aircraftType}) in ${faction} database`);
     console.log(`[AIRCRAFT LOOKUP] Flight object keys:`, Object.keys(flight));
@@ -368,6 +369,7 @@ class PrintGenerator {
     // First try exact match by key
     if (aircraftDB[aircraftType]) {
       rawAircraftData = aircraftDB[aircraftType];
+      matchedAircraftKey = aircraftType;
       console.log(`[AIRCRAFT LOOKUP] ✓ Found exact match for "${aircraftType}"`);
     } else {
       console.log(`[AIRCRAFT LOOKUP] No exact match, searching aliases...`);
@@ -378,6 +380,7 @@ class PrintGenerator {
         if (data.aliases && Array.isArray(data.aliases)) {
           if (data.aliases.includes(aircraftType)) {
             rawAircraftData = data;
+            matchedAircraftKey = key;
             console.log(`[AIRCRAFT LOOKUP] ✓ Found via alias "${aircraftType}" -> "${key}"`);
             break;
           }
@@ -398,6 +401,7 @@ class PrintGenerator {
           const normalizedKey = key.replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
           if (normalizedKey.includes(normalizedSearch) || normalizedSearch.includes(normalizedKey)) {
             rawAircraftData = aircraftDB[key];
+            matchedAircraftKey = key;
             console.log(`[AIRCRAFT LOOKUP] ✓ Found via partial match "${aircraftType}" -> "${key}"`);
             break;
           }
@@ -417,6 +421,21 @@ class PrintGenerator {
     
     // Convert to designer format
     let aircraftData = this.convertAircraftData(rawAircraftData, nationCode, weaponsData, aircraftType);
+
+    const aliasRequested = originalAircraftType && rawAircraftData.aliases && Array.isArray(rawAircraftData.aliases)
+      ? rawAircraftData.aliases.includes(originalAircraftType)
+      : false;
+    if (aliasRequested && aircraftData) {
+      const canonicalKey = matchedAircraftKey || aircraftType;
+      const shouldOverride = canonicalKey && canonicalKey !== originalAircraftType;
+      if (shouldOverride) {
+        aircraftData.model = this.applyAliasDisplayName(
+          aircraftData.model,
+          canonicalKey,
+          originalAircraftType
+        );
+      }
+    }
     
     // Apply note rules if available
     if (noteRulesData && window.applyDesignerNoteRules) {
@@ -747,6 +766,25 @@ class PrintGenerator {
       radarModifier: radarModifier,
       surfaceRadar: surfaceRadarDisplay
     };
+  }
+
+  /**
+   * Replace the canonical aircraft name on the card with the rolled alias while keeping any descriptive suffix.
+   */
+  applyAliasDisplayName(baseModel, canonicalKey, aliasName) {
+    if (!aliasName) return baseModel;
+    if (!baseModel) return aliasName;
+
+    if (canonicalKey && canonicalKey !== aliasName && baseModel.includes(canonicalKey)) {
+      return baseModel.replace(canonicalKey, aliasName);
+    }
+
+    const firstSpace = baseModel.indexOf(' ');
+    if (firstSpace > 0) {
+      return `${aliasName}${baseModel.substring(firstSpace)}`;
+    }
+
+    return aliasName;
   }
 
   /**
