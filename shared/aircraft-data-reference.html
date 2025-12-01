@@ -389,6 +389,7 @@
                     const tbody = document.getElementById('natoBody');
                     const sortedKeys = Object.keys(natoData)
                         .filter(key => !key.startsWith('_'))
+                        .filter(key => !natoData[key].hideFromReference)
                         .sort((a, b) => a.localeCompare(b));
                     sortedKeys.forEach(key => {
                         const aircraft = natoData[key];
@@ -403,6 +404,7 @@
                     const tbody = document.getElementById('wpBody');
                     const sortedKeys = Object.keys(wpData)
                         .filter(key => !key.startsWith('_'))
+                        .filter(key => !wpData[key].hideFromReference)
                         .sort((a, b) => a.localeCompare(b));
                     sortedKeys.forEach(key => {
                         const aircraft = wpData[key];

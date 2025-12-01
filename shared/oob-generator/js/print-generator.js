@@ -455,9 +455,11 @@ class PrintGenerator {
       
       // Detect CSAR by tasking (all CSAR flights are helicopters)
       const isCSAR = tasking && tasking.toUpperCase().trim() === 'CSAR';
-      console.log(`Flight ${flightNum + 1}/${numFlights}: ${aircraftType}, Tasking: "${tasking}", CSAR: ${isCSAR}`);
+      // BA module CSAR gets full cards (they have combat capability), RS module gets compact cards
+      const useCompactCSAR = isCSAR && aircraftData && aircraftData.module === 'RS';
+      console.log(`Flight ${flightNum + 1}/${numFlights}: ${aircraftType}, Tasking: "${tasking}", CSAR: ${isCSAR}, Module: ${aircraftData?.module}, Compact: ${useCompactCSAR}`);
       
-      if (isCSAR) {
+      if (useCompactCSAR) {
         hasCSAR = true;
         console.log(`Generating compact CSAR card for ${aircraftType}`);
         allCardsHTML += this.generateCompactCSARCard(

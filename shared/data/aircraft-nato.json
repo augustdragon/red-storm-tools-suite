@@ -2615,7 +2615,56 @@
                                        "CSAR"
                                    ],
                   "aam":  null,
-                  "module":  "RS"
+                  "module":  "RS",
+                  "hideFromReference":  true
+              },
+    "S-61":  {
+                  "name":  "S-61",
+                  "model":  "S-61",
+                  "nation":  "DK",
+                  "crew":  0,
+                  "rwy":  0,
+                  "fuel":  0,
+                  "notes":  null,
+                  "weapons":  {
+
+                              },
+                  "speeds":  {
+
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "CSAR"
+                                   ],
+                  "aam":  null,
+                  "module":  "BA",
+                  "hideFromReference":  true
+              },
+    "HKP-4D":  {
+                  "name":  "HKP-4D",
+                  "model":  "HKP-4D",
+                  "nation":  "SE",
+                  "crew":  0,
+                  "rwy":  0,
+                  "fuel":  0,
+                  "notes":  null,
+                  "weapons":  {
+
+                              },
+                  "speeds":  {
+
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "CSAR"
+                                   ],
+                  "aam":  null,
+                  "module":  "BA",
+                  "hideFromReference":  true
               },
     "EA-6B":  {
                   "name":  "EA-6B Prowler",
