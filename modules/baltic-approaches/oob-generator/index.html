@@ -962,7 +962,7 @@
             // Render grouped flights
             html += `<div class="aircraft-list">`;
             for (const grouped of Object.values(flightsByType)) {
-              html += `<div class="aircraft-item">`;
+              html += `<div class="aircraft-item" style="font-size: 12px;">`;
               html += `${grouped.count} x {${grouped.flightSize}} ${grouped.aircraft}, ${grouped.type}`;
               html += `</div>`;
             }
