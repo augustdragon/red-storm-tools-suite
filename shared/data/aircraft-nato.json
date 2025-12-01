@@ -170,7 +170,7 @@
                        "crew":  2,
                        "rwy":  0,
                        "fuel":  "U",
-                       "notes":  "C",
+                       "notes":  null,
                        "weapons":  {
                                        "gun":  null,
                                        "gunDepletion":  null,
@@ -1391,7 +1391,7 @@
                        "jam":  null,
                        "radar":  {
                                      "name":  "APG-66",
-                                     "type":  "LD",
+                                     "type":  "LD, Surf",
                                      "range":  12,
                                      "modifier":  "10+: -1"
                                  },
@@ -1399,7 +1399,7 @@
                                       "clean":  {
                                                     "combat":  "4/4/5/-",
                                                     "dash":  "5/6/8/-",
-                                                    "maneuver":  "9/8/9/-"
+                                                    "maneuver":  "9/9/9/-"
                                                 },
                                       "laden":  {
                                                     "combat":  "3/3/4/-",
@@ -1642,8 +1642,8 @@
                           "weapons":  {
                                           "gun":  "30mm",
                                           "gunDepletion":  4,
-                                          "irm":  null,
-                                          "irmDepletion":  null,
+                                          "irm":  "AIM-9N",
+                                          "irmDepletion":  3,
                                           "rhm":  null,
                                           "rhmDepletion":  null
                                       },
@@ -1885,7 +1885,12 @@
                            "sight":  null,
                            "rwr":  "B",
                            "jam":  null,
-                           "radar":  "Surf",
+                           "radar":  {
+                                         "name":  "ARI.5955",
+                                         "type":  "Surf",
+                                         "range":  8,
+                                         "modifier":  "6+: -1"
+                                     },
                            "speeds":  {
                                           "clean":  {
                                                         "combat":  "1/-/-/-",
@@ -2074,7 +2079,7 @@
                         "crew":  2,
                         "rwy":  3,
                         "fuel":  9,
-                        "notes":  "E",
+                        "notes":  "C",
                         "weapons":  {
                                         "gun":  "27mm",
                                         "gunDepletion":  4,
@@ -2734,54 +2739,6 @@
                   "aam":  null,
                   "module":  "BA"
               },
-    "Tornado IDS (Navy)":  {
-                               "name":  "Tornado IDS (Navy)",
-                               "model":  "Tornado IDS (Navy)",
-                               "nation":  "UK",
-                               "crew":  2,
-                               "rwy":  3,
-                               "fuel":  9,
-                               "notes":  "C",
-                               "weapons":  {
-                                               "gun":  "27mm",
-                                               "gunDepletion":  4,
-                                               "irm":  "AIM-9L",
-                                               "irmDepletion":  8,
-                                               "rhm":  null,
-                                               "rhmDepletion":  null
-                                           },
-                               "bomb":  "4/2",
-                               "sight":  "+4",
-                               "rwr":  "B",
-                               "jam":  "3d",
-                               "radar":  "Surf",
-                               "speeds":  {
-                                              "clean":  {
-                                                            "combat":  "4/4/5/-",
-                                                            "dash":  "5/6/7/-",
-                                                            "maneuver":  "4/5/6/-"
-                                                        },
-                                              "laden":  {
-                                                            "combat":  "3/3/3/-",
-                                                            "dash":  "4/4/5/-",
-                                                            "maneuver":  "2/3/3/-"
-                                                        }
-                                          },
-                               "ordnance":  [
-                                                {
-                                                    "type":  "Kormoran",
-                                                    "quantity":  2
-                                                }
-                                            ],
-                               "capabilities":  [
-                                                    "Radar",
-                                                    "Recon",
-                                                    "TFR",
-                                                    "Night"
-                                                ],
-                               "aam":  "AIM-9L",
-                               "module":  "BA"
-                           },
     "Buccaneer S.2B":  {
                            "name":  "Buccaneer S.2B",
                            "model":  "Buccaneer S.2B",
@@ -2807,7 +2764,7 @@
                                           "clean":  {
                                                         "combat":  "3/3/2/-",
                                                         "dash":  "4/4/3/-",
-                                                        "maneuver":  "4/3/3/-"
+                                                        "maneuver":  "4/3/2/-"
                                                     },
                                           "laden":  {
                                                         "combat":  "2/2/2/-",
