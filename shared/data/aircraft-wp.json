@@ -2142,13 +2142,16 @@
                                                   "maneuver":  "5/6/7/-"
                                               },
                                     "laden":  {
-                                                  "combat":  "3/3/3/-",
-                                                  "dash":  "4/4/4/-",
+                                                  "combat":  "2/3/3/-",
+                                                  "dash":  "3/4/4/-",
                                                   "maneuver":  "2/2/3/-"
                                               }
                                 },
                      "ordnance":  [
-
+                                        {
+                                            "type":  "Chaff",
+                                            "quantity":  null
+                                        }   
                                   ],
                      "capabilities":  [
                                           "Night(Ltd)",
