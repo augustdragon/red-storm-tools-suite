@@ -534,15 +534,13 @@
           if (hasSingleAircraft) {
             // Simple format: nation and aircraft type in single lighter box
             const aircraftType = aircraftEntries[0][1];
-            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 12px;">`;
+            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
             html += `<span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}`;
-            html += `</div>`;
+            html += `</div>`;`;
           } else {
             // Multi-aircraft format: nation header with aircraft rolls
-            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 12px;">`;
-            html += `<div style="font-weight: 600; margin-bottom: 4px;">${nationRange} ${nationData.name}:</div>`;
-            
-            // Sort aircraft by roll range
+            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
+            html += `<div style="font-weight: 600; margin-bottom: 4px;">${nationRange} ${nationData.name}:</div>`;`;            // Sort aircraft by roll range
             const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
               const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
               const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
@@ -652,7 +650,7 @@
       
       // Add Setup/Entry note if present
       if (table.setupEntry && table.setupEntry.text) {
-        html += `<div style="margin-top: 20px; padding: 12px 15px; background-color: rgba(255,255,255,0.08); border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.2); font-size: 12px;">`;
+        html += `<div style="margin-top: 20px; padding: 12px 15px; background-color: rgba(255,255,255,0.08); border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.2); font-size: 14px;">`;
         html += `<div style="font-weight: 600; margin-bottom: 6px;">Setup/Entry:</div>`;
         html += `<div style="color: #ccc;">${table.setupEntry.text}</div>`;
         html += `</div>`;
@@ -686,7 +684,7 @@
             });
             
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
-              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 14px;">`;
               html += `${aircraftRange}: ${aircraftType}`;
               html += `</div>`;
             }
@@ -696,7 +694,7 @@
       
       // Add Setup/Entry note if present
       if (table.setupEntry && table.setupEntry.text) {
-        html += `<div style="margin-top: 20px; padding: 12px 15px; background-color: rgba(255,255,255,0.08); border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.2); font-size: 12px;">`;
+        html += `<div style="margin-top: 20px; padding: 12px 15px; background-color: rgba(255,255,255,0.08); border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.2); font-size: 14px;">`;
         html += `<div style="font-weight: 600; margin-bottom: 6px;">Setup/Entry:</div>`;
         html += `<div style="color: #ccc;">${table.setupEntry.text}</div>`;
         html += `</div>`;
@@ -782,7 +780,7 @@
         }
         
         // Add ordnance table at the end
-        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">`;
         html += `<div style="font-weight: bold; margin-bottom: 8px;">SEAD flights may change task to CAP as soon as all air-to-ground ordnance is expended or jettisoned.</div>`;
         html += `<div style="font-weight: bold; margin-bottom: 8px; margin-top: 12px;">Ordnance Available. Roll for each SEAD<sup>1</sup> or Bombing:</div>`;
         html += `<div style="margin-left: 15px;">`;
@@ -820,7 +818,7 @@
         
         // Add ordnance rolls once at the bottom
         if (ordnanceRollsData) {
-          html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+          html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">`;
           html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available. Roll for each SEAD or Bombing:</div>`;
           
           for (const [taskType, rolls] of Object.entries(ordnanceRollsData)) {
@@ -846,7 +844,7 @@
         }
         
         // Add ordnance note at bottom for J2
-        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">`;
         html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
         html += `<div style="margin-left: 15px;">All Bombing flights may carry any air-to-ground ordnance allowed for the specified aircraft type.</div>`;
         html += `<div style="margin-left: 15px; margin-top: 4px;">Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.</div>`;
@@ -861,7 +859,7 @@
           html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 15px; color: #ddd; font-size: 14px;">${natData.name}</div>`;
           
           for (const flight of natData.flights) {
-            html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+            html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 14px;">`;
             html += `${flight.flightCount} x {${flight.flightSize}} ${flight.type}`;
             
             if (flight.aircraft) {
@@ -884,7 +882,7 @@
         }
         
         // Add ordnance note at bottom for J3
-        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">`;
         html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
         html += `<div style="margin-left: 15px;">All Bombing and SEAD flights may only carry Bombs, ARM, EOGM, EOGB, or LGB ordnance.</div>`;
         html += `<div style="margin-left: 15px; margin-top: 4px;">Recon flights may only carry air-to-air missiles and guns.</div>`;
@@ -899,7 +897,7 @@
         }
         
         // Add ordnance note at bottom for D2
-        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">`;
         html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
         html += `<div style="margin-left: 15px;">All aircraft use lower bomb point load, if applicable.</div>`;
         html += `<div style="margin-left: 15px; margin-top: 4px;">Bombing and SEAD flights may only carry Bombs, ARM, EOGM, EOGB, LGB, or ASM ordnance.</div>`;
@@ -975,7 +973,7 @@
         }
         
         // Add ordnance note at bottom for D3
-        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">`;
         html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
         html += `<div style="margin-left: 15px;">All aircraft use lower bomb point load, if applicable.</div>`;
         html += `<div style="margin-left: 15px; margin-top: 4px;">Bombing and SEAD flights may only carry Bombs, ARM, EOGM, EOGB, LGB, or ASM ordnance.</div>`;
@@ -1077,7 +1075,7 @@
       
       // Add setup/nationality note if present (skip for K2 as it will be shown at bottom)
       if (table.setupEntry && table.setupEntry.text && tableId !== 'K2') {
-        html += `<div style="font-style: italic; color: #bbb; margin: 0 15px 10px 15px; padding: 8px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">${table.setupEntry.text}</div>`;
+        html += `<div style="font-style: italic; color: #bbb; margin: 0 15px 10px 15px; padding: 8px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">${table.setupEntry.text}</div>`;
       }
       
       // E2 has nationality-based structure - filter by selected nationality
@@ -1100,7 +1098,7 @@
                 }
               }
               
-              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 14px;">`;
               html += `${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}`;
               
               if (flight.description) {
@@ -1145,7 +1143,7 @@
             html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 12px; color: #ddd; font-size: 14px;">${natData.name}</div>`;
             
             for (const flight of natData.flights) {
-              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 14px;">`;
               html += `${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}`;
               
               if (flight.description) {
@@ -1202,7 +1200,7 @@
           
           if (hasSingleAircraft) {
             const aircraftType = aircraftEntries[0][1];
-            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 12px;">`;
+            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
             html += `<span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}`;
             html += `</div>`;
           } else {
@@ -1212,7 +1210,7 @@
               return aStart - bStart;
             });
             
-            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 12px;">`;
+            html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
             html += `<div style="font-weight: 600; margin-bottom: 4px;">${nationRange} ${nationData.name}:</div>`;
             for (const [range, type] of sortedAircraft) {
               html += `<div style="margin-left: 10px; color: #ccc;">${range}: ${type}</div>`;
@@ -1229,7 +1227,7 @@
           
           if (natData) {
             for (const flight of natData.flights) {
-              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 14px;">`;
               html += `${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}`;
               
               if (flight.aircraft) {
@@ -1265,7 +1263,7 @@
             html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 12px; color: #ddd; font-size: 14px;">${natData.name}</div>`;
             
             for (const flight of natData.flights) {
-              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+              html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 14px;">`;
               html += `${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}`;
               
               if (flight.aircraft) {
@@ -1297,7 +1295,7 @@
         }
         
         // Add ordnance note at bottom with nationality info
-        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 12px;">`;
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">`;
         if (table.setupEntry && table.setupEntry.text) {
           html += `<div style="margin-bottom: 8px;">${table.setupEntry.text}</div>`;
         }
@@ -1315,7 +1313,7 @@
           html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 12px; color: #ddd; font-size: 14px;">${missionName}</div>`;
           
           // Show flight composition in highlighted box
-          html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 12px;">`;
+          html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 14px;">`;
           html += `${missionData.flightCount} x {${missionData.flightSize}} [${missionName}], ${missionName}`;
           // Show ordnance note if present
           if (missionData.ordnanceNote) {
@@ -2008,7 +2006,7 @@
   <div class="flight-grid">
     ${flightCardsHTML}
   </div>
-  <div class="no-print" style="text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 12px;">
+  <div class="no-print" style="text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 14px;">
     <p>Baltic Approaches - Red Storm Tools Suite</p>
     <p>Generated: ${new Date().toLocaleString()}</p>
     <button onclick="window.print()" style="margin-top: 10px; padding: 8px 20px; font-size: 14px; cursor: pointer; background: #2a5a7a; color: white; border: none; border-radius: 4px;">Print Flight Sheets</button>
