@@ -1,22 +1,49 @@
 # Red Storm Tools Suite
 
-A comprehensive set of tools for the Red Storm board game by GMT Games.
+A comprehensive web-based tool suite for the Red Storm and Baltic Approaches board games by GMT Games.
 
-## 🎯 Available Tools
+## 🎯 Live Site
 
-### 🎲 Initiative Chit Pull
-Mobile and web app for simulating chit pulls in Red Storm scenarios.
+**Visit:** [https://augustdragon.github.io/red-storm-tools-suite/](https://augustdragon.github.io/red-storm-tools-suite/)
 
-### ✈️ Order of Battle Generator  
-Tool for generating aircraft flights according to official Red Storm OOB tables.
+## 🌐 Available Modules
 
-## 🌐 Web Applications
+### Red Storm (Central Germany 1987)
+- Order of Battle Generator
+- Flight Sheet Designer  
+- Aircraft Notes Reference
+- Chit Pull Generator
+- Aircraft Data Reference
 
-Visit our GitHub Pages site to access all tools: [Red Storm Tools](https://augustdragon.github.io/red-storm-tools-suite/)
+### Baltic Approaches (Northern Europe)
+- Order of Battle Generator
+- Aircraft Notes Reference
+- Table Reference
+- Surface Search Radar Reference
+- Aircraft Data Reference
 
-### Direct Links:
-- **Chit Pull App**: https://augustdragon.github.io/red-storm-tools-suite/chit-pull/
-- **OOB Generator**: https://augustdragon.github.io/red-storm-tools-suite/oob-generator/
+## ✈️ Features
+
+### Order of Battle Generator
+- **Complete OOB Tables**: All NATO and Warsaw Pact aircraft tables
+- **Accurate Generation**: Follows official Red Storm/Baltic Approaches rules
+- **Automated Processing**: Aircraft notes, ordnance rolls, weapon variants
+- **Flight Sheet Printing**: Professional printable flight cards
+- **CSAR Support**: Compact cards for rescue missions
+- **Date Variants**: Support for different scenario timeframes
+
+### Aircraft Data Reference
+- **Comprehensive Database**: All aircraft from both modules
+- **Search & Filter**: By nation, module, or aircraft name
+- **Complete Stats**: Weapons, speeds, radar, EW systems, capabilities
+- **Surface Radar Data**: Detailed radar specs for naval strike aircraft
+- **Notes with Tooltips**: Hover over note codes for full descriptions
+
+### Other Tools
+- **Chit Pull Generator**: Digital chit draws for initiative
+- **Flight Sheet Designer**: Create custom flight sheets manually
+- **Aircraft Notes**: Detailed reference for all aircraft special rules
+- **Table Reference**: Quick lookup for OOB table structures
 
 ## 📱 Test the App Now!
 
@@ -101,39 +128,61 @@ npx expo start --tunnel
 ## 📁 Project Structure
 
 ```
-red-storm-tools/
-├── chit-pull/          # Initiative Chit Pull web app
-├── oob-generator/      # Order of Battle Generator web app
-├── shared/             # Shared CSS and resources
-├── App.js              # React Native mobile app (Chit Pull)
-└── .github/workflows/  # Deployment automation
+red-storm-tools-suite/
+├── index.html              # Module selection landing page
+├── modules/
+│   ├── red-storm/          # Red Storm module
+│   │   └── oob-generator/  # OOB Generator and tools
+│   └── baltic-approaches/  # Baltic Approaches module
+│       └── oob-generator/  # OOB Generator and tools
+├── shared/
+│   ├── oob-generator/      # Shared OOB logic and processors
+│   ├── data/               # Shared aircraft databases
+│   ├── css/                # Shared stylesheets
+│   ├── assets/             # Roundels and images
+│   ├── chit-pull/          # Initiative chit pull tool
+│   └── docs/               # User guide and documentation
+├── mobile-app/             # React Native mobile app (Chit Pull)
+└── .github/workflows/      # GitHub Pages deployment
 ```
 
 ## 🔧 Technical Details
 
-- **Built with**: React Native + Expo SDK 54 (mobile), HTML/CSS/JavaScript (web)
+- **Architecture**: Modular multi-game system with shared components
+- **Frontend**: Pure HTML/CSS/JavaScript (no build step required)
+- **Mobile App**: React Native + Expo SDK 54 (separate chit pull app in mobile-app/)
+- **Deployment**: GitHub Pages with automated workflow
 - **Performance**: Optimized for mobile and desktop devices
-- **Compatibility**: iOS, Android, and modern web browsers
-- **State Management**: Efficient React hooks and vanilla JavaScript
-- **No Data Collection**: Completely private, no user data stored
-- **Shared Architecture**: Common CSS for consistent styling across all tools
+- **Compatibility**: Modern web browsers (Chrome, Firefox, Safari, Edge)
+- **No Data Collection**: Completely private, no user data stored or tracked
+- **Shared Components**: Common CSS, JavaScript modules, and aircraft databases
 
-## 🎮 About Red Storm
+## 🎮 About the Games
 
-Red Storm is a board game by GMT Games simulating air combat over Central Germany in 1987. This tools suite helps with various game mechanics:
+**Red Storm** and **Baltic Approaches** are board games by GMT Games simulating air combat in Cold War gone hot scenarios:
 
-- **Initiative Chit Pull**: Determines turn order and special events
-- **Order of Battle Generation**: Creates realistic aircraft flights for scenarios
+- **Red Storm**: Central Germany, 1987 - Warsaw Pact invasion
+- **Baltic Approaches**: Northern Europe - Naval and air operations in Scandinavia
+
+This tools suite automates game mechanics and provides quick reference materials:
+- **Initiative System**: Chit pulls for turn order and events
+- **Order of Battle**: Realistic aircraft flight generation
+- **Flight Management**: Professional flight sheet printing
+- **Reference Data**: Complete aircraft specifications and rules
 
 **Official Game Links:**
-- [GMT Games Product Page](https://www.gmtgames.com/p-1059-red-storm-2nd-printing.aspx)
-- [BoardGameGeek Page](https://boardgamegeek.com/boardgame/213497/red-storm-the-air-war-over-central-germany-1987)
+- [Red Storm at GMT Games](https://www.gmtgames.com/p-1059-red-storm-2nd-printing.aspx)
+- [Baltic Approaches at GMT Games](https://www.gmtgames.com/p-1060-baltic-approaches-2nd-printing.aspx)
+- [BoardGameGeek - Red Storm](https://boardgamegeek.com/boardgame/213497/red-storm-the-air-war-over-central-germany-1987)
+- [BoardGameGeek - Baltic Approaches](https://boardgamegeek.com/boardgame/329506/baltic-approaches)
 - [ConsimWorld Discussion](https://talk.consimworld.com/WebX/.1ddc7afe/1)
 
-## 📝 Feedback
+## 📝 Feedback & Support
 
-Found a bug or have a suggestion? These tools are actively maintained and we welcome feedback!
+Found a bug or have a suggestion? Open an issue on the [GitHub repository](https://github.com/augustdragon/red-storm-tools-suite/issues).
+
+For questions or discussion, visit the [ConsimWorld forum](https://talk.consimworld.com/WebX/.1ddc7afe/1).
 
 ---
 
-*This is an unofficial fan-made tool suite for the Red Storm board game. GMT Games and Red Storm are trademarks of their respective owners.*
+*This is an unofficial fan-made tool suite for Red Storm and Baltic Approaches. GMT Games, Red Storm, and Baltic Approaches are trademarks of their respective owners.*

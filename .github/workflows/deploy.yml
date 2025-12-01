@@ -28,8 +28,10 @@ jobs:
           # Copy the .nojekyll file to disable Jekyll processing
           cp .nojekyll dist/.nojekyll
           
-          # Copy the previews directory to preserve URL structure
-          cp -r previews dist/
+          # Copy root structure to dist
+          cp index.html dist/
+          cp -r modules dist/
+          cp -r shared dist/
           
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -618,6 +618,29 @@
                      "aam":  "AIM-9P(8)",
                      "module":  "RS"
                  },
+    "Puma":  {
+                 "name":  "Puma",
+                 "model":  "Puma",
+                 "nation":  "UK",
+                 "crew":  0,
+                 "rwy":  0,
+                 "fuel":  0,
+                 "notes":  null,
+                 "weapons":  {
+
+                             },
+                 "speeds":  {
+
+                            },
+                 "ordnance":  [
+
+                              ],
+                 "capabilities":  [
+                                      "CSAR"
+                                  ],
+                 "aam":  null,
+                 "module":  "RS"
+             },
     "RF-4B":  {
                   "name":  "RF-4B Phantom II",
                   "model":  "RF-4B Phantom II",
@@ -1421,17 +1444,9 @@
                                               "dash":  "-/-/-/-",
                                               "maneuver":  "1/1/1/-"
                                           },
-                                "laden":  {
-                                              "combat":  "2/2/2/-",
-                                              "dash":  "-/-/-/-",
-                                              "maneuver":  "1/1/1/-"
-                                          }
+                                "laden":  null
                             },
                  "ordnance":  [
-                                  {
-                                      "type":  "Harpoon",
-                                      "quantity":  2
-                                  }
                               ],
                  "capabilities":  [
                                       "Night"
@@ -2145,7 +2160,7 @@
                          "weapons":  {
                                          "gun":  null,
                                          "gunDepletion":  null,
-                                         "irm":  "AIM-9P",
+                                         "irm": "AIM-9P",
                                          "irmDepletion":  6,
                                          "rhm":  null,
                                          "rhmDepletion":  null
@@ -2456,15 +2471,15 @@
                             "name":  "P-3C Orion",
                             "model":  "P-3C Orion",
                             "nation":  "NE",
-                            "crew":  11,
+                            "crew":  13,
                             "rwy":  4,
                             "fuel":  "U",
                             "notes":  "B, I",
                             "weapons":  {
                                             "gun":  null,
                                             "gunDepletion":  null,
-                                            "irm":  null,
-                                            "irmDepletion":  null,
+                                            "irm":  "AIM-9L",
+                                            "irmDepletion":  8,
                                             "rhm":  null,
                                             "rhmDepletion":  null
                                         },
@@ -2475,7 +2490,7 @@
                             "radar":  "Surf",
                             "speeds":  {
                                            "clean":  {
-                                                         "combat":  "2/2/2/-",
+                                                         "combat":  "3/3/2/-",
                                                          "dash":  "-/-/-/-",
                                                          "maneuver":  "1/1/1/-"
                                                      },
@@ -2487,7 +2502,7 @@
                             "capabilities":  [
                                                  "Night"
                                              ],
-                            "aam":  null,
+                            "aam":  "AIM-9L",
                             "module":  "BA"
                         },
     "A-7D":  {
@@ -2575,6 +2590,29 @@
                   "capabilities":  [
                                        "Recon",
                                        "Night"
+                                   ],
+                  "aam":  null,
+                  "module":  "RS"
+              },
+    "CH-53":  {
+                  "name":  "CH-53",
+                  "model":  "CH-53",
+                  "nation":  "FRG",
+                  "crew":  0,
+                  "rwy":  0,
+                  "fuel":  0,
+                  "notes":  null,
+                  "weapons":  {
+
+                              },
+                  "speeds":  {
+
+                             },
+                  "ordnance":  [
+
+                               ],
+                  "capabilities":  [
+                                       "CSAR"
                                    ],
                   "aam":  null,
                   "module":  "RS"
