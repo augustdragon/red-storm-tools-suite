@@ -1406,12 +1406,6 @@
       }
     }
 
-    // Make functions available globally
-    window.viewTable = viewTable;
-    window.viewTableWithVariables = viewTableWithVariables;
-    window.handleNationalityChange = handleNationalityChange;
-    window.getTableResultWithVariables = getTableResultWithVariables;
-
     // Note: selectTable is provided by shared/oob-generator/js/state-manager.js
     // Note: setScenarioDate is provided by shared/oob-generator/js/state-manager.js
     // Note: makeRolls, clearResults, etc. are provided by shared/oob-generator/js/ui-controller.js
@@ -2037,6 +2031,12 @@
       };
       return (text || '').replace(/[&<>"']/g, function(m) { return map[m]; });
     }
+
+    // Make functions available globally - must be at end after all definitions
+    window.viewTable = viewTable;
+    window.viewTableWithVariables = viewTableWithVariables;
+    window.handleNationalityChange = handleNationalityChange;
+    window.getTableResultWithVariables = getTableResultWithVariables;
   </script>
 </body>
 </html>
