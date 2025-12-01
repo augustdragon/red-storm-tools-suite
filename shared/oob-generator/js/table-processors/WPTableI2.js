@@ -168,7 +168,6 @@ class WPTableI2 extends BaseTableProcessor {
       nationality: nationality,
       raidType: 'Bombing',
       taskings: taskingResults,
-      flights: flights,
       debugRolls: debugRolls,
       ordnanceNote: this.tableData.ordnanceNote || null
     };
