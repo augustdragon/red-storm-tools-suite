@@ -34,11 +34,7 @@
                                                  "dash":  "-/-/-/-",
                                                  "maneuver":  "1/1/1/-"
                                              },
-                                   "laden":  {
-                                                 "combat":  "2/2/2/-",
-                                                 "dash":  "-/-/-/-",
-                                                 "maneuver":  "1/1/1/-"
-                                             }
+                                   "laden": null
                                },
                     "ordnance":  [
 
@@ -1969,15 +1965,11 @@
                     "radar":  "Surf",
                     "speeds":  {
                                    "clean":  {
-                                                 "combat":  "2/3/4/-",
+                                                 "combat":  "3/3/4/-",
                                                  "dash":  "4/4/6/-",
                                                  "maneuver":  "1/1/1/-"
                                              },
-                                   "laden":  {
-                                                 "combat":  "2/3/4/-",
-                                                 "dash":  "4/4/5/-",
-                                                 "maneuver":  "1/1/1/-"
-                                             }
+                                   "laden":  null
                                },
                     "ordnance":  [
 
