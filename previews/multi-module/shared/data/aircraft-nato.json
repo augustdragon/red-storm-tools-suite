@@ -570,6 +570,10 @@
     "F-111D/E":  {
                      "name":  "F-111D/E Aardvark",
                      "model":  "F-111D/E Aardvark",
+                     "aliases":  [
+                                      "F-111D",
+                                      "F-111E"
+                                  ],
                      "nation":  "US",
                      "crew":  2,
                      "rwy":  4,
