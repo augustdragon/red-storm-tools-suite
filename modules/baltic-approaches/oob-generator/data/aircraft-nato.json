@@ -270,7 +270,7 @@
     "speeds": {
       "clean": {
         "combat": "4/4/5/-",
-        "dash": "5/6/8/-",
+        "dash": "5/6/6/-",
         "maneuver": "7/7/8/-"
       },
       "laden": {
@@ -368,7 +368,7 @@
       }
     },
     "ordnance": [
-      { "type": "Harpoon", "quantity": 2 }
+      { "type": "Rockets", "quantity": null }
     ],
     "capabilities": ["FLIR", "Night"],
     "aam": null
