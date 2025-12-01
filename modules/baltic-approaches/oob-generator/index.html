@@ -397,7 +397,7 @@
       if (!debugRolls || !Array.isArray(debugRolls)) return null;
       for (const roll of debugRolls) {
         if (typeof roll === 'string' && roll.includes(rollType)) {
-          const match = roll.match(/(\\d+)/);
+          const match = roll.match(/(\d+)/);
           return match ? parseInt(match[1]) : null;
         }
       }
