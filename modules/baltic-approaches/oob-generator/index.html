@@ -277,6 +277,136 @@
     window.BA_DATE_RANGES = BA_DATE_RANGES;
     window.BA_DATE_RANGES_COMBINED_MAY = BA_DATE_RANGES_COMBINED_MAY;
     
+    /**
+     * Baltic Approaches table result processing
+     * Must be defined early as ui-controller.js needs it
+     */
+    function getTableResultWithVariables(tableId, atafZone, scenarioDate) {
+      console.log(`BA getTableResultWithVariables called with tableId: ${tableId}, atafZone: ${atafZone}, scenarioDate: ${scenarioDate}`);
+      
+      // Get processor factory instance
+      const factory = window.getTableProcessorFactory ? window.getTableProcessorFactory() : null;
+      if (!factory) {
+        console.error('TableProcessorFactory not available');
+        return { text: `Error: Table processor factory not available`, rolls: [], debugInfo: [] };
+      }
+      
+      // Build parameters object based on table type and Baltic Approaches specifics
+      const params = {};
+      
+      // Get the current scenario date from state if not provided
+      const currentDate = scenarioDate || (window.getScenarioDate ? window.getScenarioDate() : null);
+      
+      // Convert Baltic Approaches ordinal date (1, 2, 3) to table data format
+      if (currentDate && ['A2', 'A2-SE', 'B2', 'C2', 'D2', 'D3', 'G2', 'H2'].includes(tableId)) {
+        // Tables D3 and H2 combine both May periods into one
+        if (tableId === 'D3' || tableId === 'H2') {
+          params.scenarioDate = BA_DATE_RANGES_COMBINED_MAY[currentDate];
+        } else {
+          params.scenarioDate = BA_DATE_RANGES[currentDate];
+        }
+      }
+      
+      // Handle special table ID variants
+      let actualTableId = tableId;
+      if (tableId === 'A2-SE') {
+        actualTableId = 'A2';
+      }
+      
+      // Handle nationality parameter for table E2
+      if (actualTableId === 'E2' && atafZone) {
+        params.nationality = atafZone;
+        if (atafZone.includes(':')) {
+          const [nation, hexType] = atafZone.split(':');
+          params.nationality = nation;
+          params.hexType = hexType;
+        }
+      }
+      
+      // Handle mission type parameter for table F2
+      if (actualTableId === 'F2' && atafZone) {
+        params.missionType = atafZone;
+      }
+      
+      // Handle nationality parameter for WP tables J3, K2
+      if ((actualTableId === 'J3' || actualTableId === 'K2') && !params.nationality) {
+        const nationalitySelect = document.getElementById('crewNationality');
+        if (nationalitySelect && nationalitySelect.value) {
+          params.nationality = nationalitySelect.value;
+          if (actualTableId === 'K2') {
+            const hexTypeSelect = document.getElementById('hexType');
+            if (hexTypeSelect && hexTypeSelect.value) {
+              params.hexType = hexTypeSelect.value;
+            }
+          }
+        }
+      }
+      
+      // Handle mission type parameter for table L2
+      if (actualTableId === 'L2' && !params.missionType) {
+        const missionTypeSelect = document.getElementById('missionType');
+        if (missionTypeSelect && missionTypeSelect.value) {
+          params.missionType = missionTypeSelect.value;
+        }
+      }
+      
+      console.log(`Processing table ${actualTableId} (original: ${tableId}) with params:`, params);
+      
+      try {
+        const result = factory.processTable(tableId, params);
+        
+        if (result.error) {
+          console.error(`Table ${tableId} processing error:`, result.error);
+          return {
+            text: result.text || `Error: ${result.error}`,
+            rolls: [],
+            debugInfo: [result.error]
+          };
+        }
+        
+        const formattedResult = {
+          text: result.text || result.result,
+          rolls: result.debugRolls || [],
+          debugInfo: result.debugRolls || [],
+          nationRoll: extractRollValue(result.debugRolls, 'Nation'),
+          aircraftRoll: extractRollValue(result.debugRolls, 'Aircraft'),
+          result: result.text || result.result,
+          taskings: result.taskings,
+          flights: result.flights,
+          faction: result.faction,
+          nationality: result.nationality,
+          table: result.table,
+          scenarioDate: result.scenarioDate,
+          raidType: result.raidType
+        };
+        
+        console.log(`[TABLE RESULT] Formatted result:`, formattedResult);
+        return formattedResult;
+        
+      } catch (error) {
+        console.error(`Error processing table ${tableId}:`, error);
+        return {
+          text: `Error: ${error.message}`,
+          rolls: [],
+          debugInfo: [error.message]
+        };
+      }
+    }
+    
+    function extractRollValue(debugRolls, rollType) {
+      if (!debugRolls || !Array.isArray(debugRolls)) return null;
+      for (const roll of debugRolls) {
+        if (typeof roll === 'string' && roll.includes(rollType)) {
+          const match = roll.match(/(\\d+)/);
+          return match ? parseInt(match[1]) : null;
+        }
+      }
+      return null;
+    }
+    
+    // Expose critical functions immediately for ui-controller.js
+    window.getTableResultWithVariables = getTableResultWithVariables;
+    
     // Initialize the app after modules load
     function initializeApp() {
       console.log('Initializing Baltic Approaches OOB Generator...');
@@ -1409,145 +1539,7 @@
     // Note: selectTable is provided by shared/oob-generator/js/state-manager.js
     // Note: setScenarioDate is provided by shared/oob-generator/js/state-manager.js
     // Note: makeRolls, clearResults, etc. are provided by shared/oob-generator/js/ui-controller.js
-
-    /**
-     * Baltic Approaches table result processing
-     * Simplified version for Baltic Approaches tables (A2, B2, etc.)
-     */
-    function getTableResultWithVariables(tableId, atafZone, scenarioDate) {
-      console.log(`BA getTableResultWithVariables called with tableId: ${tableId}, atafZone: ${atafZone}, scenarioDate: ${scenarioDate}`);
-      
-      // Get processor factory instance
-      const factory = getTableProcessorFactory();
-      if (!factory) {
-        console.error('TableProcessorFactory not available');
-        return { text: `Error: Table processor factory not available`, rolls: [], debugInfo: [] };
-      }
-      
-      // Build parameters object based on table type and Baltic Approaches specifics
-      const params = {};
-      
-      // Get the current scenario date from state if not provided
-      const currentDate = scenarioDate || getScenarioDate();
-      
-      // Convert Baltic Approaches ordinal date (1, 2, 3) to table data format
-      if (currentDate && ['A2', 'A2-SE', 'B2', 'C2', 'D2', 'D3', 'G2', 'H2'].includes(tableId)) {
-        // Tables D3 and H2 combine both May periods into one
-        if (tableId === 'D3' || tableId === 'H2') {
-          params.scenarioDate = BA_DATE_RANGES_COMBINED_MAY[currentDate];
-        } else {
-          params.scenarioDate = BA_DATE_RANGES[currentDate];
-        }
-      }
-      
-      // Handle special table ID variants
-      let actualTableId = tableId;
-      if (tableId === 'A2-SE') {
-        actualTableId = 'A2';
-        // A2-SE might need special parameters - for now treat as regular A2
-      }
-      
-      // Handle nationality parameter for table E2
-      if (actualTableId === 'E2' && atafZone) {
-        params.nationality = atafZone;
-        // If hex type is also provided (for FRG CSAR), extract it
-        if (atafZone.includes(':')) {
-          const [nation, hexType] = atafZone.split(':');
-          params.nationality = nation;
-          params.hexType = hexType;
-        }
-      }
-      
-      // Handle mission type parameter for table F2
-      if (actualTableId === 'F2' && atafZone) {
-        params.missionType = atafZone;
-      }
-      
-      // Handle nationality parameter for WP tables J3, K2
-      if ((actualTableId === 'J3' || actualTableId === 'K2') && !params.nationality) {
-        const nationalitySelect = document.getElementById('crewNationality');
-        if (nationalitySelect && nationalitySelect.value) {
-          params.nationality = nationalitySelect.value;
-          
-          // For K2, also check hex type
-          if (actualTableId === 'K2') {
-            const hexTypeSelect = document.getElementById('hexType');
-            if (hexTypeSelect && hexTypeSelect.value) {
-              params.hexType = hexTypeSelect.value;
-            }
-          }
-        }
-      }
-      
-      // Handle mission type parameter for table L2
-      if (actualTableId === 'L2' && !params.missionType) {
-        const missionTypeSelect = document.getElementById('missionType');
-        if (missionTypeSelect && missionTypeSelect.value) {
-          params.missionType = missionTypeSelect.value;
-        }
-      }
-      
-      console.log(`Processing table ${actualTableId} (original: ${tableId}) with params:`, params);
-      
-      try {
-        // Use the processor factory to process the table  
-        const result = factory.processTable(tableId, params);
-        
-        if (result.error) {
-          console.error(`Table ${tableId} processing error:`, result.error);
-          return {
-            text: result.text || `Error: ${result.error}`,
-            rolls: [],
-            debugInfo: [result.error]
-          };
-        }
-        
-        // Convert processor result to the expected format
-        const formattedResult = {
-          text: result.text || result.result,
-          rolls: result.debugRolls || [],
-          debugInfo: result.debugRolls || [],
-          nationRoll: extractRollValue(result.debugRolls, 'Nation'),
-          aircraftRoll: extractRollValue(result.debugRolls, 'Aircraft'),
-          result: result.text || result.result,  // Store text in result field for display
-          taskings: result.taskings,  // Preserve taskings array from WPTableI2
-          flights: result.flights,    // Preserve structured flights (D3, J3, etc.)
-          faction: result.faction,
-          nationality: result.nationality,
-          table: result.table,
-          scenarioDate: result.scenarioDate,
-          raidType: result.raidType
-        };
-        
-        console.log(`[TABLE RESULT] Formatted result:`, formattedResult);
-        console.log(`[TABLE RESULT] result.taskings:`, result.taskings);
-        
-        return formattedResult;
-        
-      } catch (error) {
-        console.error(`Error processing table ${tableId}:`, error);
-        return {
-          text: `Error: ${error.message}`,
-          rolls: [],
-          debugInfo: [error.message]
-        };
-      }
-    }
-    
-    /**
-     * Extract roll value from debug rolls array
-     */
-    function extractRollValue(debugRolls, rollType) {
-      if (!debugRolls || !Array.isArray(debugRolls)) return null;
-      
-      for (const roll of debugRolls) {
-        if (typeof roll === 'string' && roll.includes(rollType)) {
-          const match = roll.match(/(\\d+)/);
-          return match ? parseInt(match[1]) : null;
-        }
-      }
-      return null;
-    }
+    // Note: getTableResultWithVariables is defined at top of script for early availability
 
     /**
      * Baltic Approaches flight sheet generation - matches Red Storm design
@@ -2036,7 +2028,7 @@
     window.viewTable = viewTable;
     window.viewTableWithVariables = viewTableWithVariables;
     window.handleNationalityChange = handleNationalityChange;
-    window.getTableResultWithVariables = getTableResultWithVariables;
+    // Note: getTableResultWithVariables is already exposed at top of script
   </script>
 </body>
 </html>
