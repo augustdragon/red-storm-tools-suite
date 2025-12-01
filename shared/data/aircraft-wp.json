@@ -400,8 +400,8 @@
                  "radar":  null,
                  "speeds":  {
                                 "clean":  {
-                                              "combat":  "-/4/13/-",
-                                              "dash":  "-/4/4/-",
+                                              "combat":  "-/-/13/-",
+                                              "dash":  "-/-/-/-",
                                               "maneuver":  "-/-/2/-"
                                           },
                                 "laden":  null
@@ -522,10 +522,10 @@
                     "fuel":  8,
                     "notes":  "B, E, F",
                     "weapons":  {
-                                    "gun":  null,
-                                    "gunDepletion":  null,
-                                    "irm":  null,
-                                    "irmDepletion":  null,
+                                    "gun":  "30mm",
+                                    "gunDepletion":  4,
+                                    "irm":  "R-60",
+                                    "irmDepletion":  6,
                                     "rhm":  null,
                                     "rhmDepletion":  null
                                 },
@@ -552,7 +552,7 @@
                                          "quantity":  1
                                      },
                                      {
-                                         "type":  "EOGM(F)",
+                                         "type":  "Kh-25MP",
                                          "quantity":  1
                                      }
                                  ],
@@ -1639,7 +1639,7 @@
                     "fuel":  "U",
                     "notes":  "A, G, H",
                     "weapons":  {
-                                    "gun":  null,
+                                    "gun":  "Rear Gun",
                                     "gunDepletion":  null,
                                     "irm":  null,
                                     "irmDepletion":  null,
@@ -1653,13 +1653,13 @@
                     "radar":  "Surf",
                     "speeds":  {
                                    "clean":  {
-                                                 "combat":  "2/4/5/-",
+                                                 "combat":  "3/4/5/-",
                                                  "dash":  "4/6/7/-",
                                                  "maneuver":  "1/1/1/-"
                                              },
                                    "laden":  {
-                                                 "combat":  "2/3/4/-",
-                                                 "dash":  "4/6/7/-",
+                                                 "combat":  "3/3/4/-",
+                                                 "dash":  "4/4/5/-",
                                                  "maneuver":  "1/1/1/-"
                                              }
                                },
