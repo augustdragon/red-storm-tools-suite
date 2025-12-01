@@ -473,8 +473,8 @@
                          "weapons":  {
                                          "gun":  "30mm",
                                          "gunDepletion":  4,
-                                         "irm":  null,
-                                         "irmDepletion":  null,
+                                         "irm":  "AIM-9P",
+                                         "irmDepletion":  6,
                                          "rhm":  null,
                                          "rhmDepletion":  null
                                      },
@@ -1444,46 +1444,15 @@
                                               "dash":  "-/-/-/-",
                                               "maneuver":  "1/1/1/-"
                                           },
-                                "laden":  {
-                                              "combat":  "2/2/2/-",
-                                              "dash":  "-/-/-/-",
-                                              "maneuver":  "1/1/1/-"
-                                          }
+                                "laden":  null
                             },
                  "ordnance":  [
-                                  {
-                                      "type":  "Harpoon",
-                                      "quantity":  2
-                                  }
                               ],
                  "capabilities":  [
                                       "Night"
                                   ],
                  "aam":  null,
                  "module":  "BA"
-             },
-    "H-53":  {
-                 "name":  "H-53",
-                 "model":  "H-53",
-                 "nation":  "US",
-                 "crew":  0,
-                 "rwy":  0,
-                 "fuel":  0,
-                 "notes":  null,
-                 "weapons":  {
-
-                             },
-                 "speeds":  {
-
-                            },
-                 "ordnance":  [
-
-                              ],
-                 "capabilities":  [
-                                      "CSAR"
-                                  ],
-                 "aam":  null,
-                 "module":  "RS"
              },
     "Phantom FGR.2":  {
                           "name":  "Phantom FGR.2",
@@ -1922,10 +1891,10 @@
                          "weapons":  {
                                          "gun":  "30mm",
                                          "gunDepletion":  4,
-                                         "irm":  null,
-                                         "irmDepletion":  null,
-                                         "rhm":  null,
-                                         "rhmDepletion":  null
+                                         "irm":  "AIM-9P/L",
+                                         "irmDepletion":  3,
+                                         "rhm":  "Skyflash",
+                                         "rhmDepletion":  6
                                      },
                          "bomb":  1,
                          "sight":  "+2",
@@ -2191,8 +2160,8 @@
                          "weapons":  {
                                          "gun":  null,
                                          "gunDepletion":  null,
-                                         "irm":  null,
-                                         "irmDepletion":  null,
+                                         "irm": "AIM-9P",
+                                         "irmDepletion":  6,
                                          "rhm":  null,
                                          "rhmDepletion":  null
                                      },
@@ -2647,54 +2616,6 @@
                                    ],
                   "aam":  null,
                   "module":  "RS"
-              },
-    "S-61":  {
-                  "name":  "S-61",
-                  "model":  "S-61",
-                  "aliases":  [],
-                  "nation":  "DK",
-                  "crew":  0,
-                  "rwy":  0,
-                  "fuel":  0,
-                  "notes":  null,
-                  "weapons":  {
-
-                              },
-                  "speeds":  {
-
-                             },
-                  "ordnance":  [
-
-                               ],
-                  "capabilities":  [
-                                       "CSAR"
-                                   ],
-                  "aam":  null,
-                  "module":  "BA"
-              },
-    "HKP-4D":  {
-                  "name":  "HKP-4D",
-                  "model":  "HKP-4D",
-                  "aliases":  [],
-                  "nation":  "SE",
-                  "crew":  0,
-                  "rwy":  0,
-                  "fuel":  0,
-                  "notes":  null,
-                  "weapons":  {
-
-                              },
-                  "speeds":  {
-
-                             },
-                  "ordnance":  [
-
-                               ],
-                  "capabilities":  [
-                                       "CSAR"
-                                   ],
-                  "aam":  null,
-                  "module":  "BA"
               },
     "EA-6B":  {
                   "name":  "EA-6B Prowler",
