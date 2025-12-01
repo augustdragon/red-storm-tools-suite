@@ -1377,7 +1377,7 @@ class PrintGenerator {
           const processedFlight = {
             ...flight,
             ...individualFlight, // Spread flight properties (text, tasking, nationality, aircraftType, etc.)
-            result: individualFlight.text || individualFlight.result, // Use flight text as the result
+            result: individualFlight.text || individualFlight.result || flight.text || flight.result, // Use flight text as the result, fallback to parent
             faction: flight.faction || individualFlight.faction || 'NATO'
           };
           console.log(`[PROCESS FLIGHTS] Created processed flight with nationality:`, processedFlight.nationality);
