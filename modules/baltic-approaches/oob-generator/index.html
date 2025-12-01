@@ -993,12 +993,12 @@
     function renderTaskingSection(taskingName, taskingData, table) {
       let html = `<div style="margin-bottom: 20px;">`;
       
-      // Tasking header with flight info - using A2's highlighted box style
+      // Tasking header with flight info - single box style like D3
       const flightInfo = taskingData.flightCount && taskingData.flightSize 
         ? `${taskingData.flightCount} x {${taskingData.flightSize}}`
         : '';
       const label = flightInfo ? `${flightInfo} [${taskingName}], ${taskingName}` : taskingName;
-      html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3); font-weight: bold; font-size: 13px;">${label}</div>`;
+      html += `<div style="background-color: rgba(255,255,255,0.15); padding: 10px 15px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3); font-weight: bold; font-size: 14px;">${label}</div>`;
       
       // Render nations if present (D2/J2 style with nations containing aircraft)
       if (taskingData.nations) {
@@ -1008,8 +1008,8 @@
           return aMin - bMin;
         });
         
-        // Wrap all aircraft entries in a highlighted box
-        html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin: 0 15px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3);">`;
+        // Single box containing all nation rolls like D3
+        html += `<div style="background-color: rgba(255,255,255,0.1); padding: 10px 15px; margin: 0 0 0 0; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.25);">`;
         
         for (const [nationRange, nationData] of sortedNations) {
           const aircraftEntries = Object.entries(nationData.aircraft);
@@ -1034,15 +1034,15 @@
           }
         }
         
-        html += `</div>`; // Close aircraft box
+        html += `</div>`; // Close nation box
       }
       // Render aircraft if present directly (I2 style with aircraft at tasking level)
       else if (taskingData.aircraft) {
         const aircraftEntries = Object.entries(taskingData.aircraft);
         const hasSingleAircraft = aircraftEntries.length === 1 && aircraftEntries[0][0] === '1-10';
         
-        // Wrap aircraft entries in a highlighted box
-        html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin: 0 15px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3);">`;
+        // Single box for aircraft
+        html += `<div style="background-color: rgba(255,255,255,0.1); padding: 10px 15px; margin: 0 0 0 0; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.25);">`;
         
         if (hasSingleAircraft) {
           const aircraftType = aircraftEntries[0][1];
