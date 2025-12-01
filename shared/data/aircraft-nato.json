@@ -912,8 +912,8 @@
                             },
                  "ordnance":  [
                                   {
-                                      "type":  "Harpoon",
-                                      "quantity":  2
+                                      "type":  "Rockets",
+                                      "quantity":  null
                                   }
                               ],
                  "capabilities":  [
