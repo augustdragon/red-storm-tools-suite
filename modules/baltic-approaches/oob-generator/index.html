@@ -578,9 +578,17 @@
       
       // If scenarioDate is provided, show only that date's data
       if (scenarioDate) {
-        const dateRangeKey = window.BA_DATE_RANGES[scenarioDate];
-        if (dateRangeKey && table.dateRanges[dateRangeKey]) {
-          const dateData = table.dateRanges[dateRangeKey];
+        // Try standard date ranges first, then combined date ranges (for H2)
+        let dateRangeKey = window.BA_DATE_RANGES[scenarioDate];
+        let dateData = dateRangeKey ? table.dateRanges[dateRangeKey] : null;
+        
+        // If not found, try combined date ranges (H2 uses 15-31 May instead of split dates)
+        if (!dateData) {
+          dateRangeKey = window.BA_DATE_RANGES_COMBINED_MAY[scenarioDate];
+          dateData = dateRangeKey ? table.dateRanges[dateRangeKey] : null;
+        }
+        
+        if (dateData) {
           html += renderNationsAndAircraft(dateData);
         }
       } else {
