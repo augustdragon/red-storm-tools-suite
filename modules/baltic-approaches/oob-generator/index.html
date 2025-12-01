@@ -962,7 +962,7 @@
             // Render grouped flights
             html += `<div class="aircraft-list">`;
             for (const grouped of Object.values(flightsByType)) {
-              html += `<div class="aircraft-item" style="font-size: 12px;">`;
+              html += `<div class="aircraft-item">`;
               html += `${grouped.count} x {${grouped.flightSize}} ${grouped.aircraft}, ${grouped.type}`;
               html += `</div>`;
             }
@@ -1017,7 +1017,7 @@
           
           if (hasSingleAircraft) {
             const aircraftType = aircraftEntries[0][1];
-            html += `<div style="margin-bottom: 4px; font-size: 12px;"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}</div>`;
+            html += `<div style="margin-bottom: 4px; font-size: 14px;"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}</div>`;
           } else {
             const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
               const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
@@ -1025,7 +1025,7 @@
               return aStart - bStart;
             });
             
-            html += `<div style="margin-bottom: 8px; font-size: 12px;">`;
+            html += `<div style="margin-bottom: 8px; font-size: 14px;">`;
             html += `<div style="font-weight: 600; margin-bottom: 2px;">${nationRange} ${nationData.name}:</div>`;
             for (const [range, type] of sortedAircraft) {
               html += `<div style="margin-left: 15px; color: #ccc;">${range}: ${type}</div>`;
@@ -1046,7 +1046,7 @@
         
         if (hasSingleAircraft) {
           const aircraftType = aircraftEntries[0][1];
-          html += `<div style="margin-bottom: 4px; font-size: 12px; font-weight: 600;">Aircraft: ${aircraftType}</div>`;
+          html += `<div style="margin-bottom: 4px; font-size: 14px; font-weight: 600;">Aircraft: ${aircraftType}</div>`;
         } else {
           const sortedAircraft = Object.entries(taskingData.aircraft).sort((a, b) => {
             const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
@@ -1054,7 +1054,7 @@
             return aStart - bStart;
           });
           
-          html += `<div style="font-size: 12px;">`;
+          html += `<div style="font-size: 14px;">`;
           html += `<div style="font-weight: 600; margin-bottom: 2px;">Aircraft:</div>`;
           for (const [range, type] of sortedAircraft) {
             html += `<div style="margin-left: 15px; color: #ccc;">${range}: ${type}</div>`;
