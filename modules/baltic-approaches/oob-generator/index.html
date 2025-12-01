@@ -1407,12 +1407,13 @@
     }
 
     // Make functions available globally
+    window.viewTable = viewTable;
     window.viewTableWithVariables = viewTableWithVariables;
     window.handleNationalityChange = handleNationalityChange;
 
     // Note: selectTable is provided by shared/oob-generator/js/state-manager.js
     // Note: setScenarioDate is provided by shared/oob-generator/js/state-manager.js
-    // Note: makeRolls, viewTable, clearResults, etc. are provided by shared/oob-generator/js/ui-controller.js
+    // Note: makeRolls, clearResults, etc. are provided by shared/oob-generator/js/ui-controller.js
 
     /**
      * Baltic Approaches table result processing
