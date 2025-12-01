@@ -98,7 +98,7 @@ function applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode
   const natoNations = ['US', 'UK', 'FRG', 'BEL', 'CAN', 'HOL', 'NATO_BA', 'USN/USMC', 'DK', 'SE'];
   const deepStrikeTables = ['D', 'D2', 'D3', 'E', 'J', 'J2', 'K', 'K2'];
   
-  if (natoNations.includes(mappedNation) && modifiedData.bomb && modifiedData.bomb.includes('/')) {
+  if (natoNations.includes(mappedNation) && modifiedData.bomb && typeof modifiedData.bomb === 'string' && modifiedData.bomb.includes('/')) {
     // Check if this is NOT a Deep Strike table
     if (!deepStrikeTables.includes(sourceTable) && isAirToGroundCapable) {
       const bombParts = modifiedData.bomb.split('/');
@@ -135,7 +135,7 @@ function applyUSNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundCa
   
   // US Note C: Reduced bomb load for Deep Strike Raid (Tables D, D2, D3)
   if (notes.includes('C') && ['D', 'D2', 'D3'].includes(sourceTable) && isAirToGroundCapable) {
-    if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+    if (modifiedData.bomb && typeof modifiedData.bomb === 'string' && modifiedData.bomb.includes('/')) {
       const bombParts = modifiedData.bomb.split('/');
       if (bombParts.length === 2) {
         modifiedData.bomb = bombParts[1].trim();
@@ -277,7 +277,7 @@ function applyUKNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundCa
   
   // UK Note H: Lower bomb load for Deep Strike (Tables D, D2, D3)
   if (notes.includes('H') && ['D', 'D2', 'D3'].includes(sourceTable) && isAirToGroundCapable) {
-    if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+    if (modifiedData.bomb && typeof modifiedData.bomb === 'string' && modifiedData.bomb.includes('/')) {
       const bombParts = modifiedData.bomb.split('/');
       if (bombParts.length === 2) {
         modifiedData.bomb = bombParts[1].trim();
@@ -359,7 +359,7 @@ function applyFRGNotes(modifiedData, notes, tasking, sourceTable, isAirToGroundC
   
   // FRG Note E: Use lower bomb load for Deep Strike Raids (Tables D, D2, D3)
   if (notes.includes('E') && ['D', 'D2', 'D3'].includes(sourceTable) && isAirToGroundCapable) {
-    if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+    if (modifiedData.bomb && typeof modifiedData.bomb === 'string' && modifiedData.bomb.includes('/')) {
       const bombParts = modifiedData.bomb.split('/');
       modifiedData.bomb = bombParts[1].trim();
     }
@@ -632,7 +632,7 @@ function applyBECANENotes(modifiedData, notes, tasking, sourceTable, isAirToGrou
   
   // BE/CA/NE Note C: Use lower bomb load for Deep Strike Raids (Tables D, D2, D3)
   if (notes.includes('C') && ['D', 'D2', 'D3'].includes(sourceTable) && isAirToGroundCapable) {
-    if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+    if (modifiedData.bomb && typeof modifiedData.bomb === 'string' && modifiedData.bomb.includes('/')) {
       const bombParts = modifiedData.bomb.split('/');
       modifiedData.bomb = bombParts[1].trim();
     }
@@ -687,7 +687,7 @@ function applyNATOBA_Notes(modifiedData, notes, tasking, sourceTable, isAirToGro
   
   // NATO Note C: Lower bomb load for Deep Strike/Naval Strike - MODIFICATION
   if (notes.includes('C') && (sourceTable === 'D' || sourceTable === 'E') && isAirToGroundCapable) {
-    if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+    if (modifiedData.bomb && typeof modifiedData.bomb === 'string' && modifiedData.bomb.includes('/')) {
       const bombParts = modifiedData.bomb.split('/');
       modifiedData.bomb = bombParts[1].trim();
     }
@@ -762,7 +762,7 @@ function applyNATOBA_Notes(modifiedData, notes, tasking, sourceTable, isAirToGro
 function applyUSNUSMC_Notes(modifiedData, notes, tasking, sourceTable, isAirToGroundCapable) {
   // USN/USMC Note A: Lower bomb load for Deep Strike/Naval Strike - MODIFICATION
   if (notes.includes('A') && (sourceTable === 'D' || sourceTable === 'E') && isAirToGroundCapable) {
-    if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+    if (modifiedData.bomb && typeof modifiedData.bomb === 'string' && modifiedData.bomb.includes('/')) {
       const bombParts = modifiedData.bomb.split('/');
       modifiedData.bomb = bombParts[1].trim();
     }
@@ -860,7 +860,7 @@ function applyUSSR_BA_Notes(modifiedData, notes, tasking, sourceTable, isAirToGr
   
   // USSR_BA Note B: Lower bomb load for Deep Strike/Naval Strike - MODIFICATION
   if (notes.includes('B') && (sourceTable === 'J' || sourceTable === 'K') && isAirToGroundCapable) {
-    if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+    if (modifiedData.bomb && typeof modifiedData.bomb === 'string' && modifiedData.bomb.includes('/')) {
       const bombParts = modifiedData.bomb.split('/');
       modifiedData.bomb = bombParts[1].trim();
     }
@@ -1198,7 +1198,7 @@ function rollSovietIRM_R73(modifiedData) {
  * Apply dual bomb load logic (USSR Note I, GDR Note D)
  */
 function applyDualBombLoad(modifiedData, sourceTable, tasking) {
-  if (modifiedData.bomb && modifiedData.bomb.includes('/')) {
+  if (modifiedData.bomb && typeof modifiedData.bomb === 'string' && modifiedData.bomb.includes('/')) {
     const bombParts = modifiedData.bomb.split('/');
     // Deep Strike tables (J, J2, K, K2) with Bombing or SEAD tasking use lower bomb load
     const isDeepStrike = (sourceTable === 'J' || sourceTable === 'J2' || sourceTable === 'K' || sourceTable === 'K2') 
