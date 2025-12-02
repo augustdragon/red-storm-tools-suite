@@ -619,7 +619,6 @@ input[type="number"]::-webkit-outer-spin-button {
 .aircraft-item {
   color: #d4d4d4;
   margin-bottom: 4px;
-  font-family: monospace;
   font-size: 14px;
 }
 
