@@ -1270,7 +1270,7 @@ class PrintGenerator {
     .damage-boxes { display: flex; flex-direction: row; gap: 2px; }
     .damage-column { display: flex; flex-direction: column; gap: 1px; }
     .damage-row { display: flex; gap: 2px; align-items: center; }
-    .damage-label { border: 1px solid #666; padding: 1px 3px; height: 16px; font-size: 6pt; background: white; display: flex; align-items: center; min-width: 50px; box-sizing: border-box; }
+    .damage-label { border: 1px solid #666; padding: 1px 3px; height: 16px; font-size: 6pt; background: white; display: flex; align-items: center; min-width: 42px; box-sizing: border-box; }
     .damage-checkbox { border: 1px solid #666; width: 16px; height: 16px; background: white; box-sizing: border-box; }
     .ordnance-area-small { border: none; border-top: 1px solid #666; padding: 6px 0 4px 0; min-height: 24px; width: 100%; background: white; flex: 1; overflow: hidden; font-size: 7pt; }
     .ordnance-label-small { font-size: 7pt; color: #999; font-style: italic; }
