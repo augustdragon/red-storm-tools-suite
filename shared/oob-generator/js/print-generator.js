@@ -1295,7 +1295,11 @@ class PrintGenerator {
       .flight-card { page-break-inside: avoid; margin-bottom: 5px; }
       .flight-grid { page-break-inside: auto; }
       .page-break-after { page-break-after: always; }
-      .page-break-after-nato { page-break-after: always !important; break-after: page !important; }
+      .page-break-after-nato { 
+        page-break-after: always !important; 
+        break-after: page !important;
+        display: contents; /* Allow grid children to participate in parent grid */
+      }
       .no-print { display: none !important; }
     }
   </style>
