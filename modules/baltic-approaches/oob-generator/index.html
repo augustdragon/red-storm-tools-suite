@@ -765,19 +765,11 @@
               const hasSingleAircraft = sortedAircraft.length === 1 && sortedAircraft[0][0] === '1-10';
               
               for (const [range, type] of sortedAircraft) {
-                // Add superscript 2 for specific aircraft based on date range
-                let displayType = type;
-                if ((dateRange === '15-20 May' && type.includes('F-35XD')) ||
-                    (dateRange === '21-31 May' && (type.includes('F-35XD') || type.includes('Jaguar GR1A'))) ||
-                    (dateRange === '1-15 June' && type.includes('Jaguar GR1A'))) {
-                  displayType = type + '<sup>2</sup>';
-                }
-                
                 if (hasSingleAircraft) {
                   // Don't show the "1-10:" prefix for single aircraft types
-                  html += `<div class="aircraft-item">${displayType}</div>`;
+                  html += `<div class="aircraft-item">${type}</div>`;
                 } else {
-                  html += `<div class="aircraft-item">${range}: ${displayType}</div>`;
+                  html += `<div class="aircraft-item">${range}: ${type}</div>`;
                 }
               }
               

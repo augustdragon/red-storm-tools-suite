@@ -224,7 +224,7 @@
               "1": {
                 "name": "DK",
                 "aircraft": {
-                  "1-10": "F-35XD Draken"
+                  "1-10": "F-35XD Draken<sup>2</sup>"
                 }
               },
               "2-3": {
@@ -252,7 +252,7 @@
               "1": {
                 "name": "DK",
                 "aircraft": {
-                  "1-10": "F-35XD Draken"
+                  "1-10": "F-35XD Draken<sup>2</sup>"
                 }
               },
               "2": {
