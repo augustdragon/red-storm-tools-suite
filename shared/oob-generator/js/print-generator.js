@@ -489,7 +489,8 @@ class PrintGenerator {
     
     // Wrap CSAR cards in container with page break if needed
     if (hasCSAR) {
-      const containerPageBreak = isLastNATOFlight ? ' style="page-break-after: always;"' : '';
+      const containerPageBreak = isLastNATOFlight ? ' style="page-break-after: always;" class="page-break-after-nato"' : '';
+      console.log(`[PAGE BREAK] CSAR container - isLastNATOFlight: ${isLastNATOFlight}, applying break: ${!!isLastNATOFlight}`);
       allCardsHTML = `<div class="csar-container"${containerPageBreak}>\n${allCardsHTML}\n</div>\n`;
     }
     
@@ -858,7 +859,8 @@ class PrintGenerator {
     console.log('[ROUNDEL] Roundel map keys:', Object.keys(roundelMap));
     
     // Add page break style if this is the last NATO flight
-    const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always;"' : '';
+    const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always !important;" class="page-break-after-nato"' : '';
+    console.log(`[PAGE BREAK] Regular card - applyPageBreak: ${applyPageBreak}, aircraft: ${aircraftType}`);
     
     let html = `
   <div class="flight-card"${pageBreakStyle}>
@@ -1257,6 +1259,7 @@ class PrintGenerator {
       .flight-card { page-break-inside: avoid; margin-bottom: 5px; }
       .flight-grid { page-break-inside: auto; }
       .page-break-after { page-break-after: always; }
+      .page-break-after-nato { page-break-after: always !important; break-after: page !important; }
       .no-print { display: none !important; }
     }
   </style>
