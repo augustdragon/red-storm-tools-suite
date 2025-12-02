@@ -857,12 +857,13 @@
         html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 15px; color: #ddd;">Raid Nationality: 1-6 USSR, 7-8 GDR, 9-10 POL</div>`;
         
         for (const [natCode, natData] of Object.entries(table.nationalities)) {
-          html += `<div style="margin-bottom: 20px;">`;
-          html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 15px; color: #ddd; font-size: 14px;">${natData.name}</div>`;
+          html += `<div class="tasking-section">`;
+          html += `<div class="tasking-header">${natData.name}</div>`;
           
+          html += `<div class="aircraft-list">`;
           for (const flight of natData.flights) {
-            html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 14px;">`;
-            html += `${flight.flightCount} x {${flight.flightSize}} ${flight.type}`;
+            html += `<div class="aircraft-item">`;
+            html += `${flight.flightCount} x {${flight.flightSize}} `;
             
             if (flight.aircraft) {
               const sortedAircraft = Object.entries(flight.aircraft).sort((a, b) => {
@@ -871,14 +872,23 @@
                 return aStart - bStart;
               });
               
-              html += `<br><span style="font-size: 13px; color: #bbb; font-weight: 600;">Aircraft:</span>`;
-              for (const [range, type] of sortedAircraft) {
-                html += `<br><span style="font-size: 13px; color: #bbb; margin-left: 15px;">${range}: ${type}</span>`;
+              // Check if single aircraft type (no roll needed)
+              if (sortedAircraft.length === 1 && sortedAircraft[0][0] === '1-10') {
+                html += `${sortedAircraft[0][1]}, ${flight.type}`;
+              } else {
+                // Multiple aircraft options with ranges
+                html += `${flight.type}`;
+                html += `<br><span style="margin-left: 15px; font-size: 13px; color: #bbb;">Aircraft: `;
+                html += sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
+                html += `</span>`;
               }
+            } else {
+              html += flight.type;
             }
             
             html += `</div>`;
           }
+          html += `</div>`;
           
           html += `</div>`;
         }
