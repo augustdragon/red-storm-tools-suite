@@ -449,6 +449,9 @@ class PrintGenerator {
     // Generate cards for each flight
     let allCardsHTML = '';
     let hasCSAR = false;
+    let csarCardCount = 0;
+    const csarGroupSize = 4;
+    
     for (let flightNum = 0; flightNum < numFlights; flightNum++) {
       const isLastCard = flightNum === numFlights - 1;
       const applyPageBreak = isLastNATOFlight && isLastCard;
@@ -462,6 +465,12 @@ class PrintGenerator {
       
       if (useCompactCSAR) {
         hasCSAR = true;
+        
+        // Start new CSAR container if this is the first card or we've hit the group size
+        if (csarCardCount === 0) {
+          allCardsHTML += '<div class="csar-container">\n';
+        }
+        
         console.log(`Generating compact CSAR card for ${aircraftType}`);
         allCardsHTML += this.generateCompactCSARCard(
           aircraftType,
@@ -470,8 +479,21 @@ class PrintGenerator {
           nationCode,
           tasking,
           faction,
-          applyPageBreak
+          false  // Never apply page break to individual cards
         );
+        
+        csarCardCount++;
+        
+        // Close container after 4 cards or if this is the last card
+        if (csarCardCount === csarGroupSize || isLastCard) {
+          const needsPageBreak = isLastNATOFlight && isLastCard;
+          if (needsPageBreak) {
+            allCardsHTML += '</div>\n<div style="page-break-after: always !important; break-after: page !important;" class="page-break-after-nato"></div>\n';
+          } else {
+            allCardsHTML += '</div>\n';
+          }
+          csarCardCount = 0;
+        }
       } else {
         console.log(`Generating regular designer card for ${aircraftType}`);
         allCardsHTML += this.generateSingleDesignerCard(
@@ -487,29 +509,14 @@ class PrintGenerator {
       }
     }
     
-    // Wrap CSAR cards in container with page break if needed
-    // Group CSAR cards into rows of 4 (2 rows in 2-column grid)
-    if (hasCSAR) {
-      console.log(`[PAGE BREAK] CSAR container - isLastNATOFlight: ${isLastNATOFlight}, applying break: ${!!isLastNATOFlight}`);
-      
-      // Split cards into groups of 4 for better printing
-      const csarCards = allCardsHTML.match(/<div class="compact-csar-card">[\s\S]*?<\/div>\s*<\/div>/g) || [];
-      const groupSize = 4;
-      let groupedHTML = '';
-      
-      for (let i = 0; i < csarCards.length; i += groupSize) {
-        const group = csarCards.slice(i, i + groupSize);
-        const isLastGroup = i + groupSize >= csarCards.length;
-        const needsPageBreak = isLastNATOFlight && isLastGroup;
-        
-        if (needsPageBreak) {
-          groupedHTML += `<div style="page-break-after: always !important; break-after: page !important;" class="page-break-after-nato">\n<div class="csar-container">\n${group.join('\n')}\n</div>\n</div>\n`;
-        } else {
-          groupedHTML += `<div class="csar-container">\n${group.join('\n')}\n</div>\n`;
-        }
+    // Close any unclosed CSAR container (shouldn't happen but safety check)
+    if (hasCSAR && csarCardCount > 0) {
+      const needsPageBreak = isLastNATOFlight;
+      if (needsPageBreak) {
+        allCardsHTML += '</div>\n<div style="page-break-after: always !important; break-after: page !important;" class="page-break-after-nato"></div>\n';
+      } else {
+        allCardsHTML += '</div>\n';
       }
-      
-      allCardsHTML = groupedHTML;
     }
     
     return allCardsHTML;
