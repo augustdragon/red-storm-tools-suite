@@ -487,9 +487,10 @@ class PrintGenerator {
       }
     }
     
-    // Wrap CSAR cards in container
+    // Wrap CSAR cards in container with page break if needed
     if (hasCSAR) {
-      allCardsHTML = `<div class="csar-container">\n${allCardsHTML}\n</div>\n`;
+      const containerPageBreak = isLastNATOFlight ? ' style="page-break-after: always;"' : '';
+      allCardsHTML = `<div class="csar-container"${containerPageBreak}>\n${allCardsHTML}\n</div>\n`;
     }
     
     return allCardsHTML;
