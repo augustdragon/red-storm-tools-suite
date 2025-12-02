@@ -26,7 +26,7 @@
       <button class="action-button" id="debugModeButton" onclick="toggleDebugMode()" style="background-color: #666; font-size: 12px; padding: 5px 10px;">
         Debug Mode: OFF
       </button>
-      <div id="debugStatus" style="font-size: 11px; color: #888; margin-top: 5px;">
+      <div id="debugStatus" style="font-size: 13px; color: #888; margin-top: 5px;">
         Debug mode shows all die rolls for testing
       </div>
     </div>
@@ -1026,7 +1026,7 @@
             });
             
             html += `<div style="margin-bottom: 8px; font-size: 14px;">`;
-            html += `<div style="font-weight: 600; margin-bottom: 2px;">${nationRange} ${nationData.name}:</div>`;
+            html += `<div style="font-weight: 600; margin-bottom: 4px;">${nationRange} ${nationData.name}:</div>`;
             for (const [range, type] of sortedAircraft) {
               html += `<div style="margin-left: 15px; color: #ccc;">${range}: ${type}</div>`;
             }
@@ -1055,7 +1055,7 @@
           });
           
           html += `<div style="font-size: 14px;">`;
-          html += `<div style="font-weight: 600; margin-bottom: 2px;">Aircraft:</div>`;
+          html += `<div style="font-weight: 600; margin-bottom: 4px;">Aircraft:</div>`;
           for (const [range, type] of sortedAircraft) {
             html += `<div style="margin-left: 15px; color: #ccc;">${range}: ${type}</div>`;
           }
@@ -1104,7 +1104,7 @@
               html += `${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}`;
               
               if (flight.description) {
-                html += `<br><span style="font-size: 11px; color: #bbb;">${flight.description}</span>`;
+                html += `<br><span style="font-size: 13px; color: #bbb;">${flight.description}</span>`;
               } else if (aircraftData) {
                 // Show aircraft options
                 if (typeof aircraftData === 'object' && !Array.isArray(aircraftData)) {
@@ -1125,7 +1125,7 @@
                     // Die roll ranges
                     aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
                   }
-                  html += `<br><span style="font-size: 11px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
+                  html += `<br><span style="font-size: 13px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
                 }
               }
               
@@ -1149,7 +1149,7 @@
               html += `${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}`;
               
               if (flight.description) {
-                html += `<br><span style="font-size: 11px; color: #bbb;">${flight.description}</span>`;
+                html += `<br><span style="font-size: 13px; color: #bbb;">${flight.description}</span>`;
               } else if (flight.aircraft) {
                 // Show aircraft options
                 if (typeof flight.aircraft === 'object' && !Array.isArray(flight.aircraft)) {
@@ -1167,7 +1167,7 @@
                     // Die roll ranges
                     aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
                   }
-                  html += `<br><span style="font-size: 11px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
+                  html += `<br><span style="font-size: 13px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
                 }
               }
               
@@ -1256,7 +1256,7 @@
                     // Die roll ranges
                     aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
                   }
-                  html += `<br><span style="font-size: 11px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
+                  html += `<br><span style="font-size: 13px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
                 }
               }
               
@@ -1292,7 +1292,7 @@
                     // Die roll ranges
                     aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
                   }
-                  html += `<br><span style="font-size: 11px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
+                  html += `<br><span style="font-size: 13px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
                 }
               }
               
@@ -1325,7 +1325,7 @@
           html += `${missionData.flightCount} x {${missionData.flightSize}} [${missionName}], ${missionName}`;
           // Show ordnance note if present
           if (missionData.ordnanceNote) {
-            html += `<br><span style="font-size: 11px; color: #bbb; font-style: italic;">${missionData.ordnanceNote}</span>`;
+            html += `<br><span style="font-size: 13px; color: #bbb; font-style: italic;">${missionData.ordnanceNote}</span>`;
           }
           
           html += `</div>`; // Close flight composition box
@@ -1344,7 +1344,7 @@
               
               if (hasSingleAircraft) {
                 const aircraftType = aircraftEntries[0][1];
-                html += `<div style="background-color: rgba(255,255,255,0.08); padding: 4px 8px; margin: 3px 30px; border-radius: 3px; font-size: 11px;">`;
+                html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
                 html += `<span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}`;
                 html += `</div>`;
               } else {
@@ -1354,8 +1354,8 @@
                   return aStart - bStart;
                 });
                 
-                html += `<div style="background-color: rgba(255,255,255,0.08); padding: 4px 8px; margin: 3px 30px; border-radius: 3px; font-size: 11px;">`;
-                html += `<div style="font-weight: 600; margin-bottom: 2px;">${nationRange} ${nationData.name}:</div>`;
+                html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
+                html += `<div style="font-weight: 600; margin-bottom: 4px;">${nationRange} ${nationData.name}:</div>`;
                 for (const [range, type] of sortedAircraft) {
                   html += `<div style="margin-left: 10px; color: #ccc;">${range}: ${type}</div>`;
                 }
@@ -1842,7 +1842,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr 2fr;
       gap: 1px;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
       align-items: center;
     }
     
