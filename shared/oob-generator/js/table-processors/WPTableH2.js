@@ -76,11 +76,15 @@ class WPTableH2 extends BaseTableProcessor {
     // Create flights array (all flights use same aircraft)
     const flights = [];
     for (let i = 0; i < flightCount; i++) {
+      const flightText = `1 x {${flightSize}} ${aircraftResult.aircraftType}, CAP`;
       flights.push({
+        text: flightText,
         faction: 'WP',
         nationality: nationResult.nationName,
+        aircraftType: aircraftResult.aircraftType,
         aircraft: aircraftResult.aircraftType,
         flightSize: flightSize,
+        flightCount: 1,
         tasking: 'CAP',
         ordnance: 'Air-to-Air'
       });
