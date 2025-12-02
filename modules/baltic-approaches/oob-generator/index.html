@@ -1075,8 +1075,8 @@
     function renderParameterTable(table, tableId, atafZone) {
       let html = `<div class="table-view-content">`;
       
-      // Add setup/nationality note if present (skip for K2 as it will be shown at bottom)
-      if (table.setupEntry && table.setupEntry.text && tableId !== 'K2') {
+      // Add setup/nationality note if present (skip for K2 and E2 as they will be shown at bottom)
+      if (table.setupEntry && table.setupEntry.text && tableId !== 'K2' && tableId !== 'E2') {
         html += `<div style="font-style: italic; color: #bbb; margin: 0 15px 10px 15px; padding: 8px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">${table.setupEntry.text}</div>`;
       }
       
@@ -1177,6 +1177,13 @@
             html += `</div>`;
           }
         }
+        
+        // Add nationality and ordnance info at bottom for E2
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">`;
+        if (table.setupEntry && table.setupEntry.text) {
+          html += `<div><span style="font-weight: bold;">Nationality:</span> ${table.setupEntry.text}</div>`;
+        }
+        html += `</div>`;
       }
       // F2 has simple nation-based structure with single mission type
       else if (tableId === 'F2' && table.nations) {
@@ -1299,12 +1306,11 @@
         // Add ordnance note at bottom with nationality info
         html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">`;
         if (table.setupEntry && table.setupEntry.text) {
-          html += `<div style="margin-bottom: 8px;">${table.setupEntry.text}</div>`;
+          html += `<div style="margin-bottom: 8px;"><span style="font-weight: bold;">Nationality:</span> ${table.setupEntry.text}</div>`;
         }
-        html += `<div style="font-weight: bold; margin-bottom: 8px;">Ordnance Available:</div>`;
-        html += `<div style="margin-left: 15px;">${table.ordnanceNote}</div>`;
+        html += `<div><span style="font-weight: bold;">Ordnance Available:</span> ${table.ordnanceNote}</div>`;
         if (table.additionalNote) {
-          html += `<div style="margin-left: 15px; margin-top: 8px;">${table.additionalNote}</div>`;
+          html += `<div style="margin-top: 8px;">${table.additionalNote}</div>`;
         }
         html += `</div>`;
       }
