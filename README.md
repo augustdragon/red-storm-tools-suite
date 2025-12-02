@@ -2,11 +2,11 @@
 
 A comprehensive web-based tool suite for the Red Storm and Baltic Approaches board games by GMT Games.
 
-## 🎯 Live Site
+## Live Site
 
 **Visit:** [https://augustdragon.github.io/red-storm-tools-suite/](https://augustdragon.github.io/red-storm-tools-suite/)
 
-## 🌐 Available Modules
+## Available Modules
 
 ### Red Storm 
 - Order of Battle Generator
@@ -50,7 +50,7 @@ A comprehensive web-based tool suite for the Red Storm and Baltic Approaches boa
 
 ### Mobile version (in development)
 
-## 🎲 Initiative Chit Pull Features
+## Initiative Chit Pull Features
 
 ### Core Functionality
 - **Accurate Chit Pools**: Exact Red Storm game probabilities
