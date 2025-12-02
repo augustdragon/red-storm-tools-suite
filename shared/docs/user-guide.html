@@ -408,10 +408,10 @@
 
     <div class="tool-section" id="aircraft-data">
         <h2>Aircraft Data Reference</h2>
-        <p>A comprehensive digital reference containing complete statistics and capabilities for all aircraft in Red Storm.</p>
+        <p>A comprehensive digital version of the game's Aircraft Data Charts. Includes all aircraft from Red Storm and Baltic Approaches.</p>
 
         <h3>Overview</h3>
-        <p>The Aircraft Data Reference provides quick access to detailed information about every aircraft type in the game. This tool is invaluable for scenario planning, answering questions during gameplay, and learning about aircraft capabilities.</p>
+        <p>The Aircraft Data Reference provides quick access to detailed information about every aircraft in the game. This tool can save table space and reduce time spent flipping through multiple charts during gameplay.</p>
 
         <h3>Using the Reference</h3>
         
@@ -428,20 +428,25 @@
         <ul>
             <li><strong>Basic Information:</strong>
                 <ul>
-                    <li>Aircraft model designation</li>
-                    <li>Nation/faction</li>
-                    <li>Aircraft type (Fighter, Strike, Multirole, etc.)</li>
+                    <li>Aircraft model and name</li>
+                    <li>Source game module:  Red Storm or Baltic Approaches</li>
+                    <li>Nationality</li>
                 </ul>
             </li>
-            <li><strong>Weapons Systems:</strong>
+            <li><strong>Operational Data:</strong></li>
+            <ul>
+                <li>Crew size</li>
+                <li>Runway requirement</li>
+                <li>Fuel capacity</li>
+            </ul>
+            </li>
+            <li><strong>Weapons and Radar Systems:</strong>
                 <ul>
-                    <li>Gun rating (attack/defense modifiers)</li>
-                    <li>IRM (Infrared Missile) types and ratings</li>
-                    <li>RHM (Radar Homing Missile) types and ratings</li>
-                    <li>AAM (Advanced Air-to-Air Missile) systems</li>
-                    <li>Ordnance options for ground attack</li>
+                    <li>Radar and EW data</li>
+                    <li>Air-to-Air weapons</li>
+                    <li>Ordnance</li>
                     <li>Bomb load capacity</li>
-                    <li>Sight modifier for bombing accuracy</li>
+                    <li>Sight modifier</li>
                 </ul>
             </li>
             <li><strong>Performance Data:</strong>
@@ -451,25 +456,12 @@
                     <li>Altitude ceiling limitations</li>
                 </ul>
             </li>
-            <li><strong>Electronic Warfare:</strong>
-                <ul>
-                    <li>RWR (Radar Warning Receiver) capability</li>
-                    <li>Jamming systems and effectiveness</li>
-                    <li>Radar type and range</li>
-                </ul>
             </li>
-            <li><strong>Operational Characteristics:</strong>
-                <ul>
-                    <li>Crew size</li>
-                    <li>Runway requirements (light/medium/heavy)</li>
-                    <li>Fuel capacity</li>
-                </ul>
-            </li>
-            <li><strong>Special Capabilities:</strong>
+            <li><strong>Capabilities and notes:</strong>
                 <ul>
                     <li>Note codes (A-Z) indicating special rules</li>
-                    <li>Detailed note descriptions showing rule effects</li>
-                    <li>Mission-specific restrictions or bonuses</li>
+                    <li>Hover over note to see text</li>
+                    <li>Aircraft capabilities</li>
                 </ul>
             </li>
         </ul>
@@ -488,18 +480,16 @@
         <h4>Speed Tables</h4>
         <p>Aircraft performance is shown across altitude bands:</p>
         <ul>
-            <li><strong>VL (Very Low):</strong> Ground level to low altitude</li>
-            <li><strong>LO (Low):</strong> Low altitude operations</li>
-            <li><strong>ML (Medium-Low):</strong> Medium-low altitude</li>
-            <li><strong>MH (Medium-High):</strong> Medium-high altitude</li>
-            <li><strong>HI (High):</strong> High altitude</li>
-            <li><strong>VH (Very High):</strong> Very high altitude (omitted if aircraft cannot operate at this level)</li>
+            <li><strong>D/L:</strong> Deck/Low</li>
+            <li><strong>M:</strong>Medium</li>
+            <li><strong>H:</strong>High</li>
+            <li><strong>V:</strong>Very High</li>
         </ul>
-        <p>Each altitude shows three speed values:</p>
+        <p>Each altitude shows three values:</p>
         <ul>
             <li><strong>C (Combat):</strong> Combat speed</li>
-            <li><strong>D (Dash):</strong> Maximum dash speed</li>
-            <li><strong>M (Maneuver):</strong> Maximum maneuver speed</li>
+            <li><strong>D (Dash):</strong> Dash speed</li>
+            <li><strong>M (Maneuver):</strong> Maneuver rating for comabat</li>
         </ul>
 
         <h4>Clean vs Laden Performance</h4>
@@ -513,22 +503,13 @@
         <p>Note codes (letters A-Z) indicate special rules that modify aircraft characteristics. Common note types include:</p>
         <ul>
             <li><strong>Weapon variations:</strong> Different missile types based on dice rolls</li>
-            <li><strong>Gun pods:</strong> Optional gun installations</li>
-            <li><strong>Radar degradation:</strong> Reduced radar performance under certain conditions</li>
+            <li><strong>Gun pods:</strong> Optional external gun pods</li>
             <li><strong>Special capabilities:</strong> Defensive Wheel, Spot Jamming, SAR recon, laser designation</li>
-            <li><strong>Mission restrictions:</strong> Zoom climb limitations, ordnance restrictions</li>
+            <li><strong>Performance restrictions:</strong> Zoom climb limitations, ordnance restrictions</li>
             <li><strong>Multirole designation:</strong> Can perform multiple mission types</li>
         </ul>
 
-        <h3>Practical Uses</h3>
-        <ul>
-            <li><strong>Scenario Planning:</strong> Compare aircraft capabilities when designing custom scenarios</li>
-            <li><strong>Quick Reference:</strong> Look up stats during gameplay without searching through rulebooks</li>
-            <li><strong>Learning:</strong> Study different aircraft to understand their strengths and weaknesses</li>
-            <li><strong>Verification:</strong> Cross-check generated flight sheets against source data</li>
-            <li><strong>House Rules:</strong> Use accurate baseline data when creating variants or modifications</li>
-        </ul>
-
+        
         <div class="note">
             <strong>Note:</strong> The Aircraft Data Reference displays raw data from the game. The OOB Generator applies this data along with note processing and mission-specific modifications to create complete flight sheets.
         </div>
@@ -536,13 +517,14 @@
 
     <div class="tool-section" id="aircraft-notes">
         <h2>Aircraft Notes Reference</h2>
-        <p>Digital version of notes listed from aircraft data cards.</p>
+        <p>Digital version of notes listed from aircraft data charts.</p>
 
         <h3>Using the Reference</h3>
         <ul>
             <li>Browse notes by nation</li>
             <li>Search for specific note codes</li>
             <li>View detailed explanations and game effects</li>
+            <li>Each module has its own set of notes, but a universal notes reference is included on the main page</li>
         </ul>
     </div>
 
