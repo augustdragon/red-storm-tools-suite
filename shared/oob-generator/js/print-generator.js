@@ -488,14 +488,28 @@ class PrintGenerator {
     }
     
     // Wrap CSAR cards in container with page break if needed
+    // Group CSAR cards into rows of 4 (2 rows in 2-column grid)
     if (hasCSAR) {
       console.log(`[PAGE BREAK] CSAR container - isLastNATOFlight: ${isLastNATOFlight}, applying break: ${!!isLastNATOFlight}`);
-      if (isLastNATOFlight) {
-        // Wrap in an outer div for page break control (grid containers can interfere with page breaks)
-        allCardsHTML = `<div style="page-break-after: always !important; break-after: page !important;" class="page-break-after-nato">\n<div class="csar-container">\n${allCardsHTML}\n</div>\n</div>\n`;
-      } else {
-        allCardsHTML = `<div class="csar-container">\n${allCardsHTML}\n</div>\n`;
+      
+      // Split cards into groups of 4 for better printing
+      const csarCards = allCardsHTML.match(/<div class="compact-csar-card">[\s\S]*?<\/div>\s*<\/div>/g) || [];
+      const groupSize = 4;
+      let groupedHTML = '';
+      
+      for (let i = 0; i < csarCards.length; i += groupSize) {
+        const group = csarCards.slice(i, i + groupSize);
+        const isLastGroup = i + groupSize >= csarCards.length;
+        const needsPageBreak = isLastNATOFlight && isLastGroup;
+        
+        if (needsPageBreak) {
+          groupedHTML += `<div style="page-break-after: always !important; break-after: page !important;" class="page-break-after-nato">\n<div class="csar-container">\n${group.join('\n')}\n</div>\n</div>\n`;
+        } else {
+          groupedHTML += `<div class="csar-container">\n${group.join('\n')}\n</div>\n`;
+        }
       }
+      
+      allCardsHTML = groupedHTML;
     }
     
     return allCardsHTML;
