@@ -88,8 +88,7 @@ class WPTableK2 extends BaseTableProcessor {
         flightSize: flightSize,
         flightCount: flightCount,
         type: taskingDisplay,
-        tasking: taskingDisplay,
-        ordnance: type === 'Rescue Support' ? 'Air-to-Ground' : 'None'
+        tasking: taskingDisplay
       });
     }
 
