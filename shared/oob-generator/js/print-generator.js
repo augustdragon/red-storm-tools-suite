@@ -486,12 +486,18 @@ class PrintGenerator {
         
         // Close container after 4 cards or if this is the last card
         if (csarCardCount === csarGroupSize || isLastCard) {
+          allCardsHTML += '</div>\n';
+          
+          // Apply page break wrapper if this is the last NATO flight and last CSAR card
           const needsPageBreak = isLastNATOFlight && isLastCard;
           if (needsPageBreak) {
-            allCardsHTML += '</div>\n<div style="page-break-after: always !important; break-after: page !important;" class="page-break-after-nato"></div>\n';
-          } else {
-            allCardsHTML += '</div>\n';
+            // Wrap the last container in a page break div
+            const lastContainerStart = allCardsHTML.lastIndexOf('<div class="csar-container">');
+            const beforeContainer = allCardsHTML.substring(0, lastContainerStart);
+            const container = allCardsHTML.substring(lastContainerStart);
+            allCardsHTML = beforeContainer + '<div style="page-break-after: always !important; break-after: page !important;" class="page-break-after-nato">\n' + container + '</div>\n';
           }
+          
           csarCardCount = 0;
         }
       } else {
@@ -511,11 +517,16 @@ class PrintGenerator {
     
     // Close any unclosed CSAR container (shouldn't happen but safety check)
     if (hasCSAR && csarCardCount > 0) {
+      allCardsHTML += '</div>\n';
+      
+      // Apply page break if needed
       const needsPageBreak = isLastNATOFlight;
       if (needsPageBreak) {
-        allCardsHTML += '</div>\n<div style="page-break-after: always !important; break-after: page !important;" class="page-break-after-nato"></div>\n';
-      } else {
-        allCardsHTML += '</div>\n';
+        // Wrap the last container in a page break div
+        const lastContainerStart = allCardsHTML.lastIndexOf('<div class="csar-container">');
+        const beforeContainer = allCardsHTML.substring(0, lastContainerStart);
+        const container = allCardsHTML.substring(lastContainerStart);
+        allCardsHTML = beforeContainer + '<div style="page-break-after: always !important; break-after: page !important;" class="page-break-after-nato">\n' + container + '</div>\n';
       }
     }
     
