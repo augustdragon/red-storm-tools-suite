@@ -79,17 +79,18 @@ class WPTableK2 extends BaseTableProcessor {
       const taskingDisplay = type === 'CSAR' ? 'CSAR' : 'Rescue Support';
       resultLines.push(`${flightCount} x {${flightSize}} ${aircraftType}, ${taskingDisplay}`);
 
-      // Build flight records for flight sheet generation
-      for (let i = 1; i <= flightCount; i++) {
-        flights.push({
-          faction: 'WP',
-          nationality: 'GDR',
-          aircraft: aircraftType,
-          flightSize: flightSize,
-          tasking: taskingDisplay,
-          ordnance: type === 'Rescue Support' ? 'Air-to-Ground' : 'None'
-        });
-      }
+      // Build single flight record per flight type (not per individual flight)
+      flights.push({
+        text: `${flightCount} x {${flightSize}} ${aircraftType}, ${taskingDisplay}`,
+        faction: 'WP',
+        nationality: 'GDR',
+        aircraftType: aircraftType,
+        flightSize: flightSize,
+        flightCount: flightCount,
+        type: taskingDisplay,
+        tasking: taskingDisplay,
+        ordnance: type === 'Rescue Support' ? 'Air-to-Ground' : 'None'
+      });
     }
 
     // Combine all results with line breaks (like RS Table K)
