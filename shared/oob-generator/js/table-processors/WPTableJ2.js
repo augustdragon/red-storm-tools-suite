@@ -24,7 +24,6 @@ class WPTableJ2 extends BaseTableProcessor {
    */
   process(params) {
     const taskingResults = [];
-    const flights = [];
     const debugRolls = [];
     const taskingOrder = ['Escort Jamming', 'Close Escort', 'Deep Strike', 'Recon'];
 
@@ -48,56 +47,17 @@ class WPTableJ2 extends BaseTableProcessor {
       const aircraftType = aircraftResult.aircraftType;
       debugRolls.push(aircraftResult.aircraftRollDebug);
 
-      // Determine ordnance and build individual flight records
-      const flightLines = [];
-      for (let i = 1; i <= flightCount; i++) {
-        let ordnance = 'Air-to-Air';
-        
-        if (taskingName === 'Escort Jamming') {
-          ordnance = 'Jamming';
-        } else if (taskingName === 'Recon') {
-          ordnance = 'Air-to-Air Only';
-        } else if (taskingName === 'Deep Strike') {
-          const ordnanceRolls = this.tableData.ordnanceRolls['Deep Strike'];
-          if (ordnanceRolls) {
-            const ordnanceResult = this.rollForOrdnance(ordnanceRolls, `${taskingName} Flight ${i} Ordnance`);
-            if (ordnanceResult.error) {
-              return {
-                text: `Error: ${ordnanceResult.error}`,
-                error: ordnanceResult.error
-              };
-            }
-            ordnance = ordnanceResult.ordnanceType;
-            debugRolls.push(ordnanceResult.ordnanceRollDebug);
-          }
-        }
-        
-        // Build flight record for flight sheet generation
-        flights.push({
-          faction: 'WP',
-          nationality: 'USSR',
-          aircraft: aircraftType,
-          flightSize: flightSize,
-          tasking: taskingName === 'Deep Strike' ? 'Bombing' : taskingName,
-          ordnance: ordnance,
-          sourceTable: 'J2'
-        });
-
-        // Build individual flight line with ordnance display
-        const taskingDisplay = taskingName === 'Deep Strike' ? 'Bombing' : taskingName;
-        const ordnanceDisplay = ordnance && ordnance !== 'Air-to-Air' && ordnance !== 'Jamming' && ordnance !== 'Air-to-Air Only'
-          ? ` (${ordnance})`
-          : '';
-        const flightLine = `1 x {${flightSize}} USSR ${aircraftType}, ${taskingDisplay}${ordnanceDisplay}`;
-        flightLines.push(flightLine);
-      }
-
-      // Add all flight lines to results
-      flightLines.forEach(line => {
-        taskingResults.push({
-          tasking: taskingName === 'Deep Strike' ? 'Bombing' : taskingName,
-          text: line
-        });
+      // Group flights like RS Table J (no ordnance display per rules)
+      const taskingDisplay = taskingName === 'Deep Strike' ? 'Bombing' : taskingName;
+      const groupedText = `${flightCount} x {${flightSize}} USSR ${aircraftType}, ${taskingDisplay}`;
+      
+      taskingResults.push({
+        tasking: taskingDisplay,
+        text: groupedText,
+        nationality: 'USSR',
+        aircraftType: aircraftType,
+        flightSize: flightSize,
+        flightCount: flightCount
       });
     }
 
@@ -112,36 +72,9 @@ class WPTableJ2 extends BaseTableProcessor {
       faction: 'WP',
       nationality: 'USSR',
       taskings: taskingResults,
-      flights: flights,
       debugRolls: debugRolls,
       ordnanceNote: this.tableData.ordnanceNote || null,
       additionalNote: this.tableData.additionalNote || null
-    };
-  }
-
-  /**
-   * Roll for ordnance availability
-   */
-  rollForOrdnance(ordnanceRolls, rollName) {
-    const roll = makeDebugRoll(10, rollName);
-    const rollValue = roll.roll;
-
-    // Find matching ordnance range
-    for (const [range, ordnanceType] of Object.entries(ordnanceRolls)) {
-      const [min, max] = this.parseRange(range);
-      if (rollValue >= min && rollValue <= max) {
-        return {
-          ordnanceType: ordnanceType,
-          ordnanceRoll: rollValue,
-          ordnanceRollDebug: roll.debug
-        };
-      }
-    }
-
-    return {
-      error: `No ordnance found for roll ${rollValue}`,
-      ordnanceRoll: rollValue,
-      ordnanceRollDebug: roll.debug
     };
   }
 }
