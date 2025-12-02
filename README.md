@@ -58,7 +58,7 @@ A comprehensive web-based tool suite for the Red Storm and Baltic Approaches boa
   - Large Chits: [1,2,2,2,3,3,4,4,4,5]
 - **Random Draw with Replacement**: Simulates real game mechanics
 - **Visual Chit Display**: Shows drawn value and type (SM/LG)
-- **Tracks chit pull history 
+- **Tracks chit pull history**
 
 ## Technical Details
 
