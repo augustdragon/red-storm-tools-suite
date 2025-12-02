@@ -185,34 +185,27 @@ class PrintGenerator {
     let tasking = flight.tasking || '';
     let rolledOrdnance = '';
     
+    // Determine if this tasking should display ordnance
+    // Only air-to-ground attack missions show ordnance on flight cards
+    const ordnanceTaskings = ['SEAD', 'Bombing', 'Strike', 'Deep Strike', 'Naval Strike', 'Rescue Support'];
+    const shouldShowOrdnance = ordnanceTaskings.some(t => tasking.includes(t));
+    
     // Process ordnance from structured data - filter out base "Bombs/CBU/Rockets"
-    if (flight.ordnance) {
+    if (flight.ordnance && shouldShowOrdnance) {
       const fullOrdnance = flight.ordnance;
-      
-      // Filter out non-displayable ordnance values (air-to-air, none, etc.)
-      const nonDisplayableOrdnance = [
-        'Bombs/CBU/Rockets',
-        'Air-to-Air',
-        'Air-to-Air Only',
-        'None',
-        'Maritime',
-        'Jamming',
-        'Air-to-Ground'
-      ];
       
       if (fullOrdnance.includes('+')) {
         // Split on '+' and remove "Bombs/CBU/Rockets", keep additional ordnance
         const parts = fullOrdnance.split('+').map(p => p.trim());
         const additionalParts = parts.filter(part => 
           part !== 'Bombs/CBU/Rockets' && 
-          part !== '' && 
-          !nonDisplayableOrdnance.includes(part)
+          part !== ''
         );
         if (additionalParts.length > 0) {
           rolledOrdnance = '+' + additionalParts.join(' +');
         }
-      } else if (!nonDisplayableOrdnance.includes(fullOrdnance)) {
-        // Single ordnance that should be displayed
+      } else if (fullOrdnance !== 'Bombs/CBU/Rockets') {
+        // Single ordnance that's not just base load
         rolledOrdnance = fullOrdnance;
       }
     }
