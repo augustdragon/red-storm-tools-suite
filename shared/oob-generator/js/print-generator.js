@@ -315,7 +315,8 @@ class PrintGenerator {
     // Extract ordnance if not provided (structured data takes priority)
     if (!rolledOrdnance && !isBalticFormat) {
       // Red Storm format text parsing fallback
-      const ordnanceMatch = resultText.match(/\(([^)]+)\)/);
+      // Only match parentheses that appear after a comma (indicating ordnance, not aircraft variant)
+      const ordnanceMatch = resultText.match(/,\s*[^,]+\s*\(([^)]+)\)/);
       if (ordnanceMatch) {
         const fullOrdnance = ordnanceMatch[1].trim();
         // Extract additional ordnance beyond the base load
