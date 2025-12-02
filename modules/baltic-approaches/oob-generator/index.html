@@ -1019,7 +1019,7 @@
         });
         
         // Wrap all aircraft entries in a highlighted box
-        html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin: 0 15px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3);">`;
+        html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3);">`;
         
         for (const [nationRange, nationData] of sortedNations) {
           const aircraftEntries = Object.entries(nationData.aircraft);
@@ -1052,7 +1052,7 @@
         const hasSingleAircraft = aircraftEntries.length === 1 && aircraftEntries[0][0] === '1-10';
         
         // Wrap aircraft entries in a highlighted box
-        html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin: 0 15px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3);">`;
+        html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3);">`;
         
         if (hasSingleAircraft) {
           const aircraftType = aircraftEntries[0][1];
