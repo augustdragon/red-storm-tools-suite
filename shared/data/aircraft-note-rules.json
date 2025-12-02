@@ -240,7 +240,7 @@
                "module":  "RS"
            },
     "_created":  "2025-11-21",
-    "USSR":  {
+    "USSR_RS":  {
                  "A":  {
                            "description":  "No IRM/R-27 if tasked with Bombing, SEAD, Rescue Support, or Chaff Laying",
                            "type":  "weaponRestriction",
