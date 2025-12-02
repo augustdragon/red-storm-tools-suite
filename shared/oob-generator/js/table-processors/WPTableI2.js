@@ -119,21 +119,21 @@ class WPTableI2 extends BaseTableProcessor {
       const flightSize = taskingFlights[0].flightSize;
       
       if (taskingName === 'Close Escort') {
-        // Close Escort: Grouped format like RS for display
-        const aircraftList = taskingFlights.map(f => f.aircraft).join(', ');
-        resultLines.push(`1 x {${flightSize}} ${nationality} ${aircraftList}, ${taskingName}`);
+        // Close Escort: Grouped format like RS Table I
+        const flightCount = taskingFlights.length;
+        const aircraftType = taskingFlights[0].aircraft;
+        const groupedText = `${flightCount} x {${flightSize}} ${nationality} ${aircraftType}, ${taskingName}`;
+        resultLines.push(groupedText);
         
-        // Add individual flights to taskings array for flight sheet generation
-        for (const flight of taskingFlights) {
-          taskingResults.push({
-            tasking: taskingName,
-            text: `1 x {${flightSize}} ${nationality} ${flight.aircraft}, ${taskingName}`,
-            nationality: nationality,
-            aircraftType: flight.aircraft,
-            flightSize: flightSize,
-            flightCount: 1
-          });
-        }
+        // Add single grouped entry to taskings array
+        taskingResults.push({
+          tasking: taskingName,
+          text: groupedText,
+          nationality: nationality,
+          aircraftType: aircraftType,
+          flightSize: flightSize,
+          flightCount: flightCount
+        });
       } else {
         // SEAD and Bombing: Individual flights with ordnance, nationality prefix like Table C
         for (const flight of taskingFlights) {
