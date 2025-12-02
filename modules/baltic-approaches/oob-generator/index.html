@@ -765,11 +765,19 @@
               const hasSingleAircraft = sortedAircraft.length === 1 && sortedAircraft[0][0] === '1-10';
               
               for (const [range, type] of sortedAircraft) {
+                // Add superscript 2 for specific aircraft based on date range
+                let displayType = type;
+                if ((dateRange === '15-20 May' && type.includes('F-35XD')) ||
+                    (dateRange === '21-31 May' && (type.includes('F-35XD') || type.includes('Jaguar GR1A'))) ||
+                    (dateRange === '1-15 June' && type.includes('Jaguar GR1A'))) {
+                  displayType = type + '<sup>2</sup>';
+                }
+                
                 if (hasSingleAircraft) {
                   // Don't show the "1-10:" prefix for single aircraft types
-                  html += `<div class="aircraft-item">${type}</div>`;
+                  html += `<div class="aircraft-item">${displayType}</div>`;
                 } else {
-                  html += `<div class="aircraft-item">${range}: ${type}</div>`;
+                  html += `<div class="aircraft-item">${range}: ${displayType}</div>`;
                 }
               }
               
@@ -784,16 +792,16 @@
         
         // Add ordnance table at the end
         html += `<div style="margin-top: 15px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 4px; font-size: 14px;">`;
-        html += `<div style="font-weight: bold; margin-bottom: 8px;">SEAD flights may change task to CAP as soon as all air-to-ground ordnance is expended or jettisoned.</div>`;
-        html += `<div style="font-weight: bold; margin-bottom: 8px; margin-top: 12px;">Ordnance Available. Roll for each SEAD<sup>3</sup> or Bombing:</div>`;
+        html += `<div style="font-weight: bold; margin-bottom: 8px; margin-top: 12px;">Ordnance Available. Roll for each fight tasked with SEAD<sup>3</sup> or Bombing:</div>`;
         html += `<div style="margin-left: 15px;">`;
         html += `<div>1-4: Bombs/CBU/Rockets</div>`;
         html += `<div>5-7: Above plus EOGM</div>`;
         html += `<div>8-10: Above plus LGB/EOGB</div>`;
         html += `</div>`;
         html += `<div style="margin-top: 10px; font-size: 14px; font-style: italic; color: #aaa; line-height: 1.4;">`;
-        html += `<div><sup>1</sup> If generated for SEAD, type may not also do Bombing mission</div>`;
-        html += `<div><sup>2</sup> SEAD flights may always carry ARMs, if capable.</div>`;
+        html += `<div><sup>1</sup> SEAD flights may change task to CAP as soon as all air-to-ground ordnance is expended or jettisoned.</div>`;
+        html += `<div><sup>2</sup> If generated for SEAD, type may not also do Bombing mission</div>`;
+        html += `<div><sup>3</sup> SEAD flights may always carry ARMs, if capable.</div>`;
         html += `</div>`;
         html += `</div>`;
       }
