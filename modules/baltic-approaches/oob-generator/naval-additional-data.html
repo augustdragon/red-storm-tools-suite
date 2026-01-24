@@ -76,7 +76,9 @@
             border-radius: 4px;
             font-size: 16px;
             transition: all 0.3s ease;
-            margin-left: 20px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
         
         body.dark-theme .theme-toggle {
@@ -104,6 +106,7 @@
             margin-bottom: 20px;
             border-bottom: 3px solid #3498db;
             box-shadow: 0 2px 4px var(--shadow);
+            position: relative;
         }
         
         .header h1 {
@@ -263,9 +266,8 @@
     </div>
     
     <div class="header">
-        <h1>Additional Naval Data
-            <button id="themeToggle" class="theme-toggle" title="Toggle dark mode" style="float: right; margin-top: -5px;">🌙</button>
-        </h1>
+        <button id="themeToggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
+        <h1>Additional Naval Data</h1>
         <p>Surface-to-Surface Missiles, Sub-Target Damage, and Unit Notes</p>
     </div>
     
