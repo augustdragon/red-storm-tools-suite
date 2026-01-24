@@ -3,7 +3,6 @@
   "_version": "1.0.0",
   "_created": "2026-01-24",
   "_description": "Naval unit specifications for Baltic Approaches Warsaw Pact forces.",
-  
   "Kynda (CG)": {
     "Nation": "USSR",
     "Dmg": 17,
@@ -29,11 +28,11 @@
     },
     "capabilities": {
       "SSM": "3M44",
-      "Ammo": 8
+      "Ammo": 8,
+      "Helo": null
     },
     "Notes": "A"
   },
-  
   "Sverdlov (CL)": {
     "Nation": "USSR",
     "Dmg": 50,
@@ -59,11 +58,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Sovremenny (DDG)": {
     "Nation": "USSR",
     "Dmg": 22,
@@ -89,11 +88,11 @@
     },
     "capabilities": {
       "SSM": "3M80",
-      "Ammo": 8
+      "Ammo": 8,
+      "Helo": null
     },
     "Notes": "A, C"
   },
-  
   "Kashin Mod (DDG)": {
     "Nation": "USSR",
     "Dmg": 16,
@@ -119,11 +118,11 @@
     },
     "capabilities": {
       "SSM": "P-15M",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": "A"
   },
-  
   "Kashin (DDG)": {
     "Nation": "USSR",
     "Dmg": 14,
@@ -149,11 +148,11 @@
     },
     "capabilities": {
       "SSM": "Helo",
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": "A"
   },
-  
   "Kanin (DDG)": {
     "Nation": "USSR",
     "Dmg": 15,
@@ -179,11 +178,11 @@
     },
     "capabilities": {
       "SSM": "Helo",
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": "A"
   },
-  
   "Kildin Mod (DD)": {
     "Nation": "USSR",
     "Dmg": 13,
@@ -209,11 +208,11 @@
     },
     "capabilities": {
       "SSM": "P-15M",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Kotlin (DD)": {
     "Nation": "USSR",
     "Dmg": 13,
@@ -239,11 +238,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Krivak I/II (FFG)": {
     "Nation": "USSR",
     "Dmg": 12,
@@ -269,11 +268,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": "A, B"
   },
-  
   "Grisha III (FFL)": {
     "Nation": "USSR",
     "Dmg": 6,
@@ -299,11 +298,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": "A, B"
   },
-  
   "Koni I (FFL)": {
     "Nation": "GDR",
     "Dmg": 9,
@@ -329,11 +328,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": "A, B"
   },
-  
   "Nanuchka I (FFL)": {
     "Nation": "USSR",
     "Dmg": 4,
@@ -359,11 +358,11 @@
     },
     "capabilities": {
       "SSM": "P-120",
-      "Ammo": 6
+      "Ammo": 6,
+      "Helo": null
     },
     "Notes": "A, B"
   },
-  
   "Nanuchka II (FFL)": {
     "Nation": "USSR",
     "Dmg": 4,
@@ -389,11 +388,11 @@
     },
     "capabilities": {
       "SSM": "P-120",
-      "Ammo": 6
+      "Ammo": 6,
+      "Helo": null
     },
     "Notes": "A, B"
   },
-  
   "Parchim I (FFL)": {
     "Nation": "GDR",
     "Dmg": 6,
@@ -419,11 +418,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Parchim II (FFL)": {
     "Nation": "USSR",
     "Dmg": 6,
@@ -449,11 +448,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Pauk I (FFL)": {
     "Nation": "USSR",
     "Dmg": 4,
@@ -479,11 +478,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Riga (FFL)": {
     "Nation": "USSR",
     "Dmg": 7,
@@ -509,11 +508,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Tarantul I (FFL)": {
     "Nation": "POL, GDR",
     "Dmg": 4,
@@ -539,11 +538,11 @@
     },
     "capabilities": {
       "SSM": "P-15M",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Tarantul II (FFL)": {
     "Nation": "USSR",
     "Dmg": 4,
@@ -569,11 +568,11 @@
     },
     "capabilities": {
       "SSM": "P-15M",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Tarantul III (FFL)": {
     "Nation": "USSR",
     "Dmg": 4,
@@ -599,11 +598,11 @@
     },
     "capabilities": {
       "SSM": "3M80",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Osa I (PCM)": {
     "Nation": "USSR, POL, GDR",
     "Dmg": 2,
@@ -629,11 +628,11 @@
     },
     "capabilities": {
       "SSM": "P-15U",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Osa II (PCM)": {
     "Nation": "USSR",
     "Dmg": 2,
@@ -659,11 +658,11 @@
     },
     "capabilities": {
       "SSM": "P-15M",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Alligator (LST)": {
     "Nation": "USSR",
     "Dmg": 11,
@@ -689,11 +688,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Frosch I (LST)": {
     "Nation": "GDR",
     "Dmg": 5,
@@ -719,11 +718,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Polnocny B (LST)": {
     "Nation": "USSR, POL",
     "Dmg": 5,
@@ -749,11 +748,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Ropucha I (LST)": {
     "Nation": "USSR",
     "Dmg": 12,
@@ -779,11 +778,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Minesweepers (MS)": {
     "Nation": "USSR, POL, GDR",
     "Dmg": 4,
@@ -809,11 +808,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": "D"
   },
-  
   "Cargo (MV)": {
     "Nation": "USSR, POL, GDR",
     "Dmg": 24,
@@ -839,7 +838,8 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   }

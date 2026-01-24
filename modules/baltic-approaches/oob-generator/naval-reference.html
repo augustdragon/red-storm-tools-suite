@@ -515,15 +515,32 @@
                 
                 // Helper function to format capabilities
                 const formatCapabilities = (cap) => {
-                    if (!cap || (!cap.SSM && !cap.Ammo)) {
+                    if (!cap || (!cap.SSM && !cap.Ammo && !cap.Helo)) {
                         return '<span class="null-value">—</span>';
                     }
+                    let parts = [];
+                    
+                    // Add SSM info
                     if (cap.SSM && cap.Ammo) {
-                        return cap.SSM + ' x ' + cap.Ammo;
+                        parts.push(cap.SSM + ' x ' + cap.Ammo);
                     } else if (cap.SSM) {
-                        return cap.SSM;
+                        parts.push(cap.SSM);
                     }
-                    return '<span class="null-value">—</span>';
+                    
+                    // Add Helo info
+                    if (cap.Helo) {
+                        parts.push('Helo: ' + cap.Helo);
+                    }
+                    
+                    if (parts.length === 0) {
+                        return '<span class="null-value">—</span>';
+                    }
+                    
+                    // If multiple capabilities, show on separate lines
+                    if (parts.length > 1) {
+                        return '<div class="multi-line">' + parts.map(p => '<div>' + p + '</div>').join('') + '</div>';
+                    }
+                    return parts[0];
                 };
                 
                 // Helper function to format notes with tooltips

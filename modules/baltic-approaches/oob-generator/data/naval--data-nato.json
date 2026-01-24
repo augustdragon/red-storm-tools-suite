@@ -3,7 +3,6 @@
   "_version": "1.0.0",
   "_created": "2026-01-24",
   "_description": "Naval unit specifications for Baltic Approaches NATO forces.",
-  
   "O.H. Perry (FFG)": {
     "Nation": "USA",
     "Dmg": 16,
@@ -29,11 +28,11 @@
     },
     "capabilities": {
       "SSM": "Harpoon",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": "C, D"
   },
-  
   "Knox (FF)": {
     "Nation": "USA",
     "Dmg": 15,
@@ -59,11 +58,11 @@
     },
     "capabilities": {
       "SSM": "Harpoon",
-      "Ammo": 2
+      "Ammo": 2,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Minesweeper (MS)": {
     "Nation": "All",
     "Dmg": 3,
@@ -89,11 +88,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": "B"
   },
-  
   "Cargo (MV)": {
     "Nation": "All",
     "Dmg": 24,
@@ -119,11 +118,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Niels Juel (FFL)": {
     "Nation": "DK",
     "Dmg": 6,
@@ -149,11 +148,11 @@
     },
     "capabilities": {
       "SSM": "Harpoon",
-      "Ammo": 8
+      "Ammo": 8,
+      "Helo": null
     },
     "Notes": "D"
   },
-  
   "Peder Skram (FFG)": {
     "Nation": "DK",
     "Dmg": 13,
@@ -179,11 +178,11 @@
     },
     "capabilities": {
       "SSM": "Harpoon",
-      "Ammo": 8
+      "Ammo": 8,
+      "Helo": null
     },
     "Notes": "D"
   },
-  
   "Willemoes (PCM)": {
     "Nation": "DK",
     "Dmg": 3,
@@ -209,11 +208,11 @@
     },
     "capabilities": {
       "SSM": "Harpoon",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Falster (ML)": {
     "Nation": "DK",
     "Dmg": 6,
@@ -239,11 +238,11 @@
     },
     "capabilities": {
       "SSM": "Minelaying",
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Lindormen (ML)": {
     "Nation": "DK",
     "Dmg": 3,
@@ -269,11 +268,11 @@
     },
     "capabilities": {
       "SSM": "Minelaying",
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Lütjens (DDG)": {
     "Nation": "FRG",
     "Dmg": 16,
@@ -299,11 +298,11 @@
     },
     "capabilities": {
       "SSM": "Harpoon",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": "C, D"
   },
-  
   "Hamburg (DDG)": {
     "Nation": "FRG",
     "Dmg": 16,
@@ -329,11 +328,11 @@
     },
     "capabilities": {
       "SSM": "Exocet",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Bremen (FFG)": {
     "Nation": "FRG",
     "Dmg": 14,
@@ -355,15 +354,15 @@
     "V": "NA",
     "AAA": {
       "AAA1": "Radar AAA (M)",
-      "AAA2": "Helo"
+      "AAA2": null
     },
     "capabilities": {
       "SSM": "Harpoon",
-      "Ammo": 8
+      "Ammo": 8,
+      "Helo": "Lynx"
     },
     "Notes": "D"
   },
-  
   "Köln (FF)": {
     "Nation": "FRG",
     "Dmg": 12,
@@ -389,11 +388,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Thetis (FFL)": {
     "Nation": "FRG",
     "Dmg": 6,
@@ -419,11 +418,11 @@
     },
     "capabilities": {
       "SSM": null,
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Sachsenwald (ML)": {
     "Nation": "FRG",
     "Dmg": 12,
@@ -449,11 +448,11 @@
     },
     "capabilities": {
       "SSM": "Minelaying",
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Gepard (PCM)": {
     "Nation": "FRG",
     "Dmg": 3,
@@ -479,11 +478,11 @@
     },
     "capabilities": {
       "SSM": "Exocet",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Albatros (PCM)": {
     "Nation": "FRG",
     "Dmg": 3,
@@ -509,11 +508,11 @@
     },
     "capabilities": {
       "SSM": "Exocet",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Tiger (PCM)": {
     "Nation": "FRG",
     "Dmg": 3,
@@ -539,11 +538,11 @@
     },
     "capabilities": {
       "SSM": "Exocet",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Jacob van H. (FFG)": {
     "Nation": "NE",
     "Dmg": 14,
@@ -569,11 +568,11 @@
     },
     "capabilities": {
       "SSM": "Harpoon",
-      "Ammo": 8
+      "Ammo": 8,
+      "Helo": null
     },
     "Notes": "C, D"
   },
-  
   "Kortenaer (FF)": {
     "Nation": "NE",
     "Dmg": 14,
@@ -593,18 +592,7 @@
     "M": "-1",
     "H": "NA",
     "V": "NA",
-    "AAA": {
-      "AAA1": "Radar AAA (M)",
-      "AAA2": "Light AAA"
-    },
-    "capabilities": {
-      "SSM": "Harpoon",
-      "Ammo": 8
-    },
-    "Notes": "D"
-  },
-  
-  "Stockholm (FFL)": {
+    \"AAA\": {\n      \"AAA1\": \"Radar AAA (M)\",\n      \"AAA2\": \"Light AAA\"\n    },\n    \"capabilities\": {\n      \"SSM\": \"Harpoon\",\n      \"Ammo\": 8,\n      \"Helo\": \"Lynx\"\n    },\n    \"Notes\": \"D\"\n  },\n  \"Stockholm (FFL)\": {
     "Nation": "SE",
     "Dmg": 4,
     "Size": "S",
@@ -629,11 +617,11 @@
     },
     "capabilities": {
       "SSM": "RBS-15",
-      "Ammo": 8
+      "Ammo": 8,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Norrkoping (PCM)": {
     "Nation": "SE",
     "Dmg": 3,
@@ -659,11 +647,11 @@
     },
     "capabilities": {
       "SSM": "RBS-15",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Hugin (PCM)": {
     "Nation": "SE",
     "Dmg": 2,
@@ -689,11 +677,11 @@
     },
     "capabilities": {
       "SSM": "Penguin",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Älvsborg (ML)": {
     "Nation": "SE",
     "Dmg": 5,
@@ -719,11 +707,11 @@
     },
     "capabilities": {
       "SSM": "Minelaying",
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Type 42 (DDG)": {
     "Nation": "UK",
     "Dmg": 16,
@@ -749,11 +737,11 @@
     },
     "capabilities": {
       "SSM": "Helo",
-      "Ammo": null
+      "Ammo": null,
+      "Helo": null
     },
     "Notes": null
   },
-  
   "Type 22/1 (FF)": {
     "Nation": "UK",
     "Dmg": 14,
@@ -779,7 +767,8 @@
     },
     "capabilities": {
       "SSM": "Exocet",
-      "Ammo": 4
+      "Ammo": 4,
+      "Helo": null
     },
     "Notes": "A, D"
   }
