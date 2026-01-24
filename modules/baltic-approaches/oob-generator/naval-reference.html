@@ -280,6 +280,71 @@
             visibility: visible;
         }
         
+        /* SSM tooltip styles */
+        .ssm-link {
+            color: #2980b9;
+            cursor: help;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            position: relative;
+        }
+        
+        body.dark-theme .ssm-link {
+            color: #5dade2;
+        }
+        
+        .ssm-tooltip {
+            visibility: hidden;
+            position: absolute;
+            z-index: 1000;
+            background-color: #2c3e50;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: calc(100% + 8px);
+            min-width: 300px;
+        }
+        
+        .ssm-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #2c3e50 transparent transparent transparent;
+        }
+        
+        .ssm-link:hover .ssm-tooltip {
+            visibility: visible;
+        }
+        
+        .ssm-tooltip-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 3px 0;
+            padding: 2px 0;
+        }
+        
+        .ssm-tooltip-row:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .ssm-tooltip-label {
+            font-weight: bold;
+            margin-right: 12px;
+        }
+        
+        .ssm-tooltip-value {
+            text-align: right;
+        }
+        
         .null-value {
             color: var(--null-text);
             font-style: italic;
@@ -475,14 +540,20 @@
     
     <script>
         let navalNotesData = {};
+        let ssmDataNATO = {};
+        let ssmDataWP = {};
         
         // Load all data
         Promise.all([
             fetch('data/naval-data-nato.json').then(r => r.json()),
             fetch('data/naval-data-wp.json').then(r => r.json()),
-            fetch('data/naval-note-rules.json').then(r => r.json())
-        ]).then(([natoData, wpData, notesData]) => {
+            fetch('data/naval-note-rules.json').then(r => r.json()),
+            fetch('data/ssm-data-nato.json').then(r => r.json()),
+            fetch('data/ssm-data-wp.json').then(r => r.json())
+        ]).then(([natoData, wpData, notesData, ssmNATO, ssmWP]) => {
             navalNotesData = notesData;
+            ssmDataNATO = ssmNATO;
+            ssmDataWP = ssmWP;
             renderNavalTable('nato-tbody', natoData, 'NATO');
             renderNavalTable('wp-tbody', wpData, 'WP');
         }).catch(error => {
@@ -538,17 +609,17 @@
                 };
                 
                 // Helper function to format capabilities
-                const formatCapabilities = (cap) => {
+                const formatCapabilities = (cap, faction) => {
                     if (!cap || (!cap.SSM && !cap.Ammo && !cap.Helo)) {
                         return '<span class="null-value">—</span>';
                     }
                     let parts = [];
                     
-                    // Add SSM info
+                    // Add SSM info with tooltip
                     if (cap.SSM && cap.Ammo) {
-                        parts.push(cap.SSM + ' x ' + cap.Ammo);
+                        parts.push(createSSMTooltip(cap.SSM, faction) + ' x ' + cap.Ammo);
                     } else if (cap.SSM) {
-                        parts.push(cap.SSM);
+                        parts.push(createSSMTooltip(cap.SSM, faction));
                     }
                     
                     // Add Helo info
@@ -565,6 +636,61 @@
                         return '<div class="multi-line">' + parts.map(p => '<div>' + p + '</div>').join('') + '</div>';
                     }
                     return parts[0];
+                };
+                
+                // Helper function to create SSM tooltip
+                const createSSMTooltip = (ssmName, faction) => {
+                    const ssmData = faction === 'NATO' ? ssmDataNATO : ssmDataWP;
+                    const ssm = ssmData[ssmName];
+                    
+                    if (!ssm) {
+                        return ssmName; // Return plain text if no data found
+                    }
+                    
+                    const tooltipContent = `
+                        <div class="ssm-tooltip-row">
+                            <span class="ssm-tooltip-label">Type:</span>
+                            <span class="ssm-tooltip-value">${ssmName}</span>
+                        </div>
+                        <div class="ssm-tooltip-row">
+                            <span class="ssm-tooltip-label">Range:</span>
+                            <span class="ssm-tooltip-value">${ssm.Rng} hex</span>
+                        </div>
+                        <div class="ssm-tooltip-row">
+                            <span class="ssm-tooltip-label">Min:</span>
+                            <span class="ssm-tooltip-value">${ssm.Min} hex</span>
+                        </div>
+                        <div class="ssm-tooltip-row">
+                            <span class="ssm-tooltip-label">Speed:</span>
+                            <span class="ssm-tooltip-value">${ssm.Spd}</span>
+                        </div>
+                        <div class="ssm-tooltip-row">
+                            <span class="ssm-tooltip-label">Altitude:</span>
+                            <span class="ssm-tooltip-value">${ssm.Alt}</span>
+                        </div>
+                        <div class="ssm-tooltip-row">
+                            <span class="ssm-tooltip-label">Dmg Mod:</span>
+                            <span class="ssm-tooltip-value">${ssm.DmgMod}</span>
+                        </div>
+                        <div class="ssm-tooltip-row">
+                            <span class="ssm-tooltip-label">EW:</span>
+                            <span class="ssm-tooltip-value">${ssm.EW}</span>
+                        </div>
+                        <div class="ssm-tooltip-row">
+                            <span class="ssm-tooltip-label">Sight:</span>
+                            <span class="ssm-tooltip-value">${ssm.Sight}</span>
+                        </div>
+                        <div class="ssm-tooltip-row">
+                            <span class="ssm-tooltip-label">Size:</span>
+                            <span class="ssm-tooltip-value">${ssm.Size}</span>
+                        </div>
+                        <div class="ssm-tooltip-row">
+                            <span class="ssm-tooltip-label">Profile:</span>
+                            <span class="ssm-tooltip-value">${ssm.AttackProfile}</span>
+                        </div>
+                    `;
+                    
+                    return `<span class="ssm-link">${ssmName}<span class="ssm-tooltip">${tooltipContent}</span></span>`;
                 };
                 
                 // Helper function to format notes with tooltips
@@ -601,7 +727,7 @@
                     <td>${formatValue(ship.H)}</td>
                     <td>${formatValue(ship.V)}</td>
                     <td>${formatAAA(ship.AAA)}</td>
-                    <td>${formatCapabilities(ship.capabilities)}</td>
+                    <td>${formatCapabilities(ship.capabilities, faction)}</td>
                     <td>${formatNotes(ship.Notes)}</td>
                 `;
                 
