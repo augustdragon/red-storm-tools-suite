@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baltic Approaches - Additional Naval Data</title>
+    <link rel="stylesheet" href="css/ba-theme.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #e8ecef;
+            max-width: 1200px;
+        }
+        
+        .header {
+            background-color: #4a5d6d;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        
+        h2.wp-heading {
+            border-bottom-color: #e74c3c;
+        }
+        
+        h3 {
+            color: #34495e;
+            margin-top: 25px;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: #4a5d6d;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .nato-row {
+            border-left: 4px solid #3498db;
+        }
+        
+        .wp-row {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .notes-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .note-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+        }
+        
+        .note-item.wp-note {
+            border-left-color: #e74c3c;
+        }
+        
+        .note-letter {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .note-letter.wp {
+            background-color: #e74c3c;
+        }
+        
+        .table-reference {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+        
+        .back-nav {
+            margin-bottom: 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: #4a5d6d;
+            text-decoration: none;
+            padding: 8px 16px;
+            background-color: #d0d8dd;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .back-link:hover {
+            background-color: #c0c8cd;
+        }
+        
+        .footnote {
+            font-size: 0.9em;
+            font-style: italic;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="back-nav">
+        <a href="naval-reference.html" class="back-link">← Back to Naval Reference</a>
+    </div>
+    
+    <div class="header">
+        <h1>Additional Naval Data</h1>
+        <p>Surface-to-Surface Missiles, Sub-Target Damage, and Unit Notes</p>
+    </div>
+    
+    <h2>NATO Surface-to-Surface Missile Table [35.9]</h2>
+    <p class="table-reference">Reference: Rule 35.9 - Surface-to-Surface Missile Attacks</p>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Rng</th>
+                    <th>Min</th>
+                    <th>Spd</th>
+                    <th>Alt</th>
+                    <th>Dmg Mod</th>
+                    <th>EW</th>
+                    <th>Sight</th>
+                    <th>Size</th>
+                    <th>Attack Profile</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="nato-row">
+                    <td><strong>Harpoon</strong></td>
+                    <td>22</td>
+                    <td>2</td>
+                    <td>4</td>
+                    <td>Deck</td>
+                    <td>+1</td>
+                    <td>C</td>
+                    <td>+2</td>
+                    <td>S</td>
+                    <td>Level at Deck</td>
+                </tr>
+                <tr class="nato-row">
+                    <td><strong>Exocet</strong></td>
+                    <td>10</td>
+                    <td>2</td>
+                    <td>4</td>
+                    <td>Deck</td>
+                    <td>+0</td>
+                    <td>B</td>
+                    <td>+1</td>
+                    <td>S</td>
+                    <td>Level at Deck</td>
+                </tr>
+                <tr class="nato-row">
+                    <td><strong>RB-08</strong></td>
+                    <td>13</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>Low</td>
+                    <td>+1</td>
+                    <td>A</td>
+                    <td>+0</td>
+                    <td>L</td>
+                    <td>Dive at Low</td>
+                </tr>
+                <tr class="nato-row">
+                    <td><strong>RBS-15</strong></td>
+                    <td>20</td>
+                    <td>2</td>
+                    <td>4</td>
+                    <td>Deck</td>
+                    <td>+1</td>
+                    <td>B</td>
+                    <td>+2</td>
+                    <td>S</td>
+                    <td>Level at Deck</td>
+                </tr>
+                <tr class="nato-row">
+                    <td><strong>Penguin</strong></td>
+                    <td>4</td>
+                    <td>2</td>
+                    <td>4</td>
+                    <td>Deck</td>
+                    <td>-1</td>
+                    <td>B</td>
+                    <td>+2</td>
+                    <td>S</td>
+                    <td>Level at Deck</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h2 class="wp-heading">Warsaw Pact Surface-to-Surface Missile Table [35.9]</h2>
+    <p class="table-reference">Reference: Rule 35.9 - Surface-to-Surface Missile Attacks</p>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Rng</th>
+                    <th>Min</th>
+                    <th>Spd</th>
+                    <th>Alt</th>
+                    <th>Dmg Mod</th>
+                    <th>EW</th>
+                    <th>Sight</th>
+                    <th>Size</th>
+                    <th>Attack Profile</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="wp-row">
+                    <td><strong>P-15U (SS-N-2B)</strong></td>
+                    <td>10</td>
+                    <td>2</td>
+                    <td>4</td>
+                    <td>Low</td>
+                    <td>+2</td>
+                    <td>A</td>
+                    <td>+0</td>
+                    <td>L</td>
+                    <td>Dive at Low</td>
+                </tr>
+                <tr class="wp-row">
+                    <td><strong>P-15M (SS-N-2C)</strong></td>
+                    <td>18</td>
+                    <td>2</td>
+                    <td>4</td>
+                    <td>Low</td>
+                    <td>+2</td>
+                    <td>B</td>
+                    <td>+0</td>
+                    <td>L</td>
+                    <td>Dive at Low</td>
+                </tr>
+                <tr class="wp-row">
+                    <td><strong>3M44 (SS-N-3D)</strong></td>
+                    <td>60</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>Med</td>
+                    <td>+4</td>
+                    <td>B</td>
+                    <td>+0</td>
+                    <td>L</td>
+                    <td>Dive at Med</td>
+                </tr>
+                <tr class="wp-row">
+                    <td><strong>P-120 (SS-N-9)</strong></td>
+                    <td>26</td>
+                    <td>2</td>
+                    <td>4</td>
+                    <td>Low</td>
+                    <td>+2</td>
+                    <td>B</td>
+                    <td>+1</td>
+                    <td>S</td>
+                    <td>Dive at Low</td>
+                </tr>
+                <tr class="wp-row">
+                    <td><strong>3M80 (SS-N-22)</strong></td>
+                    <td>20</td>
+                    <td>3</td>
+                    <td>10</td>
+                    <td>Deck</td>
+                    <td>+2</td>
+                    <td>C</td>
+                    <td>+2</td>
+                    <td>S</td>
+                    <td>Level at Deck</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="footnote">For all WP SSM: Data Relay Required at ≥ 3 Hex Range [35.94].</p>
+    </div>
+    
+    <h2>Naval Unit Sub-Target Damage Table [35.82]</h2>
+    <p class="table-reference">Reference: Rule 35.82 - Sub-Target Damage</p>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Target Class</th>
+                    <th>EWR</th>
+                    <th>SAM*</th>
+                    <th>AAA*</th>
+                    <th>SSM</th>
+                    <th>Hull</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>A</strong></td>
+                    <td>1</td>
+                    <td>2-4</td>
+                    <td>5-6</td>
+                    <td>7</td>
+                    <td>8+</td>
+                </tr>
+                <tr>
+                    <td><strong>B</strong></td>
+                    <td>1</td>
+                    <td>2-4</td>
+                    <td>5-6</td>
+                    <td></td>
+                    <td>7+</td>
+                </tr>
+                <tr>
+                    <td><strong>C</strong></td>
+                    <td>1</td>
+                    <td></td>
+                    <td>2-3</td>
+                    <td>4</td>
+                    <td>5+</td>
+                </tr>
+                <tr>
+                    <td><strong>D</strong></td>
+                    <td>1</td>
+                    <td></td>
+                    <td>2-3</td>
+                    <td></td>
+                    <td>4+</td>
+                </tr>
+                <tr>
+                    <td><strong>E</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td>1-2</td>
+                    <td>3</td>
+                    <td>4+</td>
+                </tr>
+                <tr>
+                    <td><strong>F</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td>1-2</td>
+                    <td></td>
+                    <td>3+</td>
+                </tr>
+                <tr>
+                    <td><strong>G</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>All</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="footnote">* Randomly determine which SAM or AAA is hit.</p>
+    </div>
+    
+    <h2>NATO Naval Unit Notes</h2>
+    <div class="notes-section">
+        <div class="note-item">
+            <span class="note-letter">A</span>
+            <strong>SAM EQ Tracking:</strong> SAM may use EQ Tracking [15.54].
+        </div>
+        <div class="note-item">
+            <span class="note-letter">B</span>
+            <strong>Mine Warfare Ships:</strong> Various classes of mine warfare ships in NATO navies.
+        </div>
+        <div class="note-item">
+            <span class="note-letter">C</span>
+            <strong>Anti-Radar SAM:</strong> May conduct Anti-Radar SAM attacks [15.53].
+        </div>
+        <div class="note-item">
+            <span class="note-letter">D</span>
+            <strong>Helicopter Engagement:</strong> SAM may acquire and attack helicopters [25.0] at Deck altitude.
+        </div>
+    </div>
+    
+    <h2 class="wp-heading">Warsaw Pact Naval Unit Notes</h2>
+    <div class="notes-section">
+        <div class="note-item wp-note">
+            <span class="note-letter wp">A</span>
+            <strong>Helicopter Engagement:</strong> SAM may acquire and attack helicopters [25.0] at Deck altitude.
+        </div>
+        <div class="note-item wp-note">
+            <span class="note-letter wp">B</span>
+            <strong>SA-N-4 EO Tracking:</strong> SA-N-4 EO Tracking capability.
+        </div>
+        <div class="note-item wp-note">
+            <span class="note-letter wp">C</span>
+            <strong>Anti-Radar SAM:</strong> May conduct Anti-Radar SAM attacks [15.53].
+        </div>
+        <div class="note-item wp-note">
+            <span class="note-letter wp">D</span>
+            <strong>Mine Warfare Ships:</strong> Various classes of mine warfare ships: Yurka, Natya, Kondor II, Schwalbe, Gaidro, Krogule, etc.
+        </div>
+    </div>
+    
+    <div class="back-nav">
+        <a href="naval-reference.html" class="back-link">← Back to Naval Reference</a>
+    </div>
+</body>
+</html>

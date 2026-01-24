@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baltic Approaches - Naval Reference</title>
+    <link rel="stylesheet" href="css/ba-theme.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #e8ecef;
+            max-width: 100%;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background-color: #4a5d6d;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+        }
+        
+        .header-buttons {
+            margin-top: 15px;
+        }
+        
+        .header-button {
+            display: inline-block;
+            background-color: #6a8a9a;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .header-button:hover {
+            background-color: #7a9aaa;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        
+        h2.wp-heading {
+            border-bottom-color: #e74c3c;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+        
+        th {
+            background-color: #4a5d6d;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 0.9em;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        /* Nation color coding */
+        .nation-USA {
+            border-left: 4px solid #002868;
+        }
+        
+        .nation-DK {
+            border-left: 4px solid #C60C30;
+        }
+        
+        .nation-FRG {
+            border-left: 4px solid #000000;
+        }
+        
+        .nation-UK {
+            border-left: 4px solid #012169;
+        }
+        
+        .nation-NE {
+            border-left: 4px solid #FF9B00;
+        }
+        
+        .nation-SE {
+            border-left: 4px solid #006AA7;
+        }
+        
+        .nation-Atl {
+            border-left: 4px solid #7f8c8d;
+        }
+        
+        .nation-USSR {
+            border-left: 4px solid #DA291C;
+        }
+        
+        .nation-POL {
+            border-left: 4px solid #DC143C;
+        }
+        
+        .nation-GDR {
+            border-left: 4px solid #DD0000;
+        }
+        
+        /* Note tooltips */
+        .note-letter {
+            display: inline-block;
+            margin: 0 2px;
+            padding: 2px 4px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 3px;
+            font-weight: bold;
+            cursor: help;
+            position: relative;
+            font-size: 0.85em;
+        }
+        
+        .note-letter:hover {
+            background-color: #2980b9;
+        }
+        
+        .note-tooltip {
+            visibility: hidden;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: normal;
+            white-space: normal;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            width: 250px;
+            text-align: left;
+        }
+        
+        .note-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #2c3e50;
+        }
+        
+        .note-letter:hover .note-tooltip {
+            visibility: visible;
+        }
+        
+        .null-value {
+            color: #bdc3c7;
+            font-style: italic;
+        }
+        
+        .multi-line {
+            line-height: 1.6;
+        }
+        
+        .multi-line div {
+            margin: 2px 0;
+        }
+        
+        .back-nav {
+            margin-bottom: 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: #4a5d6d;
+            text-decoration: none;
+            padding: 8px 16px;
+            background-color: #d0d8dd;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .back-link:hover {
+            background-color: #c0c8cd;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            th, td {
+                padding: 8px 4px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-nav">
+            <a href="../index.html" class="back-link">← Back to Baltic Approaches</a>
+        </div>
+        
+        <div class="header">
+            <h1>Naval Reference</h1>
+            <p>Complete ship data for Baltic Approaches NATO and Warsaw Pact forces</p>
+            <div class="header-buttons">
+                <a href="naval-additional-data.html" class="header-button">Additional Naval Data</a>
+                <a href="aircraft-data-reference.html" class="header-button">Aircraft Reference</a>
+            </div>
+        </div>
+        
+        <h2>NATO Naval Units</h2>
+        <div class="table-container">
+            <table id="nato-table">
+                <thead>
+                    <tr>
+                        <th>Ship</th>
+                        <th>Nation</th>
+                        <th>Dmg</th>
+                        <th>Size</th>
+                        <th>Tgt</th>
+                        <th>EW</th>
+                        <th>EWR</th>
+                        <th>SAM</th>
+                        <th>Shots</th>
+                        <th>LOAL</th>
+                        <th>Acq</th>
+                        <th>Atk</th>
+                        <th>Min</th>
+                        <th>Long</th>
+                        <th>D</th>
+                        <th>L</th>
+                        <th>M</th>
+                        <th>H</th>
+                        <th>V</th>
+                        <th>AAA</th>
+                        <th>Capabilities</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="nato-tbody">
+                    <!-- NATO ships will be loaded here via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <h2 class="wp-heading">Warsaw Pact Naval Units</h2>
+        <div class="table-container">
+            <table id="wp-table">
+                <thead>
+                    <tr>
+                        <th>Ship</th>
+                        <th>Nation</th>
+                        <th>Dmg</th>
+                        <th>Size</th>
+                        <th>Tgt</th>
+                        <th>EW</th>
+                        <th>EWR</th>
+                        <th>SAM</th>
+                        <th>Shots</th>
+                        <th>LOAL</th>
+                        <th>Acq</th>
+                        <th>Atk</th>
+                        <th>Min</th>
+                        <th>Long</th>
+                        <th>D</th>
+                        <th>L</th>
+                        <th>M</th>
+                        <th>H</th>
+                        <th>V</th>
+                        <th>AAA</th>
+                        <th>Capabilities</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="wp-tbody">
+                    <!-- WP ships will be loaded here via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        let navalNotesData = {};
+        
+        // Load all data
+        Promise.all([
+            fetch('data/naval--data-nato.json').then(r => r.json()),
+            fetch('data/naval--data-wp.json').then(r => r.json()),
+            fetch('data/naval-note-rules.json').then(r => r.json())
+        ]).then(([natoData, wpData, notesData]) => {
+            navalNotesData = notesData;
+            renderNavalTable('nato-tbody', natoData, 'NATO');
+            renderNavalTable('wp-tbody', wpData, 'WP');
+        }).catch(error => {
+            console.error('Error loading naval data:', error);
+        });
+        
+        function renderNavalTable(tbodyId, data, faction) {
+            const tbody = document.getElementById(tbodyId);
+            tbody.innerHTML = '';
+            
+            // Filter out metadata fields
+            const ships = Object.keys(data).filter(key => !key.startsWith('_'));
+            
+            ships.forEach(shipName => {
+                const ship = data[shipName];
+                const row = document.createElement('tr');
+                
+                // Determine nation class for color coding
+                let nationClass = 'nation-' + ship.Nation.split(',')[0].trim();
+                row.className = nationClass;
+                
+                // Helper function to format value
+                const formatValue = (val) => {
+                    if (val === null || val === undefined) {
+                        return '<span class="null-value">—</span>';
+                    }
+                    return val;
+                };
+                
+                // Helper function to format AAA
+                const formatAAA = (aaa) => {
+                    if (!aaa) return '<span class="null-value">—</span>';
+                    let lines = [];
+                    if (aaa.AAA1) lines.push(aaa.AAA1);
+                    if (aaa.AAA2) lines.push(aaa.AAA2);
+                    if (lines.length === 0) return '<span class="null-value">—</span>';
+                    return '<div class="multi-line">' + lines.map(l => '<div>' + l + '</div>').join('') + '</div>';
+                };
+                
+                // Helper function to format capabilities
+                const formatCapabilities = (cap) => {
+                    if (!cap || (!cap.SSM && !cap.Ammo)) {
+                        return '<span class="null-value">—</span>';
+                    }
+                    if (cap.SSM && cap.Ammo) {
+                        return cap.SSM + ' x ' + cap.Ammo;
+                    } else if (cap.SSM) {
+                        return cap.SSM;
+                    }
+                    return '<span class="null-value">—</span>';
+                };
+                
+                // Helper function to format notes with tooltips
+                const formatNotes = (notes) => {
+                    if (!notes) return '<span class="null-value">—</span>';
+                    const noteLetters = notes.split(',').map(n => n.trim());
+                    const factionNotes = navalNotesData[faction] || {};
+                    
+                    return noteLetters.map(letter => {
+                        const noteObj = factionNotes[letter];
+                        const noteText = noteObj ? noteObj.description : 'No description available';
+                        return `<span class="note-letter">${letter}<span class="note-tooltip">${noteText}</span></span>`;
+                    }).join(' ');
+                };
+                
+                row.innerHTML = `
+                    <td><strong>${shipName}</strong></td>
+                    <td>${formatValue(ship.Nation)}</td>
+                    <td>${formatValue(ship.Dmg)}</td>
+                    <td>${formatValue(ship.Size)}</td>
+                    <td>${formatValue(ship.Tgt)}</td>
+                    <td>${formatValue(ship.EW)}</td>
+                    <td>${formatValue(ship.EWR)}</td>
+                    <td>${formatValue(ship.SAM)}</td>
+                    <td>${formatValue(ship.Shots)}</td>
+                    <td>${formatValue(ship.LOAL)}</td>
+                    <td>${formatValue(ship.Acq)}</td>
+                    <td>${formatValue(ship.Atk)}</td>
+                    <td>${formatValue(ship.Min)}</td>
+                    <td>${formatValue(ship.Long)}</td>
+                    <td>${formatValue(ship.D)}</td>
+                    <td>${formatValue(ship.L)}</td>
+                    <td>${formatValue(ship.M)}</td>
+                    <td>${formatValue(ship.H)}</td>
+                    <td>${formatValue(ship.V)}</td>
+                    <td>${formatAAA(ship.AAA)}</td>
+                    <td>${formatCapabilities(ship.capabilities)}</td>
+                    <td>${formatNotes(ship.Notes)}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>

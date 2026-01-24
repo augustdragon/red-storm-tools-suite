@@ -140,6 +140,8 @@ nationality-test.html
 **/task-*.md
 MULTI-MODULE-IMPLEMENTATION.md
 aircraft-id-plan.md
+docs/*.md
+docs/**/*.md
 
 # Development scripts
 *.ps1

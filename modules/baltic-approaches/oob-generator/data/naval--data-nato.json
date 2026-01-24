@@ -1,45 +1,786 @@
 {
-    "_Comment": "Baltic Approaches NATO naval unit data",
-    "_version": "1.0.0",
-    "_created": "2025-11-28",
-    "_description": "Naval unit specifications for Baltic Approaches NATO forces.",
-     
-    
-    "Niels Juel (FFL)":
-        {"Nation": "DK",
-        "Dmg": 6,
-        "Size": "S",
-        "Tgt": "A",
-        "EW": "B",
-        "EWR": {
-                "name": "AWS-5",
-                "range": "[20/10/8]"
-        },
-        "SAM": {
-                "SAM1": "RIM-7M",
-                "Ammo1": 40,
-                "SAM2": null,
-                "Ammo2": null
-                },
-        "LOAL": "L",
-        "Acq": 6,
-        "Atk": 4,
-        "Min": 0,
-        "Long": "4",
-        "D":"+1",
-        "L":"0",
-        "M":"-1",
-        "H":"NA",
-        "V":"NA",
-        "AAA": {
-                "AAA1": "Radar AAA(M)",
-                "AAA2": null
-            },
-        "capabilities": {
-                "SSM": "Harpoon",
-                "Ammo": 8
-          },                
-        "Notes": "D"        
-      }
-
-     }
+  "_Comment": "Baltic Approaches NATO naval unit data",
+  "_version": "1.0.0",
+  "_created": "2026-01-24",
+  "_description": "Naval unit specifications for Baltic Approaches NATO forces.",
+  
+  "O.H. Perry (FFG)": {
+    "Nation": "USA",
+    "Dmg": 16,
+    "Size": "M",
+    "Tgt": "A",
+    "EW": "C",
+    "EWR": "SPS-49 [40/20/8]",
+    "SAM": "SM-1MR (18)",
+    "Shots": null,
+    "LOAL": "L",
+    "Acq": 15,
+    "Atk": 8,
+    "Min": 1,
+    "Long": "7-8",
+    "D": "0",
+    "L": "+1",
+    "M": "+1",
+    "H": "0",
+    "V": "-2",
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": "Close Defense (4)"
+    },
+    "capabilities": {
+      "SSM": "Harpoon",
+      "Ammo": 4
+    },
+    "Notes": "C, D"
+  },
+  
+  "Knox (FF)": {
+    "Nation": "USA",
+    "Dmg": 15,
+    "Size": "M",
+    "Tgt": "A",
+    "EW": "B",
+    "EWR": "SPS-40 [30/15/8]",
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Radar AAA (H)",
+      "AAA2": "Close Defense (4)"
+    },
+    "capabilities": {
+      "SSM": "Harpoon",
+      "Ammo": 2
+    },
+    "Notes": null
+  },
+  
+  "Minesweeper (MS)": {
+    "Nation": "Atl",
+    "Dmg": 3,
+    "Size": "S",
+    "Tgt": "F",
+    "EW": null,
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Light AAA",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": null,
+      "Ammo": null
+    },
+    "Notes": "B"
+  },
+  
+  "Cargo (MV)": {
+    "Nation": "Atl",
+    "Dmg": 24,
+    "Size": "L",
+    "Tgt": "G",
+    "EW": null,
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": null,
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": null,
+      "Ammo": null
+    },
+    "Notes": null
+  },
+  
+  "Niels Juel (FFL)": {
+    "Nation": "DK",
+    "Dmg": 6,
+    "Size": "S",
+    "Tgt": "A",
+    "EW": "B",
+    "EWR": "AWS-5 [20/10/8]",
+    "SAM": "RIM-7M (40)",
+    "Shots": null,
+    "LOAL": "L",
+    "Acq": 6,
+    "Atk": 4,
+    "Min": 0,
+    "Long": "4",
+    "D": "+1",
+    "L": "0",
+    "M": "-1",
+    "H": "NA",
+    "V": "NA",
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": "Harpoon",
+      "Ammo": 8
+    },
+    "Notes": "D"
+  },
+  
+  "Peder Skram (FFG)": {
+    "Nation": "DK",
+    "Dmg": 13,
+    "Size": "M",
+    "Tgt": "A",
+    "EW": "B",
+    "EWR": "SA-G29 [34/20/8]",
+    "SAM": "RIM-7M (16)",
+    "Shots": 4,
+    "LOAL": "L",
+    "Acq": 6,
+    "Atk": 4,
+    "Min": 0,
+    "Long": "4",
+    "D": "+1",
+    "L": "0",
+    "M": "-1",
+    "H": "NA",
+    "V": "NA",
+    "AAA": {
+      "AAA1": "Radar AAA (H)",
+      "AAA2": "Light AAA"
+    },
+    "capabilities": {
+      "SSM": "Harpoon",
+      "Ammo": 8
+    },
+    "Notes": "D"
+  },
+  
+  "Willemoes (PCM)": {
+    "Nation": "DK",
+    "Dmg": 3,
+    "Size": "S",
+    "Tgt": "E",
+    "EW": "B",
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": "Harpoon",
+      "Ammo": 4
+    },
+    "Notes": null
+  },
+  
+  "Falster (ML)": {
+    "Nation": "DK",
+    "Dmg": 6,
+    "Size": "M",
+    "Tgt": "F",
+    "EW": "B",
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": "Light AAA"
+    },
+    "capabilities": {
+      "SSM": null,
+      "Ammo": null
+    },
+    "Notes": "Minelaying"
+  },
+  
+  "Lindormen (ML)": {
+    "Nation": "DK",
+    "Dmg": 3,
+    "Size": "S",
+    "Tgt": "F",
+    "EW": "A",
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Light AAA",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": null,
+      "Ammo": null
+    },
+    "Notes": "Minelaying"
+  },
+  
+  "Lütjens (DDG)": {
+    "Nation": "FRG",
+    "Dmg": 16,
+    "Size": "M",
+    "Tgt": "A",
+    "EW": "C",
+    "EWR": "SPS-40 [30/15/8]",
+    "SAM": "SM-1MR (18)",
+    "Shots": null,
+    "LOAL": "L",
+    "Acq": 15,
+    "Atk": 8,
+    "Min": 1,
+    "Long": "7-8",
+    "D": "0",
+    "L": "+1",
+    "M": "+1",
+    "H": "0",
+    "V": "-2",
+    "AAA": {
+      "AAA1": "Radar AAA (H)",
+      "AAA2": "Light AAA"
+    },
+    "capabilities": {
+      "SSM": "Harpoon",
+      "Ammo": 4
+    },
+    "Notes": "C, D"
+  },
+  
+  "Hamburg (DDG)": {
+    "Nation": "FRG",
+    "Dmg": 16,
+    "Size": "M",
+    "Tgt": "C",
+    "EW": "A",
+    "EWR": "LW-04 [36/18/8]",
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Radar AAA (H)",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": "Exocet",
+      "Ammo": 4
+    },
+    "Notes": null
+  },
+  
+  "Bremen (FFG)": {
+    "Nation": "FRG",
+    "Dmg": 14,
+    "Size": "M",
+    "Tgt": "A",
+    "EW": "C",
+    "EWR": "DA-08 [32/16/8]",
+    "SAM": "RIM-7M (16)",
+    "Shots": 4,
+    "LOAL": "L",
+    "Acq": 6,
+    "Atk": 4,
+    "Min": 0,
+    "Long": "4",
+    "D": "+1",
+    "L": "0",
+    "M": "-1",
+    "H": "NA",
+    "V": "NA",
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": "Helo"
+    },
+    "capabilities": {
+      "SSM": "Harpoon",
+      "Ammo": 8
+    },
+    "Notes": "D"
+  },
+  
+  "Köln (FF)": {
+    "Nation": "FRG",
+    "Dmg": 12,
+    "Size": "M",
+    "Tgt": "D",
+    "EW": "A",
+    "EWR": "ZW-01 [12/6/6]",
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Med AAA",
+      "AAA2": "Light AAA"
+    },
+    "capabilities": {
+      "SSM": null,
+      "Ammo": null
+    },
+    "Notes": null
+  },
+  
+  "Thetis (FFL)": {
+    "Nation": "FRG",
+    "Dmg": 6,
+    "Size": "S",
+    "Tgt": "F",
+    "EW": null,
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Light AAA",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": null,
+      "Ammo": null
+    },
+    "Notes": null
+  },
+  
+  "Sachsenwald (ML)": {
+    "Nation": "FRG",
+    "Dmg": 12,
+    "Size": "M",
+    "Tgt": "F",
+    "EW": null,
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Light AAA",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": null,
+      "Ammo": null
+    },
+    "Notes": "Minelaying"
+  },
+  
+  "Gepard (PCM)": {
+    "Nation": "FRG",
+    "Dmg": 3,
+    "Size": "S",
+    "Tgt": "E",
+    "EW": "B",
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": "Exocet",
+      "Ammo": 4
+    },
+    "Notes": null
+  },
+  
+  "Albatros (PCM)": {
+    "Nation": "FRG",
+    "Dmg": 3,
+    "Size": "S",
+    "Tgt": "E",
+    "EW": "B",
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": "Exocet",
+      "Ammo": 4
+    },
+    "Notes": null
+  },
+  
+  "Tiger (PCM)": {
+    "Nation": "FRG",
+    "Dmg": 3,
+    "Size": "S",
+    "Tgt": "E",
+    "EW": "B",
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": "Exocet",
+      "Ammo": 4
+    },
+    "Notes": null
+  },
+  
+  "Jacob van H. (FFG)": {
+    "Nation": "NE",
+    "Dmg": 14,
+    "Size": "M",
+    "Tgt": "A",
+    "EW": "C",
+    "EWR": "DA-05 [32/16/8]",
+    "SAM": "SM-1MR (20)",
+    "Shots": null,
+    "LOAL": "L",
+    "Acq": 15,
+    "Atk": 8,
+    "Min": 1,
+    "Long": "7-8",
+    "D": "0",
+    "L": "+1",
+    "M": "+1",
+    "H": "0",
+    "V": "-2",
+    "AAA": {
+      "AAA1": "Light AAA",
+      "AAA2": "Close Defense (4)"
+    },
+    "capabilities": {
+      "SSM": "Harpoon",
+      "Ammo": 8
+    },
+    "Notes": "C, D"
+  },
+  
+  "Kortenaer (FF)": {
+    "Nation": "NE",
+    "Dmg": 14,
+    "Size": "M",
+    "Tgt": "A",
+    "EW": "B",
+    "EWR": "LW-08 [30/15/8]",
+    "SAM": "RIM-7M (16)",
+    "Shots": 4,
+    "LOAL": "L",
+    "Acq": 6,
+    "Atk": 4,
+    "Min": 0,
+    "Long": "4",
+    "D": "+1",
+    "L": "0",
+    "M": "-1",
+    "H": "NA",
+    "V": "NA",
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": "Light AAA"
+    },
+    "capabilities": {
+      "SSM": "Harpoon",
+      "Ammo": 8
+    },
+    "Notes": "D"
+  },
+  
+  "Stockholm (FFL)": {
+    "Nation": "SE",
+    "Dmg": 4,
+    "Size": "S",
+    "Tgt": "C",
+    "EW": null,
+    "EWR": "SG-50HC [10/8/8]",
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": "RBS-15",
+      "Ammo": 8
+    },
+    "Notes": null
+  },
+  
+  "Norrkoping (PCM)": {
+    "Nation": "SE",
+    "Dmg": 3,
+    "Size": "S",
+    "Tgt": "E",
+    "EW": "B",
+    "EWR": "SG-50HC [16/8/8]",
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": "RBS-15",
+      "Ammo": 4
+    },
+    "Notes": null
+  },
+  
+  "Hugin (PCM)": {
+    "Nation": "SE",
+    "Dmg": 2,
+    "Size": "S",
+    "Tgt": "E",
+    "EW": null,
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Light AAA",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": "Penguin",
+      "Ammo": 4
+    },
+    "Notes": null
+  },
+  
+  "Älvsborg (ML)": {
+    "Nation": "SE",
+    "Dmg": 5,
+    "Size": "S",
+    "Tgt": "F",
+    "EW": null,
+    "EWR": null,
+    "SAM": null,
+    "Shots": null,
+    "LOAL": null,
+    "Acq": null,
+    "Atk": null,
+    "Min": null,
+    "Long": null,
+    "D": null,
+    "L": null,
+    "M": null,
+    "H": null,
+    "V": null,
+    "AAA": {
+      "AAA1": "Light AAA",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": null,
+      "Ammo": null
+    },
+    "Notes": "Minelaying"
+  },
+  
+  "Type 42 (DDG)": {
+    "Nation": "UK",
+    "Dmg": 16,
+    "Size": "M",
+    "Tgt": "B",
+    "EW": "B",
+    "EWR": "Type 1022 [40/20/8]",
+    "SAM": "Sea Dart (11)",
+    "Shots": null,
+    "LOAL": "-",
+    "Acq": 16,
+    "Atk": 8,
+    "Min": 1,
+    "Long": "7-5",
+    "D": "NA",
+    "L": "+1",
+    "M": "-1",
+    "H": "0",
+    "V": "-2",
+    "AAA": {
+      "AAA1": "Radar AAA (H)",
+      "AAA2": "Close Defense (4)"
+    },
+    "capabilities": {
+      "SSM": "Helo",
+      "Ammo": null
+    },
+    "Notes": null
+  },
+  
+  "Type 22/1 (FF)": {
+    "Nation": "UK",
+    "Dmg": 14,
+    "Size": "M",
+    "Tgt": "A",
+    "EW": "C",
+    "EWR": "Type 967/968 [30/15/8]",
+    "SAM": "Sea Wolf (6)",
+    "Shots": null,
+    "LOAL": "L",
+    "Acq": 4,
+    "Atk": 2,
+    "Min": 0,
+    "Long": "2",
+    "D": "+1",
+    "L": "+0",
+    "M": "-1",
+    "H": "NA",
+    "V": "NA",
+    "AAA": {
+      "AAA1": "Med AAA",
+      "AAA2": null
+    },
+    "capabilities": {
+      "SSM": "Exocet",
+      "Ammo": 4
+    },
+    "Notes": "A, D"
+  }
+}
