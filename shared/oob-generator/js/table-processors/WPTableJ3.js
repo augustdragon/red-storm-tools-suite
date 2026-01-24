@@ -91,6 +91,8 @@ class WPTableJ3 extends BaseTableProcessor {
           faction: 'WP',
           nationality: nationality,
           aircraft: aircraftResult.aircraftType,
+          aircraftType: aircraftResult.aircraftType,
+          aircraftId: aircraftResult.aircraftId,
           flightSize: flightSize,
           tasking: type,
           ordnance: ordnance

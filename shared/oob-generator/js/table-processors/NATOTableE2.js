@@ -109,7 +109,13 @@ class NATOTableE2 extends BaseTableProcessor {
         };
       }
       
-      const aircraftType = hexType === 'sea' ? aircraft.sea : aircraft.land;
+      const aircraftEntry = hexType === 'sea' ? aircraft.sea : aircraft.land;
+      const aircraftType = (aircraftEntry && typeof aircraftEntry === 'object')
+        ? aircraftEntry.name
+        : aircraftEntry;
+      const aircraftId = (aircraftEntry && typeof aircraftEntry === 'object')
+        ? aircraftEntry.aircraftId
+        : null;
       const flightText = `${flightCount} x {${flightSize}} ${aircraftType}, ${type}`;
       
       return {
@@ -117,8 +123,10 @@ class NATOTableE2 extends BaseTableProcessor {
         type: type,
         nationality: nationality,
         aircraftType: aircraftType,
+        aircraftId: aircraftId,
         flightSize: flightSize,
         flightCount: flightCount,
+        tasking: type,
         hexType: hexType,
         debugRolls: [`${type} Aircraft: ${hexType} hex -> ${aircraftType}`]
       };
@@ -138,8 +146,10 @@ class NATOTableE2 extends BaseTableProcessor {
         type: type,
         nationality: nationality,
         aircraftType: aircraftResult.aircraftType,
+        aircraftId: aircraftResult.aircraftId,
         flightSize: flightSize,
         flightCount: flightCount,
+        tasking: type,
         debugRolls: [aircraftResult.aircraftRollDebug]
       };
     }
@@ -158,8 +168,10 @@ class NATOTableE2 extends BaseTableProcessor {
         type: type,
         nationality: nationality,
         aircraftType: aircraftResult.aircraftType,
+        aircraftId: aircraftResult.aircraftId,
         flightSize: flightSize,
         flightCount: flightCount,
+        tasking: type,
         debugRolls: [aircraftResult.aircraftRollDebug]
       };
     }

@@ -1197,6 +1197,7 @@
 // Legacy inline printable sheet removed; generatePrintableSheet now delegates to generateDetailedFlightSheet()
 
     // Generate Detailed Flight Sheet (Designer Style)
+    
     async function generateDetailedFlightSheet() {
       const state = getAppState();
       const results = state.results;
@@ -1206,110 +1207,35 @@
         return;
       }
       
-      // Sort flights by faction: NATO first, then WP
-      const sortedResults = [...results].sort((a, b) => {
-        if (a.faction === 'NATO' && b.faction === 'WP') return -1;
-        if (a.faction === 'WP' && b.faction === 'NATO') return 1;
-        return 0;
-      });
-      
-      // Load required data files
       try {
-        const [aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData] = await Promise.all([
-          fetch('data/aircraft-nato.json').then(r => r.json()),
-          fetch('data/aircraft-wp.json').then(r => r.json()),
-          fetch('data/aircraft-note-rules.json').then(r => r.json()),
-          fetch('data/weapons.json').then(r => r.json()),
-          fetch('data/aircraft-name-mapping.json').then(r => r.json())
-        ]);
+        const printGen = getPrintGenerator();
+        const dataFiles = await printGen.loadDataFiles();
+        const processedFlights = printGen.processFlights(results);
+        const { natoRegular, natoCSAR, wpRegular, wpCSAR } = printGen.sortFlights(processedFlights);
         
-        // Create print window
         const printWindow = window.open('', '_blank');
         if (!printWindow) {
           alert('Please allow pop-ups to generate flight sheets');
           return;
         }
         
-        // Generate HTML for all flights using designer layout
-        // First, split any multi-flight results into individual flight objects
-        const allIndividualFlights = [];
-        
-        for (const flight of sortedResults) {
-          const resultText = flight.result || flight.text || '';
-          
-          // Check if this is a multi-flight result (contains <br>)
-          if (resultText.includes('<br>') || resultText.includes(';')) {
-            console.log('Multi-flight result detected, splitting before grouping...');
-            const separator = resultText.includes('<br>') ? '<br>' : ';';
-            const flightParts = resultText.split(separator).map(part => part.trim()).filter(part => part.length > 0);
-            
-            // Create separate flight objects for each part
-            for (const flightPart of flightParts) {
-              allIndividualFlights.push({
-                ...flight,
-                result: flightPart,
-                text: flightPart
-              });
-            }
-          } else {
-            // Single flight, add as-is
-            allIndividualFlights.push(flight);
-          }
-        }
-        
-        console.log(`Split ${sortedResults.length} results into ${allIndividualFlights.length} individual flights`);
-        
-        // Now separate NATO and WP flights, then separate CSAR from regular within each faction
-        const natoRegular = [];
-        const natoCSAR = [];
-        const wpRegular = [];
-        const wpCSAR = [];
-        
-        for (const flight of allIndividualFlights) {
-          // Extract tasking from result text to determine if CSAR
-          const resultText = flight.result || flight.text || '';
-          const taskingMatch = resultText.match(/,\s*([^,<]+?)$/);
-          const tasking = taskingMatch ? taskingMatch[1].trim() : '';
-          const isCSAR = tasking === 'CSAR';
-          
-          console.log(`Sorting flight: "${resultText.substring(0, 60)}" -> tasking="${tasking}", isCSAR=${isCSAR}`);
-          
-          if (flight.faction === 'NATO') {
-            if (isCSAR) {
-              natoCSAR.push(flight);
-            } else {
-              natoRegular.push(flight);
-            }
-          } else {
-            if (isCSAR) {
-              wpCSAR.push(flight);
-            } else {
-              wpRegular.push(flight);
-            }
-          }
-        }
-        
-        console.log(`Generating flight cards: NATO(${natoRegular.length} regular, ${natoCSAR.length} CSAR), WP(${wpRegular.length} regular, ${wpCSAR.length} CSAR)`);
-        
         let flightCardsHTML = '';
+        const hasWPFlights = (wpRegular.length > 0 || wpCSAR.length > 0);
         
-        // Process NATO regular flights first
+        // Generate NATO regular flights first
         for (let i = 0; i < natoRegular.length; i++) {
           const flight = natoRegular[i];
-          
-          console.log('Processing NATO regular flight:', flight.result || flight.text);
-          
-          try {
-            const cardHTML = await generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
-            if (cardHTML && cardHTML.trim()) {
-              flightCardsHTML += cardHTML;
-              console.log('✓ Generated NATO regular card for:', (flight.result || flight.text).substring(0, 50));
-            } else {
-              console.warn('⚠ Empty card generated for:', flight.result || flight.text);
-            }
-          } catch (error) {
-            console.error('✗ Error generating card for:', flight.result || flight.text, error);
-          }
+          const isLastNATOFlight = hasWPFlights && (i === natoRegular.length - 1) && (natoCSAR.length === 0);
+          const cardHTML = await printGen.generateDesignerFlightCard(
+            flight,
+            dataFiles.aircraftNATO,
+            dataFiles.aircraftWP,
+            dataFiles.noteRules,
+            dataFiles.weapons,
+            dataFiles.nameMapping,
+            isLastNATOFlight
+          );
+          flightCardsHTML += cardHTML;
         }
         
         // Add NATO CSAR flights after NATO regular flights
@@ -1317,80 +1243,67 @@
           flightCardsHTML += '<div class="csar-container">';
           for (let i = 0; i < natoCSAR.length; i++) {
             const flight = natoCSAR[i];
-            console.log('Processing NATO CSAR flight:', flight.result || flight.text);
-            
-            try {
-              const cardHTML = await getPrintGenerator().generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
-              if (cardHTML && cardHTML.trim()) {
-                flightCardsHTML += cardHTML;
-                console.log('✓ Generated NATO CSAR card for:', (flight.result || flight.text).substring(0, 50));
-              } else {
-                console.warn('⚠ Empty card generated for:', flight.result || flight.text);
-              }
-            } catch (error) {
-              console.error('✗ Error generating NATO CSAR card for:', flight.result || flight.text, error);
-            }
+            const isLastNATOFlight = hasWPFlights && (i === natoCSAR.length - 1);
+            const cardHTML = await printGen.generateDesignerFlightCard(
+              flight,
+              dataFiles.aircraftNATO,
+              dataFiles.aircraftWP,
+              dataFiles.noteRules,
+              dataFiles.weapons,
+              dataFiles.nameMapping,
+              isLastNATOFlight
+            );
+            let unwrappedHTML = cardHTML;
+            unwrappedHTML = unwrappedHTML.replace(/<div class="csar-container"[^>]*>/g, '');
+            unwrappedHTML = unwrappedHTML.replace(/<\/div>\s*$/g, '');
+            flightCardsHTML += unwrappedHTML;
           }
           flightCardsHTML += '</div>';
         }
         
-        // Page break between NATO and WP
-        if (wpRegular.length > 0 || wpCSAR.length > 0) {
-          flightCardsHTML += '</div><div style="page-break-after: always;"></div><div class="flight-grid">';
-        }
-        
-        // Process WP regular flights
-        for (let i = 0; i < wpRegular.length; i++) {
-          const flight = wpRegular[i];
-          
-          console.log('Processing WP regular flight:', flight.result || flight.text);
-          
-          try {
-            const cardHTML = await getPrintGenerator().generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
-            if (cardHTML && cardHTML.trim()) {
-              flightCardsHTML += cardHTML;
-              console.log('✓ Generated WP regular card for:', (flight.result || flight.text).substring(0, 50));
-            } else {
-              console.warn('⚠ Empty card generated for:', flight.result || flight.text);
-            }
-          } catch (error) {
-            console.error('✗ Error generating card for:', flight.result || flight.text, error);
-          }
+        // Generate WP regular flights
+        for (const flight of wpRegular) {
+          const cardHTML = await printGen.generateDesignerFlightCard(
+            flight,
+            dataFiles.aircraftNATO,
+            dataFiles.aircraftWP,
+            dataFiles.noteRules,
+            dataFiles.weapons,
+            dataFiles.nameMapping,
+            false
+          );
+          flightCardsHTML += cardHTML;
         }
         
         // Add WP CSAR flights after WP regular flights
         if (wpCSAR.length > 0) {
           flightCardsHTML += '<div class="csar-container">';
-          for (let i = 0; i < wpCSAR.length; i++) {
-            const flight = wpCSAR[i];
-            console.log('Processing WP CSAR flight:', flight.result || flight.text);
-            
-            try {
-              const cardHTML = await getPrintGenerator().generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, false);
-              if (cardHTML && cardHTML.trim()) {
-                flightCardsHTML += cardHTML;
-                console.log('✓ Generated WP CSAR card for:', (flight.result || flight.text).substring(0, 50));
-              } else {
-                console.warn('⚠ Empty card generated for:', flight.result || flight.text);
-              }
-            } catch (error) {
-              console.error('✗ Error generating WP CSAR card for:', flight.result || flight.text, error);
-            }
+          for (const flight of wpCSAR) {
+            const cardHTML = await printGen.generateDesignerFlightCard(
+              flight,
+              dataFiles.aircraftNATO,
+              dataFiles.aircraftWP,
+              dataFiles.noteRules,
+              dataFiles.weapons,
+              dataFiles.nameMapping,
+              false
+            );
+            let unwrappedHTML = cardHTML;
+            unwrappedHTML = unwrappedHTML.replace(/<div class="csar-container"[^>]*>/g, '');
+            unwrappedHTML = unwrappedHTML.replace(/<\/div>\s*$/g, '');
+            flightCardsHTML += unwrappedHTML;
           }
           flightCardsHTML += '</div>';
         }
         
-        console.log(`Total cards generated: ${flightCardsHTML.length > 0 ? 'Success' : 'None'}`);
-        
-        // Write complete HTML document with designer styles
-        printWindow.document.write(getPrintGenerator().generateDesignerSheetHTML(flightCardsHTML));
+        printWindow.document.write(printGen.generateDesignerSheetHTML(flightCardsHTML));
         printWindow.document.close();
-        
       } catch (error) {
         console.error('Error loading data:', error);
         alert('Failed to load aircraft/weapons data. Check console for details.');
       }
     }
+
 
     function getMaxFlightSize(results) {
       let max = 2;
@@ -1399,235 +1312,6 @@
         if (flightSize > max) max = flightSize;
       }
       return Math.min(max, 6); // Cap at 6 aircraft per row
-    }
-
-    function generateFlightCard(flight) {
-      // Parse the result text to extract aircraft and flight info
-      // Example result format: "FRG: 1 x {2} F-4F, CAP"
-      // For multi-flight results (Table C): Individual flights separated by <br> tags
-      const resultText = flight.result || '';
-      const nationName = flight.nationName || '';
-      const tableName = flight.tableName || '';
-      
-      // Check if this is a multi-flight result (contains <br> or semicolons)
-      if (resultText.includes('<br>') || resultText.includes(';')) {
-        // Split by <br> or semicolon and generate separate cards for each flight
-        const separator = resultText.includes('<br>') ? '<br>' : ';';
-        const flightParts = resultText.split(separator).map(part => part.trim()).filter(part => part.length > 0);
-        let allCards = '';
-        
-        for (const flightPart of flightParts) {
-          // Create a temporary flight object for each part
-          const tempFlight = {
-            ...flight,
-            result: flightPart
-          };
-          allCards += generateSingleFlightCard(tempFlight);
-        }
-        
-        return allCards;
-      } else {
-        // Single flight - process normally
-        return generateSingleFlightCard(flight);
-      }
-    }
-    
-    function generateSingleFlightCard(flight) {
-      const resultText = flight.result || '';
-      const nationName = flight.nationName || '';
-      const tableName = flight.tableName || '';
-      const faction = flight.faction || 'NATO';
-      
-      // Extract aircraft type from result text
-      let aircraft = 'Unknown';
-      let flightSize = 4; // Default aircraft per flight
-      let numFlights = 1; // Default number of flights
-      let tasking = '';
-      let ordnance = '';
-      
-      // Try to parse flight multiplier and size from "4 x {2}" pattern
-      const flightSizeMatch = resultText.match(/(\d+)\s*x\s*\{(\d+)\}/);
-      if (flightSizeMatch) {
-        numFlights = parseInt(flightSizeMatch[1]); // Number of flights (4)
-        flightSize = parseInt(flightSizeMatch[2]); // Aircraft per flight (2)
-      }
-      
-      // Extract ordnance if present (text in parentheses)
-      const ordnanceMatch = resultText.match(/\(([^)]+)\)/);
-      if (ordnanceMatch) {
-        ordnance = ordnanceMatch[1].trim();
-      }
-      
-      // Extract aircraft type (everything after the } up to comma, excluding ordnance in parens)
-      const aircraftMatch = resultText.match(/\}\s*([^,\(<]+)/);
-      if (aircraftMatch) {
-        aircraft = aircraftMatch[1].trim();
-      }
-      
-      // For Table C format: "1 x {2} US F-4G" - nation is in the aircraft string
-      // Extract nation from aircraft string if it starts with a nation code
-      let extractedNation = nationName;
-      const nationInAircraft = aircraft.match(/^(US|UK|FRG|CAN|HOL|BEL|USSR|DDR|POL|CZE)\s+(.+)/);
-      if (nationInAircraft) {
-        extractedNation = nationInAircraft[1];
-        aircraft = nationInAircraft[2];
-      }
-      
-      // Extract tasking (everything after comma, before ordnance parens or debug info)
-      const taskingMatch = resultText.match(/,\s*([^<\(]+)/);
-      if (taskingMatch) {
-        tasking = taskingMatch[1].trim();
-      } else {
-        // Fallback: use table name if no explicit tasking
-        tasking = tableName.split(' - ')[1] || tableName;
-      }
-      
-      // Format aircraft display with nation
-      const aircraftDisplay = extractedNation ? `${aircraft} (${extractedNation})` : aircraft;
-      
-      // Generate multiple flight cards if needed (for results like "4 x {2}")
-      let allCards = '';
-      for (let flightNum = 0; flightNum < numFlights; flightNum++) {
-        let card = `
-    <div class="flight-card">
-      <!-- Header: Aircraft Type, Callsign, Counter, Aggression -->
-      <div class="flight-header">
-        <div class="field">
-          <div class="field-value">${escapeHtml(aircraftDisplay)}</div>
-        </div>
-        <div class="field">
-          <div class="field-label">Callsign</div>
-        </div>
-        <div class="field">
-          <div class="field-label">Counter</div>
-        </div>
-        <div class="field">
-          <div class="field-label">Aggression</div>
-        </div>
-      </div>
-      
-      <!-- Tasking and Fuel Row -->
-      <div class="tasking-fuel-row">
-        <div class="field">
-          <div class="field-value">${escapeHtml(tasking)}</div>
-        </div>
-        <div class="field">
-          <div class="field-label">Crew</div>
-        </div>
-        <div class="fuel-section">
-          <div class="fuel-label">Fuel:</div>
-          <div class="fuel-grid">
-`;
-
-        // Generate 18 fuel boxes in 2 rows of 9
-        for (let i = 0; i < 18; i++) {
-          card += `            <div class="fuel-box"></div>\n`;
-        }
-
-        card += `
-          </div>
-        </div>
-      </div>
-      
-      <!-- Aircraft Section -->
-      <div class="aircraft-section">
-`;
-
-        // Generate individual aircraft cards for this flight
-        for (let i = 0; i < flightSize; i++) {
-          card += `
-        <div class="aircraft-card">
-          <!-- Aircraft row with silhouette, health checkboxes, and weapons -->
-          <div class="aircraft-row">
-            <div class="aircraft-left">
-        <div class="aircraft-silhouette" style="width:60px; height:50px; display:flex; align-items:center; justify-content:center; border:1px dashed #ccc; background:#f9f9f9; overflow:hidden;">
-       <img 
-         alt="${faction} Aircraft" 
-         style="max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block;"
-         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-         src="https://augustdragon.github.io/red-storm-tools-suite/assets/${faction === 'NATO' ? 'nato' : 'wp'}.jpg?v=${Date.now()}"
-       >
-                <svg width="60" height="50" viewBox="0 0 60 50" style="width: 100%; height: 100%; display: none;">
-                  <!-- NATO aircraft silhouette (F-16 style) -->
-                  <g fill="#666" style="display: ${faction === 'NATO' ? 'block' : 'none'}">
-                    <ellipse cx="30" cy="25" rx="20" ry="3" />
-                    <rect x="28" y="15" width="4" height="20" />
-                    <polygon points="25,20 35,20 32,25 28,25" />
-                    <polygon points="20,22 40,22 42,28 18,28" />
-                    <polygon points="15,30 45,30 40,35 20,35" />
-                  </g>
-                  <!-- WP aircraft silhouette (MiG style) -->
-                  <g fill="#666" style="display: ${faction === 'WP' ? 'block' : 'none'}">
-                    <ellipse cx="30" cy="25" rx="18" ry="3" />
-                    <rect x="29" y="15" width="2" height="20" />
-                    <polygon points="27,20 33,20 31,25 29,25" />
-                    <polygon points="22,22 38,22 40,27 20,27" />
-                    <polygon points="18,30 42,30 38,34 22,34" />
-                    <circle cx="25" cy="28" r="2" />
-                    <circle cx="35" cy="28" r="2" />
-                  </g>
-                  <!-- Fallback if neither matches -->
-                  <text x="30" y="30" text-anchor="middle" font-size="12" fill="#666" style="display: ${faction !== 'NATO' && faction !== 'WP' ? 'block' : 'none'}">${faction}</text>
-                </svg>
-              </div>
-              
-              <!-- Health checkboxes stacked vertically -->
-              <div class="health-checkboxes">
-                <div class="checkbox">
-                  <span class="checkbox-box"></span>
-                  <span>Da</span>
-                </div>
-                <div class="checkbox">
-                  <span class="checkbox-box"></span>
-                  <span>Cr</span>
-                </div>
-                <div class="checkbox">
-                  <span class="checkbox-box"></span>
-                  <span>☠</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Air-to-air weapons stacked vertically on right -->
-            <div class="aircraft-weapons">
-              <div class="weapon-field">
-                <span class="weapon-label">Gun</span>
-                <span class="weapon-brackets">
-                  <span class="weapon-bracket">{</span><span class="weapon-bracket">}</span>
-                </span>
-              </div>
-              <div class="weapon-field">
-                <span class="weapon-label">IRM</span>
-                <span class="weapon-brackets">
-                  <span class="weapon-bracket">{</span><span class="weapon-bracket">}</span>
-                </span>
-              </div>
-              <div class="weapon-field">
-                <span class="weapon-label">RHM</span>
-                <span class="weapon-brackets">
-                  <span class="weapon-bracket">{</span><span class="weapon-bracket">}</span>
-                </span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Ordnance area -->
-          <div class="ordnance-area">
-            <div class="ordnance-label">Ordnance</div>
-          </div>
-        </div>
-`;
-        }
-
-        card += `
-      </div>
-    </div>
-`;
-        
-        allCards += card;
-      }
-
-      return allCards;
     }
 
     // escapeHtml() function moved to utils.js
@@ -1687,785 +1371,18 @@
      * @param {boolean} isLastNATOFlight - Whether this is the last NATO flight before WP (for page break)
      * @returns {string} HTML for flight card with designer layout
      */
+    
     async function generateDesignerFlightCard(flight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, isLastNATOFlight = false) {
-      // Parse result text to extract flight info
-      const resultText = flight.result || flight.text || '';
-      const faction = flight.faction || 'NATO';
-      
-      // Check if this is a multi-flight result (contains <br> or semicolons)
-      // Table C (Bombing Raid) produces results like "4 x {2} US F-15C, CAP<br>1 x {2} US A-7D, SEAD<br>..."
-      if (resultText.includes('<br>') || resultText.includes(';')) {
-        console.log('Multi-flight result detected, splitting...');
-        // Split by <br> or semicolon and generate separate cards for each flight
-        const separator = resultText.includes('<br>') ? '<br>' : ';';
-        const flightParts = resultText.split(separator).map(part => part.trim()).filter(part => part.length > 0);
-        console.log(`Split into ${flightParts.length} individual flights:`, flightParts);
-        
-        let allCards = '';
-        for (let i = 0; i < flightParts.length; i++) {
-          const flightPart = flightParts[i];
-          // Create a temporary flight object for each part
-          const tempFlight = {
-            ...flight,
-            result: flightPart
-          };
-          // Debug: Check if nationality is being copied
-          console.log(`Split flight ${i}: nationality="${tempFlight.nationality}", original nationality="${flight.nationality}"`);
-          // Recursively call this function to generate card for single flight
-          // Only the last card of multi-flight NATO results gets the page break
-          const isLastCard = i === flightParts.length - 1;
-          const applyPageBreakToThisFlight = isLastNATOFlight && isLastCard;
-          allCards += await getPrintGenerator().generateDesignerFlightCard(tempFlight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, applyPageBreakToThisFlight);
-        }
-        
-        return allCards;
-      }
-      
-      // Single flight processing below
-      // Extract aircraft type, flight size, tasking from result text
-      // Format: "FRG: 1 x {2} F-4F, CAP" or "USSR: 4 x {2} MiG-29, SWEEP"
-      let aircraftType = 'Unknown';
-      let flightSize = 2;
-      let numFlights = 1;
-      let nationCode = '';
-      let tasking = '';
-      
-      // Extract flight multiplier and size from "4 x {2}" pattern
-      const flightSizeMatch = resultText.match(/(\d+)\s*x\s*\{(\d+)\}/);
-      if (flightSizeMatch) {
-        numFlights = parseInt(flightSizeMatch[1]);
-        flightSize = parseInt(flightSizeMatch[2]);
-      }
-      
-      // Extract aircraft type (everything after } up to comma)
-      const aircraftMatch = resultText.match(/\}\s*([^,<]+)/);
-      if (aircraftMatch) {
-        aircraftType = aircraftMatch[1].trim();
-      }
-      
-      // Save original aircraft type before any mapping happens
-      // This is needed for database lookups since databases use short keys like "NF-5A"
-      // while the mapping will convert to long names like "NF-5A Freedom Fighter"
-      const originalAircraftType = aircraftType;
-      
-      // Extract nation from result or aircraft string
-      const nationMatch = resultText.match(/^([A-Z]{2,4}):/);
-      if (nationMatch) {
-        nationCode = nationMatch[1];
-      } else {
-        // Check if nation is in aircraft string
-        const nationInAircraft = aircraftType.match(/^(US|UK|FRG|CAN|NE|BE|USSR}GDR)\s+(.+)/);
-        if (nationInAircraft) {
-          nationCode = nationInAircraft[1];
-          aircraftType = nationInAircraft[2];
-        }
-      }
-      
-      // If still no nation code, check if flight has a nationality property (from table processor)
-      // This is critical for helicopters where multiple nations use the same aircraft type (e.g., GDR and USSR both use Mi-8)
-      // Check both 'nationality' and 'atafZone' as different tables use different property names
-      // However, skip combined nations like "BE/NE" and ATAF zones like "2ATAF" - check aircraft database instead
-      if (!nationCode && (flight.nationality || flight.atafZone)) {
-        const flightNation = flight.nationality || flight.atafZone;
-        console.log(`Checking flight nation "${flightNation}" for "${aircraftType}"`);
-        // Valid nation codes: only playable nations in Red Storm
-        const validNationCodes = ['US', 'UK', 'FRG', 'CAN', 'BE', 'NE', 'USSR', 'GDR'];
-        if (flightNation && validNationCodes.includes(flightNation)) {
-          nationCode = flightNation;
-          console.log(`Using nationality "${nationCode}" from table result for "${aircraftType}"`);
-        } else {
-          console.log(`Skipping invalid/combined nation code "${flightNation}" - will check aircraft database`);
-        }
-      } else if (!nationCode) {
-        console.log(`No nationality found in flight object for "${aircraftType}"`, flight);
-      }
-      
-      // If still no nation code, try to infer from aircraft database as last resort
-      // This handles helicopters and other aircraft without nation prefixes
-      // Also handles cases where table result had combined nation codes like "BE/NE"
-      // Use originalAircraftType (before name mapping) for database lookup
-      if (!nationCode && originalAircraftType) {
-        console.log(`Checking aircraft database for "${originalAircraftType}"`);
-        // Check both databases to find which one contains this aircraft
-        if (aircraftNATO[originalAircraftType]) {
-          // Found in NATO database, use the aircraft's nation
-          nationCode = aircraftNATO[originalAircraftType].nation || '';
-          console.log(`Inferred nation "${nationCode}" for "${originalAircraftType}" from NATO database`);
-        } else if (aircraftWP[originalAircraftType]) {
-          // Found in WP database, use the aircraft's nation
-          nationCode = aircraftWP[originalAircraftType].nation || '';
-          console.log(`Inferred nation "${nationCode}" for "${originalAircraftType}" from WP database`);
-        }
-      }
-      
-      // Handle variant aircraft with nation in parentheses (e.g., F-16A(BE), F-16A(NE))
-      const variantNationMatch = aircraftType.match(/^(.+?)\((BE|NE)\)$/);
-      if (variantNationMatch) {
-        const baseAircraft = variantNationMatch[1];
-        const variantNation = variantNationMatch[2];
-        // Use variant codes directly (BE, NE) - they're already in the roundel map
-        nationCode = variantNation;
-        console.log(`Detected variant aircraft: ${aircraftType} -> nation: ${nationCode}, base: ${baseAircraft}`);
-      }
-      
-      // Extract tasking (after comma, before ordnance parentheses)
-      const taskingMatch = resultText.match(/,\s*([^<(]+)/);
-      if (taskingMatch) {
-        tasking = taskingMatch[1].trim();
-      }
-      
-      // Extract ordnance if present (text in parentheses)
-      let rolledOrdnance = '';
-      const ordnanceMatch = resultText.match(/\(([^)]+)\)/);
-      if (ordnanceMatch) {
-        const fullOrdnance = ordnanceMatch[1].trim();
-        
-        // Check if this contains a note (e.g., "Note E:")
-        if (fullOrdnance.includes('Note ')) {
-          // Keep the entire text including the note
-          rolledOrdnance = fullOrdnance;
-        } else if (fullOrdnance.includes('+')) {
-          // Extract only the additions after "Bombs/CBU/Rockets"
-          // Remove the base "Bombs/CBU/Rockets" part and keep only additions
-          const parts = fullOrdnance.split('+');
-          if (parts.length > 1) {
-            // Join all parts after the first one with '+'
-            rolledOrdnance = '+' + parts.slice(1).map(p => p.trim()).join('+');
-          }
-        }
-      }
-      
-      // Apply name mapping if available (handles abbreviations and variants)
-      const factionKey = faction === 'NATO' ? 'NATO' : 'WP';
-      if (nameMappingData && nameMappingData[factionKey]) {
-        let mappedName = null;
-        
-        // For WP, check nation-specific mappings first (e.g., USSR vs GDR variants)
-        if (factionKey === 'WP' && nationCode && nameMappingData[factionKey][nationCode]) {
-          mappedName = nameMappingData[factionKey][nationCode][aircraftType];
-          if (mappedName) {
-            console.log(`Mapped "${aircraftType}" to "${mappedName}" via ${nationCode}-specific lookup`);
-          }
-        }
-        
-        // Fall back to faction-level mapping if no nation-specific mapping found
-        if (!mappedName && nameMappingData[factionKey][aircraftType]) {
-          mappedName = nameMappingData[factionKey][aircraftType];
-          console.log(`Mapped "${aircraftType}" to "${mappedName}" via faction-level lookup`);
-        }
-        
-        if (mappedName) {
-          aircraftType = mappedName;
-        }
-      }
-      
-      // Get aircraft data from appropriate database
-      const aircraftDB = faction === 'NATO' ? aircraftNATO : aircraftWP;
-      let rawAircraftData = null;
-      
-      // Aircraft are stored as keys in the JSON object, not in an array
-      // Try exact match first
-      if (aircraftDB[aircraftType]) {
-        rawAircraftData = aircraftDB[aircraftType];
-      } else {
-        // Try partial match with improved logic
-        // Sort keys by length (longest first) to prefer more specific matches
-        const aircraftKeys = Object.keys(aircraftDB)
-          .filter(key => !key.startsWith('_')) // Skip metadata keys
-          .sort((a, b) => b.length - a.length); // Longest first
-        
-        // Normalize search term for better matching
-        const normalizedSearch = aircraftType.replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
-        
-        for (const key of aircraftKeys) {
-          const normalizedKey = key.replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
-          
-          // Check if normalized forms match (handles "FGR2" vs "Phantom FGR.2")
-          if (normalizedKey.includes(normalizedSearch) || normalizedSearch.includes(normalizedKey)) {
-            rawAircraftData = aircraftDB[key];
-            console.log(`Matched "${aircraftType}" to database key "${key}"`);
-            break;
-          }
-        }
-        
-        // If still no match, log error for debugging
-        if (!rawAircraftData) {
-          console.error(`Aircraft not found: "${aircraftType}" in ${faction} database`);
-          console.error(`Result text: "${resultText}"`);
-          console.error(`Available aircraft keys:`, Object.keys(aircraftDB).filter(k => !k.startsWith('_')).slice(0, 10));
-        }
-      }
-      
-      // If aircraft not found, return empty string
-      if (!rawAircraftData) {
-        console.warn(`Skipping flight card generation - aircraft "${aircraftType}" not found`);
-        return '';
-      }
-      
-      // Convert to designer format
-      let aircraftData = getPrintGenerator().convertAircraftData(rawAircraftData, nationCode, weaponsData);
-      
-      // Apply note rules if available
-      if (noteRulesData && nationCode) {
-        const sourceTable = flight.table || '';
-        aircraftData = applyDesignerNoteRules(aircraftData, tasking, noteRulesData, nationCode, sourceTable, weaponsData);
-      }
-      
-      // Generate cards for each flight in the result (e.g., "4 x {2}" = 4 flights)
-      let allCardsHTML = '';
-      for (let flightNum = 0; flightNum < numFlights; flightNum++) {
-        // Only apply page break to the very last card of the last NATO flight
-        const isLastCard = flightNum === numFlights - 1;
-        const applyPageBreak = isLastNATOFlight && isLastCard;
-        
-        // Check if this is a CSAR helicopter - route to compact card generator
-        const isCSAR = aircraftData.capabilities && aircraftData.capabilities.includes('CSAR');
-        
-        if (isCSAR) {
-          allCardsHTML += generateCompactCSARCard(
-            aircraftType,
-            aircraftData,
-            flightSize,
-            nationCode,
-            tasking,
-            faction,
-            applyPageBreak
-          );
-        } else {
-          allCardsHTML += generateSingleDesignerCard(
-            aircraftType,
-            aircraftData,
-            flightSize,
-            nationCode,
-            tasking,
-            faction,
-            applyPageBreak,
-            rolledOrdnance
-          );
-        }
-      }
-      
-      return allCardsHTML;
+      return getPrintGenerator().generateDesignerFlightCard(
+        flight,
+        aircraftNATO,
+        aircraftWP,
+        noteRulesData,
+        weaponsData,
+        nameMappingData,
+        isLastNATOFlight
+      );
     }
-    
-    /**
-     * Convert JSON aircraft data to designer display format
-     * @param {object} jsonData - Raw aircraft JSON from database
-     * @param {string} nationCode - Nation code for display
-     * @param {object} weaponsData - Weapons database with ratings
-     * @returns {object} Designer-formatted aircraft data
-     */
-    function convertAircraftData(jsonData, nationCode, weaponsData) {
-      if (!jsonData) return null;
-      
-      // Helper function to extract speed for a specific altitude band
-      function extractSpeedForBand(speedString, index) {
-        if (!speedString || speedString === 'N/A') return 'N/A';
-        const values = speedString.split('/');
-        return values[index] || 'N/A';
-      }
-      
-      // Helper function to look up weapon ratings
-      function getWeaponRatings(weaponName, weaponClass) {
-        if (!weaponName || !weaponsData) return { stdRtg: 0, bvrRtg: null };
-        
-        // Search in appropriate weapons category
-        const category = weaponClass === 'Gun' ? weaponsData.guns : weaponsData.missiles;
-        if (!category) return { stdRtg: 0, bvrRtg: null };
-        
-        // Find weapon by exact name match
-        const weapon = category[weaponName];
-        if (weapon) {
-          return { stdRtg: weapon.stdRtg || 0, bvrRtg: weapon.bvrRtg };
-        }
-        
-        // If not found, return defaults
-        return { stdRtg: 0, bvrRtg: null };
-      }
-      
-      // Build weapon display strings from JSON format
-      let gunDisplay = '';
-      if (jsonData.weapons && jsonData.weapons.gun && jsonData.weapons.gunDepletion) {
-        // Look up gun rating from weapons database
-        const { stdRtg } = getWeaponRatings(jsonData.weapons.gun, 'Gun');
-        gunDisplay = `+${stdRtg} {${jsonData.weapons.gunDepletion}}`;
-      }
-      
-      let irmDisplay = '';
-      if (jsonData.weapons && jsonData.weapons.irm && jsonData.weapons.irmDepletion) {
-        // Look up IRM ratings from weapons database
-        const { stdRtg, bvrRtg } = getWeaponRatings(jsonData.weapons.irm, 'IRM');
-        const bvrStr = bvrRtg !== null ? `/${bvrRtg >= 0 ? '+' : ''}${bvrRtg}` : '/NA';
-        irmDisplay = `+${stdRtg}${bvrStr} {${jsonData.weapons.irmDepletion}}`;
-      }
-      
-      let rhmDisplay = '';
-      if (jsonData.weapons && jsonData.weapons.rhm && jsonData.weapons.rhmDepletion) {
-        // Look up RHM ratings from weapons database
-        const { stdRtg, bvrRtg } = getWeaponRatings(jsonData.weapons.rhm, 'RHM');
-        const bvrStr = bvrRtg !== null ? `/${bvrRtg >= 0 ? '+' : ''}${bvrRtg}` : '';
-        rhmDisplay = `+${stdRtg}${bvrStr} {${jsonData.weapons.rhmDepletion}}`;
-      }
-      
-      // Build radar display
-      let radarDisplay = null;
-      let radarModifier = null;
-      if (jsonData.radar && jsonData.radar.name) {
-        radarDisplay = jsonData.radar.name;
-        if (jsonData.radar.type) radarDisplay += ` ${jsonData.radar.type}`;
-        if (jsonData.radar.range) radarDisplay += ` [${jsonData.radar.range}]`;
-        if (jsonData.radar.modifier) radarModifier = jsonData.radar.modifier;
-      }
-      
-      // RWR and Jam - filter out dash-only values
-      const rwrDisplay = (jsonData.rwr && jsonData.rwr !== '-' && jsonData.rwr !== '-/-') ? jsonData.rwr : null;
-      const jamDisplay = (jsonData.jam && jsonData.jam !== '-' && jsonData.jam !== '-/-') ? jsonData.jam : null;
-      
-      // Build ordnance string
-      const ordnanceStr = jsonData.ordnance && jsonData.ordnance.length > 0
-        ? jsonData.ordnance.map(o => o.quantity ? `${o.type}(${o.quantity})` : o.type).join(', ')
-        : '';
-      
-      // Build capabilities string
-      const capabilitiesStr = jsonData.capabilities && jsonData.capabilities.length > 0
-        ? jsonData.capabilities.join(', ')
-        : '';
-      
-      // Extract speeds for each altitude band
-      const speeds = {};
-      if (jsonData.speeds && jsonData.speeds.clean) {
-        const altitudeBands = ['VH', 'H', 'M', 'L/D'];
-        const indices = { 'VH': 3, 'H': 2, 'M': 1, 'L/D': 0 };
-        
-        altitudeBands.forEach(band => {
-          const idx = indices[band];
-          speeds[band] = {
-            combat: extractSpeedForBand(jsonData.speeds.clean.combat, idx),
-            dash: extractSpeedForBand(jsonData.speeds.clean.dash, idx),
-            maneuver: extractSpeedForBand(jsonData.speeds.clean.maneuver, idx)
-          };
-        });
-      }
-      
-      // Extract laden speeds if present
-      let speedsLaden = null;
-      if (jsonData.speeds && jsonData.speeds.laden) {
-        speedsLaden = {};
-        const altitudeBands = ['VH', 'H', 'M', 'L/D'];
-        const indices = { 'VH': 3, 'H': 2, 'M': 1, 'L/D': 0 };
-        
-        altitudeBands.forEach(band => {
-          const idx = indices[band];
-          speedsLaden[band] = {
-            combat: extractSpeedForBand(jsonData.speeds.laden.combat, idx),
-            dash: extractSpeedForBand(jsonData.speeds.laden.dash, idx),
-            maneuver: extractSpeedForBand(jsonData.speeds.laden.maneuver, idx)
-          };
-        });
-      }
-      
-      return {
-        model: jsonData.name || jsonData.model,
-        nation: nationCode || jsonData.nation,
-        crew: jsonData.crew,
-        rwy: jsonData.runway || jsonData.rwy,
-        fuel: jsonData.fuel,
-        notes: jsonData.notes,
-        gun: gunDisplay,
-        irm: irmDisplay,
-        rhm: rhmDisplay,
-        rwr: rwrDisplay,
-        jam: jamDisplay,
-        standoffJammingStrength: jsonData.standoffJammingStrength,
-        ordnance: ordnanceStr,
-        aam: jsonData.aam,
-        bomb: jsonData.bomb,
-        sight: jsonData.sight,
-        capabilities: capabilitiesStr,
-        speeds: speeds,
-        speedsClean: speeds,
-        speedsLaden: speedsLaden,
-        radar: radarDisplay,
-        radarModifier: radarModifier
-      };
-    }
-    
-    /**
-     * Generate a single flight card using exact designer layout
-     * @param {string} aircraftType - Aircraft name
-     * @param {object} aircraftData - Designer-formatted aircraft data
-     * @param {number} flightSize - Number of aircraft in flight
-     * @param {string} nationCode - Nation code (FRG, USSR, etc.)
-     * @param {string} tasking - Mission tasking
-     * @param {string} faction - NATO or WP
-     * @param {boolean} applyPageBreak - Whether to apply page-break-before to this card
-     * @param {string} rolledOrdnance - Ordnance additions from table roll (e.g., "+EOGM+ARM")
-     * @returns {string} HTML for single flight card
-     */
-    function generateSingleDesignerCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction, applyPageBreak = false, rolledOrdnance = '') {
-      // Use default data if aircraft not found
-      if (!aircraftData) {
-        aircraftData = {
-          model: aircraftType,
-          crew: '?',
-          rwy: '?',
-          fuel: 18,
-          notes: '',
-          gun: '',
-          irm: '',
-          rhm: '',
-          speeds: {}
-        };
-      }
-      
-      // Determine if laden values should be shown (after notes have been applied)
-      // Only show laden if: 1) aircraft has speedsLaden data, 2) has air-to-ground ordnance, AND 3) tasking allows air-to-ground
-      const airToGroundNoneTasks = ['CAP', 'Close Escort', 'Recon', 'Escort Jamming', 'Standoff Jamming', 'CSAR', 'Transport', 'Laser Designation', 'Chaff Laying', 'Fast FAC'];
-      const hasAirToGroundOrdnance = (aircraftData.ordnance && aircraftData.ordnance.length > 0) || 
-                                     (aircraftData.bomb && aircraftData.bomb !== '-');
-      const showLaden = aircraftData.speedsLaden && hasAirToGroundOrdnance && !airToGroundNoneTasks.includes(tasking);
-      
-      // Determine roundel image
-      const roundelMap = {
-        'US': 'USAF.jpg',
-        'UK': 'UK.jpg',
-        'FRG': 'FRG.jpg',
-        'BEL': 'Belgium.jpg',
-        'Belgium': 'Belgium.jpg',
-        'BE': 'Belgium.jpg',
-        'BE/NE': 'Netherlands.jpg', // BE/NE combined entry defaults to Netherlands
-        'NE': 'Netherlands.jpg',
-        'CAN': 'Canada.jpg',
-        'Canada': 'Canada.jpg',
-        'USSR': 'USSR.jpg',
-        'GDR': 'GDR.jpg'
-      };
-      // Debug: Log roundel selection
-      console.log(`Roundel selection for "${aircraftType}": nationCode="${nationCode}", aircraftData.nation="${aircraftData.nation}", result="${roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg'}"`);
-      const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
-      
-      // Add page break style if this is the last NATO flight (breaks after, not before)
-      const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always;"' : '';
-      
-      let html = `
-    <div class="flight-card"${pageBreakStyle}>
-      <!-- Flight-level information -->
-      <div class="flight-info-section">
-        <div class="flight-header">
-          <div class="roundel-box-header">
-            <img src="../../../shared/assets/roundels/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
-          </div>
-          <div class="field">
-            <div class="field-label">Aircraft</div>
-            <div class="field-value">${aircraftData.model || aircraftType}</div>
-          </div>
-          <div class="field">
-            <div class="field-label">Callsign</div>
-            <div class="field-value"></div>
-          </div>
-          <div class="field">
-            <div class="field-label">Counter</div>
-            <div class="field-value"></div>
-          </div>
-          <div class="field">
-            <div class="field-label">Aggr.</div>
-            <div class="field-value"></div>
-          </div>
-        </div>
-        
-        <div class="tasking-fuel-row">
-          <div class="field">
-            <div class="field-label">Tasking</div>
-            <div class="field-value">${tasking}</div>
-          </div>
-          ${aircraftData.capabilities && aircraftData.capabilities.includes('CSAR') ? `
-          <div class="field">
-            <div class="field-label">Fuel</div>
-            <div class="field-value"></div>
-          </div>
-          ` : `
-          <div class="fuel-box">
-            <div class="fuel-label-value">
-              <span class="field-label">Fuel</span>
-              <span class="fuel-value">${aircraftData.fuel || 18}</span>
-            </div>
-            <div class="fuel-circles-container">
-              ${typeof aircraftData.fuel === 'number' ? `
-              <div class="fuel-circles-row">
-                ${Array(Math.ceil(aircraftData.fuel / 2)).fill(0).map(() => 
-                  `<div class="fuel-circle"></div>`
-                ).join('')}
-              </div>
-              <div class="fuel-circles-row">
-                ${Array(Math.floor(aircraftData.fuel / 2)).fill(0).map(() => 
-                  `<div class="fuel-circle"></div>`
-                ).join('')}
-              </div>
-              ` : ''}
-            </div>
-          </div>
-          `}
-          <div class="field">
-            <div class="field-label">Notes</div>
-            <div class="field-value">${aircraftData.notes || ''}</div>
-          </div>
-        </div>
-        
-        <div class="flight-weapons-row">
-          <div class="weapons-display">
-            ${aircraftData.gun ? `<div class="weapon-item">
-              <span class="weapon-label">Gun:</span>
-              <span>${aircraftData.gun}</span>
-            </div>` : ''}
-            ${aircraftData.irm ? `<div class="weapon-item">
-              <span class="weapon-label">IRM:</span>
-              <span>${aircraftData.irm}</span>
-            </div>` : ''}
-            ${aircraftData.rhm ? `<div class="weapon-item">
-              <span class="weapon-label">RHM:</span>
-              <span>${aircraftData.rhm}</span>
-            </div>` : ''}
-          </div>
-          ${aircraftData.crew || aircraftData.rwy ? `<div style="display: flex; gap: 10px; font-size: 7pt;">
-            ${aircraftData.crew ? `<div><strong>Crew:</strong> ${aircraftData.crew}</div>` : ''}
-            ${aircraftData.rwy ? `<div><strong>Rwy:</strong> ${aircraftData.rwy}</div>` : ''}
-          </div>` : ''}
-        </div>
-        
-        ${aircraftData.ordnance || aircraftData.aam || aircraftData.bomb || (aircraftData.sight && aircraftData.sight !== '-') ? `<div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px; line-height: 1.05;">
-          ${aircraftData.aam ? `<strong>AAM:</strong> ${aircraftData.aam}` : ''}${(aircraftData.aam && aircraftData.ordnance && !airToGroundNoneTasks.includes(tasking)) ? ' | ' : ''}${aircraftData.ordnance && !airToGroundNoneTasks.includes(tasking) ? `<strong>Ordnance:</strong> ${aircraftData.ordnance}` : ''}${((aircraftData.aam || aircraftData.ordnance) && aircraftData.bomb && !airToGroundNoneTasks.includes(tasking)) ? ' | ' : ''}${aircraftData.bomb && !airToGroundNoneTasks.includes(tasking) ? `<strong>Bomb:</strong> ${aircraftData.bomb}` : ''}${((aircraftData.aam || aircraftData.ordnance || aircraftData.bomb) && aircraftData.sight && aircraftData.sight !== '-' && !airToGroundNoneTasks.includes(tasking)) ? ' | ' : ''}${aircraftData.sight && aircraftData.sight !== '-' && !airToGroundNoneTasks.includes(tasking) ? `<strong>Sight:</strong> ${aircraftData.sight}` : ''}
-        </div>` : ''}
-        
-        ${aircraftData.radar || aircraftData.rwr || aircraftData.jam || aircraftData.standoffJammingStrength ? `<div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px; line-height: 1.05;">
-          ${aircraftData.radar ? `<strong>Radar:</strong> ${aircraftData.radar} ${aircraftData.radarModifier || ''}` : ''}
-          ${aircraftData.radar && aircraftData.rwr ? ' | ' : ''}
-          ${aircraftData.rwr ? `<strong>RWR:</strong> ${aircraftData.rwr}` : ''}
-          ${(aircraftData.radar || aircraftData.rwr) && aircraftData.jam ? ' | ' : ''}
-          ${aircraftData.jam ? `<strong>Jam:</strong> ${aircraftData.jam}` : ''}
-          ${(aircraftData.radar || aircraftData.rwr || aircraftData.jam) && aircraftData.standoffJammingStrength ? ' | ' : ''}
-          ${aircraftData.standoffJammingStrength ? `<strong>Standoff Jamming:</strong> ${aircraftData.standoffJammingStrength}` : ''}
-        </div>` : ''}
-        
-        ${aircraftData.capabilities || (aircraftData.specialRules && aircraftData.specialRules.length > 0) ? `<div style="padding: 1px 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 1px; line-height: 1.05;">
-          ${aircraftData.capabilities ? `<strong>Capabilities:</strong> ${aircraftData.capabilities}` : ''}${aircraftData.capabilities && aircraftData.specialRules && aircraftData.specialRules.length > 0 ? ' | ' : ''}${aircraftData.specialRules && aircraftData.specialRules.length > 0 ? `<strong>Notes:</strong> ${aircraftData.specialRules.join('; ')}` : ''}
-        </div>` : ''}
-        
-        ${showLaden ? `
-        <table class="speed-table">
-          <tr>
-            <th rowspan="2">Alt</th>
-            <th colspan="3">Clean</th>
-            <th colspan="3">Laden</th>
-          </tr>
-          <tr>
-            <th>C</th>
-            <th>D</th>
-            <th>M</th>
-            <th>C</th>
-            <th>D</th>
-            <th>M</th>
-          </tr>
-          ${Object.keys(aircraftData.speedsClean).filter(alt => {
-            // Skip VH row if all values are "-"
-            if (alt === 'VH') {
-              const cleanValues = aircraftData.speedsClean[alt];
-              const ladenValues = aircraftData.speedsLaden[alt];
-              return !(cleanValues.combat === '-' && cleanValues.dash === '-' && cleanValues.maneuver === '-' &&
-                       ladenValues.combat === '-' && ladenValues.dash === '-' && ladenValues.maneuver === '-');
-            }
-            return true;
-          }).map(alt => `
-            <tr>
-              <td><strong>${alt}</strong></td>
-              <td>${aircraftData.speedsClean[alt].combat}</td>
-              <td>${aircraftData.speedsClean[alt].dash}</td>
-              <td>${aircraftData.speedsClean[alt].maneuver}</td>
-              <td>${aircraftData.speedsLaden[alt].combat}</td>
-              <td>${aircraftData.speedsLaden[alt].dash}</td>
-              <td>${aircraftData.speedsLaden[alt].maneuver}</td>
-            </tr>
-          `).join('')}
-        </table>
-        ` : aircraftData.speeds && Object.keys(aircraftData.speeds).length > 0 ? `
-        <table class="speed-table">
-          <tr>
-            <th>Alt</th>
-            <th>C</th>
-            <th>D</th>
-            <th>M</th>
-          </tr>
-          ${Object.entries(aircraftData.speeds).filter(([alt, speeds]) => {
-            // Skip VH row if all values are "-"
-            if (alt === 'VH') {
-              return !(speeds.combat === '-' && speeds.dash === '-' && speeds.maneuver === '-');
-            }
-            return true;
-          }).map(([alt, speeds]) => `
-            <tr>
-              <td><strong>${alt}</strong></td>
-              <td>${speeds.combat}</td>
-              <td>${speeds.dash}</td>
-              <td>${speeds.maneuver}</td>
-            </tr>
-          `).join('')}
-        </table>
-        ` : ''}
-      </div>
-      
-      <!-- Individual aircraft boxes -->
-      <div class="aircraft-grid">
-        ${Array(parseInt(flightSize)).fill(0).map((_, i) => `
-          <div class="aircraft-box">
-            <div class="aircraft-header">
-              <div class="aircraft-number">${i + 1}</div>
-              <div class="damage-boxes">
-                <div class="damage-column">
-                  ${aircraftData.capabilities && aircraftData.capabilities.includes('CSAR') ? `
-                  <div class="damage-row">
-                    <div class="damage-label">Damaged</div>
-                    <div class="damage-checkbox"></div>
-                  </div>
-                  <div class="damage-row">
-                    <div class="damage-label">Shot down</div>
-                    <div class="damage-checkbox"></div>
-                  </div>
-                  ` : `
-                  <div class="damage-row">
-                    <div class="damage-label">Damaged</div>
-                    <div class="damage-checkbox"></div>
-                  </div>
-                  <div class="damage-row">
-                    <div class="damage-label">Crippled</div>
-                    <div class="damage-checkbox"></div>
-                  </div>
-                  <div class="damage-row">
-                    <div class="damage-label">Destroyed</div>
-                    <div class="damage-checkbox"></div>
-                  </div>
-                  `}
-                </div>
-              </div>
-            </div>
-            <div class="ordnance-area-small">
-              <div class="ordnance-label-small">Ordnance</div>
-              ${rolledOrdnance ? (() => {
-                // Check if this contains a note (e.g., "Note E:")
-                if (rolledOrdnance.includes('Note ')) {
-                  // Display the entire text as-is for notes
-                  return `<div style="font-size: 5pt; padding: 1px 3px; text-align: left; line-height: 1.2;">${rolledOrdnance}</div>`;
-                }
-                // Split by '+' and create separate lines for each ordnance item
-                const items = rolledOrdnance.split('+').filter(item => item.trim().length > 0);
-                return items.map(item => `<div style="font-size: 6pt; padding: 1px 3px; text-align: left; line-height: 1.1;">+${item.trim()}</div>`).join('');
-              })() : ''}
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-      `;
-      
-      return html;
-    }
-    
-    /**
-     * Generate a compact half-width card for CSAR helicopters
-     * @param {string} aircraftType - Aircraft model name
-     * @param {object} aircraftData - Aircraft data from database
-     * @param {number} flightSize - Number of aircraft in flight (1-4)
-     * @param {string} nationCode - Nation code for roundel
-     * @param {string} tasking - Mission tasking (should be 'CSAR')
-     * @param {string} faction - NATO or WP
-     * @param {boolean} applyPageBreak - Whether to apply page break after this card
-     * @returns {string} HTML for compact CSAR card
-     */
-    function generateCompactCSARCard(aircraftType, aircraftData, flightSize, nationCode, tasking, faction, applyPageBreak = false) {
-      // Use default data if aircraft not found
-      if (!aircraftData) {
-        aircraftData = {
-          model: aircraftType,
-          capabilities: 'CSAR'
-        };
-      }
-      
-      // Determine roundel image
-      const roundelMap = {
-        'US': 'USAF.jpg',
-        'UK': 'UK.jpg',
-        'FRG': 'FRG.jpg',
-        'BEL': 'Belgium.jpg',
-        'Belgium': 'Belgium.jpg',
-        'BE': 'Belgium.jpg',
-        'BE/NE': 'Netherlands.jpg', // BE/NE combined entry defaults to Netherlands
-        'NE': 'Netherlands.jpg',
-        'NE': 'Netherlands.jpg',
-        'CAN': 'Canada.jpg',
-        'Canada': 'Canada.jpg',
-        'USSR': 'USSR.jpg',
-        'GDR': 'GDR.jpg'
-      };
-      console.log(`CSAR Roundel selection for "${aircraftType}": nationCode="${nationCode}", aircraftData.nation="${aircraftData.nation}"`);
-      const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
-      
-      // Add page break style if needed
-      const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always;"' : '';
-      
-      let html = `
-    <div class="compact-csar-card"${pageBreakStyle}>
-      <!-- Compact CSAR header -->
-      <div class="compact-csar-header">
-        <div class="roundel-box-compact">
-          <img src="../../../shared/assets/roundels/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
-        </div>
-        <div class="field">
-          <div class="field-label">Aircraft</div>
-          <div class="field-value">${aircraftData.model || aircraftType}</div>
-        </div>
-        <div class="field">
-          <div class="field-label">Callsign</div>
-          <div class="field-value"></div>
-        </div>
-      </div>
-      
-      <div class="compact-csar-info">
-        <div class="field">
-          <div class="field-label">Tasking</div>
-          <div class="field-value">${tasking}</div>
-        </div>
-      </div>
-      
-      <!-- Compact aircraft boxes with damage underneath -->
-      <div class="compact-aircraft-grid">
-        ${Array(flightSize).fill(0).map((_, i) => `
-          <div class="compact-aircraft-box">
-            <div class="aircraft-number-compact">${i + 1}</div>
-            <div class="compact-damage-checks">
-              <div class="compact-damage-item">
-                <span class="compact-damage-label">Damaged</span>
-                <div class="damage-checkbox-compact"></div>
-              </div>
-              <div class="compact-damage-item">
-                <span class="compact-damage-label">Shot down</span>
-                <div class="damage-checkbox-compact"></div>
-              </div>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-      `;
-      
-      return html;
-    }
-    
-    /**
-     * Apply aircraft note rules to modify aircraft data
-     * @param {object} aircraftData - Original aircraft data
-     * @param {string} tasking - Mission tasking
-     * @param {object} noteRulesData - Note rules database
-     * @param {string} nationCode - Nation code
-     * @returns {object} Modified aircraft data
-     */
     function applyNoteRules(aircraftData, tasking, noteRulesData, nationCode) {
       if (!aircraftData.notes || !noteRulesData) return aircraftData;
       

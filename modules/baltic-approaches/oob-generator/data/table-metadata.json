@@ -3,7 +3,6 @@
   "_version": "1.0.0",
   "_created": "2025-11-18",
   "_description": "Metadata for Baltic Approaches OOB tables A2-L2",
-  
   "scenario_dates": {
     "may-early": {
       "id": "may-early",
@@ -11,22 +10,34 @@
       "description": "Early campaign period"
     },
     "may-late": {
-      "id": "may-late", 
+      "id": "may-late",
       "label": "21-31 May",
       "description": "Mid campaign period"
     },
     "june-early": {
       "id": "june-early",
-      "label": "1-15 June", 
+      "label": "1-15 June",
       "description": "Later campaign period"
     }
   },
-  
   "extraction_status": {
     "phase": "1-initial-setup",
     "completion": "structure-created",
     "extracted_tables": [],
-    "remaining_tables": ["A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2", "I2", "J2", "K2", "L2"],
+    "remaining_tables": [
+      "A2",
+      "B2",
+      "C2",
+      "D2",
+      "E2",
+      "F2",
+      "G2",
+      "H2",
+      "I2",
+      "J2",
+      "K2",
+      "L2"
+    ],
     "notes": [
       "Table structure created for Baltic Approaches module",
       "Tables A2-F2 are NATO tables",
@@ -34,11 +45,17 @@
       "Ready for table data population based on BA rules"
     ]
   },
-  
   "table_categories": {
     "NATO": {
       "faction": "NATO",
-      "tables": ["A2", "B2", "C2", "D2", "E2", "F2"],
+      "tables": [
+        "A2",
+        "B2",
+        "C2",
+        "D2",
+        "E2",
+        "F2"
+      ],
       "extracted": [],
       "color_scheme": {
         "primary": "#1976d2",
@@ -49,7 +66,14 @@
     },
     "WP": {
       "faction": "Warsaw Pact",
-      "tables": ["G2", "H2", "I2", "J2", "K2", "L2"],
+      "tables": [
+        "G2",
+        "H2",
+        "I2",
+        "J2",
+        "K2",
+        "L2"
+      ],
       "extracted": [],
       "color_scheme": {
         "primary": "#d32f2f",
@@ -59,7 +83,6 @@
       }
     }
   },
-  
   "table_descriptions": {
     "A2": {
       "id": "A2",
@@ -133,5 +156,9 @@
       "faction": "WP",
       "description": "TBD - To be defined based on Baltic Approaches rules"
     }
+  },
+  "result_fields": {
+    "aircraftName": "aircraftType",
+    "aircraftId": "aircraftId"
   }
 }

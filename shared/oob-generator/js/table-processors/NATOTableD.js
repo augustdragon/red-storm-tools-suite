@@ -93,10 +93,13 @@ class NATOTableD extends BaseTableProcessor {
     let resultText = '';
     
     // Handle special split aircraft types for SEAD
+    let resolvedAircraftId = aircraftResult.aircraftId;
     if (tasking === 'SEAD' && nationResult.nationName === 'US' && aircraftResult.aircraftType === 'F-4G/F-4E') {
       resultText = `2 x {${flightSize}} ${nationResult.nationName} F-4G, ${tasking}<br>2 x {${flightSize}} ${nationResult.nationName} F-4E, ${tasking}`;
+      resolvedAircraftId = null;
     } else if (tasking === 'SEAD' && nationResult.nationName === 'US' && aircraftResult.aircraftType === 'F-4G/F-16C') {
       resultText = `2 x {${flightSize}} ${nationResult.nationName} F-4G, ${tasking}<br>2 x {${flightSize}} ${nationResult.nationName} F-16C, ${tasking}`;
+      resolvedAircraftId = null;
     } else {
       // Standard result
       resultText = `${flightCount} x {${flightSize}} ${nationResult.nationName} ${aircraftResult.aircraftType}, ${tasking}`;
@@ -107,6 +110,11 @@ class NATOTableD extends BaseTableProcessor {
       nationRoll: nationResult.nationRoll,
       aircraftRoll: aircraftResult.aircraftRoll,
       nationName: nationResult.nationName,
+      nationality: nationResult.nationName,
+      aircraftType: aircraftResult.aircraftType,
+      aircraftId: resolvedAircraftId,
+      flightSize: flightSize,
+      flightCount: flightCount,
       text: resultText,
       debugText: `[${tasking}: ${this.stripBrackets(nationResult.nationRollDebug)} | ${this.stripBrackets(aircraftResult.aircraftRollDebug)}]`
     };

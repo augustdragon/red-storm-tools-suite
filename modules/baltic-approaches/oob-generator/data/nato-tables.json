@@ -3,8 +3,11 @@
   "_version": "1.0.0",
   "_created": "2025-11-19",
   "_description": "NATO OOB tables for Baltic Approaches module",
-  "_date_ranges": ["15-20 May", "21-31 May", "1-15 June"],
-  
+  "_date_ranges": [
+    "15-20 May",
+    "21-31 May",
+    "1-15 June"
+  ],
   "A2": {
     "name": "NATO Table A2 - QRA Flight",
     "faction": "NATO",
@@ -13,7 +16,7 @@
     "result": "1 x {2} [QRA], CAP",
     "hasDate": true,
     "setupEntry": {
-      "text": "DK (1-4 Skrydstrup, 5-6 Beldringe, 7-10 Værløse); FRG (1-3 Husum, 4-6 Schleswig, 7-10 Hohn); NE (any west edge hex). If these airfields are not on-map or closed, enter any west edge hex (FRG) or north edge hex (DK). Set up in Ready status if at on-map airfield."
+      "text": "DK (1-4 Skrydstrup, 5-6 Beldringe, 7-10 V\u00e6rl\u00f8se); FRG (1-3 Husum, 4-6 Schleswig, 7-10 Hohn); NE (any west edge hex). If these airfields are not on-map or closed, enter any west edge hex (FRG) or north edge hex (DK). Set up in Ready status if at on-map airfield."
     },
     "dateRanges": {
       "15-20 May": {
@@ -21,70 +24,96 @@
           "1-5": {
             "name": "DK",
             "aircraft": {
-              "1-10": "F-16A"
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
             }
           },
           "6-8": {
             "name": "FRG",
             "aircraft": {
-              "1-10": "F-4F"
+              "1-10": {
+                "name": "F-4F",
+                "aircraftId": "FRG-F-4F-1"
+              }
             }
           },
           "9-10": {
             "name": "NE",
             "aircraft": {
-              "1-10": "F-16A"
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
             }
           }
         }
       },
       "21-31 May": {
         "nations": {
-          "1-6": {
-            "name": "DK",
-            "aircraft": {
-              "1-10": "F-16A"
-            }
-          },
           "7": {
             "name": "FRG",
             "aircraft": {
-              "1-10": "F-4F"
+              "1-10": {
+                "name": "F-4F",
+                "aircraftId": "FRG-F-4F-1"
+              }
+            }
+          },
+          "1-6": {
+            "name": "DK",
+            "aircraft": {
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
             }
           },
           "8-10": {
             "name": "NE",
             "aircraft": {
-              "1-10": "F-16A"
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
             }
           }
         }
       },
       "1-15 June": {
         "nations": {
-          "1-6": {
-            "name": "DK",
-            "aircraft": {
-              "1-10": "F-16A"
-            }
-          },
           "7": {
             "name": "FRG",
             "aircraft": {
-              "1-10": "F-4F"
+              "1-10": {
+                "name": "F-4F",
+                "aircraftId": "FRG-F-4F-1"
+              }
+            }
+          },
+          "1-6": {
+            "name": "DK",
+            "aircraft": {
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
             }
           },
           "8-10": {
             "name": "NE",
             "aircraft": {
-              "1-10": "F-16A"
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
             }
           }
         }
       }
     }
   },
-  
   "A2-SE": {
     "name": "NATO Table A2-SE - SE QRA Flight",
     "faction": "NATO",
@@ -99,13 +128,18 @@
       "1-10": {
         "name": "SE",
         "aircraft": {
-          "1-5": "J-35F2",
-          "6-10": "JA-37"
+          "1-5": {
+            "name": "J-35F2",
+            "aircraftId": "SE-J-35F2-DRAKEN-1"
+          },
+          "6-10": {
+            "name": "JA-37",
+            "aircraftId": "SE-JA-37-VIGGEN-1"
+          }
         }
       }
     }
   },
-  
   "B2": {
     "name": "NATO Table B2 - CAP Flight",
     "faction": "NATO",
@@ -122,92 +156,139 @@
           "1-3": {
             "name": "DK",
             "aircraft": {
-              "1-10": "F-16A"
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
             }
           },
           "4-5": {
             "name": "FRG",
             "aircraft": {
-              "1-10": "F-4F"
+              "1-10": {
+                "name": "F-4F",
+                "aircraftId": "FRG-F-4F-1"
+              }
             }
           },
           "6-8": {
             "name": "US",
             "aircraft": {
-              "1-6": "F-15C",
-              "7-10": "F-4E"
+              "1-6": {
+                "name": "F-15C",
+                "aircraftId": "US-F-15C-1"
+              },
+              "7-10": {
+                "name": "F-4E",
+                "aircraftId": "US-F-4E-1"
+              }
             }
           },
           "9-10": {
             "name": "NE",
             "aircraft": {
-              "1-10": "F-16A"
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
             }
           }
         }
       },
       "21-31 May": {
         "nations": {
-          "1-3": {
-            "name": "DK",
-            "aircraft": {
-              "1-10": "F-16A"
-            }
-          },
           "4": {
             "name": "FRG",
             "aircraft": {
-              "1-10": "F-4F"
-            }
-          },
-          "5-9": {
-            "name": "US",
-            "aircraft": {
-              "1-6": "F-15C",
-              "7-10": "F-4E"
+              "1-10": {
+                "name": "F-4F",
+                "aircraftId": "FRG-F-4F-1"
+              }
             }
           },
           "10": {
             "name": "NE",
             "aircraft": {
-              "1-10": "F-16A"
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
+            }
+          },
+          "1-3": {
+            "name": "DK",
+            "aircraft": {
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
+            }
+          },
+          "5-9": {
+            "name": "US",
+            "aircraft": {
+              "1-6": {
+                "name": "F-15C",
+                "aircraftId": "US-F-15C-1"
+              },
+              "7-10": {
+                "name": "F-4E",
+                "aircraftId": "US-F-4E-1"
+              }
             }
           }
         }
       },
       "1-15 June": {
         "nations": {
-          "1-2": {
-            "name": "DK",
-            "aircraft": {
-              "1-10": "F-16A"
-            }
-          },
           "3": {
             "name": "FRG",
             "aircraft": {
-              "1-10": "F-4F"
-            }
-          },
-          "4-9": {
-            "name": "US",
-            "aircraft": {
-              "1-5": "F-15C",
-              "6": "F-4E",
-              "7-10": "F-14A"
+              "1-10": {
+                "name": "F-4F",
+                "aircraftId": "FRG-F-4F-1"
+              }
             }
           },
           "10": {
             "name": "NE",
             "aircraft": {
-              "1-10": "F-16A"
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
+            }
+          },
+          "1-2": {
+            "name": "DK",
+            "aircraft": {
+              "1-10": {
+                "name": "F-16A",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
+              }
+            }
+          },
+          "4-9": {
+            "name": "US",
+            "aircraft": {
+              "6": {
+                "name": "F-4E",
+                "aircraftId": "US-F-4E-1"
+              },
+              "1-5": {
+                "name": "F-15C",
+                "aircraftId": "US-F-15C-1"
+              },
+              "7-10": {
+                "name": "F-14A",
+                "aircraftId": "US-F-14A-1"
+              }
             }
           }
         }
       }
     }
   },
-  
   "C2": {
     "name": "NATO Table C2 - CAS Raid",
     "faction": "NATO",
@@ -224,25 +305,37 @@
               "1": {
                 "name": "DK",
                 "aircraft": {
-                  "1-10": "F-35XD Draken<sup>2</sup>"
+                  "1-10": {
+                    "name": "F-35XD Draken<sup>2</sup>",
+                    "aircraftId": null
+                  }
                 }
               },
               "2-3": {
                 "name": "FRG",
                 "aircraft": {
-                  "1-10": "F-4F"
+                  "1-10": {
+                    "name": "F-4F",
+                    "aircraftId": "FRG-F-4F-1"
+                  }
                 }
               },
               "4-7": {
                 "name": "NE",
                 "aircraft": {
-                  "1-10": "F-16A"
+                  "1-10": {
+                    "name": "F-16A",
+                    "aircraftId": "BE-F-16A-BE-CA-NE-1"
+                  }
                 }
               },
               "8-10": {
                 "name": "US",
                 "aircraft": {
-                  "1-10": "F-16C"
+                  "1-10": {
+                    "name": "F-16C",
+                    "aircraftId": "US-F-16C-1"
+                  }
                 }
               }
             }
@@ -252,32 +345,50 @@
               "1": {
                 "name": "DK",
                 "aircraft": {
-                  "1-10": "F-35XD Draken<sup>2</sup>"
+                  "1-10": {
+                    "name": "F-35XD Draken<sup>2</sup>",
+                    "aircraftId": null
+                  }
                 }
               },
               "2": {
                 "name": "UK",
                 "aircraft": {
-                  "1-10": "Jaguar GR1A<sup>2</sup>"
+                  "1-10": {
+                    "name": "Jaguar GR1A<sup>2</sup>",
+                    "aircraftId": null
+                  }
                 }
               },
               "3-4": {
                 "name": "FRG",
                 "aircraft": {
-                  "1-10": "F-4F"
+                  "1-10": {
+                    "name": "F-4F",
+                    "aircraftId": "FRG-F-4F-1"
+                  }
                 }
               },
               "5-6": {
                 "name": "NE",
                 "aircraft": {
-                  "1-10": "F-16A"
+                  "1-10": {
+                    "name": "F-16A",
+                    "aircraftId": "BE-F-16A-BE-CA-NE-1"
+                  }
                 }
               },
               "7-10": {
                 "name": "US",
                 "aircraft": {
-                  "1-4": "F-16C",
-                  "5-10": "F-16A"
+                  "1-4": {
+                    "name": "F-16C",
+                    "aircraftId": "US-F-16C-1"
+                  },
+                  "5-10": {
+                    "name": "F-16A",
+                    "aircraftId": "BE-F-16A-BE-CA-NE-1"
+                  }
                 }
               }
             }
@@ -287,27 +398,45 @@
               "1": {
                 "name": "UK",
                 "aircraft": {
-                  "1-10": "Jaguar GR1A<sup>2</sup>"
+                  "1-10": {
+                    "name": "Jaguar GR1A<sup>2</sup>",
+                    "aircraftId": null
+                  }
                 }
               },
               "2-3": {
                 "name": "FRG",
                 "aircraft": {
-                  "1-10": "F-4F"
+                  "1-10": {
+                    "name": "F-4F",
+                    "aircraftId": "FRG-F-4F-1"
+                  }
                 }
               },
               "4-5": {
                 "name": "NE",
                 "aircraft": {
-                  "1-10": "F-16A"
+                  "1-10": {
+                    "name": "F-16A",
+                    "aircraftId": "BE-F-16A-BE-CA-NE-1"
+                  }
                 }
               },
               "6-10": {
                 "name": "US",
                 "aircraft": {
-                  "1-4": "F-16C",
-                  "5-7": "F-16A",
-                  "8-10": "F/A-18A (USMC)"
+                  "1-4": {
+                    "name": "F-16C",
+                    "aircraftId": "US-F-16C-1"
+                  },
+                  "5-7": {
+                    "name": "F-16A",
+                    "aircraftId": "BE-F-16A-BE-CA-NE-1"
+                  },
+                  "8-10": {
+                    "name": "F/A-18A (USMC)",
+                    "aircraftId": "US-F-A-18A-1"
+                  }
                 }
               }
             }
@@ -321,28 +450,49 @@
               "1": {
                 "name": "DK",
                 "aircraft": {
-                  "1-10": "F-35XD Draken"
-                }
-              },
-              "2-5": {
-                "name": "FRG",
-                "aircraft": {
-                  "1-3": "Tornado IDS",
-                  "4-6": "Alpha",
-                  "7-10": "F-4F"
-                }
-              },
-              "6-9": {
-                "name": "US",
-                "aircraft": {
-                  "1-5": "F-4E",
-                  "6-10": "F-16C"
+                  "1-10": {
+                    "name": "F-35XD Draken",
+                    "aircraftId": "DK-F-35XD-DRAKEN-1"
+                  }
                 }
               },
               "10": {
                 "name": "NE",
                 "aircraft": {
-                  "1-10": "F-16A"
+                  "1-10": {
+                    "name": "F-16A",
+                    "aircraftId": "BE-F-16A-BE-CA-NE-1"
+                  }
+                }
+              },
+              "2-5": {
+                "name": "FRG",
+                "aircraft": {
+                  "1-3": {
+                    "name": "Tornado IDS",
+                    "aircraftId": "FRG-TORNADO-IDS-1"
+                  },
+                  "4-6": {
+                    "name": "Alpha",
+                    "aircraftId": "FRG-ALPHA-JET-A-1"
+                  },
+                  "7-10": {
+                    "name": "F-4F",
+                    "aircraftId": "FRG-F-4F-1"
+                  }
+                }
+              },
+              "6-9": {
+                "name": "US",
+                "aircraft": {
+                  "1-5": {
+                    "name": "F-4E",
+                    "aircraftId": "US-F-4E-1"
+                  },
+                  "6-10": {
+                    "name": "F-16C",
+                    "aircraftId": "US-F-16C-1"
+                  }
                 }
               }
             }
@@ -352,62 +502,113 @@
               "1": {
                 "name": "DK",
                 "aircraft": {
-                  "1-10": "F-35XD Draken"
+                  "1-10": {
+                    "name": "F-35XD Draken",
+                    "aircraftId": "DK-F-35XD-DRAKEN-1"
+                  }
                 }
               },
               "2": {
                 "name": "UK",
                 "aircraft": {
-                  "1-10": "Jaguar GR1A"
-                }
-              },
-              "3-4": {
-                "name": "FRG",
-                "aircraft": {
-                  "1-3": "Tornado IDS",
-                  "4-6": "Alpha",
-                  "7-10": "F-4F"
-                }
-              },
-              "5-9": {
-                "name": "US",
-                "aircraft": {
-                  "1-4": "A-10A",
-                  "5-7": "F-16C",
-                  "8-10": "F-16A"
+                  "1-10": {
+                    "name": "Jaguar GR1A",
+                    "aircraftId": "UK-JAGUAR-GR-1A-1"
+                  }
                 }
               },
               "10": {
                 "name": "NE",
                 "aircraft": {
-                  "1-10": "F-16A"
+                  "1-10": {
+                    "name": "F-16A",
+                    "aircraftId": "BE-F-16A-BE-CA-NE-1"
+                  }
+                }
+              },
+              "3-4": {
+                "name": "FRG",
+                "aircraft": {
+                  "1-3": {
+                    "name": "Tornado IDS",
+                    "aircraftId": "FRG-TORNADO-IDS-1"
+                  },
+                  "4-6": {
+                    "name": "Alpha",
+                    "aircraftId": "FRG-ALPHA-JET-A-1"
+                  },
+                  "7-10": {
+                    "name": "F-4F",
+                    "aircraftId": "FRG-F-4F-1"
+                  }
+                }
+              },
+              "5-9": {
+                "name": "US",
+                "aircraft": {
+                  "1-4": {
+                    "name": "A-10A",
+                    "aircraftId": "US-A-10A-1"
+                  },
+                  "5-7": {
+                    "name": "F-16C",
+                    "aircraftId": "US-F-16C-1"
+                  },
+                  "8-10": {
+                    "name": "F-16A",
+                    "aircraftId": "BE-F-16A-BE-CA-NE-1"
+                  }
                 }
               }
             }
           },
           "1-15 June": {
             "nations": {
+              "10": {
+                "name": "UK/NE",
+                "aircraft": {
+                  "1-5": {
+                    "name": "Jaguar GR1A (UK)",
+                    "aircraftId": "UK-JAGUAR-GR-1A-1"
+                  },
+                  "6-10": {
+                    "name": "F-16A (NE)",
+                    "aircraftId": "DK-F-16A-DK-1"
+                  }
+                }
+              },
               "1-3": {
                 "name": "FRG",
                 "aircraft": {
-                  "1-3": "Tornado IDS",
-                  "4-6": "Alpha",
-                  "7-10": "F-4F"
+                  "1-3": {
+                    "name": "Tornado IDS",
+                    "aircraftId": "FRG-TORNADO-IDS-1"
+                  },
+                  "4-6": {
+                    "name": "Alpha",
+                    "aircraftId": "FRG-ALPHA-JET-A-1"
+                  },
+                  "7-10": {
+                    "name": "F-4F",
+                    "aircraftId": "FRG-F-4F-1"
+                  }
                 }
               },
               "4-9": {
                 "name": "US",
                 "aircraft": {
-                  "1-4": "A-10A",
-                  "5-7": "AV-8B (USMC)",
-                  "8-10": "F-16A"
-                }
-              },
-              "10": {
-                "name": "UK/NE",
-                "aircraft": {
-                  "1-5": "Jaguar GR1A (UK)",
-                  "6-10": "F-16A (NE)"
+                  "1-4": {
+                    "name": "A-10A",
+                    "aircraftId": "US-A-10A-1"
+                  },
+                  "5-7": {
+                    "name": "AV-8B (USMC)",
+                    "aircraftId": "US-AV-8B-1"
+                  },
+                  "8-10": {
+                    "name": "F-16A",
+                    "aircraftId": "BE-F-16A-BE-CA-NE-1"
+                  }
                 }
               }
             }
@@ -428,7 +629,6 @@
       }
     }
   },
-  
   "D2": {
     "name": "NATO Table D2 - Deep Strike Raid",
     "faction": "NATO",
@@ -445,7 +645,10 @@
           "1-10": {
             "name": "US",
             "aircraft": {
-              "1-10": "EF-111A"
+              "1-10": {
+                "name": "EF-111A",
+                "aircraftId": "US-EF-111A-1"
+              }
             }
           }
         }
@@ -457,14 +660,23 @@
           "1-3": {
             "name": "FRG",
             "aircraft": {
-              "1-10": "F-4F"
+              "1-10": {
+                "name": "F-4F",
+                "aircraftId": "FRG-F-4F-1"
+              }
             }
           },
           "4-10": {
             "name": "US",
             "aircraft": {
-              "1-6": "F-15C",
-              "7-10": "F-4E"
+              "1-6": {
+                "name": "F-15C",
+                "aircraftId": "US-F-15C-1"
+              },
+              "7-10": {
+                "name": "F-4E",
+                "aircraftId": "US-F-4E-1"
+              }
             }
           }
         }
@@ -476,20 +688,32 @@
           "1-2": {
             "name": "FRG",
             "aircraft": {
-              "1-10": "F-4F"
+              "1-10": {
+                "name": "F-4F",
+                "aircraftId": "FRG-F-4F-1"
+              }
             }
           },
           "3-4": {
             "name": "UK",
             "aircraft": {
-              "1-10": "Jaguar GR1A"
+              "1-10": {
+                "name": "Jaguar GR1A",
+                "aircraftId": "UK-JAGUAR-GR-1A-1"
+              }
             }
           },
           "5-10": {
             "name": "US",
             "aircraft": {
-              "1-5": "F-16C",
-              "6-10": "F-4E"
+              "1-5": {
+                "name": "F-16C",
+                "aircraftId": "US-F-16C-1"
+              },
+              "6-10": {
+                "name": "F-4E",
+                "aircraftId": "US-F-4E-1"
+              }
             }
           }
         }
@@ -501,15 +725,27 @@
           "1-4": {
             "name": "FRG",
             "aircraft": {
-              "1-7": "Tornado IDS",
-              "8-10": "F-4F"
+              "1-7": {
+                "name": "Tornado IDS",
+                "aircraftId": "FRG-TORNADO-IDS-1"
+              },
+              "8-10": {
+                "name": "F-4F",
+                "aircraftId": "FRG-F-4F-1"
+              }
             }
           },
           "5-10": {
             "name": "US",
             "aircraft": {
-              "1-5": "F-111E",
-              "6-10": "F-4E"
+              "1-5": {
+                "name": "F-111E",
+                "aircraftId": "US-F-111D-E-1"
+              },
+              "6-10": {
+                "name": "F-4E",
+                "aircraftId": "US-F-4E-1"
+              }
             }
           }
         }
@@ -521,13 +757,19 @@
           "1-6": {
             "name": "FRG",
             "aircraft": {
-              "1-10": "RF-4E"
+              "1-10": {
+                "name": "RF-4E",
+                "aircraftId": "FRG-RF-4E-1"
+              }
             }
           },
           "7-10": {
             "name": "US",
             "aircraft": {
-              "1-10": "RF-4C"
+              "1-10": {
+                "name": "RF-4C",
+                "aircraftId": "US-RF-4C-1"
+              }
             }
           }
         }
@@ -546,7 +788,6 @@
       }
     }
   },
-  
   "D3": {
     "name": "NATO Table D3 - Naval Strike Raid",
     "faction": "NATO",
@@ -559,82 +800,423 @@
         "1-4": {
           "nationality": "FRG/DK",
           "flights": [
-            { "type": "CAP", "flightSize": 2, "flightCount": 4, "aircraft": "F-16A (DK)", "nationality":"DK" },
-            { "type": "Maritime Patrol", "flightSize": 1, "flightCount": 1, "aircraft": "BR.1150 Atlantic 2", "nationality":"FRG" },
-            { "type": "SEAD", "flightSize": 2, "flightCount": 3, "aircraft": "Tornado IDS (Navy)", "nationality":"FRG" },
-            { "type": "Naval Strike", "flightSize": 4, "flightCount": 3, "aircraft": "Tornado IDS (Navy)", "nationality":"FRG" },
-            { "type": "Recon", "flightSize": 1, "flightCount": 2, "aircraft": "RF-35XD Draken", "nationality":"DK" }
+            {
+              "type": "CAP",
+              "flightSize": 2,
+              "flightCount": 4,
+              "aircraft": {
+                "name": "F-16A (DK)",
+                "aircraftId": "DK-F-16A-DK-1"
+              },
+              "nationality": "DK"
+            },
+            {
+              "type": "Maritime Patrol",
+              "flightSize": 1,
+              "flightCount": 1,
+              "aircraft": {
+                "name": "BR.1150 Atlantic 2",
+                "aircraftId": "FRG-BR-1150-ATLANTIC-2-1"
+              },
+              "nationality": "FRG"
+            },
+            {
+              "type": "SEAD",
+              "flightSize": 2,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "Tornado IDS (Navy)",
+                "aircraftId": "UK-TORNADO-IDS-NAVY-1"
+              },
+              "nationality": "FRG"
+            },
+            {
+              "type": "Naval Strike",
+              "flightSize": 4,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "Tornado IDS (Navy)",
+                "aircraftId": "UK-TORNADO-IDS-NAVY-1"
+              },
+              "nationality": "FRG"
+            },
+            {
+              "type": "Recon",
+              "flightSize": 1,
+              "flightCount": 2,
+              "aircraft": {
+                "name": "RF-35XD Draken",
+                "aircraftId": "DK-RF-35XD-DRAKEN-1"
+              },
+              "nationality": "DK"
+            }
           ]
         },
         "5-7": {
           "nationality": "UK(RAF)",
           "flights": [
-            { "type": "CAP", "flightSize": 2, "flightCount": 4, "aircraft": "FGR2", "nationality":"UK" },
-            { "type": "Maritime Patrol", "flightSize": 1, "flightCount": 1, "aircraft": "Nimrod MR2", "nationality":"UK" },
-            { "type": "SEAD", "flightSize": 2, "flightCount": 3, "aircraft": "Buccaneer S2B", "nationality":"UK" },
-            { "type": "Naval Strike", "flightSize": 4, "flightCount": 3, "aircraft": "Buccaneer S2", "nationality":"UK" },
-            { "type": "Recon", "flightSize": 1, "flightCount": 2, "aircraft": "Jaguar GR1A", "nationality":"UK" }
+            {
+              "type": "CAP",
+              "flightSize": 2,
+              "flightCount": 4,
+              "aircraft": {
+                "name": "FGR2",
+                "aircraftId": "UK-PHANTOM-FGR-2-1"
+              },
+              "nationality": "UK"
+            },
+            {
+              "type": "Maritime Patrol",
+              "flightSize": 1,
+              "flightCount": 1,
+              "aircraft": {
+                "name": "Nimrod MR2",
+                "aircraftId": "UK-NIMROD-MR-2-1"
+              },
+              "nationality": "UK"
+            },
+            {
+              "type": "SEAD",
+              "flightSize": 2,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "Buccaneer S2B",
+                "aircraftId": "UK-BUCCANEER-S-2B-1"
+              },
+              "nationality": "UK"
+            },
+            {
+              "type": "Naval Strike",
+              "flightSize": 4,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "Buccaneer S2",
+                "aircraftId": "UK-BUCCANEER-S-2B-1"
+              },
+              "nationality": "UK"
+            },
+            {
+              "type": "Recon",
+              "flightSize": 1,
+              "flightCount": 2,
+              "aircraft": {
+                "name": "Jaguar GR1A",
+                "aircraftId": "UK-JAGUAR-GR-1A-1"
+              },
+              "nationality": "UK"
+            }
           ]
         },
         "8-10": {
           "nationality": "USAF",
           "flights": [
-            { "type": "CAP", "flightSize": 2, "flightCount": 4, "aircraft": "F-15C", "nationality":"US" },
-            { "type": "Maritime Patrol", "flightSize": 1, "flightCount": 1, "aircraft": "P-3C", "nationality":"US" },
-            { "type": "Escort Jamming", "flightSize": 1, "flightCount": 2, "aircraft": "EF-111A", "nationality":"US" },
-            { "type": "SEAD", "flightSize": 2, "flightCount": 3, "aircraft": "F-16C", "nationality":"US" },
-            { "type": "Naval Strike", "flightSize": 4, "flightCount": 3, "aircraft": "F-111E", "nationality":"US" },
-            { "type": "Recon", "flightSize": 1, "flightCount": 2, "aircraft": "RF-4C", "nationality":"US" }
+            {
+              "type": "CAP",
+              "flightSize": 2,
+              "flightCount": 4,
+              "aircraft": {
+                "name": "F-15C",
+                "aircraftId": "US-F-15C-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Maritime Patrol",
+              "flightSize": 1,
+              "flightCount": 1,
+              "aircraft": {
+                "name": "P-3C",
+                "aircraftId": "US-P-3C-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Escort Jamming",
+              "flightSize": 1,
+              "flightCount": 2,
+              "aircraft": {
+                "name": "EF-111A",
+                "aircraftId": "US-EF-111A-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "SEAD",
+              "flightSize": 2,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "F-16C",
+                "aircraftId": "US-F-16C-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Naval Strike",
+              "flightSize": 4,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "F-111E",
+                "aircraftId": "US-F-111D-E-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Recon",
+              "flightSize": 1,
+              "flightCount": 2,
+              "aircraft": {
+                "name": "RF-4C",
+                "aircraftId": "US-RF-4C-1"
+              },
+              "nationality": "US"
+            }
           ]
         }
       },
       "1-15 June": {
-        "1-3": {
-          "nationality": "FRG/DK",
-          "flights": [
-            { "type": "CAP", "flightSize": 2, "flightCount": 4, "aircraft": "F-4F", "nationality":"FRG" },
-            { "type": "Maritime Patrol", "flightSize": 1, "flightCount": 1, "aircraft": "BR.1150 Atlantic 2", "nationality":"FRG" },
-            { "type": "SEAD", "flightSize": 2, "flightCount": 3, "aircraft": "F-35XD Draken", "nationality":"DK" },
-            { "type": "Naval Strike", "flightSize": 4, "flightCount": 3, "aircraft": "Tornado IDS (Navy)", "nationality":"FRG" },
-            { "type": "Recon", "flightSize": 1, "flightCount": 2, "aircraft": "RF-35XD Draken", "nationality":"DK" }
-          ]
-        },
         "4": {
           "nationality": "UK(RN)",
           "flights": [
-            { "type": "CAP", "flightSize": 2, "flightCount": 4, "aircraft": "FGR2", "nationality":"UK" },
-            { "type": "Maritime Patrol", "flightSize": 1, "flightCount": 1, "aircraft": "Nimrod MR2", "nationality":"UK" },
-            { "type": "SEAD", "flightSize": 2, "flightCount": 3, "aircraft": "Harrier FRS1", "nationality":"UK" },
-            { "type": "Naval Strike", "flightSize": 4, "flightCount": 3, "aircraft": "Harrier FRS1", "nationality":"UK" },
-            { "type": "Recon", "flightSize": 1, "flightCount": 2, "aircraft": "Jaguar GR1A", "nationality":"UK" }
+            {
+              "type": "CAP",
+              "flightSize": 2,
+              "flightCount": 4,
+              "aircraft": {
+                "name": "FGR2",
+                "aircraftId": "UK-PHANTOM-FGR-2-1"
+              },
+              "nationality": "UK"
+            },
+            {
+              "type": "Maritime Patrol",
+              "flightSize": 1,
+              "flightCount": 1,
+              "aircraft": {
+                "name": "Nimrod MR2",
+                "aircraftId": "UK-NIMROD-MR-2-1"
+              },
+              "nationality": "UK"
+            },
+            {
+              "type": "SEAD",
+              "flightSize": 2,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "Harrier FRS1",
+                "aircraftId": "UK-SEA-HARRIER-FRS-1-1"
+              },
+              "nationality": "UK"
+            },
+            {
+              "type": "Naval Strike",
+              "flightSize": 4,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "Harrier FRS1",
+                "aircraftId": "UK-SEA-HARRIER-FRS-1-1"
+              },
+              "nationality": "UK"
+            },
+            {
+              "type": "Recon",
+              "flightSize": 1,
+              "flightCount": 2,
+              "aircraft": {
+                "name": "Jaguar GR1A",
+                "aircraftId": "UK-JAGUAR-GR-1A-1"
+              },
+              "nationality": "UK"
+            }
+          ]
+        },
+        "1-3": {
+          "nationality": "FRG/DK",
+          "flights": [
+            {
+              "type": "CAP",
+              "flightSize": 2,
+              "flightCount": 4,
+              "aircraft": {
+                "name": "F-4F",
+                "aircraftId": "FRG-F-4F-1"
+              },
+              "nationality": "FRG"
+            },
+            {
+              "type": "Maritime Patrol",
+              "flightSize": 1,
+              "flightCount": 1,
+              "aircraft": {
+                "name": "BR.1150 Atlantic 2",
+                "aircraftId": "FRG-BR-1150-ATLANTIC-2-1"
+              },
+              "nationality": "FRG"
+            },
+            {
+              "type": "SEAD",
+              "flightSize": 2,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "F-35XD Draken",
+                "aircraftId": "DK-F-35XD-DRAKEN-1"
+              },
+              "nationality": "DK"
+            },
+            {
+              "type": "Naval Strike",
+              "flightSize": 4,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "Tornado IDS (Navy)",
+                "aircraftId": "UK-TORNADO-IDS-NAVY-1"
+              },
+              "nationality": "FRG"
+            },
+            {
+              "type": "Recon",
+              "flightSize": 1,
+              "flightCount": 2,
+              "aircraft": {
+                "name": "RF-35XD Draken",
+                "aircraftId": "DK-RF-35XD-DRAKEN-1"
+              },
+              "nationality": "DK"
+            }
           ]
         },
         "5-7": {
           "nationality": "USN",
           "flights": [
-            { "type": "CAP", "flightSize": 2, "flightCount": 4, "aircraft": "F-14A", "nationality":"US" },
-            { "type": "Maritime Patrol", "flightSize": 1, "flightCount": 1, "aircraft": "S-3A", "nationality":"US" },
-            { "type": "Escort Jamming", "flightSize": 1, "flightCount": 2, "aircraft": "EA-6B", "nationality":"US" },
-            { "type": "SEAD", "flightSize": 2, "flightCount": 3, "aircraft": "A-6E", "nationality":"US" },
-            { "type": "Naval Strike", "flightSize": 4, "flightCount": 3, "aircraft": "A-7E", "nationality":"US" },
-            { "type": "Recon", "flightSize": 1, "flightCount": 2, "aircraft": "F-14A", "nationality":"US" }
+            {
+              "type": "CAP",
+              "flightSize": 2,
+              "flightCount": 4,
+              "aircraft": {
+                "name": "F-14A",
+                "aircraftId": "US-F-14A-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Maritime Patrol",
+              "flightSize": 1,
+              "flightCount": 1,
+              "aircraft": {
+                "name": "S-3A",
+                "aircraftId": "US-S-3A-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Escort Jamming",
+              "flightSize": 1,
+              "flightCount": 2,
+              "aircraft": {
+                "name": "EA-6B",
+                "aircraftId": "US-EA-6B-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "SEAD",
+              "flightSize": 2,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "A-6E",
+                "aircraftId": "US-A-6E-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Naval Strike",
+              "flightSize": 4,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "A-7E",
+                "aircraftId": "US-A-7E-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Recon",
+              "flightSize": 1,
+              "flightCount": 2,
+              "aircraft": {
+                "name": "F-14A",
+                "aircraftId": "US-F-14A-1"
+              },
+              "nationality": "US"
+            }
           ]
         },
         "8-10": {
           "nationality": "USMC",
           "flights": [
-            { "type": "CAP", "flightSize": 2, "flightCount": 4, "aircraft": "F/A-18A", "nationality":"US" },
-            { "type": "Maritime Patrol", "flightSize": 1, "flightCount": 1, "aircraft": "S-3A", "nationality":"US" },
-            { "type": "Escort Jamming", "flightSize": 1, "flightCount": 2, "aircraft": "EA-6B", "nationality":"US" },
-            { "type": "SEAD", "flightSize": 2, "flightCount": 3, "aircraft": "F/A-18A", "nationality":"US" },
-            { "type": "Naval Strike", "flightSize": 4, "flightCount": 3, "aircraft": "A-6E", "nationality":"US" },
-            { "type": "Recon", "flightSize": 1, "flightCount": 2, "aircraft": "RF-4B", "nationality":"US" }
+            {
+              "type": "CAP",
+              "flightSize": 2,
+              "flightCount": 4,
+              "aircraft": {
+                "name": "F/A-18A",
+                "aircraftId": "US-F-A-18A-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Maritime Patrol",
+              "flightSize": 1,
+              "flightCount": 1,
+              "aircraft": {
+                "name": "S-3A",
+                "aircraftId": "US-S-3A-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Escort Jamming",
+              "flightSize": 1,
+              "flightCount": 2,
+              "aircraft": {
+                "name": "EA-6B",
+                "aircraftId": "US-EA-6B-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "SEAD",
+              "flightSize": 2,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "F/A-18A",
+                "aircraftId": "US-F-A-18A-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Naval Strike",
+              "flightSize": 4,
+              "flightCount": 3,
+              "aircraft": {
+                "name": "A-6E",
+                "aircraftId": "US-A-6E-1"
+              },
+              "nationality": "US"
+            },
+            {
+              "type": "Recon",
+              "flightSize": 1,
+              "flightCount": 2,
+              "aircraft": {
+                "name": "RF-4B",
+                "aircraftId": "US-RF-4B-1"
+              },
+              "nationality": "US"
+            }
           ]
         }
       }
     }
   },
-  
   "E2": {
     "name": "NATO Table E2 - Combat Rescue",
     "faction": "NATO",
@@ -654,8 +1236,14 @@
             "flightSize": 2,
             "flightCount": 2,
             "aircraft": {
-              "1-8": "Alpha Jet",
-              "9-10": "F-4F"
+              "1-8": {
+                "name": "Alpha Jet",
+                "aircraftId": "FRG-ALPHA-JET-A-1"
+              },
+              "9-10": {
+                "name": "F-4F",
+                "aircraftId": "FRG-F-4F-1"
+              }
             }
           },
           {
@@ -664,8 +1252,14 @@
             "flightCount": 2,
             "description": "CH-53 (Land Hex); Mk41 Sea King (Sea Hex)",
             "aircraft": {
-              "land": "CH-53",
-              "sea": "Mk41 Sea King"
+              "land": {
+                "name": "CH-53",
+                "aircraftId": "FRG-CH-53-1"
+              },
+              "sea": {
+                "name": "Mk41 Sea King",
+                "aircraftId": "FRG-MK-41-SEA-KING-1"
+              }
             }
           }
         ]
@@ -678,7 +1272,10 @@
             "flightSize": 1,
             "flightCount": 2,
             "aircraft": {
-              "1-10": "S-61"
+              "1-10": {
+                "name": "S-61",
+                "aircraftId": "DK-S-61-1"
+              }
             }
           }
         ]
@@ -691,14 +1288,16 @@
             "flightSize": 1,
             "flightCount": 2,
             "aircraft": {
-              "1-10": "HKP-4D"
+              "1-10": {
+                "name": "HKP-4D",
+                "aircraftId": "SE-HKP-4D-1"
+              }
             }
           }
         ]
       }
     }
   },
-  
   "F2": {
     "name": "NATO Table F2 - Maritime Patrol",
     "faction": "NATO",
@@ -711,25 +1310,37 @@
       "1": {
         "name": "US",
         "aircraft": {
-          "1-10": "P-3C"
+          "1-10": {
+            "name": "P-3C",
+            "aircraftId": "US-P-3C-1"
+          }
         }
       },
       "2-3": {
         "name": "NE",
         "aircraft": {
-          "1-10": "P-3C Orion"
+          "1-10": {
+            "name": "P-3C Orion",
+            "aircraftId": "US-P-3C-1"
+          }
         }
       },
       "4-7": {
         "name": "FRG",
         "aircraft": {
-          "1-10": "BR.1150 Atlantic 2"
+          "1-10": {
+            "name": "BR.1150 Atlantic 2",
+            "aircraftId": "FRG-BR-1150-ATLANTIC-2-1"
+          }
         }
       },
       "8-10": {
         "name": "UK",
         "aircraft": {
-          "1-10": "Nimrod MR2"
+          "1-10": {
+            "name": "Nimrod MR2",
+            "aircraftId": "UK-NIMROD-MR-2-1"
+          }
         }
       }
     }

@@ -78,6 +78,10 @@ class WPTableL extends BaseTableProcessor {
         nationRoll: null,
         aircraftRoll: aircraftResult.aircraftRoll,
         nationName: tacticalReconNation,
+        nationality: tacticalReconNation,
+        flightSize: missionData.flightSize,
+        flightCount: missionData.flightCount,
+        tasking: missionType,
         text: resultText,
         debugText: this.buildDebugText({ aircraftRollDebug: aircraftResult.aircraftRollDebug })
       });
@@ -124,6 +128,10 @@ class WPTableL extends BaseTableProcessor {
       nationRoll: nationResult.nationRoll,
       aircraftRoll: aircraftResult.aircraftRoll,
       nationName: nationResult.nationName,
+      nationality: nationResult.nationName,
+      flightSize: missionData.flightSize,
+      flightCount: missionData.flightCount,
+      tasking: missionType,
       text: resultText,
       debugText: debugText
     });

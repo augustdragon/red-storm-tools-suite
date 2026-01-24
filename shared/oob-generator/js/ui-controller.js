@@ -237,6 +237,14 @@ function makeRollsWithVariables() {
       aircraftRoll: result.aircraftRoll,
       nationName: result.nationName,
       result: result.text,
+      aircraftType: result.aircraftType,
+      aircraftId: result.aircraftId,
+      flightSize: result.flightSize,
+      flightCount: result.flightCount,
+      tasking: result.tasking,
+      ordnance: result.ordnance,
+      nationCode: result.nationCode,
+      sourceTable: result.sourceTable,
       debugText: result.debugText || result.debugInfo?.join(' | ') || '', // Handle both debugText and legacy debugInfo
       timestamp: new Date().getTime() + i, // Ensure unique timestamps
       // Preserve structured data from table processors (WPTableI2, D3, J3, etc.)
@@ -307,6 +315,14 @@ function makeRolls() {
       nationRoll: result.nationRoll,
       aircraftRoll: result.aircraftRoll,
       result: result.text,
+      aircraftType: result.aircraftType,
+      aircraftId: result.aircraftId,
+      flightSize: result.flightSize,
+      flightCount: result.flightCount,
+      tasking: result.tasking,
+      ordnance: result.ordnance,
+      nationCode: result.nationCode,
+      sourceTable: result.sourceTable,
       debugText: result.debugText || result.debugInfo?.join(' | ') || '', // Handle both debugText and legacy debugInfo
       scenarioDate: currentTable === 'C' ? currentScenarioDate : undefined,
       timestamp: new Date().getTime() + i, // Ensure unique timestamps

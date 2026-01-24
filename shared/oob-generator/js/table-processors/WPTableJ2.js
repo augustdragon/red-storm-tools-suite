@@ -56,6 +56,7 @@ class WPTableJ2 extends BaseTableProcessor {
         text: groupedText,
         nationality: 'USSR',
         aircraftType: aircraftType,
+        aircraftId: aircraftResult.aircraftId,
         flightSize: flightSize,
         flightCount: flightCount
       });

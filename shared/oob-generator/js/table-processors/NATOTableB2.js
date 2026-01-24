@@ -76,16 +76,23 @@ class NATOTableB2 extends BaseTableProcessor {
     const flightSize = this.tableData.flightSize || 2;
     const resultText = `1 x ${flightSize} [CAP], CAP (${nationResult.nationName}: ${aircraftResult.aircraftType})`;
 
-    return {
+    const structuredResult = this.formatResult({
       text: resultText,
+      nationName: nationResult.nationName,
+      nationality: nationResult.nationName,
+      aircraftType: aircraftResult.aircraftType,
+      aircraftId: aircraftResult.aircraftId,
+      flightSize: flightSize,
+      flightCount: 1,
+      tasking: 'CAP'
+    });
+
+    return {
+      ...structuredResult,
       result: resultText,
       table: 'B2',
       faction: 'NATO',
-      nationality: nationResult.nationName,
-      aircraftType: aircraftResult.aircraftType,
-      flightSize: flightSize,
       quantity: 1,
-      tasking: 'CAP',
       debugRolls: [
         nationResult.nationRollDebug,
         aircraftResult.aircraftRollDebug

@@ -1527,14 +1527,15 @@
         
         // Convert processor result to the expected format
         const formattedResult = {
+          ...result,
           text: result.text || result.result,
           rolls: result.debugRolls || [],
           debugInfo: result.debugRolls || [],
           nationRoll: extractRollValue(result.debugRolls, 'Nation'),
           aircraftRoll: extractRollValue(result.debugRolls, 'Aircraft'),
-          result: result.text || result.result,  // Store text in result field for display
-          taskings: result.taskings,  // Preserve taskings array from WPTableI2
-          flights: result.flights,    // Preserve structured flights (D3, J3, etc.)
+          result: result.text || result.result,
+          taskings: result.taskings,
+          flights: result.flights,
           faction: result.faction,
           nationality: result.nationality,
           table: result.table,

@@ -32,4 +32,17 @@
  */
 
 // Placeholder for table processing module
-console.log('OOB Generator: table-processor.js module loaded (placeholder)');
+// Future: centralize result normalization here so table processors emit consistent fields.
+function normalizeTableResult(result) {
+  if (!result || typeof result !== 'object') return result;
+  if (result.aircraftType && !result.aircraftId) {
+    result.aircraftId = result.aircraftId || null;
+  }
+  return result;
+}
+
+if (typeof window !== 'undefined') {
+  window.normalizeTableResult = normalizeTableResult;
+}
+
+console.log('OOB Generator: table-processor.js module loaded');

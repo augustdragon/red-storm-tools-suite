@@ -3,9 +3,9 @@
   "_version": "1.0.0",
   "_created": "2025-11-02",
   "_description": "Complete aircraft specifications for Warsaw Pact forces. Speed values format: L/M/H/VH altitude bands.",
-  
   "MiG-21SPS Fishbed F": {
     "name": "MiG-21SPS Fishbed F",
+    "id": "GDR-MIG-21SPS-FISHBED-F-1",
     "model": "MiG-21SPS Fishbed F",
     "nation": "GDR",
     "crew": 1,
@@ -43,14 +43,19 @@
       }
     },
     "ordnance": [
-      { "type": "Chaff", "quantity": null }
+      {
+        "type": "Chaff",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night(Ltd)"],
+    "capabilities": [
+      "Night(Ltd)"
+    ],
     "aam": "R-13M"
   },
-  
   "MiG-21M": {
     "name": "MiG-21M Fishbed J",
+    "id": "GDR-MIG-21M-1",
     "model": "MiG-21M Fishbed J",
     "nation": "GDR",
     "crew": 1,
@@ -84,12 +89,15 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Recon", "Night(Ltd)"],
+    "capabilities": [
+      "Recon",
+      "Night(Ltd)"
+    ],
     "aam": ""
   },
-  
   "MiG-21MF": {
     "name": "MiG-21MF Fishbed J",
+    "id": "GDR-MIG-21MF-1",
     "model": "MiG-21MF Fishbed J",
     "nation": "GDR",
     "crew": 1,
@@ -127,14 +135,19 @@
       }
     },
     "ordnance": [
-      { "type": "Chaff", "quantity": null }
+      {
+        "type": "Chaff",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night(Ltd)"],
+    "capabilities": [
+      "Night(Ltd)"
+    ],
     "aam": "R-13M"
   },
-  
   "MiG-21bisL": {
     "name": "MiG-21bis Fishbed L",
+    "id": "GDR-MIG-21BISL-1",
     "model": "MiG-21bis Fishbed L",
     "nation": "GDR",
     "crew": 1,
@@ -172,14 +185,19 @@
       }
     },
     "ordnance": [
-      { "type": "Chaff", "quantity": null }
+      {
+        "type": "Chaff",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night(Ltd)"],
+    "capabilities": [
+      "Night(Ltd)"
+    ],
     "aam": "R-60, R-3R"
   },
-  
   "MiG-23MF": {
     "name": "MiG-23MF Flogger B",
+    "id": "GDR-MIG-23MF-1",
     "model": "MiG-23MF Flogger B",
     "nation": "GDR",
     "crew": 1,
@@ -217,12 +235,15 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Night(Ltd)", "IRST"],
+    "capabilities": [
+      "Night(Ltd)",
+      "IRST"
+    ],
     "aam": "R-60, R-23"
   },
-  
   "MiG-23ML": {
     "name": "MiG-23ML Flogger G",
+    "id": "GDR-MIG-23ML-1",
     "model": "MiG-23ML Flogger G",
     "nation": "GDR",
     "crew": 1,
@@ -260,12 +281,15 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Night(Ltd)", "IRST"],
+    "capabilities": [
+      "Night(Ltd)",
+      "IRST"
+    ],
     "aam": "R-60/60M, R-24"
   },
-  
   "MiG-23BN": {
     "name": "MiG-23BN Flogger H",
+    "id": "GDR-MIG-23BN-1",
     "model": "MiG-23BN Flogger H",
     "nation": "GDR",
     "crew": 1,
@@ -298,14 +322,19 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Night(Ltd)"],
+    "capabilities": [
+      "Night(Ltd)"
+    ],
     "aam": ""
   },
-  
   "Su-22M4": {
     "name": "Su-22M4 Fitter K",
+    "id": "GDR-SU-22M4-1",
     "model": "Su-22M4 Fitter K",
     "nation": "GDR",
     "crew": 1,
@@ -338,14 +367,19 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Recon"],
+    "capabilities": [
+      "Recon"
+    ],
     "aam": "R-60"
   },
-  
   "MiG-21R": {
     "name": "MiG-21R Fishbed H",
+    "id": "USSR-MIG-21R-1",
     "model": "MiG-21R Fishbed H",
     "nation": "USSR",
     "crew": 1,
@@ -379,13 +413,15 @@
       "laden": null
     },
     "ordnance": [],
-      
-    "capabilities": ["Recon", "Night"],
+    "capabilities": [
+      "Recon",
+      "Night"
+    ],
     "aam": null
   },
-  
   "MiG-21bisN": {
     "name": "MiG-21bis Fishbed N",
+    "id": "USSR-MIG-21BISN-1",
     "model": "MiG-21bis Fishbed N",
     "nation": "USSR",
     "crew": 1,
@@ -423,14 +459,19 @@
       }
     },
     "ordnance": [
-      { "type": "Chaff", "quantity": null }
+      {
+        "type": "Chaff",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night(Ltd)"],
+    "capabilities": [
+      "Night(Ltd)"
+    ],
     "aam": "R-60, R-3R"
   },
-  
   "MiG-23M": {
     "name": "MiG-23M Flogger B",
+    "id": "USSR-MIG-23M-1",
     "model": "MiG-23M Flogger B",
     "nation": "USSR",
     "crew": 1,
@@ -468,14 +509,20 @@
       }
     },
     "ordnance": [
-        { "type": "Chaff", "quantity": null }
+      {
+        "type": "Chaff",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night(Ltd)", "IRST"],
+    "capabilities": [
+      "Night(Ltd)",
+      "IRST"
+    ],
     "aam": "R-60, R-23"
   },
-  
   "MiG-23MLA": {
     "name": "MiG-23MLA Flogger G",
+    "id": "USSR-MIG-23MLA-1",
     "model": "MiG-23MLA Flogger G",
     "nation": "USSR",
     "crew": 1,
@@ -513,14 +560,20 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Night(Ltd)", "IRST"],
+    "capabilities": [
+      "Night(Ltd)",
+      "IRST"
+    ],
     "aam": "R-60/60M, R-24"
   },
-  
   "MiG-23MLD": {
     "name": "MiG-23MLD Flogger K",
+    "id": "USSR-MIG-23MLD-1",
     "model": "MiG-23MLD Flogger K",
     "nation": "USSR",
     "crew": 1,
@@ -558,14 +611,20 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Night", "IRST"],
+    "capabilities": [
+      "Night",
+      "IRST"
+    ],
     "aam": "R-60M/R-73, R-24"
   },
-  
   "MiG-25RB": {
     "name": "MiG-25RB Foxbat B",
+    "id": "USSR-MIG-25RB-1",
     "model": "MiG-25RB Foxbat B",
     "nation": "USSR",
     "crew": 1,
@@ -598,12 +657,16 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Radar", "Recon", "Night"],
+    "capabilities": [
+      "Radar",
+      "Recon",
+      "Night"
+    ],
     "aam": null
   },
-  
   "MiG-25PD": {
     "name": "MiG-25PD Foxbat E",
+    "id": "USSR-MIG-25PD-1",
     "model": "MiG-25PD Foxbat E",
     "nation": "USSR",
     "crew": 1,
@@ -637,12 +700,15 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night","IRST"],
+    "capabilities": [
+      "Night",
+      "IRST"
+    ],
     "aam": "R-60M, R-40"
   },
-  
   "MiG-25BM": {
     "name": "MiG-25BM Foxbat F",
+    "id": "USSR-MIG-25BM-1",
     "model": "MiG-25BM Foxbat F",
     "nation": "USSR",
     "crew": 1,
@@ -681,14 +747,21 @@
       }
     },
     "ordnance": [
-      { "type": "Kh-58", "quantity": 2 }
+      {
+        "type": "Kh-58",
+        "quantity": 2
+      }
     ],
-    "capabilities": ["Night", "Standoff", "Spot"],
+    "capabilities": [
+      "Night",
+      "Standoff",
+      "Spot"
+    ],
     "aam": null
   },
-  
   "MiG-27M": {
     "name": "MiG-27M Flogger J",
+    "id": "USSR-MIG-27M-1",
     "model": "MiG-27M Flogger J",
     "nation": "USSR",
     "crew": 1,
@@ -721,15 +794,23 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 },
-      { "type": "Kh-25MP", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      },
+      {
+        "type": "Kh-25MP",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Night(Ltd)"],
+    "capabilities": [
+      "Night(Ltd)"
+    ],
     "aam": null
   },
-  
   "MiG-27K": {
     "name": "MiG-27K Flogger J2",
+    "id": "USSR-MIG-27K-1",
     "model": "MiG-27K Flogger J2",
     "nation": "USSR",
     "crew": 1,
@@ -762,16 +843,27 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 },
-      { "type": "Kh-25MP", "quantity": 1 },
-      { "type": "LGB", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      },
+      {
+        "type": "Kh-25MP",
+        "quantity": 1
+      },
+      {
+        "type": "LGB",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Night(Ltd)"],
+    "capabilities": [
+      "Night(Ltd)"
+    ],
     "aam": null
   },
-  
   "MiG-29A": {
     "name": "MiG-29 Fulcrum A",
+    "id": "USSR-MIG-29A-1",
     "model": "MiG-29 Fulcrum A",
     "nation": "USSR",
     "crew": 1,
@@ -809,12 +901,15 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Night", "IRST"],
+    "capabilities": [
+      "Night",
+      "IRST"
+    ],
     "aam": "R-73, R-27"
   },
-  
   "Su-17M3R": {
     "name": "Su-17M3R Fitter H",
+    "id": "USSR-SU-17M3R-1",
     "model": "Su-17M3R Fitter H",
     "nation": "USSR",
     "crew": 1,
@@ -843,12 +938,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Recon"],
+    "capabilities": [
+      "Recon"
+    ],
     "aam": null
   },
-  
-   "Su-17M4": {
+  "Su-17M4": {
     "name": "Su-17M4 Fitter K",
+    "id": "USSR-SU-17M4-1",
     "model": "Su-17M4 Fitter K",
     "nation": "USSR",
     "crew": 1,
@@ -881,15 +978,25 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 },
-      { "type": "Kh-25MP", "quantity": 1 },
-      { "type": "Kh-58", "quantity": 1 }],
+      {
+        "type": "EOGM",
+        "quantity": 1
+      },
+      {
+        "type": "Kh-25MP",
+        "quantity": 1
+      },
+      {
+        "type": "Kh-58",
+        "quantity": 1
+      }
+    ],
     "capabilities": null,
     "aam": null
   },
-
-   "Su-24": {
+  "Su-24": {
     "name": "Su-24 Fencer C",
+    "id": "USSR-SU-24-1",
     "model": "Su-24 Fencer C",
     "nation": "USSR",
     "crew": 2,
@@ -922,15 +1029,25 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 2 },
-      { "type": "Kh-28M", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 2
+      },
+      {
+        "type": "Kh-28M",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Radar", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "TFR",
+      "Night"
+    ],
     "aam": "R-60M"
   },
-
   "Su-24M": {
     "name": "Su-24M Fencer D",
+    "id": "USSR-SU-24M-1",
     "model": "Su-24M Fencer D",
     "nation": "USSR",
     "crew": 2,
@@ -963,18 +1080,37 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 2 },
-      { "type": "Kh-25MP", "quantity": 2 },
-      { "type": "Kh-58", "quantity": 1 },
-      { "type": "LGB", "quantity": 2 },
-      { "type": "EOGB", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 2
+      },
+      {
+        "type": "Kh-25MP",
+        "quantity": 2
+      },
+      {
+        "type": "Kh-58",
+        "quantity": 1
+      },
+      {
+        "type": "LGB",
+        "quantity": 2
+      },
+      {
+        "type": "EOGB",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Radar", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "TFR",
+      "Night"
+    ],
     "aam": "R-60M"
   },
-
-   "Su-24MR": {
+  "Su-24MR": {
     "name": "Su-24MR Fencer E",
+    "id": "USSR-SU-24MR-1",
     "model": "Su-24MR Fencer E",
     "nation": "USSR",
     "crew": 2,
@@ -1003,12 +1139,16 @@
       "laden": null
     },
     "ordnance": null,
-    "capabilities": ["Recon", "TFR", "Night"],
+    "capabilities": [
+      "Recon",
+      "TFR",
+      "Night"
+    ],
     "aam": "R-60M"
   },
-
   "Su-24MP": {
     "name": "Su-24MP Fencer F",
+    "id": "USSR-SU-24MP-1",
     "model": "Su-24MP Fencer F",
     "nation": "USSR",
     "crew": 2,
@@ -1042,14 +1182,20 @@
       }
     },
     "ordnance": [
-      { "type": "Chaff", "quantity": null }
+      {
+        "type": "Chaff",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night", "Standoff, Spot"],
+    "capabilities": [
+      "Night",
+      "Standoff, Spot"
+    ],
     "aam": "R-60M"
   },
-  
   "Su-25": {
     "name": "Su-25 Frogfoot A",
+    "id": "USSR-SU-25-1",
     "model": "Su-25 Frogfoot A",
     "nation": "USSR",
     "crew": 1,
@@ -1082,14 +1228,17 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 2 }
+      {
+        "type": "EOGM",
+        "quantity": 2
+      }
     ],
     "capabilities": [],
     "aam": "R-60M"
   },
-  
   "Su-27S": {
     "name": "Su-27S Flanker B",
+    "id": "USSR-SU-27S-1",
     "model": "Su-27S Flanker B",
     "nation": "USSR",
     "crew": 1,
@@ -1127,12 +1276,15 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Night", "IRST"],
+    "capabilities": [
+      "Night",
+      "IRST"
+    ],
     "aam": "R-73, R-27"
   },
-  
   "Yak-28PP": {
     "name": "Yak-28PP Brewer E",
+    "id": "USSR-YAK-28PP-1",
     "model": "Yak-28PP Brewer E",
     "nation": "USSR",
     "crew": 2,
@@ -1162,14 +1314,20 @@
       "laden": null
     },
     "ordnance": [
-      { "type": "Chaff", "quantity": null }
+      {
+        "type": "Chaff",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night", "Standoff, Spot"],
+    "capabilities": [
+      "Night",
+      "Standoff, Spot"
+    ],
     "aam": null
   },
-  
   "An-12PP": {
     "name": "An-12PP Cub C",
+    "id": "USSR-AN-12PP-1",
     "model": "An-12PP Cub C",
     "nation": "USSR",
     "crew": 12,
@@ -1199,12 +1357,15 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night", "Standoff, Spot"],
+    "capabilities": [
+      "Night",
+      "Standoff, Spot"
+    ],
     "aam": null
   },
-  
   "IL-76MD": {
     "name": "IL-76MD Candid",
+    "id": "USSR-IL-76MD-1",
     "model": "IL-76MD Candid",
     "nation": "USSR",
     "crew": 4,
@@ -1233,12 +1394,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "Tu-16K": {
     "name": "Tu-16K Badger G",
+    "id": "USSR-TU-16K-1",
     "model": "Tu-16K Badger G",
     "nation": "USSR",
     "crew": 4,
@@ -1271,15 +1434,24 @@
       }
     },
     "ordnance": [
-      { "type": "Kh-28M", "quantity": 2 },
-      { "type": "AS-6", "quantity": 2 }
+      {
+        "type": "Kh-28M",
+        "quantity": 2
+      },
+      {
+        "type": "AS-6",
+        "quantity": 2
+      }
     ],
-    "capabilities": ["Radar", "Night"],
+    "capabilities": [
+      "Radar",
+      "Night"
+    ],
     "aam": null
   },
-  
   "Tu-16P": {
     "name": "Tu-16P Badger J",
+    "id": "USSR-TU-16P-1",
     "model": "Tu-16P Badger J",
     "nation": "USSR",
     "crew": 8,
@@ -1309,12 +1481,15 @@
       "laden": null
     },
     "ordnance": null,
-    "capabilities": ["Night", "Standoff, Spot"],
+    "capabilities": [
+      "Night",
+      "Standoff, Spot"
+    ],
     "aam": null
   },
-  
   "Tu-22KPD": {
     "name": "Tu-22KPD Blinder B",
+    "id": "USSR-TU-22KPD-1",
     "model": "Tu-22KPD Blinder B",
     "nation": "USSR",
     "crew": 3,
@@ -1347,12 +1522,15 @@
       }
     },
     "ordnance": null,
-    "capabilities": ["Radar", "Night"],
+    "capabilities": [
+      "Radar",
+      "Night"
+    ],
     "aam": null
   },
-  
   "Tu-22PD": {
     "name": "Tu-22PD Blinder E",
+    "id": "USSR-TU-22PD-1",
     "model": "Tu-22PD Blinder E",
     "nation": "USSR",
     "crew": 6,
@@ -1382,14 +1560,20 @@
       "laden": null
     },
     "ordnance": [
-      { "type": "Chaff", "quantity": null }
+      {
+        "type": "Chaff",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night", "Standoff, Spot"],
+    "capabilities": [
+      "Night",
+      "Standoff, Spot"
+    ],
     "aam": null
   },
-  
   "AS-6": {
     "name": "AS-6 Kingfish",
+    "id": "USSR-AS-6-1",
     "model": "AS-6 Kingfish",
     "nation": "USSR",
     "crew": 0,
@@ -1418,12 +1602,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "AS-15": {
     "name": "AS-15 Kent",
+    "id": "USSR-AS-15-1",
     "model": "AS-15 Kent",
     "nation": "USSR",
     "crew": 0,
@@ -1452,12 +1638,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["TFR, Night"],
+    "capabilities": [
+      "TFR, Night"
+    ],
     "aam": null
   },
-  
   "Mi-8": {
     "name": "Mi-8",
+    "id": "USSR-MI-8-1",
     "model": "Mi-8",
     "nation": "USSR",
     "crew": 0,
@@ -1467,9 +1655,9 @@
     "weapons": {},
     "speeds": {},
     "ordnance": [],
-    "capabilities": ["CSAR"],
+    "capabilities": [
+      "CSAR"
+    ],
     "aam": null
   }
 }
-
-

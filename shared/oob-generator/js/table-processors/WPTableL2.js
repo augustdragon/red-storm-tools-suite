@@ -56,6 +56,8 @@ class WPTableL2 extends BaseTableProcessor {
       faction: 'WP',
       nationality: 'USSR',
       aircraft: aircraftResult.aircraftType,
+      aircraftType: aircraftResult.aircraftType,
+      aircraftId: aircraftResult.aircraftId,
       flightSize: flightSize,
       tasking: missionType,
       ordnance: missionType === 'Standoff Jamming' ? 'None' : 'Maritime'
@@ -72,6 +74,8 @@ class WPTableL2 extends BaseTableProcessor {
       nationality: 'USSR',
       missionType: missionType,
       aircraft: aircraftResult.aircraftType,
+      aircraftType: aircraftResult.aircraftType,
+      aircraftId: aircraftResult.aircraftId,
       flightSize: flightSize,
       flightCount: flightCount,
       flights: flights,

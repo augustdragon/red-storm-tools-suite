@@ -98,6 +98,7 @@ class WPTableI2 extends BaseTableProcessor {
           faction: 'WP',
           nationality: nationality,
           aircraft: aircraftType,
+          aircraftId: aircraftResult.aircraftId,
           flightSize: flightSize,
           tasking: taskingName,
           ordnance: ordnance
@@ -131,6 +132,7 @@ class WPTableI2 extends BaseTableProcessor {
           text: groupedText,
           nationality: nationality,
           aircraftType: aircraftType,
+          aircraftId: taskingFlights[0].aircraftId,
           flightSize: flightSize,
           flightCount: flightCount
         });
@@ -149,6 +151,7 @@ class WPTableI2 extends BaseTableProcessor {
             text: flightText,
             nationality: flight.nationality,
             aircraftType: flight.aircraft,
+            aircraftId: flight.aircraftId,
             flightSize: flight.flightSize,
             flightCount: 1,
             ordnance: flight.ordnance

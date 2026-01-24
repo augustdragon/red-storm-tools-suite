@@ -66,8 +66,10 @@ class NATOTableF2 extends BaseTableProcessor {
       table: 'F2',
       faction: 'NATO',
       missionType: missionType,
+      tasking: missionType,
       nationality: nationResult.nationName,
       aircraftType: aircraftResult.aircraftType,
+      aircraftId: aircraftResult.aircraftId,
       flightSize: flightSize,
       flightCount: flightCount,
       debugRolls: [

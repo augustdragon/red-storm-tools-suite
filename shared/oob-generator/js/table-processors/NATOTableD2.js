@@ -160,6 +160,7 @@ class NATOTableD2 extends BaseTableProcessor {
             text: flightText,
             nationality: nationResult.nationName,
             aircraftType: aircraftResult.aircraftType,
+            aircraftId: aircraftResult.aircraftId,
             flightSize: flightConfig.size,
             flightCount: 1,
             ordnance: ordnanceResult.ordnanceType,
@@ -175,6 +176,7 @@ class NATOTableD2 extends BaseTableProcessor {
             text: flightText,
             nationality: nationResult.nationName,
             aircraftType: aircraftResult.aircraftType,
+            aircraftId: aircraftResult.aircraftId,
             flightSize: flightConfig.size,
             flightCount: 1,
             debugRolls: i === 1 ? sharedDebugRolls : []
@@ -190,6 +192,7 @@ class NATOTableD2 extends BaseTableProcessor {
           text: flightText,
           nationality: nationResult.nationName,
           aircraftType: aircraftResult.aircraftType,
+          aircraftId: aircraftResult.aircraftId,
           flightSize: flightConfig.size,
           flightCount: 1,
           debugRolls: i === 1 ? sharedDebugRolls : []

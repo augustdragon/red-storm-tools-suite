@@ -117,8 +117,13 @@ class NATOTableC extends BaseTableProcessor {
     }
     
     // Handle sub-rolls for aircraft variants
-    const subRollResult = this.handleSubRoll(aircraftResult.aircraftType, `${tasking} Sub-roll`);
+    const subRollResult = this.handleSubRollWithId(
+      aircraftResult.aircraftType,
+      aircraftResult.aircraftId,
+      `${tasking} Sub-roll`
+    );
     const finalAircraftType = subRollResult.finalAircraftType;
+    const finalAircraftId = subRollResult.finalAircraftId;
     
     const flightSize = this.flightSizes[tasking];
     const flightCount = this.flightCounts[tasking];
@@ -143,6 +148,11 @@ class NATOTableC extends BaseTableProcessor {
         nationRoll: nationResult.nationRoll,
         aircraftRoll: aircraftResult.aircraftRoll,
         nationName: nationResult.nationName,
+        nationality: nationResult.nationName,
+        aircraftType: finalAircraftType,
+        aircraftId: finalAircraftId,
+        flightSize: flightSize,
+        flightCount: flightCount,
         text: resultText,
         debugText: this.buildDebugText({
           nationRollDebug: nationResult.nationRollDebug,
@@ -177,6 +187,11 @@ class NATOTableC extends BaseTableProcessor {
       nationRoll: nationResult.nationRoll,
       aircraftRoll: aircraftResult.aircraftRoll,
       nationName: nationResult.nationName,
+      nationality: nationResult.nationName,
+      aircraftType: finalAircraftType,
+      aircraftId: finalAircraftId,
+      flightSize: flightSize,
+      flightCount: flightCount,
       text: resultText,
       debugText: `[${tasking}: ${this.stripBrackets(nationResult.nationRollDebug)} | ${this.stripBrackets(aircraftResult.aircraftRollDebug)}${additionalDebug.join('')}]`
     };
@@ -218,6 +233,11 @@ class NATOTableC extends BaseTableProcessor {
       nationRoll: nationResult.nationRoll,
       aircraftRoll: aircraftResult.aircraftRoll,
       nationName: nationResult.nationName,
+      nationality: nationResult.nationName,
+      aircraftType: `${aircraft1}/${aircraft2}`,
+      aircraftId: null,
+      flightSize: flightSize,
+      flightCount: 4,
       text: flights.join('<br>'),
       debugText: `[SEAD: ${this.stripBrackets(nationResult.nationRollDebug)} | ${this.stripBrackets(aircraftResult.aircraftRollDebug)} | ${ordnanceDebug.join(' | ')}]`
     };

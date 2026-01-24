@@ -3,9 +3,9 @@
   "_version": "1.0.0",
   "_created": "2025-11-18",
   "_description": "Aircraft specifications for Baltic Approaches NATO forces. Speed values format: L/M/H/VH altitude bands.",
-  
   "A-6E": {
     "name": "A-6E Intruder",
+    "id": "US-A-6E-1",
     "model": "A-6E Intruder",
     "nation": "USA",
     "crew": 2,
@@ -38,17 +38,34 @@
       }
     },
     "ordnance": [
-      { "type": "LGB", "quantity": 1 },
-      { "type": "EOGB", "quantity": 1 },
-      { "type": "Harpoon", "quantity": 2 },
-      { "type": "Shrike", "quantity": 1 }
+      {
+        "type": "LGB",
+        "quantity": 1
+      },
+      {
+        "type": "EOGB",
+        "quantity": 1
+      },
+      {
+        "type": "Harpoon",
+        "quantity": 2
+      },
+      {
+        "type": "Shrike",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Radar", "FLIR", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "FLIR",
+      "TFR",
+      "Night"
+    ],
     "aam": null
   },
-  
   "EA-6B": {
     "name": "EA-6B Prowler",
+    "id": "US-EA-6B-1",
     "model": "EA-6B Prowler",
     "nation": "USA",
     "crew": 4,
@@ -78,14 +95,20 @@
       "laden": null
     },
     "ordnance": [
-      { "type": "HARM", "quantity": 1 }
+      {
+        "type": "HARM",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Night", "Standoff, Spot"],
+    "capabilities": [
+      "Night",
+      "Standoff, Spot"
+    ],
     "aam": null
   },
-  
   "A-7E": {
     "name": "A-7E Corsair II",
+    "id": "US-A-7E-1",
     "model": "A-7E Corsair II",
     "nation": "USA",
     "crew": 1,
@@ -118,17 +141,33 @@
       }
     },
     "ordnance": [
-      { "type": "LGB", "quantity": 1 },
-      { "type": "EOGB", "quantity": 1 },
-      { "type": "Shrike", "quantity": 1 },
-      { "type": "HARM", "quantity": 2 }
+      {
+        "type": "LGB",
+        "quantity": 1
+      },
+      {
+        "type": "EOGB",
+        "quantity": 1
+      },
+      {
+        "type": "Shrike",
+        "quantity": 1
+      },
+      {
+        "type": "HARM",
+        "quantity": 2
+      }
     ],
-    "capabilities": ["Radar", "FLIR", "Night"],
+    "capabilities": [
+      "Radar",
+      "FLIR",
+      "Night"
+    ],
     "aam": "AIM-9L (6), 20mm Gun (3)"
   },
-  
   "AV-8B": {
     "name": "AV-8B Harrier II",
+    "id": "US-AV-8B-1",
     "model": "AV-8B Harrier II",
     "nation": "USA",
     "crew": 1,
@@ -161,15 +200,21 @@
       }
     },
     "ordnance": [
-      { "type": "LGB", "quantity": 1 },
-      { "type": "EOGM", "quantity": 1 }
+      {
+        "type": "LGB",
+        "quantity": 1
+      },
+      {
+        "type": "EOGM",
+        "quantity": 1
+      }
     ],
     "capabilities": [],
     "aam": "AIM-9L (8), 25mm Gun (3)"
   },
-  
   "RF-4B": {
     "name": "RF-4B Phantom II",
+    "id": "US-RF-4B-1",
     "model": "RF-4B Phantom II",
     "nation": "USA",
     "crew": 2,
@@ -198,12 +243,16 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Recon", "TFR", "Night"],
+    "capabilities": [
+      "Recon",
+      "TFR",
+      "Night"
+    ],
     "aam": null
   },
-  
   "F-14A": {
     "name": "F-14A Tomcat",
+    "id": "US-F-14A-1",
     "model": "F-14A Tomcat",
     "nation": "USA",
     "crew": 2,
@@ -237,12 +286,16 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night", "Recon", "AAX+"],
+    "capabilities": [
+      "Night",
+      "Recon",
+      "AAX+"
+    ],
     "aam": "AIM-9L (8), AIM-7M (6), AIM-54C (3), 20mm Gun (3)"
   },
-  
   "F/A-18A": {
     "name": "F/A-18A Hornet",
+    "id": "US-F-A-18A-1",
     "model": "F/A-18A Hornet",
     "nation": "USA",
     "crew": 1,
@@ -280,18 +333,37 @@
       }
     },
     "ordnance": [
-      { "type": "LGB", "quantity": 1 },
-      { "type": "EOGB", "quantity": 1 },
-      { "type": "Harpoon", "quantity": 1 },
-      { "type": "HARM", "quantity": 1 },
-      { "type": "Rockets", "quantity": null }
+      {
+        "type": "LGB",
+        "quantity": 1
+      },
+      {
+        "type": "EOGB",
+        "quantity": 1
+      },
+      {
+        "type": "Harpoon",
+        "quantity": 1
+      },
+      {
+        "type": "HARM",
+        "quantity": 1
+      },
+      {
+        "type": "Rockets",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Radar", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9M (8), AIM-7M (3), 20mm Gun (3)"
   },
-
   "F-111D/E": {
     "name": "F-111D/E Aardvark",
+    "id": "US-F-111D-E-1",
     "model": "F-111D/E Aardvark",
     "aliases": [
       "F-111D",
@@ -328,14 +400,21 @@
       }
     },
     "ordnance": [
-      { "type": "Durandal", "quantity": null }
+      {
+        "type": "Durandal",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Radar", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9P(8)"
   },
-  
   "S-3A": {
     "name": "S-3A Viking",
+    "id": "US-S-3A-1",
     "model": "S-3A Viking",
     "nation": "USA",
     "crew": 4,
@@ -368,14 +447,20 @@
       }
     },
     "ordnance": [
-      { "type": "Harpoon", "quantity": 2 }
+      {
+        "type": "Harpoon",
+        "quantity": 2
+      }
     ],
-    "capabilities": ["FLIR", "Night"],
+    "capabilities": [
+      "FLIR",
+      "Night"
+    ],
     "aam": null
   },
-  
   "P-3C": {
     "name": "P-3C Orion",
+    "id": "US-P-3C-1",
     "model": "P-3C Orion",
     "nation": "USA",
     "crew": 11,
@@ -408,14 +493,19 @@
       }
     },
     "ordnance": [
-      { "type": "Harpoon", "quantity": 2 }
+      {
+        "type": "Harpoon",
+        "quantity": 2
+      }
     ],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "P-3C Orion (NE)": {
     "name": "P-3C Orion",
+    "id": "NE-P-3C-ORION-NE-1",
     "model": "P-3C Orion",
     "nation": "NE",
     "crew": 13,
@@ -444,12 +534,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": "AIM-9L (8)"
   },
-  
   "Buccaneer S.2B": {
     "name": "Buccaneer S.2B",
+    "id": "UK-BUCCANEER-S-2B-1",
     "model": "Buccaneer S.2B",
     "nation": "UK",
     "crew": 2,
@@ -482,17 +574,32 @@
       }
     },
     "ordnance": [
-      { "type": "LGB", "quantity": 1 },
-      { "type": "EOGB", "quantity": 1 },
-      { "type": "Sea Eagle", "quantity": 2 },
-      { "type": "AS.37", "quantity": 1 }
+      {
+        "type": "LGB",
+        "quantity": 1
+      },
+      {
+        "type": "EOGB",
+        "quantity": 1
+      },
+      {
+        "type": "Sea Eagle",
+        "quantity": 2
+      },
+      {
+        "type": "AS.37",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["TFR", "Night"],
+    "capabilities": [
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9L (8)"
   },
-  
   "Sea Harrier FRS.1": {
     "name": "Sea Harrier FRS.1",
+    "id": "UK-SEA-HARRIER-FRS-1-1",
     "model": "Sea Harrier FRS.1",
     "nation": "UK",
     "crew": 1,
@@ -530,15 +637,24 @@
       }
     },
     "ordnance": [
-      { "type": "Rockets", "quantity": null },
-      { "type": "Sea Eagle", "quantity": 2 }
+      {
+        "type": "Rockets",
+        "quantity": null
+      },
+      {
+        "type": "Sea Eagle",
+        "quantity": 2
+      }
     ],
-    "capabilities": ["Radar", "Night(Ltd)"],
+    "capabilities": [
+      "Radar",
+      "Night(Ltd)"
+    ],
     "aam": "AIM-9L (6), 30mm Gun (4)"
   },
-  
   "Nimrod MR.2": {
     "name": "Nimrod MR.2",
+    "id": "UK-NIMROD-MR-2-1",
     "model": "Nimrod MR.2",
     "nation": "UK",
     "crew": 13,
@@ -567,12 +683,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "Lynx HAS.3": {
     "name": "Lynx HAS.3",
+    "id": "UK-LYNX-HAS-3-1",
     "model": "Lynx HAS.3",
     "nation": "UK",
     "crew": 2,
@@ -601,14 +719,19 @@
       "laden": null
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "Tornado IDS (Navy)": {
     "name": "Tornado IDS (Navy)",
+    "id": "UK-TORNADO-IDS-NAVY-1",
     "model": "Tornado IDS (Navy)",
     "nation": "UK",
     "crew": 2,
@@ -641,14 +764,22 @@
       }
     },
     "ordnance": [
-      { "type": "Kormoran", "quantity": 2 }
+      {
+        "type": "Kormoran",
+        "quantity": 2
+      }
     ],
-    "capabilities": ["Radar", "Recon", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "Recon",
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9L (8), 27mm Gun (4)"
   },
-  
   "BR.1150 Atlantic 2": {
     "name": "BR.1150 Atlantic 2",
+    "id": "FRG-BR-1150-ATLANTIC-2-1",
     "model": "BR.1150 Atlantic 2",
     "nation": "FRG",
     "crew": 10,
@@ -677,12 +808,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "MK-41 Sea King": {
     "name": "MK-41 Sea King",
+    "id": "FRG-MK-41-SEA-KING-1",
     "model": "MK-41 Sea King",
     "nation": "FRG",
     "crew": 4,
@@ -711,17 +844,25 @@
       "laden": null
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "F-16A (DK)": {
     "name": "F-16A Fighting Falcon",
+    "id": "DK-F-16A-DK-1",
     "model": "F-16A Fighting Falcon",
     "nation": "DK",
-    "nationOptions": ["DK", "NE"],
+    "nationOptions": [
+      "DK",
+      "NE"
+    ],
     "crew": 1,
     "rwy": 2,
     "fuel": 6,
@@ -757,12 +898,15 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Radar", "Night(Ltd)"],
+    "capabilities": [
+      "Radar",
+      "Night(Ltd)"
+    ],
     "aam": "AIM-9L (3), 20mm Gun (3)"
   },
-  
   "F-35XD Draken": {
     "name": "F-35XD Draken",
+    "id": "DK-F-35XD-DRAKEN-1",
     "model": "F-35XD Draken",
     "nation": "DK",
     "crew": 1,
@@ -795,14 +939,17 @@
       }
     },
     "ordnance": [
-      { "type": "Rockets", "quantity": null }
+      {
+        "type": "Rockets",
+        "quantity": null
+      }
     ],
     "capabilities": [],
     "aam": "AIM-9N (3), 30mm Gun (4), 30mm Gun (4)"
   },
-  
   "RF-35XD Draken": {
     "name": "RF-35XD Draken",
+    "id": "DK-RF-35XD-DRAKEN-1",
     "model": "RF-35XD Draken",
     "nation": "DK",
     "crew": 1,
@@ -835,12 +982,14 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Recon"],
+    "capabilities": [
+      "Recon"
+    ],
     "aam": null
   },
-  
   "JA-37 Viggen": {
     "name": "JA-37 Viggen",
+    "id": "SE-JA-37-VIGGEN-1",
     "model": "JA-37 Viggen",
     "nation": "SE",
     "crew": 1,
@@ -878,14 +1027,19 @@
       }
     },
     "ordnance": [
-      { "type": "Rockets", "quantity": null }
+      {
+        "type": "Rockets",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": "AIM-9P/L (3), Skyflash (3), 30mm Gun (4)"
   },
-  
   "AJ-37 Viggen": {
     "name": "AJ-37 Viggen",
+    "id": "SE-AJ-37-VIGGEN-1",
     "model": "AJ-37 Viggen",
     "nation": "SE",
     "crew": 1,
@@ -918,16 +1072,28 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 },
-      { "type": "RB.04E", "quantity": 2 },
-      { "type": "Rockets", "quantity": null }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      },
+      {
+        "type": "RB.04E",
+        "quantity": 2
+      },
+      {
+        "type": "Rockets",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night", "Radar"],
+    "capabilities": [
+      "Night",
+      "Radar"
+    ],
     "aam": "AIM-9P (8)"
   },
-  
   "SH-37 Viggen": {
     "name": "SH-37 Viggen",
+    "id": "SE-SH-37-VIGGEN-1",
     "model": "SH-37 Viggen",
     "nation": "SE",
     "crew": 1,
@@ -956,12 +1122,15 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Recon", "Night"],
+    "capabilities": [
+      "Recon",
+      "Night"
+    ],
     "aam": "AIM-9P (3)"
   },
-  
   "J-35F2 Draken": {
     "name": "J-35F2 Draken",
+    "id": "SE-J-35F2-DRAKEN-1",
     "model": "J-35F2 Draken",
     "nation": "SE",
     "crew": 1,
@@ -999,14 +1168,20 @@
       }
     },
     "ordnance": [
-      { "type": "Rockets", "quantity": null }
+      {
+        "type": "Rockets",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night", "IRS1"],
+    "capabilities": [
+      "Night",
+      "IRS1"
+    ],
     "aam": "AIM-9P (3), AIM-4F (6), 30mm Gun (4)"
   },
-  
   "J-32E Lansen": {
     "name": "J-32E Lansen",
+    "id": "SE-J-32E-LANSEN-1",
     "model": "J-32E Lansen",
     "nation": "SE",
     "crew": 2,
@@ -1036,8 +1211,9 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   }
 }
-

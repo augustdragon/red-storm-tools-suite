@@ -55,23 +55,30 @@ class WPTableK2 extends BaseTableProcessor {
 
       // Roll for aircraft once per flight type
       let aircraftType;
+      let aircraftId = null;
       let aircraftDebug = null;
 
       if (typeof aircraft === 'object' && !Array.isArray(aircraft)) {
-        // Aircraft is a roll table
-        const aircraftResult = this.rollForAircraft(aircraft, `${type} Aircraft`);
-        if (aircraftResult.error) {
-          return {
-            text: `Error: ${aircraftResult.error}`,
-            error: aircraftResult.error
-          };
+        if (aircraft.name) {
+          aircraftType = aircraft.name;
+          aircraftId = aircraft.aircraftId || null;
+        } else {
+          // Aircraft is a roll table
+          const aircraftResult = this.rollForAircraft(aircraft, `${type} Aircraft`);
+          if (aircraftResult.error) {
+            return {
+              text: `Error: ${aircraftResult.error}`,
+              error: aircraftResult.error
+            };
+          }
+          aircraftType = aircraftResult.aircraftType;
+          aircraftId = aircraftResult.aircraftId;
+          aircraftDebug = aircraftResult.aircraftRollDebug;
+          debugRolls.push(aircraftDebug);
         }
-        aircraftType = aircraftResult.aircraftType;
-        aircraftDebug = aircraftResult.aircraftRollDebug;
-        debugRolls.push(aircraftDebug);
       } else {
         // Fixed aircraft type
-        const aircraftValue = Object.values(aircraft)[0];
+        const aircraftValue = typeof aircraft === 'string' ? aircraft : Object.values(aircraft)[0];
         aircraftType = aircraftValue;
       }
 
@@ -85,6 +92,7 @@ class WPTableK2 extends BaseTableProcessor {
         faction: 'WP',
         nationality: 'GDR',
         aircraftType: aircraftType,
+        aircraftId: aircraftId,
         flightSize: flightSize,
         flightCount: flightCount,
         type: taskingDisplay,

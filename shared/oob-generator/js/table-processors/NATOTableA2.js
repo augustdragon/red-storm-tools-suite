@@ -60,7 +60,9 @@ class NATOTableA2 extends BaseTableProcessor {
         faction: 'NATO',
         nationality: nationResult.nationName,
         aircraftType: aircraftResult.aircraftType,
+        aircraftId: aircraftResult.aircraftId,
         flightSize: 2,
+        flightCount: 1,
         quantity: 1,
         tasking: 'CAP',
         debugRolls: [
@@ -122,7 +124,9 @@ class NATOTableA2 extends BaseTableProcessor {
       faction: 'NATO',
       nationality: nationResult.nationName,
       aircraftType: aircraftResult.aircraftType,
+      aircraftId: aircraftResult.aircraftId,
       flightSize: 2,
+      flightCount: 1,
       quantity: 1,
       tasking: 'CAP',
       debugRolls: [

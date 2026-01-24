@@ -89,6 +89,7 @@ class BaseTableProcessor {
     for (const [range, nationData] of Object.entries(nationsData)) {
       const [min, max] = parseRange(range);
       if (nationRoll >= min && nationRoll <= max) {
+        this.lastNationResult = { nationName: nationData.name, nationData };
         return {
           nationRoll,
           nationRollDebug: nationRollResult.debugEntry,
@@ -129,10 +130,16 @@ class BaseTableProcessor {
     for (const [range, aircraft] of Object.entries(aircraftData)) {
       const [min, max] = parseRange(range);
       if (aircraftRoll >= min && aircraftRoll <= max) {
+        const resolvedAircraft = this.normalizeAircraftEntry(aircraft);
+        this.lastAircraftResult = {
+          aircraftType: resolvedAircraft.name,
+          aircraftId: resolvedAircraft.aircraftId
+        };
         return {
           aircraftRoll,
           aircraftRollDebug: aircraftRollResult.debugEntry,
-          aircraftType: aircraft
+          aircraftType: resolvedAircraft.name,
+          aircraftId: resolvedAircraft.aircraftId
         };
       }
     }
@@ -153,29 +160,47 @@ class BaseTableProcessor {
    * @returns {object} { finalAircraftType, subRollDebug }
    */
   handleSubRoll(aircraftType, rollLabel = 'Sub-roll') {
-    if (!aircraftType || (!aircraftType.includes('²') && !aircraftType.includes('¹'))) {
-      return { finalAircraftType: aircraftType, subRollDebug: null };
+    return this.handleSubRollWithId(aircraftType, null, rollLabel);
+  }
+
+  /**
+   * Handle aircraft sub-rolls for superscript references while preserving ID context
+   * 
+   * @param {string} aircraftType - Aircraft type that may have superscript
+   * @param {string|null} aircraftId - Aircraft ID (if already resolved)
+   * @param {string} rollLabel - Label for debug output
+   * @returns {object} { finalAircraftType, finalAircraftId, subRollDebug }
+   */
+  handleSubRollWithId(aircraftType, aircraftId = null, rollLabel = 'Sub-roll') {
+    if (!aircraftType || (!aircraftType.includes('Aı') && !aircraftType.includes('A1'))) {
+      return { finalAircraftType: aircraftType, finalAircraftId: aircraftId, subRollDebug: null };
     }
     
     const subRollResult = makeDebugRoll(10, rollLabel);
     let finalAircraftType = aircraftType;
+    let finalAircraftId = aircraftId;
     
     // Handle common sub-roll patterns
-    if (aircraftType.includes('F-4²')) {
+    if (aircraftType.includes('F-4Aı')) {
       finalAircraftType = subRollResult.roll <= 5 ? 'F-4D' : 'F-4E';
-    } else if (aircraftType.includes('MiG-23²')) {
+      finalAircraftId = null;
+    } else if (aircraftType.includes('MiG-23Aı')) {
       if (subRollResult.roll <= 4) finalAircraftType = 'MiG-23M';
       else if (subRollResult.roll <= 8) finalAircraftType = 'MiG-23MF';
       else finalAircraftType = 'MiG-23ML';
-    } else if (aircraftType.includes('MiG-23MF/ML¹')) {
+      finalAircraftId = null;
+    } else if (aircraftType.includes('MiG-23MF/MLA1')) {
       finalAircraftType = subRollResult.roll <= 5 ? 'MiG-23MF' : 'MiG-23ML';
+      finalAircraftId = null;
     }
     
     return {
       finalAircraftType,
+      finalAircraftId,
       subRollDebug: subRollResult.debugEntry
     };
   }
+
 
   /**
    * Build debug text from processing steps
@@ -207,6 +232,7 @@ class BaseTableProcessor {
     return debugStr ? debugStr.replace(/[\[\]]/g, '') : '';
   }
 
+
   /**
    * Format basic result output
    * 
@@ -218,8 +244,33 @@ class BaseTableProcessor {
       nationRoll: data.nationRoll || null,
       aircraftRoll: data.aircraftRoll || null,
       nationName: data.nationName || null,
+      nationality: data.nationality || data.nationCode || data.nationName || this.lastNationResult?.nationName || null,
+      aircraftType: data.aircraftType || this.lastAircraftResult?.aircraftType || null,
+      aircraftId: data.aircraftId || this.lastAircraftResult?.aircraftId || null,
+      flightSize: data.flightSize || this.tableData.flightSize || null,
+      flightCount: data.flightCount || this.tableData.flightCount || data.quantity || null,
+      tasking: data.tasking || null,
+      sourceTable: data.sourceTable || this.tableId,
       text: data.text,
       debugText: data.debugText || ''
+    };
+  }
+
+  /**
+   * Normalize aircraft entry from table data
+   * 
+   * @param {object|string} aircraftEntry - Aircraft entry from table data
+   * @returns {object} { name, aircraftId }
+   */
+  normalizeAircraftEntry(aircraftEntry) {
+    if (!aircraftEntry || typeof aircraftEntry !== 'object' || Array.isArray(aircraftEntry)) {
+      return { name: aircraftEntry, aircraftId: null };
+    }
+
+    const name = aircraftEntry.name || aircraftEntry.aircraft || aircraftEntry.display || aircraftEntry.model || '';
+    return {
+      name,
+      aircraftId: aircraftEntry.aircraftId || null
     };
   }
 }

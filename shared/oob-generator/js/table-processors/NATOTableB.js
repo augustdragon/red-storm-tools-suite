@@ -81,6 +81,12 @@ class NATOTableB extends BaseTableProcessor {
       nationRoll: nationResult.nationRoll,
       aircraftRoll: aircraftResult.aircraftRoll,
       nationName: nationResult.nationName,
+      nationality: nationResult.nationName,
+      aircraftType: aircraftResult.aircraftType,
+      aircraftId: aircraftResult.aircraftId,
+      flightSize: 2,
+      flightCount: 1,
+      tasking: 'CAP',
       text: resultText,
       debugText: debugText
     });

@@ -158,7 +158,9 @@ class NATOTableC2 extends BaseTableProcessor {
         tasking: taskingKey,
         nationality: nationResult.nationName,
         aircraftType: aircraftResult.aircraftType,
+        aircraftId: aircraftResult.aircraftId,
         flightSize: config.size,
+        flightCount: 1,
         quantity: 1,
         ordnance: ordnance
       });

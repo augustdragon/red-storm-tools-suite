@@ -3,9 +3,9 @@
   "_version": "1.0.0",
   "_created": "2025-11-01",
   "_description": "Complete aircraft specifications for NATO forces. Speed values format: L/M/H/VH altitude bands.",
-  
   "F-4D": {
     "name": "F-4D Phantom II",
+    "id": "US-F-4D-1",
     "model": "F-4D Phantom",
     "nation": "US",
     "crew": 2,
@@ -43,16 +43,28 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 },
-      { "type": "LGB", "quantity": 1 },
-      { "type": "EOGB", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      },
+      {
+        "type": "LGB",
+        "quantity": 1
+      },
+      {
+        "type": "EOGB",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Radar", "Night"],
+    "capabilities": [
+      "Radar",
+      "Night"
+    ],
     "aam": "AIM-9J/P, AIM-7E-2"
   },
-  
   "F-4E": {
     "name": "F-4E Phantom II",
+    "id": "US-F-4E-1",
     "model": "F-4E Phantom",
     "nation": "US",
     "crew": 2,
@@ -90,16 +102,28 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 },
-      { "type": "LGB", "quantity": 1 },
-      { "type": "EOGB", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      },
+      {
+        "type": "LGB",
+        "quantity": 1
+      },
+      {
+        "type": "EOGB",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Radar", "Night"],
+    "capabilities": [
+      "Radar",
+      "Night"
+    ],
     "aam": "AIM-9L, AIM-7F"
   },
-  
   "F-4G": {
     "name": "F-4G Wild Weasel V",
+    "id": "US-F-4G-1",
     "model": "F-4G Wild Weasel",
     "nation": "US",
     "crew": 2,
@@ -137,16 +161,27 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 },
-      { "type": "HARM", "quantity": 2 },
-      { "type": "Shrike", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      },
+      {
+        "type": "HARM",
+        "quantity": 2
+      },
+      {
+        "type": "Shrike",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Radar, Night"],
+    "capabilities": [
+      "Radar, Night"
+    ],
     "aam": "AIM-7F"
   },
-  
   "RF-4C": {
     "name": "RF-4C Phantom II",
+    "id": "US-RF-4C-1",
     "model": "RF-4C Phantom",
     "nation": "US",
     "crew": 2,
@@ -180,12 +215,16 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Recon", "TFR", "Night"],
+    "capabilities": [
+      "Recon",
+      "TFR",
+      "Night"
+    ],
     "aam": null
   },
-  
   "F-16A": {
     "name": "F-16A Fighting Falcon",
+    "id": "US-F-16A-1",
     "model": "F-16A Falcon",
     "nation": "US",
     "crew": 1,
@@ -223,14 +262,20 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 }
-],
-    "capabilities": ["Radar", "Night"],
+      {
+        "type": "EOGM",
+        "quantity": 1
+      }
+    ],
+    "capabilities": [
+      "Radar",
+      "Night"
+    ],
     "aam": "AIM-9L"
   },
-  
   "F-16C": {
     "name": "F-16C Fighting Falcon",
+    "id": "US-F-16C-1",
     "model": "F-16C Falcon",
     "nation": "US",
     "crew": 1,
@@ -268,16 +313,29 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 },
-      { "type": "HARM", "quantity": 1 },
-      { "type": "Shrike", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      },
+      {
+        "type": "HARM",
+        "quantity": 1
+      },
+      {
+        "type": "Shrike",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Radar", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9M"
   },
-  
   "F-15A": {
     "name": "F-15A Eagle",
+    "id": "US-F-15A-1",
     "model": "F-15A Eagle",
     "nation": "US",
     "crew": 1,
@@ -311,12 +369,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": "AIM-9L/M, AIM-7F/M"
   },
-  
   "F-15C": {
     "name": "F-15C Eagle",
+    "id": "US-F-15C-1",
     "model": "F-15C Eagle",
     "nation": "US",
     "crew": 1,
@@ -350,12 +410,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": "AIM-9M, AIM-7M"
   },
-  
   "F-111D/E": {
     "name": "F-111D/E Aardvark",
+    "id": "US-F-111D-E-1",
     "model": "F-111D/E Aardvark",
     "aliases": [
       "F-111D",
@@ -392,14 +454,21 @@
       }
     },
     "ordnance": [
-      { "type": "Durandal", "quantity": null }
+      {
+        "type": "Durandal",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Radar", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9P(8)"
   },
-  
   "F-111F": {
     "name": "F-111F Aardvark",
+    "id": "US-F-111F-1",
     "model": "F-111F Aardvark",
     "nation": "US",
     "crew": 2,
@@ -432,15 +501,26 @@
       }
     },
     "ordnance": [
-      { "type": "LGB", "quantity": 2 },
-      { "type": "EOGB", "quantity": 4 }
+      {
+        "type": "LGB",
+        "quantity": 2
+      },
+      {
+        "type": "EOGB",
+        "quantity": 4
+      }
     ],
-    "capabilities": ["Radar", "FLIR", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "FLIR",
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9P(8)"
   },
-  
   "EF-111A": {
     "name": "EF-111A Raven",
+    "id": "US-EF-111A-1",
     "model": "EF-111A Raven",
     "nation": "US",
     "crew": 2,
@@ -470,12 +550,16 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["TFR", "Night", "Standoff, Spot"],
+    "capabilities": [
+      "TFR",
+      "Night",
+      "Standoff, Spot"
+    ],
     "aam": null
   },
-  
   "F-117A": {
     "name": "F-117A Nighthawk",
+    "id": "US-F-117A-1",
     "model": "F-117A Nighthawk",
     "nation": "US",
     "crew": 1,
@@ -504,14 +588,20 @@
       "laden": null
     },
     "ordnance": [
-      { "type": "LGB", "quantity": 1 }
+      {
+        "type": "LGB",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Night", "FLIR"],
+    "capabilities": [
+      "Night",
+      "FLIR"
+    ],
     "aam": null
   },
-  
   "A-7D": {
     "name": "A-7D Corsair II",
+    "id": "US-A-7D-1",
     "model": "A-7D Corsair II",
     "nation": "US",
     "crew": 1,
@@ -544,15 +634,24 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 2 },
-      { "type": "LGB", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 2
+      },
+      {
+        "type": "LGB",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Radar", "Night"],
+    "capabilities": [
+      "Radar",
+      "Night"
+    ],
     "aam": "AIM-9J"
   },
-  
   "A-10A": {
     "name": "A-10A Thunderbolt II",
+    "id": "US-A-10A-1",
     "model": "A-10A Thunderbolt II",
     "nation": "US",
     "crew": 1,
@@ -585,15 +684,21 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 2 },
-      { "type": "LGB", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 2
+      },
+      {
+        "type": "LGB",
+        "quantity": 1
+      }
     ],
     "capabilities": [],
     "aam": "AIM-9L"
   },
-  
   "B-52G": {
     "name": "B-52G Stratofortress",
+    "id": "US-B-52G-1",
     "model": "B-52G",
     "nation": "US",
     "crew": 6,
@@ -626,14 +731,21 @@
       }
     },
     "ordnance": [
-      { "type": "SRAM", "quantity": 4 }
+      {
+        "type": "SRAM",
+        "quantity": 4
+      }
     ],
-    "capabilities": ["Radar", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "TFR",
+      "Night"
+    ],
     "aam": null
   },
-  
   "C-141B": {
     "name": "C-141B Starlifter",
+    "id": "US-C-141B-1",
     "model": "C-141B",
     "nation": "US",
     "crew": 4,
@@ -662,12 +774,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "EC-130H": {
     "name": "EC-130H Compass Call",
+    "id": "US-EC-130H-1",
     "model": "EC-130H",
     "nation": "US",
     "crew": 13,
@@ -697,12 +811,15 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night", "Standoff, Spot"],
+    "capabilities": [
+      "Night",
+      "Standoff, Spot"
+    ],
     "aam": null
   },
-  
   "BGM-109G": {
     "name": "BGM-109G GLCM",
+    "id": "US-BGM-109G-1",
     "model": "BGM-109G",
     "nation": "US",
     "crew": 0,
@@ -731,12 +848,15 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["TFR", "Night"],
+    "capabilities": [
+      "TFR",
+      "Night"
+    ],
     "aam": null
   },
-  
   "AGM-69A": {
     "name": "AGM-69A SRAM",
+    "id": "US-AGM-69A-1",
     "model": "AGM-69A",
     "nation": "US",
     "crew": 0,
@@ -765,12 +885,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "BGM-74C": {
     "name": "BGM-74C Chukar III",
+    "id": "US-BGM-74C-1",
     "model": "BGM-74C",
     "nation": "US",
     "crew": 0,
@@ -799,12 +921,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "Phantom FGR.2": {
     "name": "Phantom FGR.2",
+    "id": "UK-PHANTOM-FGR-2-1",
     "model": "Phantom FGR.2",
     "nation": "UK",
     "crew": 2,
@@ -838,12 +962,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": "AIM-9L, Skyflash"
   },
-  
   "Tornado F.2A": {
     "name": "Tornado F.2A",
+    "id": "UK-TORNADO-F-2A-1",
     "model": "Tornado F.2A",
     "nation": "UK",
     "crew": 2,
@@ -877,12 +1003,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": "AIM-9L, Skyflash"
   },
-  
   "Tornado GR.1": {
     "name": "Tornado GR.1",
+    "id": "UK-TORNADO-GR-1-1",
     "model": "Tornado GR.1",
     "nation": "UK",
     "crew": 2,
@@ -915,14 +1043,21 @@
       }
     },
     "ordnance": [
-      { "type": "JP233", "quantity": null }
+      {
+        "type": "JP233",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Radar", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9L"
   },
-  
   "Tornado GR.1A": {
     "name": "Tornado GR.1A",
+    "id": "UK-TORNADO-GR-1A-1",
     "model": "Tornado GR.1A",
     "nation": "UK",
     "crew": 2,
@@ -951,12 +1086,16 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Recon", "TFR", "Night"],
+    "capabilities": [
+      "Recon",
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9L"
   },
-  
   "Jaguar GR.1A": {
     "name": "Jaguar GR.1A",
+    "id": "UK-JAGUAR-GR-1A-1",
     "model": "Jaguar GR.1A",
     "nation": "UK",
     "crew": 1,
@@ -989,14 +1128,20 @@
       }
     },
     "ordnance": [
-      { "type": "LGB", "quantity": 1 }
+      {
+        "type": "LGB",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Recon", "Night(ltd)"],
+    "capabilities": [
+      "Recon",
+      "Night(ltd)"
+    ],
     "aam": "AIM-9G"
   },
-  
   "Harrier GR.3": {
     "name": "Harrier GR.3",
+    "id": "UK-HARRIER-GR-3-1",
     "model": "Harrier GR.3",
     "nation": "UK",
     "crew": 1,
@@ -1029,14 +1174,20 @@
       }
     },
     "ordnance": [
-      { "type": "LGB", "quantity": 1 }
+      {
+        "type": "LGB",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Recon", "Night(ltd)"],
+    "capabilities": [
+      "Recon",
+      "Night(ltd)"
+    ],
     "aam": "AIM-9G"
   },
-  
   "Buccaneer S.2B": {
     "name": "Buccaneer S.2B",
+    "id": "UK-BUCCANEER-S-2B-1",
     "model": "Buccaneer S.2B",
     "nation": "UK",
     "crew": 2,
@@ -1069,16 +1220,28 @@
       }
     },
     "ordnance": [
-      { "type": "LGB", "quantity": 1 },
-      { "type": "EOGB", "quantity": 1 },
-      { "type": "AS.37", "quantity": 1 }
+      {
+        "type": "LGB",
+        "quantity": 1
+      },
+      {
+        "type": "EOGB",
+        "quantity": 1
+      },
+      {
+        "type": "AS.37",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["TFR", "Night"],
+    "capabilities": [
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9L"
   },
-  
   "Falcon 20F": {
     "name": "Falcon 20F",
+    "id": "UK-FALCON-20F-1",
     "model": "Falcon 20F",
     "nation": "UK",
     "crew": 5,
@@ -1108,12 +1271,15 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night", "Standoff, Spot"],
+    "capabilities": [
+      "Night",
+      "Standoff, Spot"
+    ],
     "aam": null
   },
-  
   "F-4F": {
     "name": "F-4F Phantom II",
+    "id": "FRG-F-4F-1",
     "model": "F-4F Phantom",
     "nation": "FRG",
     "crew": 2,
@@ -1151,14 +1317,20 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Radar", "Night"],
+    "capabilities": [
+      "Radar",
+      "Night"
+    ],
     "aam": "AIM-9L"
   },
-  
   "RF-4E": {
     "name": "RF-4E Phantom II",
+    "id": "FRG-RF-4E-1",
     "model": "RF-4E Phantom",
     "nation": "FRG",
     "crew": 2,
@@ -1187,12 +1359,15 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Recon", "Night"],
+    "capabilities": [
+      "Recon",
+      "Night"
+    ],
     "aam": null
   },
-  
   "Tornado IDS": {
     "name": "Tornado IDS",
+    "id": "FRG-TORNADO-IDS-1",
     "model": "IDS",
     "nation": "FRG",
     "crew": 2,
@@ -1225,15 +1400,25 @@
       }
     },
     "ordnance": [
-      { "type": "MW-1A", "quantity": null },
-      { "type": "MW-1B", "quantity": null }
+      {
+        "type": "MW-1A",
+        "quantity": null
+      },
+      {
+        "type": "MW-1B",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Radar", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9L"
   },
-  
   "Alpha Jet A": {
     "name": "Alpha Jet A",
+    "id": "FRG-ALPHA-JET-A-1",
     "model": "Alpha Jet A",
     "nation": "FRG",
     "crew": 2,
@@ -1269,9 +1454,9 @@
     "capabilities": [],
     "aam": null
   },
-  
   "F-104G": {
     "name": "F-104G Starfighter",
+    "id": "FRG-F-104G-1",
     "model": "F-104G Starfighter",
     "nation": "FRG",
     "crew": 1,
@@ -1309,12 +1494,15 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Radar", "Night(Ltd)"],
+    "capabilities": [
+      "Radar",
+      "Night(Ltd)"
+    ],
     "aam": "AIM-9F"
   },
-  
   "HFB 320": {
     "name": "HFB 320 Hansa Jet",
+    "id": "FRG-HFB-320-1",
     "model": "HFB 320 Hansa Jet",
     "nation": "FRG",
     "crew": 5,
@@ -1344,15 +1532,22 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night", "Standoff, Spot"],
+    "capabilities": [
+      "Night",
+      "Standoff, Spot"
+    ],
     "aam": null
   },
-  
   "F-16A BE/CA/NE": {
     "name": "F-16A Fighting Falcon",
+    "id": "BE-F-16A-BE-CA-NE-1",
     "model": "F-16A Falcon",
     "nation": "Belgium",
-    "nationOptions": ["Belgium", "Canada", "Netherlands"],
+    "nationOptions": [
+      "Belgium",
+      "Canada",
+      "Netherlands"
+    ],
     "crew": 1,
     "rwy": 2,
     "fuel": 6,
@@ -1388,12 +1583,16 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Radar", "Recon", "Night(Ltd)"],
+    "capabilities": [
+      "Radar",
+      "Recon",
+      "Night(Ltd)"
+    ],
     "aam": "AIM-9L"
   },
-  
   "Mirage 5BA": {
     "name": "Mirage 5BA",
+    "id": "BE-MIRAGE-5BA-1",
     "model": "Mirage 5BA",
     "nation": "Belgium",
     "crew": 1,
@@ -1426,12 +1625,14 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Night(Ltd)"],
+    "capabilities": [
+      "Night(Ltd)"
+    ],
     "aam": "AIM-9F"
   },
-  
   "Mirage 5BR": {
     "name": "Mirage 5BR",
+    "id": "BE-MIRAGE-5BR-1",
     "model": "Mirage 5BR",
     "nation": "Belgium",
     "crew": 1,
@@ -1460,12 +1661,15 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Recon", "Night"],
+    "capabilities": [
+      "Recon",
+      "Night"
+    ],
     "aam": null
   },
-  
   "CF-18A": {
     "name": "CF-18A Hornet",
+    "id": "CAN-CF-18A-1",
     "model": "CF-18A Hornet",
     "nation": "Canada",
     "crew": 1,
@@ -1503,12 +1707,16 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Radar", "TFR", "Night"],
+    "capabilities": [
+      "Radar",
+      "TFR",
+      "Night"
+    ],
     "aam": "AIM-9L, AIM-7M"
   },
-  
   "CF-5A": {
     "name": "CF-5A Freedom Fighter",
+    "id": "CAN-CF-5A-1",
     "model": "CF-5A",
     "nation": "Canada",
     "crew": 1,
@@ -1544,9 +1752,9 @@
     "capabilities": [],
     "aam": "AIM-9L"
   },
-  
   "NF-5A": {
     "name": "NF-5A Freedom Fighter",
+    "id": "NE-NF-5A-1",
     "model": "NF-5A",
     "nation": "NE",
     "crew": 1,
@@ -1582,9 +1790,9 @@
     "capabilities": [],
     "aam": "AIM-9L"
   },
-  
   "H-53": {
     "name": "H-53",
+    "id": "US-H-53-1",
     "model": "H-53",
     "nation": "US",
     "crew": 0,
@@ -1594,12 +1802,14 @@
     "weapons": {},
     "speeds": {},
     "ordnance": [],
-    "capabilities": ["CSAR"],
+    "capabilities": [
+      "CSAR"
+    ],
     "aam": null
   },
-  
   "Puma": {
     "name": "Puma",
+    "id": "UK-PUMA-1",
     "model": "Puma",
     "nation": "UK",
     "crew": 0,
@@ -1609,12 +1819,14 @@
     "weapons": {},
     "speeds": {},
     "ordnance": [],
-    "capabilities": ["CSAR"],
+    "capabilities": [
+      "CSAR"
+    ],
     "aam": null
   },
-  
   "CH-53": {
     "name": "CH-53",
+    "id": "FRG-CH-53-1",
     "model": "CH-53",
     "nation": "FRG",
     "crew": 0,
@@ -1624,11 +1836,9 @@
     "weapons": {},
     "speeds": {},
     "ordnance": [],
-    "capabilities": ["CSAR"],
+    "capabilities": [
+      "CSAR"
+    ],
     "aam": null
   }
 }
-
-
-
-

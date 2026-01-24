@@ -3,9 +3,9 @@
   "_version": "1.0.0",
   "_created": "2025-11-18",
   "_description": "Aircraft specifications for Baltic Approaches Warsaw Pact forces. Speed values format: L/M/H/VH altitude bands.",
-  
   "Su-17M3": {
     "name": "Su-17M3 Fitter H",
+    "id": "USSR-SU-17M3-1",
     "model": "Su-17M3 Fitter H",
     "nation": "USSR",
     "crew": 1,
@@ -38,15 +38,21 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 },
-      { "type": "EOGM(F)", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      },
+      {
+        "type": "EOGM(F)",
+        "quantity": 1
+      }
     ],
     "capabilities": [],
     "aam": "R-60"
   },
-  
   "Tu-22RD": {
     "name": "Tu-22RD Blinder C",
+    "id": "USSR-TU-22RD-1",
     "model": "Tu-22RD Blinder C",
     "nation": "USSR",
     "crew": 3,
@@ -75,12 +81,15 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Recon", "Night"],
+    "capabilities": [
+      "Recon",
+      "Night"
+    ],
     "aam": null
   },
-  
   "Tu-22M2": {
     "name": "Tu-22M2 Backfire B",
+    "id": "USSR-TU-22M2-1",
     "model": "Tu-22M2 Backfire B",
     "nation": "USSR",
     "crew": 4,
@@ -113,14 +122,20 @@
       }
     },
     "ordnance": [
-      { "type": "AS-4", "quantity": 2 }
+      {
+        "type": "AS-4",
+        "quantity": 2
+      }
     ],
-    "capabilities": ["Radar", "Night"],
+    "capabilities": [
+      "Radar",
+      "Night"
+    ],
     "aam": null
   },
-  
   "Tu-95RT": {
     "name": "Tu-95RT Bear D",
+    "id": "USSR-TU-95RT-1",
     "model": "Tu-95RT Bear D",
     "nation": "USSR",
     "crew": 9,
@@ -149,12 +164,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "IL-38": {
     "name": "IL-38 May",
+    "id": "USSR-IL-38-1",
     "model": "IL-38 May",
     "nation": "USSR",
     "crew": 12,
@@ -183,12 +200,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "Ka-25T": {
     "name": "Ka-25T Hormone B",
+    "id": "USSR-KA-25T-1",
     "model": "Ka-25T Hormone B",
     "nation": "USSR",
     "crew": 5,
@@ -217,12 +236,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "An-12B": {
     "name": "An-12B Cub A",
+    "id": "USSR-AN-12B-1",
     "model": "An-12B Cub A",
     "nation": "USSR",
     "crew": 6,
@@ -251,12 +272,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": "Rear Gun (3)"
   },
-  
   "AS-4": {
     "name": "AS-4 Kitchen",
+    "id": "USSR-AS-4-1",
     "model": "AS-4 Kitchen",
     "nation": "USSR",
     "crew": 0,
@@ -285,12 +308,14 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   },
-  
   "MiG-21PFM": {
     "name": "MiG-21PFM Fishbed F",
+    "id": "POL-MIG-21PFM-1",
     "model": "MiG-21PFM Fishbed F",
     "nation": "POL",
     "crew": 1,
@@ -328,14 +353,19 @@
       }
     },
     "ordnance": [
-      { "type": "Chaff", "quantity": null }
+      {
+        "type": "Chaff",
+        "quantity": null
+      }
     ],
-    "capabilities": ["Night(Ltd)"],
+    "capabilities": [
+      "Night(Ltd)"
+    ],
     "aam": "R-13M"
   },
-  
   "MiG-21RF": {
     "name": "MiG-21RF Fishbed H",
+    "id": "POL-MIG-21RF-1",
     "model": "MiG-21RF Fishbed H",
     "nation": "POL",
     "crew": 1,
@@ -364,12 +394,15 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Recon", "Night(Ltd)"],
+    "capabilities": [
+      "Recon",
+      "Night(Ltd)"
+    ],
     "aam": null
   },
-  
   "MiG-21MF": {
     "name": "MiG-21MF Fishbed J",
+    "id": "POL-MIG-21MF-1",
     "model": "MiG-21MF Fishbed J",
     "nation": "POL",
     "crew": 1,
@@ -407,12 +440,15 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Night(Ltd)","IRST"],
+    "capabilities": [
+      "Night(Ltd)",
+      "IRST"
+    ],
     "aam": "R-13M"
   },
-  
   "MiG-21bis": {
     "name": "MiG-21bis Fishbed L",
+    "id": "POL-MIG-21BIS-1",
     "model": "MiG-21bis Fishbed L",
     "nation": "POL",
     "crew": 1,
@@ -450,12 +486,14 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Night(Ltd)"],
+    "capabilities": [
+      "Night(Ltd)"
+    ],
     "aam": "R-13M/R60, R-3R,"
   },
-  
   "MiG-23MF": {
     "name": "MiG-23MF Flogger B",
+    "id": "POL-MIG-23MF-1",
     "model": "MiG-23MF Flogger B",
     "nation": "POL",
     "crew": 1,
@@ -493,12 +531,15 @@
       }
     },
     "ordnance": [],
-    "capabilities": ["Night(Ltd)", "IRST"],
+    "capabilities": [
+      "Night(Ltd)",
+      "IRST"
+    ],
     "aam": "R-60, R-23"
   },
-  
   "Su-20MK": {
     "name": "Su-20MK Fitter C",
+    "id": "POL-SU-20MK-1",
     "model": "Su-20MK Fitter C",
     "nation": "POL",
     "crew": 1,
@@ -534,9 +575,9 @@
     "capabilities": [],
     "aam": "R-13M"
   },
-  
   "Su-22M4": {
     "name": "Su-22M4 Fitter K",
+    "id": "POL-SU-22M4-1",
     "model": "Su-22M4 Fitter K",
     "nation": "POL",
     "crew": 1,
@@ -544,7 +585,7 @@
     "fuel": 8,
     "notes": "C, G, K",
     "weapons": {
-      "gun": "30mm",  
+      "gun": "30mm",
       "gunDepletion": 4,
       "irm": "R-60",
       "irmDepletion": 6,
@@ -569,14 +610,19 @@
       }
     },
     "ordnance": [
-      { "type": "EOGM", "quantity": 1 }
+      {
+        "type": "EOGM",
+        "quantity": 1
+      }
     ],
-    "capabilities": ["Recon"],
+    "capabilities": [
+      "Recon"
+    ],
     "aam": "R-60"
   },
-  
   "Mi-14PL": {
     "name": "Mi-14PL Haze A",
+    "id": "POL-MI-14PL-1",
     "model": "Mi-14PL Haze A",
     "nation": "POL",
     "crew": 4,
@@ -605,8 +651,9 @@
       "laden": null
     },
     "ordnance": [],
-    "capabilities": ["Night"],
+    "capabilities": [
+      "Night"
+    ],
     "aam": null
   }
 }
-

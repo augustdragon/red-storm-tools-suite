@@ -55,8 +55,13 @@ class WPTableG extends BaseTableProcessor {
     }
     
     // Handle sub-rolls for aircraft variants
-    const subRollResult = this.handleSubRoll(aircraftResult.aircraftType, 'Sub-roll');
+    const subRollResult = this.handleSubRollWithId(
+      aircraftResult.aircraftType,
+      aircraftResult.aircraftId,
+      'Sub-roll'
+    );
     let finalAircraftType = subRollResult.finalAircraftType;
+    let finalAircraftId = subRollResult.finalAircraftId;
     
     // Handle additional WP-specific sub-roll pattern
     let additionalSubRollDebug = null;
@@ -64,6 +69,7 @@ class WPTableG extends BaseTableProcessor {
       const subRollDebugResult = makeDebugRoll(10, 'Sub-roll');
       const subRoll = subRollDebugResult.roll;
       finalAircraftType = subRoll <= 5 ? 'MiG-25PD' : 'Su-27S';
+      finalAircraftId = null;
       additionalSubRollDebug = subRollDebugResult.debugEntry;
     }
     
@@ -80,6 +86,13 @@ class WPTableG extends BaseTableProcessor {
     return this.formatResult({
       nationRoll: nationResult.nationRoll,
       aircraftRoll: aircraftResult.aircraftRoll,
+      nationName: nationResult.nationName,
+      nationality: nationResult.nationName,
+      aircraftType: finalAircraftType,
+      aircraftId: finalAircraftId,
+      flightSize: this.tableData.flightSize,
+      flightCount: 1,
+      tasking: 'CAP',
       text: resultText,
       debugText: debugText
     });

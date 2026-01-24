@@ -131,36 +131,41 @@ class PrintGenerator {
     // Parse result text to extract flight info
     const resultText = flight.result || flight.text || '';
     const faction = flight.faction || 'NATO';
+
     
-    // Check if this is a multi-flight result (contains <br> or semicolons)
-    if (resultText.includes('<br>') || resultText.includes(';')) {
-      console.log('Multi-flight result detected, splitting...');
-      const separator = resultText.includes('<br>') ? '<br>' : ';';
-      const flightParts = resultText.split(separator).map(part => part.trim()).filter(part => part.length > 0);
-      console.log(`Split into ${flightParts.length} flight types:`, flightParts);
-      
-      // Generate cards for each flight type
+    const flightsArray = flight.flights || (flight.result && typeof flight.result === 'object' && flight.result.flights);
+    const taskingsArray = flight.taskings || (flight.result && typeof flight.result === 'object' && flight.result.taskings);
+
+    if (Array.isArray(flightsArray) || Array.isArray(taskingsArray)) {
+      const entries = Array.isArray(flightsArray) ? flightsArray : taskingsArray;
       let allHTML = '';
       const cardGroups = [];
-      
-      for (let i = 0; i < flightParts.length; i++) {
-        const flightPart = flightParts[i];
-        const derivedTaskingMatch = flightPart.match(/,\s*([^,<]+?)$/);
-        const derivedTasking = derivedTaskingMatch ? derivedTaskingMatch[1].trim() : flight.tasking;
 
-        const tempFlight = { ...flight, result: flightPart, tasking: derivedTasking };
-        const isLastPart = i === flightParts.length - 1;
+      for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i];
+        const mergedFlight = {
+          ...flight,
+          ...entry,
+          flights: null,
+          taskings: null,
+          result: entry.text || entry.result || resultText
+        };
+        const isLastPart = i === entries.length - 1;
         const applyPageBreakToThisFlight = isLastNATOFlight && isLastPart;
-        
-        const cardHTML = await this.generateDesignerFlightCard(tempFlight, aircraftNATO, aircraftWP, noteRulesData, weaponsData, nameMappingData, applyPageBreakToThisFlight);
-        
-        // Check if this group is all CSAR cards
+
+        const cardHTML = await this.generateDesignerFlightCard(
+          mergedFlight,
+          aircraftNATO,
+          aircraftWP,
+          noteRulesData,
+          weaponsData,
+          nameMappingData,
+          applyPageBreakToThisFlight
+        );
+
         const isCSARGroup = cardHTML.includes('compact-csar-card');
         cardGroups.push({ html: cardHTML, isCsar: isCSARGroup });
-        
-        console.log(`Flight type ${i + 1}: ${flightPart.substring(0, 50)}..., CSAR group: ${isCSARGroup}`);
-        
-        // If this is a CSAR group, wrap it in a container
+
         if (isCSARGroup) {
           const pageBreakStyle = applyPageBreakToThisFlight ? ' style="page-break-after: always;"' : '';
           allHTML += `<div class="csar-container"${pageBreakStyle}>\n${cardHTML}\n</div>\n`;
@@ -168,16 +173,17 @@ class PrintGenerator {
           allHTML += cardHTML;
         }
       }
-      
+
       return allHTML;
     }
-    
+
     // Single flight processing
     // Priority: Use structured data from table processors, fallback to defaults
     let aircraftType = flight.aircraftType || 'Unknown';
+    let aircraftId = flight.aircraftId || null;
     let flightSize = flight.flightSize || 2;
     let numFlights = flight.flightCount || 1;
-    let nationCode = flight.actualNationality || flight.nationality || '';
+    let nationCode = flight.actualNationality || flight.nationality || flight.nationCode || '';
     
     console.log('[FLIGHT CARD] Starting card generation for:', aircraftType);
     console.log('[FLIGHT CARD] Initial nationality from flight.nationality:', nationCode);
@@ -210,155 +216,52 @@ class PrintGenerator {
       }
     }
     
-    // Detect format for fallback parsing (only used if structured data is missing)
-    let isBalticFormat = false;
-    
-    // If structured data is incomplete, parse from text
-    const needsParsing = !aircraftType || aircraftType === 'Unknown' || !flightSize || !numFlights;
-    
-    if (needsParsing) {
-      // Check if this is Baltic Approaches format: "1 x 2 [QRA], CAP (DK: F-16A)" or "1 x 1 Maritime Patrol (US: P-3C)"
-      const balticMatch = resultText.match(/(\d+)\s*x\s*(\d+)\s*(?:\[[^\]]*\],\s*)?([^(]+)\s*\(([^:]+):\s*([^)]+)\)/);
-      
-      // Check if this is D2 format: "1 x {2} NE F-16A, SEAD ..."
-      const d2Match = resultText.match(/(\d+)\s*x\s*\{(\d+)\}\s*([A-Z]{2,4})\s+([^,]+),\s*([^(]+)/);
-      
-      if (balticMatch) {
-        // Baltic Approaches format
-        isBalticFormat = true;
-        if (!numFlights || numFlights === 1) numFlights = parseInt(balticMatch[1]);
-        if (!flightSize || flightSize === 2) flightSize = parseInt(balticMatch[2]);
-        if (!tasking) tasking = balticMatch[3].trim();
-        if (!nationCode) nationCode = balticMatch[4].trim();
-        if (!aircraftType || aircraftType === 'Unknown') aircraftType = balticMatch[5].trim();
-        
-        console.log(`Parsed Baltic format: ${numFlights}x{${flightSize}} ${nationCode} ${aircraftType}, ${tasking}`);
-      } else if (d2Match) {
-        // D2/D3 format: "1 x {2} NE F-16A, SEAD ..." or "4 x {2} DK F-16A (DK), CAP"
-        const isD2D3Table = flight.table === 'D2' || flight.table === 'D3';
-        isBalticFormat = isD2D3Table;
-        if (!numFlights || numFlights === 1) numFlights = parseInt(d2Match[1]);
-        if (!flightSize || flightSize === 2) flightSize = parseInt(d2Match[2]);
-        if (!nationCode) nationCode = d2Match[3].trim();
-        if (!aircraftType || aircraftType === 'Unknown') aircraftType = d2Match[4].trim();
-        if (!tasking) tasking = d2Match[5].trim();
-        
-        console.log(`Parsed D2/D3 format (table: ${flight.table}): ${numFlights}x{${flightSize}} ${nationCode} ${aircraftType}, ${tasking}`);
-      } else {
-        // Red Storm format: "1 x {2} US F-15C, CAP"
-        const flightSizeMatch = resultText.match(/(\d+)\s*x\s*\{(\d+)\}/);
-        if (flightSizeMatch) {
-          if (!numFlights || numFlights === 1) numFlights = parseInt(flightSizeMatch[1]);
-          if (!flightSize || flightSize === 2) flightSize = parseInt(flightSizeMatch[2]);
-        }
-        
-        if (!aircraftType || aircraftType === 'Unknown') {
-          const aircraftMatch = resultText.match(/\}\s*([^,<]+)/);
-          if (aircraftMatch) {
-            aircraftType = aircraftMatch[1].trim();
-          }
-        }
-      }
+    const missingFields = [];
+    if (!aircraftType || aircraftType === 'Unknown') missingFields.push('aircraftType');
+    if (!aircraftId && (!aircraftType || aircraftType === 'Unknown')) missingFields.push('aircraftId');
+    if (!flight.flightSize) missingFields.push('flightSize');
+    if (!flight.flightCount) missingFields.push('flightCount');
+    if (!nationCode) missingFields.push('nationality');
+    if (!tasking) missingFields.push('tasking');
+    if (missingFields.length > 0) {
+      console.warn('[FLIGHT CARD] Missing structured fields; legacy parsing disabled:', {
+        missingFields,
+        flight,
+        resultText
+      });
     }
-    
+
     const originalAircraftType = aircraftType;
-    
-    // Extract nation code for Red Storm format
-    if (!isBalticFormat) {
-      const nationMatch = resultText.match(/^([A-Z]{2,4}):/);
-      if (nationMatch) {
-        nationCode = nationMatch[1];
-      } else {
-        const nationInAircraft = aircraftType.match(/^(US|UK|FRG|CAN|NE|BE|DK|USSR|GDR)\\s+(.+)/);
-        if (nationInAircraft) {
-          nationCode = nationInAircraft[1];
-          aircraftType = nationInAircraft[2];
-        }
-      }
-    }
-    
-    // Check flight nationality
-    if (!nationCode && (flight.nationality || flight.atafZone)) {
-      const flightNation = flight.nationality || flight.atafZone;
-      const validNationCodes = ['US', 'UK', 'FRG', 'CAN', 'BE', 'NE', 'DK', 'SE', 'USSR', 'GDR'];
-      console.log('[FLIGHT CARD] Checking nationality:', flightNation, 'Valid codes:', validNationCodes);
-      console.log('[FLIGHT CARD] Is valid?', validNationCodes.includes(flightNation));
-      if (flightNation && validNationCodes.includes(flightNation)) {
-        nationCode = flightNation;
-        console.log('[FLIGHT CARD] Set nationCode to:', nationCode);
-      }
-    } else {
-      console.log('[FLIGHT CARD] Skipping nationality check, nationCode already set:', nationCode);
-    }
-    
-    // Handle variant aircraft with nation in parentheses
-    const variantNationMatch = aircraftType.match(/^(.+?)\((BE|NE)\)$/);
-    if (variantNationMatch) {
-      nationCode = variantNationMatch[2];
-    }
-    
-    // Handle nationality with service branch prefix (e.g., "UK(RN) FGR2" or "US(MC) F-4")
-    const serviceBranchMatch = aircraftType.match(/^([A-Z]{2,4})\(([A-Z]+)\)\s+(.+)$/);
-    if (serviceBranchMatch) {
-      nationCode = serviceBranchMatch[1];
-      // serviceBranchMatch[2] is the service branch (RN, MC, etc.)
-      aircraftType = serviceBranchMatch[3]; // Extract just the aircraft name
-      console.log(`[AIRCRAFT LOOKUP] Extracted nationality "${nationCode}" and aircraft "${aircraftType}" from service branch format`);
-    }
-    
-    // Extract tasking if not provided (structured data takes priority)
-    if (!tasking) {
-      if (isBalticFormat) {
-        // Baltic format already extracted tasking above
-      } else {
-        const taskingMatch = resultText.match(/,\s*([^,<(]+?)$/);
-        if (taskingMatch) {
-          tasking = taskingMatch[1].trim();
-          console.log(`Parsed tasking from text: "${tasking}"`);
-        }
-      }
-    } else {
-      console.log(`Using structured tasking: "${tasking}"`);
-    }
-    
-    // Extract ordnance if not provided (structured data takes priority)
-    if (!rolledOrdnance && !isBalticFormat) {
-      // Red Storm format text parsing fallback
-      // Only match parentheses that appear after a comma (indicating ordnance, not aircraft variant)
-      const ordnanceMatch = resultText.match(/,\s*[^,]+\s*\(([^)]+)\)/);
-      if (ordnanceMatch) {
-        const fullOrdnance = ordnanceMatch[1].trim();
-        // Extract additional ordnance beyond the base load
-        if (fullOrdnance.includes('+')) {
-          // Split on '+' and take everything after "Bombs/CBU/Rockets"
-          const parts = fullOrdnance.split('+').map(p => p.trim());
-          // Remove the base "Bombs/CBU/Rockets" if present and keep the additional items
-          const additionalParts = parts.filter(part => part !== 'Bombs/CBU/Rockets' && part !== '');
-          if (additionalParts.length > 0) {
-            rolledOrdnance = '+' + additionalParts.join(' +');
-          }
-        } else if (!fullOrdnance.startsWith('Bombs/CBU/Rockets')) {
-          // Single ordnance item that's not the base load
-          rolledOrdnance = fullOrdnance;
-        }
-      }
-    }
-    
+
     // Apply name mapping
     const factionKey = faction === 'NATO' ? 'NATO' : 'WP';
+    let mappedName = null;
+    if (typeof aircraftType === 'string') {
+      aircraftType = aircraftType.trim();
+    }
+
     if (nameMappingData && nameMappingData[factionKey] && aircraftType && typeof aircraftType === 'string') {
-      let mappedName = null;
+      let mappedEntry = null;
       
       if (factionKey === 'WP' && nationCode && nameMappingData[factionKey][nationCode]) {
-        mappedName = nameMappingData[factionKey][nationCode][aircraftType];
+        mappedEntry = nameMappingData[factionKey][nationCode][aircraftType];
       }
       
-      if (!mappedName && nameMappingData[factionKey][aircraftType]) {
-        mappedName = nameMappingData[factionKey][aircraftType];
+      if (!mappedEntry && nameMappingData[factionKey][aircraftType]) {
+        mappedEntry = nameMappingData[factionKey][aircraftType];
       }
       
-      if (mappedName) {
-        aircraftType = mappedName;
+      if (mappedEntry) {
+        if (typeof mappedEntry === 'string') {
+          mappedName = mappedEntry;
+        } else if (typeof mappedEntry === 'object') {
+          if (mappedEntry.name) {
+            mappedName = mappedEntry.name;
+          }
+          if (!aircraftId && mappedEntry.aircraftId) {
+            aircraftId = mappedEntry.aircraftId;
+          }
+        }
       }
     } else if (typeof aircraftType !== 'string') {
       console.error('Aircraft type is not a string:', aircraftType, typeof aircraftType);
@@ -369,19 +272,55 @@ class PrintGenerator {
     const aircraftDB = faction === 'NATO' ? aircraftNATO : aircraftWP;
     let rawAircraftData = null;
     let matchedAircraftKey = null;
+
+    if (mappedName && aircraftDB && Object.prototype.hasOwnProperty.call(aircraftDB, mappedName)) {
+      aircraftType = mappedName;
+    } else if (mappedName) {
+      console.warn('[AIRCRAFT LOOKUP] Mapping name not found in DB, keeping original aircraftType:', {
+        originalAircraftType: aircraftType,
+        mappedName
+      });
+    }
     
     console.log(`[AIRCRAFT LOOKUP] Searching for: "${aircraftType}" (type: ${typeof aircraftType}) in ${faction} database`);
     console.log(`[AIRCRAFT LOOKUP] Flight object keys:`, Object.keys(flight));
     console.log(`[AIRCRAFT LOOKUP] Flight.aircraftType:`, flight.aircraftType);
     console.log(`[AIRCRAFT LOOKUP] Flight.nationality:`, flight.nationality);
     console.log(`[AIRCRAFT LOOKUP] Flight.tasking:`, flight.tasking);
+    console.log(`[AIRCRAFT LOOKUP] Flight.aircraftId:`, aircraftId);
     
+
+    const aircraftIdIndex = this.aircraftIdIndex ? this.aircraftIdIndex[factionKey] : null;
+
+    if (aircraftId && aircraftIdIndex && aircraftIdIndex[aircraftId]) {
+      rawAircraftData = aircraftIdIndex[aircraftId].data;
+      matchedAircraftKey = aircraftIdIndex[aircraftId].key;
+      console.log(`[AIRCRAFT LOOKUP] Found by aircraftId "${aircraftId}" -> "${matchedAircraftKey}"`);
+    } else if (aircraftId && aircraftIdIndex) {
+      console.warn(`[AIRCRAFT LOOKUP] No aircraft found for aircraftId "${aircraftId}" in ${faction} database`);
+    }
+
     // First try exact match by key
-    if (aircraftDB[aircraftType]) {
+    const hasExactKey = !!(aircraftType && aircraftDB && Object.prototype.hasOwnProperty.call(aircraftDB, aircraftType));
+    if (!rawAircraftData && hasExactKey) {
       rawAircraftData = aircraftDB[aircraftType];
       matchedAircraftKey = aircraftType;
-      console.log(`[AIRCRAFT LOOKUP] ✓ Found exact match for "${aircraftType}"`);
-    } else {
+      console.log(`[AIRCRAFT LOOKUP] ?" Found exact match for "${aircraftType}"`);
+    }
+
+    if (!rawAircraftData && aircraftId && aircraftDB && typeof aircraftDB === 'object') {
+      for (const [key, data] of Object.entries(aircraftDB)) {
+        if (key.startsWith('_')) continue;
+        if (data && data.id === aircraftId) {
+          rawAircraftData = data;
+          matchedAircraftKey = key;
+          console.log(`[AIRCRAFT LOOKUP] Found by aircraftId scan "${aircraftId}" -> "${matchedAircraftKey}"`);
+          break;
+        }
+      }
+    }
+
+    if (!rawAircraftData) {
       console.log(`[AIRCRAFT LOOKUP] No exact match, searching aliases...`);
       // Search by aliases
       for (const [key, data] of Object.entries(aircraftDB)) {
@@ -391,39 +330,18 @@ class PrintGenerator {
           if (data.aliases.includes(aircraftType)) {
             rawAircraftData = data;
             matchedAircraftKey = key;
-            console.log(`[AIRCRAFT LOOKUP] ✓ Found via alias "${aircraftType}" -> "${key}"`);
+            console.log(`[AIRCRAFT LOOKUP] ?" Found via alias "${aircraftType}" -> "${key}"`);
             break;
           }
-        }
-      }
-      
-      // Fallback to partial match logic if still not found
-      if (!rawAircraftData) {
-        console.log(`[AIRCRAFT LOOKUP] No alias match, trying partial matching...`);
-        const aircraftKeys = Object.keys(aircraftDB)
-          .filter(key => !key.startsWith('_'))
-          .sort((a, b) => b.length - a.length);
-        
-        const normalizedSearch = aircraftType.replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
-        console.log(`[AIRCRAFT LOOKUP] Normalized search: "${normalizedSearch}"`);
-        
-        for (const key of aircraftKeys) {
-          const normalizedKey = key.replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
-          if (normalizedKey.includes(normalizedSearch) || normalizedSearch.includes(normalizedKey)) {
-            rawAircraftData = aircraftDB[key];
-            matchedAircraftKey = key;
-            console.log(`[AIRCRAFT LOOKUP] ✓ Found via partial match "${aircraftType}" -> "${key}"`);
-            break;
-          }
-        }
-        
-        if (!rawAircraftData) {
-          console.error(`[AIRCRAFT LOOKUP] ✗ FAILED: Aircraft not found: "${aircraftType}" in ${faction} database`);
-          console.error(`[AIRCRAFT LOOKUP] Available aircraft in ${faction}:`, Object.keys(aircraftDB).filter(k => !k.startsWith('_')).slice(0, 10).join(', '), '...');
         }
       }
     }
-    
+
+    if (!rawAircraftData) {
+      console.error(`[AIRCRAFT LOOKUP] ?- FAILED: Aircraft not found: "${aircraftType}" in ${faction} database`);
+      console.error(`[AIRCRAFT LOOKUP] Available aircraft in ${faction}:`, Object.keys(aircraftDB).filter(k => !k.startsWith('_')).slice(0, 10).join(', '), '...');
+    }
+
     if (!rawAircraftData) {
       console.warn(`Skipping flight card generation - aircraft "${aircraftType}" not found`);
       return '';
@@ -542,6 +460,7 @@ class PrintGenerator {
     
     return allCardsHTML;
   }
+
 
   /**
    * Convert JSON aircraft data to designer display format
@@ -1353,6 +1272,23 @@ class PrintGenerator {
     return null;
   }
 
+  /**
+   * Build an ID index for aircraft lookup by aircraftId
+   * @param {object} aircraftDB - Aircraft database keyed by name
+   * @returns {object} Map of aircraftId to { key, data }
+   */
+  buildAircraftIdIndex(aircraftDB) {
+    const index = {};
+    if (!aircraftDB || typeof aircraftDB !== 'object') return index;
+    for (const [key, value] of Object.entries(aircraftDB)) {
+      if (key.startsWith('_')) continue;
+      if (value && value.id) {
+        index[value.id] = { key, data: value };
+      }
+    }
+    return index;
+  }
+
   async loadDataFiles() {
     console.log('Loading merged data files for print generation...');
     
@@ -1388,6 +1324,11 @@ class PrintGenerator {
         this.surfaceRadarData[entry.aircraft] = entry;
       });
     }
+
+    this.aircraftIdIndex = {
+      NATO: this.buildAircraftIdIndex(loadedData.aircraftNATO),
+      WP: this.buildAircraftIdIndex(loadedData.aircraftWP)
+    };
     
     console.log('Successfully loaded merged data files containing both RS and BA data');
     return loadedData;
@@ -1431,6 +1372,8 @@ class PrintGenerator {
           const processedFlight = {
             ...flight,
             ...individualFlight, // Spread flight properties (text, tasking, nationality, aircraftType, etc.)
+            flights: null,
+            taskings: null,
             result: individualFlight.text || individualFlight.result || flight.text || flight.result, // Use flight text as the result, fallback to parent
             faction: flight.faction || individualFlight.faction || 'NATO'
           };
@@ -1446,6 +1389,8 @@ class PrintGenerator {
           const processedFlight = {
             ...flight,
             ...tasking, // Spread tasking properties (text, tasking, nationality, aircraftType, etc.)
+            flights: null,
+            taskings: null,
             result: tasking.text, // Use tasking text as the result
             faction: flight.faction || tasking.faction || 'NATO'
           };
@@ -1471,6 +1416,7 @@ class PrintGenerator {
    * @param {Array} flights - Processed flights
    * @returns {Object} Object with natoRegular, natoCSAR, wpRegular, wpCSAR arrays
    */
+
   sortFlights(flights) {
     const natoRegular = [];
     const natoCSAR = [];
@@ -1478,61 +1424,27 @@ class PrintGenerator {
     const wpCSAR = [];
     
     for (const flight of flights) {
-      // Extract tasking from result text to determine if CSAR
-      const resultText = flight.result || flight.text || '';
+      const tasking = (flight.tasking || '').toUpperCase().trim();
+      const isCSAR = tasking === 'CSAR';
       
-      // Handle multi-flight results (like "Alpha Jet, Rescue Support<br>CH-53, CSAR")
-      if (resultText.includes('<br>') || resultText.includes(';')) {
-        const separator = resultText.includes('<br>') ? '<br>' : ';';
-        const flightParts = resultText.split(separator).map(part => part.trim()).filter(part => part.length > 0);
-        
-        // Process each part separately
-        for (const flightPart of flightParts) {
-          const taskingMatch = flightPart.match(/,\s*([^,<]+?)$/);
-          const tasking = taskingMatch ? taskingMatch[1].trim() : '';
-          const isCSAR = tasking === 'CSAR';
-          
-          // Create a separate flight object for each part
-          const partFlight = { ...flight, result: flightPart };
-          
-          if (flight.faction === 'NATO') {
-            if (isCSAR) {
-              natoCSAR.push(partFlight);
-            } else {
-              natoRegular.push(partFlight);
-            }
-          } else {
-            if (isCSAR) {
-              wpCSAR.push(partFlight);
-            } else {
-              wpRegular.push(partFlight);
-            }
-          }
+      if (flight.faction === 'NATO') {
+        if (isCSAR) {
+          natoCSAR.push(flight);
+        } else {
+          natoRegular.push(flight);
         }
       } else {
-        // Single flight - use existing logic
-        const taskingMatch = resultText.match(/,\s*([^,<]+?)$/);
-        const tasking = taskingMatch ? taskingMatch[1].trim() : '';
-        const isCSAR = tasking === 'CSAR';
-        
-        if (flight.faction === 'NATO') {
-          if (isCSAR) {
-            natoCSAR.push(flight);
-          } else {
-            natoRegular.push(flight);
-          }
+        if (isCSAR) {
+          wpCSAR.push(flight);
         } else {
-          if (isCSAR) {
-            wpCSAR.push(flight);
-          } else {
-            wpRegular.push(flight);
-          }
+          wpRegular.push(flight);
         }
       }
     }
     
     return { natoRegular, natoCSAR, wpRegular, wpCSAR };
   }
+
 
   /**
    * Create print window

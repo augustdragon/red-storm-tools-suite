@@ -137,11 +137,21 @@ nationality-test.html
 # Development documentation (not user-facing)
 **/PHASE*.md
 **/DETAILED-*.md
+**/task-*.md
 MULTI-MODULE-IMPLEMENTATION.md
+aircraft-id-plan.md
 
 # Development scripts
 *.ps1
 !deploy.ps1
+
+# Docker
+Dockerfile
+Dockerfile.*
+docker-compose*.yml
+docker-compose*.yaml
+.dockerignore
+.docker/
 
 # Orphaned/obsolete files
 production-index.html

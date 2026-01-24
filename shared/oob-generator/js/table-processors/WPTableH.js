@@ -56,6 +56,7 @@ class WPTableH extends BaseTableProcessor {
     
     // Handle sub-rolls for aircraft variants
     let finalAircraftType = aircraftResult.aircraftType;
+    let finalAircraftId = aircraftResult.aircraftId;
     let additionalSubRollDebug = null;
     
     if (aircraftResult.aircraftType.includes('¹')) {
@@ -64,6 +65,7 @@ class WPTableH extends BaseTableProcessor {
       
       if (aircraftResult.aircraftType.includes('MiG-25PD/Su-27S¹')) {
         finalAircraftType = subRoll <= 5 ? 'MiG-25PD' : 'Su-27S';
+        finalAircraftId = null;
       }
       
       additionalSubRollDebug = subRollDebugResult.debugEntry;
@@ -82,6 +84,13 @@ class WPTableH extends BaseTableProcessor {
     return this.formatResult({
       nationRoll: nationResult.nationRoll,
       aircraftRoll: aircraftResult.aircraftRoll,
+      nationName: nationResult.nationName,
+      nationality: nationResult.nationName,
+      aircraftType: finalAircraftType,
+      aircraftId: finalAircraftId,
+      flightSize: this.tableData.flightSize,
+      flightCount: this.tableData.flightCount,
+      tasking: 'CAP',
       text: resultText,
       debugText: debugText
     });

@@ -3,8 +3,11 @@
   "_version": "1.0.0",
   "_created": "2025-11-19",
   "_description": "Warsaw Pact OOB tables for Baltic Approaches module",
-  "_date_ranges": ["15-20 May", "21-31 May", "1-15 June"],
-  
+  "_date_ranges": [
+    "15-20 May",
+    "21-31 May",
+    "1-15 June"
+  ],
   "G2": {
     "name": "WP Table G2 - QRA Flight",
     "faction": "WP",
@@ -13,7 +16,7 @@
     "result": "1 x {2} [QRA], CAP",
     "hasDate": true,
     "setupEntry": {
-      "text": "USSR (MiG-23 Darmgarten, MiG-25/29 Entry 1), MiG (POL Entry 3/4), GDR (MiG-21MF GDR Entry 2, MiG-23ML MiG-23MF Peenemünde). Set up in Ready status if at on-map airfield."
+      "text": "USSR (MiG-23 Darmgarten, MiG-25/29 Entry 1), MiG (POL Entry 3/4), GDR (MiG-21MF GDR Entry 2, MiG-23ML MiG-23MF Peenem\u00fcnde). Set up in Ready status if at on-map airfield."
     },
     "dateRanges": {
       "15-20 May": {
@@ -21,24 +24,48 @@
           "1-3": {
             "name": "USSR",
             "aircraft": {
-              "1-5": "MiG-23MLD",
-              "6": "MiG-29A",
-              "9-10": "MiG-25PD"
+              "6": {
+                "name": "MiG-29A",
+                "aircraftId": "USSR-MIG-29A-1"
+              },
+              "1-5": {
+                "name": "MiG-23MLD",
+                "aircraftId": "USSR-MIG-23MLD-1"
+              },
+              "9-10": {
+                "name": "MiG-25PD",
+                "aircraftId": "USSR-MIG-25PD-1"
+              }
             }
           },
           "4-6": {
             "name": "POL",
             "aircraft": {
-              "1-5": "MiG-21bis",
-              "6-10": "MiG-23MF"
+              "1-5": {
+                "name": "MiG-21bis",
+                "aircraftId": "POL-MIG-21BIS-1"
+              },
+              "6-10": {
+                "name": "MiG-23MF",
+                "aircraftId": "POL-MIG-23MF-1"
+              }
             }
           },
           "7-10": {
             "name": "GDR",
             "aircraft": {
-              "1-4": "MiG-21MF",
-              "5-9": "MiG-23ML",
-              "10": "MiG-23MF"
+              "10": {
+                "name": "MiG-23MF",
+                "aircraftId": "POL-MIG-23MF-1"
+              },
+              "1-4": {
+                "name": "MiG-21MF",
+                "aircraftId": "POL-MIG-21MF-1"
+              },
+              "5-9": {
+                "name": "MiG-23ML",
+                "aircraftId": "GDR-MIG-23ML-1"
+              }
             }
           }
         }
@@ -48,24 +75,48 @@
           "1-4": {
             "name": "USSR",
             "aircraft": {
-              "1-4": "MiG-23MLD",
-              "5-7": "MiG-23ML",
-              "8-9": "MiG-29A",
-              "10": "MiG-25PD"
+              "10": {
+                "name": "MiG-25PD",
+                "aircraftId": "USSR-MIG-25PD-1"
+              },
+              "1-4": {
+                "name": "MiG-23MLD",
+                "aircraftId": "USSR-MIG-23MLD-1"
+              },
+              "5-7": {
+                "name": "MiG-23ML",
+                "aircraftId": "GDR-MIG-23ML-1"
+              },
+              "8-9": {
+                "name": "MiG-29A",
+                "aircraftId": "USSR-MIG-29A-1"
+              }
             }
           },
           "5-7": {
             "name": "POL",
             "aircraft": {
-              "1-5": "MiG-21bis",
-              "6-10": "MiG-23MF"
+              "1-5": {
+                "name": "MiG-21bis",
+                "aircraftId": "POL-MIG-21BIS-1"
+              },
+              "6-10": {
+                "name": "MiG-23MF",
+                "aircraftId": "POL-MIG-23MF-1"
+              }
             }
           },
           "8-10": {
             "name": "GDR",
             "aircraft": {
-              "1-6": "MiG-21MF",
-              "7-10": "MiG-23ML"
+              "1-6": {
+                "name": "MiG-21MF",
+                "aircraftId": "POL-MIG-21MF-1"
+              },
+              "7-10": {
+                "name": "MiG-23ML",
+                "aircraftId": "GDR-MIG-23ML-1"
+              }
             }
           }
         }
@@ -75,29 +126,46 @@
           "1-5": {
             "name": "USSR",
             "aircraft": {
-              "1-5": "MiG-23MLD",
-              "6-9": "MiG-29A",
-              "10": "Su-27S"
+              "10": {
+                "name": "Su-27S",
+                "aircraftId": "USSR-SU-27S-1"
+              },
+              "1-5": {
+                "name": "MiG-23MLD",
+                "aircraftId": "USSR-MIG-23MLD-1"
+              },
+              "6-9": {
+                "name": "MiG-29A",
+                "aircraftId": "USSR-MIG-29A-1"
+              }
             }
           },
           "6-8": {
             "name": "POL",
             "aircraft": {
-              "1-5": "MiG-21bis",
-              "6-10": "MiG-23MF"
+              "1-5": {
+                "name": "MiG-21bis",
+                "aircraftId": "POL-MIG-21BIS-1"
+              },
+              "6-10": {
+                "name": "MiG-23MF",
+                "aircraftId": "POL-MIG-23MF-1"
+              }
             }
           },
           "9-10": {
             "name": "GDR",
             "aircraft": {
-              "1-10": "MiG-23ML"
+              "1-10": {
+                "name": "MiG-23ML",
+                "aircraftId": "GDR-MIG-23ML-1"
+              }
             }
           }
         }
       }
     }
   },
-  
   "H2": {
     "name": "WP Table H2 - Fighter Sweep",
     "faction": "WP",
@@ -109,57 +177,92 @@
     "dateRanges": {
       "15-31 May": {
         "nations": {
+          "10": {
+            "name": "GDR",
+            "aircraft": {
+              "1-10": {
+                "name": "MiG-23ML",
+                "aircraftId": "GDR-MIG-23ML-1"
+              }
+            }
+          },
           "1-7": {
             "name": "USSR",
             "aircraft": {
-              "1-5": "MiG-23MLD",
-              "6-9": "MiG-23MLD",
-              "10": "Su-27S"
+              "10": {
+                "name": "Su-27S",
+                "aircraftId": "USSR-SU-27S-1"
+              },
+              "1-5": {
+                "name": "MiG-23MLD",
+                "aircraftId": "USSR-MIG-23MLD-1"
+              },
+              "6-9": {
+                "name": "MiG-23MLD",
+                "aircraftId": "USSR-MIG-23MLD-1"
+              }
             }
           },
           "8-9": {
             "name": "POL",
             "aircraft": {
-              "1-5": "MiG-21bis",
-              "6-10": "MiG-23MF"
-            }
-          },
-          "10": {
-            "name": "GDR",
-            "aircraft": {
-              "1-10": "MiG-23ML"
+              "1-5": {
+                "name": "MiG-21bis",
+                "aircraftId": "POL-MIG-21BIS-1"
+              },
+              "6-10": {
+                "name": "MiG-23MF",
+                "aircraftId": "POL-MIG-23MF-1"
+              }
             }
           }
         }
       },
       "1-15 June": {
         "nations": {
+          "10": {
+            "name": "GDR",
+            "aircraft": {
+              "1-10": {
+                "name": "MiG-23ML",
+                "aircraftId": "GDR-MIG-23ML-1"
+              }
+            }
+          },
           "1-7": {
             "name": "USSR",
             "aircraft": {
-              "1-5": "MiG-23MLD",
-              "6-9": "MiG-21bis",
-              "10": "Su-27S"
+              "10": {
+                "name": "Su-27S",
+                "aircraftId": "USSR-SU-27S-1"
+              },
+              "1-5": {
+                "name": "MiG-23MLD",
+                "aircraftId": "USSR-MIG-23MLD-1"
+              },
+              "6-9": {
+                "name": "MiG-21bis",
+                "aircraftId": "POL-MIG-21BIS-1"
+              }
             }
           },
           "8-9": {
             "name": "POL",
             "aircraft": {
-              "1-5": "MiG-21bis",
-              "6-10": "MiG-23MF"
-            }
-          },
-          "10": {
-            "name": "GDR",
-            "aircraft": {
-              "1-10": "MiG-23ML"
+              "1-5": {
+                "name": "MiG-21bis",
+                "aircraftId": "POL-MIG-21BIS-1"
+              },
+              "6-10": {
+                "name": "MiG-23MF",
+                "aircraftId": "POL-MIG-23MF-1"
+              }
             }
           }
         }
       }
     }
   },
-  
   "I2": {
     "name": "WP Table I2 - Bombing Raid",
     "faction": "WP",
@@ -176,26 +279,50 @@
             "flightSize": 4,
             "flightCount": 3,
             "aircraft": {
-              "1-4": "MiG-21MF",
-              "5-9": "MiG-23ML",
-              "10": "MiG-23MF"
+              "10": {
+                "name": "MiG-23MF",
+                "aircraftId": "POL-MIG-23MF-1"
+              },
+              "1-4": {
+                "name": "MiG-21MF",
+                "aircraftId": "POL-MIG-21MF-1"
+              },
+              "5-9": {
+                "name": "MiG-23ML",
+                "aircraftId": "GDR-MIG-23ML-1"
+              }
             }
           },
           "SEAD": {
             "flightSize": 4,
             "flightCount": 2,
             "aircraft": {
-              "1-4": "MiG-21MF",
-              "5-9": "Su-22M4",
-              "10": "MiG-21SPS"
+              "10": {
+                "name": "MiG-21SPS",
+                "aircraftId": null
+              },
+              "1-4": {
+                "name": "MiG-21MF",
+                "aircraftId": "POL-MIG-21MF-1"
+              },
+              "5-9": {
+                "name": "Su-22M4",
+                "aircraftId": "POL-SU-22M4-1"
+              }
             }
           },
           "Bombing": {
             "flightSize": 4,
             "flightCount": 5,
             "aircraft": {
-              "1-5": "MiG-21MF",
-              "6-10": "Su-22M4"
+              "1-5": {
+                "name": "MiG-21MF",
+                "aircraftId": "POL-MIG-21MF-1"
+              },
+              "6-10": {
+                "name": "Su-22M4",
+                "aircraftId": "POL-SU-22M4-1"
+              }
             }
           }
         },
@@ -220,25 +347,46 @@
             "flightSize": 4,
             "flightCount": 3,
             "aircraft": {
-              "1-5": "MiG-21bis",
-              "6-10": "MiG-23MF"
+              "1-5": {
+                "name": "MiG-21bis",
+                "aircraftId": "POL-MIG-21BIS-1"
+              },
+              "6-10": {
+                "name": "MiG-23MF",
+                "aircraftId": "POL-MIG-23MF-1"
+              }
             }
           },
           "SEAD": {
             "flightSize": 4,
             "flightCount": 2,
             "aircraft": {
-              "1-6": "MiG-21MF",
-              "7-10": "Su-22MK"
+              "1-6": {
+                "name": "MiG-21MF",
+                "aircraftId": "POL-MIG-21MF-1"
+              },
+              "7-10": {
+                "name": "Su-22MK",
+                "aircraftId": null
+              }
             }
           },
           "Bombing": {
             "flightSize": 4,
             "flightCount": 5,
             "aircraft": {
-              "1-2": "MiG-21MF",
-              "3-5": "Su-20MK",
-              "6-10": "Su-22M4"
+              "1-2": {
+                "name": "MiG-21MF",
+                "aircraftId": "POL-MIG-21MF-1"
+              },
+              "3-5": {
+                "name": "Su-20MK",
+                "aircraftId": "POL-SU-20MK-1"
+              },
+              "6-10": {
+                "name": "Su-22M4",
+                "aircraftId": "POL-SU-22M4-1"
+              }
             }
           }
         },
@@ -263,26 +411,50 @@
             "flightSize": 4,
             "flightCount": 3,
             "aircraft": {
-              "1-4": "MiG-21bis",
-              "5-10": "MiG-23MLD"
+              "1-4": {
+                "name": "MiG-21bis",
+                "aircraftId": "POL-MIG-21BIS-1"
+              },
+              "5-10": {
+                "name": "MiG-23MLD",
+                "aircraftId": "USSR-MIG-23MLD-1"
+              }
             }
           },
           "SEAD": {
             "flightSize": 4,
             "flightCount": 2,
             "aircraft": {
-              "1-2": "Su-17M3",
-              "3-5": "MiG-27M",
-              "6-10": "Su-24M"
+              "1-2": {
+                "name": "Su-17M3",
+                "aircraftId": "USSR-SU-17M3-1"
+              },
+              "3-5": {
+                "name": "MiG-27M",
+                "aircraftId": "USSR-MIG-27M-1"
+              },
+              "6-10": {
+                "name": "Su-24M",
+                "aircraftId": "USSR-SU-24M-1"
+              }
             }
           },
           "Bombing": {
             "flightSize": 4,
             "flightCount": 5,
             "aircraft": {
-              "1-3": "Su-17M3",
-              "4-7": "MiG-27M",
-              "6-10": "MiG-23MLA"
+              "1-3": {
+                "name": "Su-17M3",
+                "aircraftId": "USSR-SU-17M3-1"
+              },
+              "4-7": {
+                "name": "MiG-27M",
+                "aircraftId": "USSR-MIG-27M-1"
+              },
+              "6-10": {
+                "name": "MiG-23MLA",
+                "aircraftId": "USSR-MIG-23MLA-1"
+              }
             }
           }
         },
@@ -319,9 +491,18 @@
           "1-10": {
             "name": "USSR",
             "aircraft": {
-              "1-2": "Su-24MP",
-              "3-7": "MiG-25BM",
-              "8-10": "Tu-22PD"
+              "1-2": {
+                "name": "Su-24MP",
+                "aircraftId": "USSR-SU-24MP-1"
+              },
+              "3-7": {
+                "name": "MiG-25BM",
+                "aircraftId": "USSR-MIG-25BM-1"
+              },
+              "8-10": {
+                "name": "Tu-22PD",
+                "aircraftId": "USSR-TU-22PD-1"
+              }
             }
           }
         }
@@ -333,8 +514,14 @@
           "1-10": {
             "name": "USSR",
             "aircraft": {
-              "1-7": "MiG-23MLD",
-              "8-10": "MiG-23MLA"
+              "1-7": {
+                "name": "MiG-23MLD",
+                "aircraftId": "USSR-MIG-23MLD-1"
+              },
+              "8-10": {
+                "name": "MiG-23MLA",
+                "aircraftId": "USSR-MIG-23MLA-1"
+              }
             }
           }
         }
@@ -346,9 +533,18 @@
           "1-10": {
             "name": "USSR",
             "aircraft": {
-              "1-4": "Tu-22M2",
-              "5-6": "Tu-16K",
-              "7-10": "Su-24M"
+              "1-4": {
+                "name": "Tu-22M2",
+                "aircraftId": "USSR-TU-22M2-1"
+              },
+              "5-6": {
+                "name": "Tu-16K",
+                "aircraftId": "USSR-TU-16K-1"
+              },
+              "7-10": {
+                "name": "Su-24M",
+                "aircraftId": "USSR-SU-24M-1"
+              }
             }
           }
         }
@@ -360,9 +556,18 @@
           "1-10": {
             "name": "USSR",
             "aircraft": {
-              "1-5": "Su-24MR",
-              "6-8": "Su-17M3R",
-              "9-10": "MiG-25RB"
+              "1-5": {
+                "name": "Su-24MR",
+                "aircraftId": "USSR-SU-24MR-1"
+              },
+              "6-8": {
+                "name": "Su-17M3R",
+                "aircraftId": "USSR-SU-17M3R-1"
+              },
+              "9-10": {
+                "name": "MiG-25RB",
+                "aircraftId": "USSR-MIG-25RB-1"
+              }
             }
           }
         }
@@ -376,7 +581,6 @@
       }
     }
   },
-  
   "J3": {
     "name": "WP Table J3 - Naval Strike Raid",
     "faction": "WP",
@@ -394,9 +598,18 @@
             "flightSize": 1,
             "flightCount": 1,
             "aircraft": {
-              "1-4": "Tu-22RD",
-              "5-8": "IL-38",
-              "9-10": "Tu-95RT"
+              "1-4": {
+                "name": "Tu-22RD",
+                "aircraftId": "USSR-TU-22RD-1"
+              },
+              "5-8": {
+                "name": "IL-38",
+                "aircraftId": "USSR-IL-38-1"
+              },
+              "9-10": {
+                "name": "Tu-95RT",
+                "aircraftId": "USSR-TU-95RT-1"
+              }
             }
           },
           {
@@ -404,9 +617,18 @@
             "flightSize": 4,
             "flightCount": 2,
             "aircraft": {
-              "1-3": "Su-17M3",
-              "4-6": "MiG-27M",
-              "7-10": "Su-24M"
+              "1-3": {
+                "name": "Su-17M3",
+                "aircraftId": "USSR-SU-17M3-1"
+              },
+              "4-6": {
+                "name": "MiG-27M",
+                "aircraftId": "USSR-MIG-27M-1"
+              },
+              "7-10": {
+                "name": "Su-24M",
+                "aircraftId": "USSR-SU-24M-1"
+              }
             }
           },
           {
@@ -414,9 +636,18 @@
             "flightSize": 4,
             "flightCount": 4,
             "aircraft": {
-              "1-3": "Su-17M3",
-              "4-7": "MiG-27M",
-              "8-10": "Su-24M"
+              "1-3": {
+                "name": "Su-17M3",
+                "aircraftId": "USSR-SU-17M3-1"
+              },
+              "4-7": {
+                "name": "MiG-27M",
+                "aircraftId": "USSR-MIG-27M-1"
+              },
+              "8-10": {
+                "name": "Su-24M",
+                "aircraftId": "USSR-SU-24M-1"
+              }
             }
           },
           {
@@ -424,9 +655,18 @@
             "flightSize": 1,
             "flightCount": 3,
             "aircraft": {
-              "1-5": "Su-24MR",
-              "6-8": "Su-17M3R",
-              "9-10": "MiG-25RB"
+              "1-5": {
+                "name": "Su-24MR",
+                "aircraftId": "USSR-SU-24MR-1"
+              },
+              "6-8": {
+                "name": "Su-17M3R",
+                "aircraftId": "USSR-SU-17M3R-1"
+              },
+              "9-10": {
+                "name": "MiG-25RB",
+                "aircraftId": "USSR-MIG-25RB-1"
+              }
             }
           }
         ]
@@ -440,9 +680,18 @@
             "flightSize": 1,
             "flightCount": 1,
             "aircraft": {
-              "1-4": "Tu-22RD",
-              "5-8": "IL-38",
-              "9-10": "Tu-95RT"
+              "1-4": {
+                "name": "Tu-22RD",
+                "aircraftId": "USSR-TU-22RD-1"
+              },
+              "5-8": {
+                "name": "IL-38",
+                "aircraftId": "USSR-IL-38-1"
+              },
+              "9-10": {
+                "name": "Tu-95RT",
+                "aircraftId": "USSR-TU-95RT-1"
+              }
             }
           },
           {
@@ -450,8 +699,14 @@
             "flightSize": 4,
             "flightCount": 2,
             "aircraft": {
-              "1-4": "MiG-21MF",
-              "5-10": "Su-22M4"
+              "1-4": {
+                "name": "MiG-21MF",
+                "aircraftId": "POL-MIG-21MF-1"
+              },
+              "5-10": {
+                "name": "Su-22M4",
+                "aircraftId": "POL-SU-22M4-1"
+              }
             }
           },
           {
@@ -459,8 +714,14 @@
             "flightSize": 4,
             "flightCount": 4,
             "aircraft": {
-              "1-4": "MiG-21MF",
-              "5-10": "Su-22M4"
+              "1-4": {
+                "name": "MiG-21MF",
+                "aircraftId": "POL-MIG-21MF-1"
+              },
+              "5-10": {
+                "name": "Su-22M4",
+                "aircraftId": "POL-SU-22M4-1"
+              }
             }
           },
           {
@@ -468,7 +729,10 @@
             "flightSize": 1,
             "flightCount": 2,
             "aircraft": {
-              "1-10": "MiG-21RF"
+              "1-10": {
+                "name": "MiG-21RF",
+                "aircraftId": "POL-MIG-21RF-1"
+              }
             }
           }
         ]
@@ -482,9 +746,18 @@
             "flightSize": 1,
             "flightCount": 1,
             "aircraft": {
-              "1-4": "Tu-22RD",
-              "5-8": "IL-38",
-              "9-10": "Tu-95RT"
+              "1-4": {
+                "name": "Tu-22RD",
+                "aircraftId": "USSR-TU-22RD-1"
+              },
+              "5-8": {
+                "name": "IL-38",
+                "aircraftId": "USSR-IL-38-1"
+              },
+              "9-10": {
+                "name": "Tu-95RT",
+                "aircraftId": "USSR-TU-95RT-1"
+              }
             }
           },
           {
@@ -492,9 +765,18 @@
             "flightSize": 4,
             "flightCount": 2,
             "aircraft": {
-              "1-4": "MiG-21MF",
-              "5-7": "Su-20MK",
-              "8-10": "Su-22M4"
+              "1-4": {
+                "name": "MiG-21MF",
+                "aircraftId": "POL-MIG-21MF-1"
+              },
+              "5-7": {
+                "name": "Su-20MK",
+                "aircraftId": "POL-SU-20MK-1"
+              },
+              "8-10": {
+                "name": "Su-22M4",
+                "aircraftId": "POL-SU-22M4-1"
+              }
             }
           },
           {
@@ -502,8 +784,14 @@
             "flightSize": 4,
             "flightCount": 4,
             "aircraft": {
-              "1-5": "Su-20MK",
-              "6-10": "Su-22M4"
+              "1-5": {
+                "name": "Su-20MK",
+                "aircraftId": "POL-SU-20MK-1"
+              },
+              "6-10": {
+                "name": "Su-22M4",
+                "aircraftId": "POL-SU-22M4-1"
+              }
             }
           },
           {
@@ -511,7 +799,10 @@
             "flightSize": 1,
             "flightCount": 2,
             "aircraft": {
-              "1-10": "MiG-21RF"
+              "1-10": {
+                "name": "MiG-21RF",
+                "aircraftId": "POL-MIG-21RF-1"
+              }
             }
           }
         ]
@@ -530,7 +821,6 @@
       }
     }
   },
-  
   "K2": {
     "name": "WP Table K2 - Combat Rescue",
     "faction": "WP",
@@ -552,8 +842,14 @@
             "flightSize": 2,
             "flightCount": 2,
             "aircraft": {
-              "1-5": "MiG-21SP",
-              "6-10": "MiG-21MF"
+              "1-5": {
+                "name": "MiG-21SP",
+                "aircraftId": null
+              },
+              "6-10": {
+                "name": "MiG-21MF",
+                "aircraftId": "POL-MIG-21MF-1"
+              }
             }
           },
           {
@@ -561,7 +857,10 @@
             "flightSize": 1,
             "flightCount": 2,
             "aircraft": {
-              "1-10": "Mi-8"
+              "1-10": {
+                "name": "Mi-8",
+                "aircraftId": "USSR-MI-8-1"
+              }
             }
           }
         ]
@@ -575,7 +874,10 @@
             "flightSize": 2,
             "flightCount": 2,
             "aircraft": {
-              "1-10": "Su-22M4"
+              "1-10": {
+                "name": "Su-22M4",
+                "aircraftId": "POL-SU-22M4-1"
+              }
             }
           },
           {
@@ -583,14 +885,16 @@
             "flightSize": 1,
             "flightCount": 2,
             "aircraft": {
-              "1-10": "Mi-14"
+              "1-10": {
+                "name": "Mi-14",
+                "aircraftId": null
+              }
             }
           }
         ]
       }
     }
   },
-  
   "L2": {
     "name": "WP Table L2 - Special Missions",
     "faction": "WP",
@@ -608,9 +912,18 @@
           "1-10": {
             "name": "USSR",
             "aircraft": {
-              "1-4": "An-12PP",
-              "5-7": "Su-24MP",
-              "8-10": "Tu-16P"
+              "1-4": {
+                "name": "An-12PP",
+                "aircraftId": "USSR-AN-12PP-1"
+              },
+              "5-7": {
+                "name": "Su-24MP",
+                "aircraftId": "USSR-SU-24MP-1"
+              },
+              "8-10": {
+                "name": "Tu-16P",
+                "aircraftId": "USSR-TU-16P-1"
+              }
             }
           }
         }
@@ -625,9 +938,18 @@
           "1-10": {
             "name": "USSR",
             "aircraft": {
-              "1-4": "Tu-22RD",
-              "5-8": "IL-38",
-              "9-10": "Tu-95RT"
+              "1-4": {
+                "name": "Tu-22RD",
+                "aircraftId": "USSR-TU-22RD-1"
+              },
+              "5-8": {
+                "name": "IL-38",
+                "aircraftId": "USSR-IL-38-1"
+              },
+              "9-10": {
+                "name": "Tu-95RT",
+                "aircraftId": "USSR-TU-95RT-1"
+              }
             }
           }
         }

@@ -122,21 +122,32 @@ class NATOTableD3 extends BaseTableProcessor {
     const groupedFlights = {};
     
     nationalityData.flights.forEach(flightDef => {
-      const { type, flightSize, flightCount, aircraft } = flightDef;
+      const { type, flightSize, flightCount } = flightDef;
+      const aircraftEntry = flightDef.aircraft;
+      const aircraftName = (aircraftEntry && typeof aircraftEntry === 'object')
+        ? aircraftEntry.name
+        : aircraftEntry;
+      const aircraftId = (aircraftEntry && typeof aircraftEntry === 'object')
+        ? aircraftEntry.aircraftId
+        : null;
       const raidNationality = nationalityData.nationality;
       const explicitNationality = flightDef.nationality;
-      const extractedNationality = explicitNationality || this.extractNationalityCode(aircraft, raidNationality);
+      const useExplicitNationality = explicitNationality && !explicitNationality.includes('/');
+      const extractedNationality = useExplicitNationality
+        ? explicitNationality
+        : this.extractNationalityCode(aircraftName, raidNationality);
       const resolvedNationality = extractedNationality || raidNationality || 'Unknown';
       
-      console.log('[D3 GROUPING] Aircraft:', aircraft, 'Raid nationality:', raidNationality, 'Resolved nationality:', resolvedNationality, 'Explicit:', explicitNationality);
+      console.log('[D3 GROUPING] Aircraft:', aircraftName, 'Raid nationality:', raidNationality, 'Resolved nationality:', resolvedNationality, 'Explicit:', explicitNationality);
       
-      const key = `${type}|${aircraft}|${flightSize}|${resolvedNationality}`;
+      const key = `${type}|${aircraftName}|${flightSize}|${resolvedNationality}`;
       if (!groupedFlights[key]) {
         groupedFlights[key] = {
           type,
-          aircraft,
+          aircraftType: aircraftName,
+          aircraftId,
           flightSize,
-          displayNationality: raidNationality || resolvedNationality,
+          displayNationality: resolvedNationality,
           resolvedNationality,
           count: 0
         };
@@ -148,8 +159,11 @@ class NATOTableD3 extends BaseTableProcessor {
 
     // Generate consolidated flight lines
     Object.values(groupedFlights).forEach(group => {
-      const flightNationalityText = group.displayNationality || group.resolvedNationality;
-      const flightText = `${group.count} x {${group.flightSize}} ${flightNationalityText} ${group.aircraft}, ${group.type}`;
+      const resolvedDisplay = group.resolvedNationality && group.resolvedNationality.includes('/')
+        ? this.extractNationalityCode(group.aircraftType, group.resolvedNationality)
+        : group.resolvedNationality;
+      const flightNationalityText = resolvedDisplay || group.displayNationality || group.resolvedNationality;
+      const flightText = `${group.count} x {${group.flightSize}} ${flightNationalityText} ${group.aircraftType}, ${group.type}`;
       flightTexts.push(flightText);
       
       // Create flight object for printing
@@ -161,7 +175,8 @@ class NATOTableD3 extends BaseTableProcessor {
         tasking: group.type,
         nationality: flightNationalityText,
         actualNationality: group.resolvedNationality,
-        aircraftType: group.aircraft,
+        aircraftType: group.aircraftType,
+        aircraftId: group.aircraftId,
         flightSize: group.flightSize,
         flightCount: group.count
       };

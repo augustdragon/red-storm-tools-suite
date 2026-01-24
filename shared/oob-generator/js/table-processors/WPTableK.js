@@ -63,6 +63,12 @@ class WPTableK extends BaseTableProcessor {
         flightType: flightData.type,
         aircraftRoll: aircraftResult.aircraftRoll,
         text: resultText,
+        nationality: nationality,
+        aircraftType: aircraftResult.aircraftType,
+        aircraftId: aircraftResult.aircraftId,
+        flightSize: flightData.flightSize,
+        flightCount: flightData.flightCount,
+        tasking: flightData.type,
         debugText: aircraftResult.aircraftRollDebug
       });
       
@@ -74,10 +80,14 @@ class WPTableK extends BaseTableProcessor {
     const combinedDebug = debugParts.length > 0 ? `[${debugParts.join(' | ')}]` : '';
     
     return {
+      table: 'K',
+      faction: 'WP',
       nationality: nationality,
       raidType: nationalityData.name,
       flightResults: results,
+      flights: results,
       text: combinedText,
+      result: combinedText,
       debugText: combinedDebug
     };
   }
