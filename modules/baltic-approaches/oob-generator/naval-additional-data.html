@@ -4,23 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Baltic Approaches - Additional Naval Data</title>
-    <link rel="stylesheet" href="css/ba-theme.css">
+    <link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
     <style>
+        :root {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: white;
+            --text-primary: #2c3e50;
+            --text-secondary: #34495e;
+            --border-color: #ecf0f1;
+            --border-light: #95a5a6;
+            --hover-bg: #f8f9fa;
+            --row-even-bg: #f9f9f9;
+            --shadow: rgba(0,0,0,0.1);
+            --note-bg: #f8f9fa;
+        }
+        
+        body.dark-theme {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #c0c0c0;
+            --border-color: #404040;
+            --border-light: #505050;
+            --hover-bg: #3a3a3a;
+            --row-even-bg: #333333;
+            --shadow: rgba(0,0,0,0.3);
+            --note-bg: #3a3a3a;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1600px;
             margin: 20px auto;
             padding: 20px;
-            background-color: #e8ecef;
-            max-width: 1200px;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .nav-header {
+            background-color: #3498db;
+            padding: 15px 30px;
+            border-bottom: 2px solid #2980b9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: -20px -20px 20px -20px;
+        }
+        
+        .nav-header span {
+            color: white;
+            font-weight: bold;
+        }
+        
+        .nav-header a {
+            color: #e8f4f8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-header a:hover {
+            color: white;
+        }
+        
+        .theme-toggle {
+            background: rgb(41, 128, 185);
+            border: 1px solid #2c3e50;
+            color: #2c3e50;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-left: 20px;
+        }
+        
+        body.dark-theme .theme-toggle {
+            background: none;
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+        }
+        
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 1);
+            border-color: #1a252f;
+        }
+        
+        body.dark-theme .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.8);
         }
         
         .header {
-            background-color: #4a5d6d;
-            color: white;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
             padding: 20px;
             text-align: center;
             border-radius: 8px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+            box-shadow: 0 2px 4px var(--shadow);
         }
         
         .header h1 {
@@ -29,53 +112,69 @@
         }
         
         h2 {
-            color: #2c3e50;
+            color: var(--text-primary);
             border-bottom: 3px solid #3498db;
             padding-bottom: 10px;
-            margin-top: 40px;
+            margin-top: 30px;
+            background-color: #d6eaf8;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        body.dark-theme h2 {
+            background-color: transparent;
+            border-bottom: 2px solid var(--border-light);
         }
         
         h2.wp-heading {
             border-bottom-color: #e74c3c;
+            background-color: #fadbd8;
+        }
+        
+        body.dark-theme h2.wp-heading {
+            background-color: transparent;
         }
         
         h3 {
-            color: #34495e;
+            color: var(--text-secondary);
             margin-top: 25px;
         }
         
         .table-container {
-            background-color: white;
+            background-color: var(--bg-secondary);
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px var(--shadow);
             margin-bottom: 30px;
-            overflow-x: auto;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 0.85em;
         }
         
         th {
-            background-color: #4a5d6d;
+            background-color: #3498db;
             color: white;
-            padding: 12px;
+            padding: 10px 6px;
             text-align: left;
             font-weight: bold;
+            font-size: 0.9em;
         }
         
         td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #ecf0f1;
+            padding: 8px 6px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9em;
+            color: var(--text-primary);
         }
         
         tr:hover {
-            background-color: #f8f9fa;
+            background-color: var(--hover-bg);
         }
         
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: var(--row-even-bg);
         }
         
         .nato-row {
@@ -87,17 +186,17 @@
         }
         
         .notes-section {
-            background-color: white;
+            background-color: var(--bg-secondary);
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px var(--shadow);
         }
         
         .note-item {
             margin-bottom: 15px;
             padding: 10px;
-            background-color: #f8f9fa;
+            background-color: var(--note-bg);
             border-left: 4px solid #3498db;
             border-radius: 4px;
         }
@@ -122,34 +221,16 @@
         
         .table-reference {
             font-size: 0.9em;
-            color: #7f8c8d;
+            color: var(--text-secondary);
             font-style: italic;
             margin-top: -10px;
             margin-bottom: 15px;
         }
         
-        .back-nav {
-            margin-bottom: 20px;
-        }
-        
-        .back-link {
-            display: inline-block;
-            color: #4a5d6d;
-            text-decoration: none;
-            padding: 8px 16px;
-            background-color: #d0d8dd;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        
-        .back-link:hover {
-            background-color: #c0c8cd;
-        }
-        
         .footnote {
             font-size: 0.9em;
             font-style: italic;
-            color: #7f8c8d;
+            color: var(--text-secondary);
             margin-top: 10px;
         }
         
@@ -170,8 +251,12 @@
     </style>
 </head>
 <body>
-    <div class="back-nav">
-        <a href="naval-reference.html" class="back-link">← Back to Naval Reference</a>
+    <div class="nav-header">
+        <span>Additional Naval Data</span>
+        <div>
+            <button id="themeToggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
+            <a href="naval-reference.html">← Back to Naval Reference</a>
+        </div>
     </div>
     
     <div class="header">
@@ -462,8 +547,25 @@
         </div>
     </div>
     
-    <div class="back-nav">
-        <a href="naval-reference.html" class="back-link">← Back to Naval Reference</a>
-    </div>
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('naval-additional-theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.textContent = '☀️';
+        }
+        
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            const isDark = body.classList.contains('dark-theme');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('naval-additional-theme', isDark ? 'dark' : 'light');
+        });
+    </script>
 </body>
 </html>
