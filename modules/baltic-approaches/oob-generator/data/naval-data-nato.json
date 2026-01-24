@@ -29,7 +29,7 @@
     "capabilities": {
       "SSM": "Harpoon",
       "Ammo": 4,
-      "Helo": null
+      "Helo": "Helo"
     },
     "Notes": "C, D"
   },
@@ -59,7 +59,7 @@
     "capabilities": {
       "SSM": "Harpoon",
       "Ammo": 2,
-      "Helo": null
+      "Helo": "Helo"
     },
     "Notes": null
   },
@@ -359,7 +359,7 @@
     "capabilities": {
       "SSM": "Harpoon",
       "Ammo": 8,
-      "Helo": "Lynx"
+      "Helo": "Helo"
     },
     "Notes": "D"
   },
@@ -599,7 +599,7 @@
     "capabilities": {
       "SSM": "Harpoon",
       "Ammo": 8,
-      "Helo": "Lynx"
+      "Helo": "Helo"
     },
     "Notes": "D"
   },
@@ -747,9 +747,9 @@
       "AAA2": "Close Defense (4)"
     },
     "capabilities": {
-      "SSM": "Helo",
+      "SSM": null,
       "Ammo": null,
-      "Helo": null
+      "Helo": "Helo"
     },
     "Notes": null
   },
