@@ -641,11 +641,29 @@
                 // Helper function to create SSM tooltip
                 const createSSMTooltip = (ssmName, faction) => {
                     const ssmData = faction === 'NATO' ? ssmDataNATO : ssmDataWP;
-                    const ssm = ssmData[ssmName];
-                    
-                    if (!ssm) {
-                        return ssmName; // Return plain text if no data found
-                    }
+
+                    // Try direct lookup, then try more flexible matching (handles keys like "3M44 (SS-N-3D)")
+                    const findSSMEntry = (name) => {
+                        if (!name) return null;
+                        if (ssmData[name]) return { key: name, data: ssmData[name] };
+                        const lower = name.toLowerCase();
+                        // Exact case-insensitive
+                        for (const k in ssmData) {
+                            if (k.toLowerCase() === lower) return { key: k, data: ssmData[k] };
+                        }
+                        // Prefix or contains match
+                        for (const k in ssmData) {
+                            const kl = k.toLowerCase();
+                            if (kl.startsWith(lower) || kl.includes(lower)) return { key: k, data: ssmData[k] };
+                        }
+                        return null;
+                    };
+
+                    const found = findSSMEntry(ssmName);
+                    if (!found) return ssmName; // Plain text if no data found
+
+                    const ssm = found.data;
+                    const displayName = found.key || ssmName;
                     
                     const tooltipContent = `
                         <div class="ssm-tooltip-row">
@@ -690,7 +708,7 @@
                         </div>
                     `;
                     
-                    return `<span class="ssm-link">${ssmName}<span class="ssm-tooltip">${tooltipContent}</span></span>`;
+                    return `<span class="ssm-link">${displayName}<span class="ssm-tooltip">${tooltipContent}</span></span>`;
                 };
                 
                 // Helper function to format notes with tooltips
