@@ -238,10 +238,10 @@
       "AAA2": "Light AAA"
     },
     "capabilities": {
-      "SSM": null,
+      "SSM": "Minelaying",
       "Ammo": null
     },
-    "Notes": "Minelaying"
+    "Notes": null
   },
   
   "Lindormen (ML)": {
@@ -268,10 +268,10 @@
       "AAA2": null
     },
     "capabilities": {
-      "SSM": null,
+      "SSM": "Minelaying",
       "Ammo": null
     },
-    "Notes": "Minelaying"
+    "Notes": null
   },
   
   "Lütjens (DDG)": {
@@ -448,10 +448,10 @@
       "AAA2": null
     },
     "capabilities": {
-      "SSM": null,
+      "SSM": "Minelaying",
       "Ammo": null
     },
-    "Notes": "Minelaying"
+    "Notes": null
   },
   
   "Gepard (PCM)": {
@@ -718,10 +718,10 @@
       "AAA2": null
     },
     "capabilities": {
-      "SSM": null,
+      "SSM": "Minelaying",
       "Ammo": null
     },
-    "Notes": "Minelaying"
+    "Notes": null
   },
   
   "Type 42 (DDG)": {
