@@ -465,8 +465,8 @@
         
         // Load all data
         Promise.all([
-            fetch('data/naval--data-nato.json').then(r => r.json()),
-            fetch('data/naval--data-wp.json').then(r => r.json()),
+            fetch('data/naval-data-nato.json').then(r => r.json()),
+            fetch('data/naval-data-wp.json').then(r => r.json()),
             fetch('data/naval-note-rules.json').then(r => r.json())
         ]).then(([natoData, wpData, notesData]) => {
             navalNotesData = notesData;

@@ -592,7 +592,18 @@
     "M": "-1",
     "H": "NA",
     "V": "NA",
-    \"AAA\": {\n      \"AAA1\": \"Radar AAA (M)\",\n      \"AAA2\": \"Light AAA\"\n    },\n    \"capabilities\": {\n      \"SSM\": \"Harpoon\",\n      \"Ammo\": 8,\n      \"Helo\": \"Lynx\"\n    },\n    \"Notes\": \"D\"\n  },\n  \"Stockholm (FFL)\": {
+    "AAA": {
+      "AAA1": "Radar AAA (M)",
+      "AAA2": "Light AAA"
+    },
+    "capabilities": {
+      "SSM": "Harpoon",
+      "Ammo": 8,
+      "Helo": "Lynx"
+    },
+    "Notes": "D"
+  },
+  "Stockholm (FFL)": {
     "Nation": "SE",
     "Dmg": 4,
     "Size": "S",
