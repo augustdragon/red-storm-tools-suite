@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="css/ba-theme.css">
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 20px auto;
             padding: 20px;
-            background-color: #e8ecef;
+            background-color: #f5f5f5;
             max-width: 100%;
         }
         
@@ -52,6 +52,27 @@
             background-color: #7a9aaa;
         }
         
+        .controls {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .controls label {
+            margin-right: 20px;
+            font-weight: bold;
+        }
+        
+        .controls input, .controls select {
+            margin-right: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
         h2 {
             color: #2c3e50;
             border-bottom: 3px solid #3498db;
@@ -75,21 +96,23 @@
             width: 100%;
             border-collapse: collapse;
             white-space: nowrap;
+            font-size: 0.85em;
         }
         
         th {
             background-color: #4a5d6d;
             color: white;
-            padding: 12px 8px;
+            padding: 10px 6px;
             text-align: left;
             font-weight: bold;
             position: sticky;
             top: 0;
             z-index: 10;
+            font-size: 0.9em;
         }
         
         td {
-            padding: 10px 8px;
+            padding: 8px 6px;
             border-bottom: 1px solid #ecf0f1;
             font-size: 0.9em;
         }
@@ -251,6 +274,26 @@
             </div>
         </div>
         
+        <div class="controls">
+            <label>Filter by Nation:</label>
+            <select id="nationFilter">
+                <option value="all">All Nations</option>
+                <option value="USA">USA</option>
+                <option value="DK">DK</option>
+                <option value="FRG">FRG</option>
+                <option value="UK">UK</option>
+                <option value="NE">NE</option>
+                <option value="SE">SE</option>
+                <option value="Atl">Atl</option>
+                <option value="USSR">USSR</option>
+                <option value="POL">POL</option>
+                <option value="GDR">GDR</option>
+            </select>
+            
+            <label>Search:</label>
+            <input type="text" id="searchBox" placeholder="Search ship name...">
+        </div>
+        
         <h2>NATO Naval Units</h2>
         <div class="table-container">
             <table id="nato-table">
@@ -353,6 +396,10 @@
                 let nationClass = 'nation-' + ship.Nation.split(',')[0].trim();
                 row.className = nationClass;
                 
+                // Set data attributes for filtering
+                row.dataset.nation = ship.Nation.split(',')[0].trim();
+                row.dataset.name = shipName.toLowerCase();
+                
                 // Helper function to format value
                 const formatValue = (val) => {
                     if (val === null || val === undefined) {
@@ -423,6 +470,28 @@
                 `;
                 
                 tbody.appendChild(row);
+            });
+        }
+        
+        // Filter functionality
+        document.getElementById('nationFilter').addEventListener('change', filterTable);
+        document.getElementById('searchBox').addEventListener('input', filterTable);
+        
+        function filterTable() {
+            const nationFilter = document.getElementById('nationFilter').value;
+            const searchText = document.getElementById('searchBox').value.toLowerCase();
+            
+            const allRows = document.querySelectorAll('#nato-tbody tr, #wp-tbody tr');
+            
+            allRows.forEach(row => {
+                const matchesNation = nationFilter === 'all' || row.dataset.nation === nationFilter;
+                const matchesSearch = searchText === '' || row.dataset.name.includes(searchText);
+                
+                if (matchesNation && matchesSearch) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
             });
         }
     </script>
