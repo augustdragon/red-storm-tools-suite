@@ -16,7 +16,7 @@ A comprehensive web-based tool suite for the Red Storm and Baltic Approaches boa
 ### Baltic Approaches Expansion
 - Order of Battle Generator
 - Aircraft Notes Reference
-- Naval Reference (planned)
+- Naval Reference (implemented) — interactive naval reference with SSM tooltips, searchable/filterable ship tables, and dark-mode styling
 - Manual Flight Generator (planned)
   
 ### Shared Tools
