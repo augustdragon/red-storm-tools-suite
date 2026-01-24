@@ -279,9 +279,9 @@
     "Size": "M",
     "Tgt": "A",
     "EW": "C",
-    "EWR": "SPS-40 [30/15/8]",
-    "SAM": "SM-1MR (18)",
-    "Shots": null,
+    "EWR": "SPS-40 [36/18/8]",
+    "SAM": "SM-1MR",
+    "Shots": 18,
     "LOAL": "L",
     "Acq": 15,
     "Atk": 8,
@@ -309,7 +309,7 @@
     "Size": "M",
     "Tgt": "C",
     "EW": "A",
-    "EWR": "LW-04 [36/18/8]",
+    "EWR": "LW.04 [36/18/8]",
     "SAM": null,
     "Shots": null,
     "LOAL": null,
@@ -324,7 +324,7 @@
     "V": null,
     "AAA": {
       "AAA1": "Radar AAA (H)",
-      "AAA2": null
+      "AAA2": "Light AAA"
     },
     "capabilities": {
       "SSM": "Exocet",
@@ -340,7 +340,7 @@
     "Tgt": "A",
     "EW": "C",
     "EWR": "DA-08 [32/16/8]",
-    "SAM": "RIM-7M (16)",
+    "SAM": "RIM-7M",
     "Shots": 4,
     "LOAL": "L",
     "Acq": 6,
@@ -363,13 +363,13 @@
     },
     "Notes": "D"
   },
-  "Köln (FF)": {
+  "Koln (FF)": {
     "Nation": "FRG",
     "Dmg": 12,
     "Size": "M",
     "Tgt": "D",
     "EW": "A",
-    "EWR": "ZW-01 [12/6/6]",
+    "EWR": "ZW.01 [12/6/6]",
     "SAM": null,
     "Shots": null,
     "LOAL": null,
@@ -383,8 +383,8 @@
     "H": null,
     "V": null,
     "AAA": {
-      "AAA1": "Med AAA",
-      "AAA2": "Light AAA"
+      "AAA1": "Radar AAA (H)",
+      "AAA2": "Med AAA"
     },
     "capabilities": {
       "SSM": null,
@@ -549,8 +549,8 @@
     "Size": "M",
     "Tgt": "A",
     "EW": "C",
-    "EWR": "DA-05 [32/16/8]",
-    "SAM": "SM-1MR (20)",
+    "EWR": "DA.05 [32/16/8]",
+    "SAM": ["SM-1MR", "RIM-7M"],
     "Shots": null,
     "LOAL": "L",
     "Acq": 15,

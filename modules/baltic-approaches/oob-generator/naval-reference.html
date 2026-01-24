@@ -516,6 +516,17 @@
                     return val;
                 };
                 
+                // Helper function to format SAM (handles both string and array)
+                const formatSAM = (sam) => {
+                    if (sam === null || sam === undefined) {
+                        return '<span class="null-value">—</span>';
+                    }
+                    if (Array.isArray(sam)) {
+                        return sam.join('<br>');
+                    }
+                    return sam;
+                };
+                
                 // Helper function to format AAA
                 const formatAAA = (aaa) => {
                     if (!aaa) return '<span class="null-value">—</span>';
@@ -577,7 +588,7 @@
                     <td>${formatValue(ship.Tgt)}</td>
                     <td>${formatValue(ship.EW)}</td>
                     <td>${formatValue(ship.EWR)}</td>
-                    <td>${formatValue(ship.SAM)}</td>
+                    <td>${formatSAM(ship.SAM)}</td>
                     <td>${formatValue(ship.Shots)}</td>
                     <td>${formatValue(ship.LOAL)}</td>
                     <td>${formatValue(ship.Acq)}</td>
