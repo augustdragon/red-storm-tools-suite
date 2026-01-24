@@ -39,26 +39,27 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1600px;
             margin: 20px auto;
             padding: 20px;
             background-color: var(--bg-primary);
             color: var(--text-primary);
-            max-width: 100%;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         .container {
-            max-width: 1400px;
             margin: 0 auto;
         }
         
         .header {
-            background-color: var(--header-bg);
-            color: white;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
             padding: 20px;
             text-align: center;
             border-radius: 8px;
             margin-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+            box-shadow: 0 2px 4px var(--shadow);
         }
         
         .header h1 {
@@ -72,7 +73,7 @@
         
         .header-button {
             display: inline-block;
-            background-color: #6a8a9a;
+            background-color: #3498db;
             color: white;
             text-decoration: none;
             padding: 10px 20px;
@@ -82,7 +83,7 @@
         }
         
         .header-button:hover {
-            background-color: #7a9aaa;
+            background-color: #2980b9;
         }
         
         .controls {
@@ -137,7 +138,6 @@
         }
         
         .table-container {
-            overflow-x: auto;
             background-color: var(--bg-secondary);
             border-radius: 8px;
             box-shadow: 0 2px 8px var(--shadow);
