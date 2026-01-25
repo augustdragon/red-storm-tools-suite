@@ -764,14 +764,25 @@
             const allRows = document.querySelectorAll('#nato-tbody tr, #wp-tbody tr');
             
             // Define NATO and WP nations (using actual nation codes from data)
-            const natoNations = ['USA', 'UK', 'FRG', 'DK', 'NE', 'SE', 'All'];
+            const natoNations = ['USA', 'UK', 'FRG', 'DK', 'NE', 'SE'];
             const wpNations = ['USSR', 'POL', 'GDR'];
             
             let hasVisibleNATO = false;
             let hasVisibleWP = false;
             
             allRows.forEach(row => {
-                const matchesNation = nationFilter === 'all' || nationFilter === 'All' || row.dataset.nation === nationFilter || row.dataset.nation === 'All';
+                let matchesNation;
+                if (nationFilter === 'all') {
+                    // "All Nations" - show everything
+                    matchesNation = true;
+                } else if (nationFilter === 'All') {
+                    // "NATO - All" - show only ships with Nation="All" (utility vessels)
+                    matchesNation = row.dataset.nation === 'All';
+                } else {
+                    // Specific nation - exact match
+                    matchesNation = row.dataset.nation === nationFilter;
+                }
+                
                 const matchesSearch = searchText === '' || row.dataset.name.includes(searchText);
                 
                 if (matchesNation && matchesSearch) {
@@ -793,8 +804,8 @@
             const wpSection = document.getElementById('wpSection');
             const wpTable = document.getElementById('wpTableContainer');
             
-            if (nationFilter === 'all' || nationFilter === 'All') {
-                // Show both sections if they have visible rows
+            if (nationFilter === 'all') {
+                // "All Nations" - show both sections if they have visible rows
                 if (natoSection && natoTable) {
                     natoSection.style.display = hasVisibleNATO ? 'block' : 'none';
                     natoTable.style.display = hasVisibleNATO ? 'block' : 'none';
@@ -802,6 +813,16 @@
                 if (wpSection && wpTable) {
                     wpSection.style.display = hasVisibleWP ? 'block' : 'none';
                     wpTable.style.display = hasVisibleWP ? 'block' : 'none';
+                }
+            } else if (nationFilter === 'All') {
+                // "NATO - All" - show only NATO section (utility vessels)
+                if (natoSection && natoTable) {
+                    natoSection.style.display = hasVisibleNATO ? 'block' : 'none';
+                    natoTable.style.display = hasVisibleNATO ? 'block' : 'none';
+                }
+                if (wpSection && wpTable) {
+                    wpSection.style.display = 'none';
+                    wpTable.style.display = 'none';
                 }
             } else if (wpNations.includes(nationFilter)) {
                 // Hide NATO section when WP nation selected
