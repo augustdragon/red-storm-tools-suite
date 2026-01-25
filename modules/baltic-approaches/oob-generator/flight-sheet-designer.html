@@ -1005,38 +1005,6 @@
       return 'No ordnance listed';
     }
 
-    function renderPreview() {
-      const grid = document.getElementById('flightGrid');
-      grid.innerHTML = '';
-      if (!flightQueue.length) {
-        clearPreview();
-        return;
-      }
-      for (const f of flightQueue) {
-        const aircraft = aircraftDatabase[f.aircraftKey] || { name: f.aircraftKey, ordnance: [] };
-        const card = document.createElement('div');
-        card.className = 'flight-card';
-        const header = document.createElement('div');
-        header.className = 'flight-info-section';
-        header.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;\"><div><strong>${aircraft.name || f.aircraftKey}</strong><div style="font-size:10px;">${aircraft.model || ''} — ${f.nation || aircraft.nation || ''}</div></div><div style="font-weight:bold;">${f.size}-ship</div></div>`;
-        card.appendChild(header);
-
-        const ord = document.createElement('div');
-        ord.className = 'ordnance-area';
-        const ordLabel = document.createElement('div');
-        ordLabel.className = 'ordnance-label';
-        ordLabel.textContent = 'Ordnance';
-        ord.appendChild(ordLabel);
-        const ordText = document.createElement('div');
-        ordText.className = 'ordnance-text';
-        ordText.textContent = getOrdnanceText(aircraft);
-        ord.appendChild(ordText);
-        card.appendChild(ord);
-
-        grid.appendChild(card);
-      }
-    }
-
     async function printQueue() {
       if (!flightQueue.length) { alert('Queue is empty.'); return; }
       
