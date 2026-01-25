@@ -467,8 +467,8 @@
             <input type="text" id="searchBox" placeholder="Search ship name...">
         </div>
         
-        <h2>NATO Naval Units</h2>
-        <div class="table-container">
+        <h2 id="natoSection">NATO Naval Units</h2>
+        <div class="table-container" id="natoTableContainer">
             <table id="nato-table">
                 <thead>
                     <tr>
@@ -502,8 +502,8 @@
             </table>
         </div>
         
-        <h2 class="wp-heading">Warsaw Pact Naval Units</h2>
-        <div class="table-container">
+        <h2 class="wp-heading" id="wpSection">Warsaw Pact Naval Units</h2>
+        <div class="table-container" id="wpTableContainer">
             <table id="wp-table">
                 <thead>
                     <tr>
@@ -763,15 +763,15 @@
             
             const allRows = document.querySelectorAll('#nato-tbody tr, #wp-tbody tr');
             
-            // Define NATO and WP nations
-            const natoNations = ['US', 'UK', 'FRG', 'DK', 'NE', 'SE'];
+            // Define NATO and WP nations (using actual nation codes from data)
+            const natoNations = ['USA', 'UK', 'FRG', 'DK', 'NE', 'SE', 'All'];
             const wpNations = ['USSR', 'POL', 'GDR'];
             
             let hasVisibleNATO = false;
             let hasVisibleWP = false;
             
             allRows.forEach(row => {
-                const matchesNation = nationFilter === 'all' || row.dataset.nation === nationFilter;
+                const matchesNation = nationFilter === 'all' || nationFilter === 'All' || row.dataset.nation === nationFilter || row.dataset.nation === 'All';
                 const matchesSearch = searchText === '' || row.dataset.name.includes(searchText);
                 
                 if (matchesNation && matchesSearch) {
@@ -788,12 +788,12 @@
             });
             
             // Hide/show section headers based on nation filter
-            const natoSection = document.querySelector('h2:has(+ .table-container #nato-table)');
-            const natoTable = document.querySelector('.table-container:has(#nato-table)');
-            const wpSection = document.querySelector('h2.wp-heading');
-            const wpTable = document.querySelector('.table-container:has(#wp-table)');
+            const natoSection = document.getElementById('natoSection');
+            const natoTable = document.getElementById('natoTableContainer');
+            const wpSection = document.getElementById('wpSection');
+            const wpTable = document.getElementById('wpTableContainer');
             
-            if (nationFilter === 'all') {
+            if (nationFilter === 'all' || nationFilter === 'All') {
                 // Show both sections if they have visible rows
                 if (natoSection && natoTable) {
                     natoSection.style.display = hasVisibleNATO ? 'block' : 'none';
