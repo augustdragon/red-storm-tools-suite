@@ -6,6 +6,8 @@
   <title>Flight Sheet Designer - Baltic Approaches</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/shared/css/red-storm.css">
+  <script src="/shared/js/module-config.js"></script>
+  <script src="/shared/oob-generator/js/print-generator.js"></script>
   <style>
     /* Override body for designer-specific styling */
     body {
@@ -721,7 +723,7 @@
     
     <div class="queue-panel">
       <div class="queue-header">
-        <span>Flight Queue (<span id="queueCount">0</span>)</span>
+        <span>Queue (<span id="queueCount">0</span>)</span>
         <button onclick="clearQueue()" style="padding: 5px 12px; background-color: #7a4a4a; color: #f4f4f4; border: 1px solid #8a5a5a; border-radius: 3px; cursor: pointer; font-size: 12px;">Clear All</button>
       </div>
       <div class="queue-list" id="queueList">
@@ -1035,42 +1037,167 @@
       }
     }
 
-    function buildPrintableHtml() {
-      const rows = flightQueue.map(f => {
-        const a = aircraftDatabase[f.aircraftKey] || { name: f.aircraftKey, ordnance: [] };
-        const ordText = getOrdnanceText(a);
-          return `<div class="flight-card" style="margin-bottom:12px;padding:8px;">` +
-            `<div style="font-weight:bold;margin-bottom:6px;">${a.name || f.aircraftKey} — ${f.nation || a.nation || ''} — ${f.size}-ship</div>` +
-            `<div style="font-size:12px;">Ordnance: ${ordText}</div>` +
-          `</div>`;
-      }).join('\n');
-      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Flight Queue Print</title><style>body{font-family:Arial,Helvetica,sans-serif;padding:20px} .flight-card{border:1px solid #222;padding:8px;background:#fff}</style></head><body><h1>Flight Queue</h1>${rows}</body></html>`;
-      return html;
-    }
-
-    function printQueue() {
+    async function printQueue() {
       if (!flightQueue.length) { alert('Queue is empty.'); return; }
-      const html = buildPrintableHtml();
-      const w = window.open('', '_blank');
-      if (!w) { alert('Unable to open print window.'); return; }
-      w.document.open();
-      w.document.write(html);
-      w.document.close();
-      setTimeout(() => { w.print(); }, 300);
+      
+      try {
+        // Convert queue to flight results format expected by PrintGenerator
+        const results = flightQueue.map(f => {
+          const a = aircraftDatabase[f.aircraftKey];
+          if (!a) return null;
+          
+          // Determine faction from nation code
+          const faction = ['USSR', 'POL'].includes(a.nation) ? 'WP' : 'NATO';
+          
+          return {
+            aircraftType: f.aircraftKey,
+            nationCode: a.nation || f.nation,
+            tasking: 'Manual',
+            faction: faction,
+            flightSize: f.size,
+            numFlights: 1
+          };
+        }).filter(Boolean);
+        
+        if (!results.length) {
+          alert('No valid flights in queue.');
+          return;
+        }
+        
+        // Use PrintGenerator to create flight sheets
+        const balticConfig = window.ModuleConfig ? window.ModuleConfig.getModuleConfig('baltic-approaches') : null;
+        const printGen = new PrintGenerator(balticConfig);
+        
+        // Load data files
+        const dataFiles = await printGen.loadDataFiles();
+        
+        // Process and sort flights
+        const processedFlights = printGen.processFlights(results);
+        const { natoRegular, natoCSAR, wpRegular, wpCSAR } = printGen.sortFlights(processedFlights);
+        
+        // Generate flight cards
+        let allCardsHTML = '';
+        const hasWPFlights = (wpRegular.length > 0 || wpCSAR.length > 0);
+        
+        // Generate NATO flights
+        for (let i = 0; i < natoRegular.length; i++) {
+          const flight = natoRegular[i];
+          const isLastNATOFlight = hasWPFlights && (i === natoRegular.length - 1);
+          const cardHTML = await printGen.generateDesignerFlightCard(
+            flight, dataFiles.aircraftNATO, dataFiles.aircraftWP,
+            dataFiles.noteRules, dataFiles.weapons, dataFiles.nameMapping, isLastNATOFlight
+          );
+          allCardsHTML += cardHTML;
+        }
+        
+        // Generate WP flights
+        for (const flight of wpRegular) {
+          const cardHTML = await printGen.generateDesignerFlightCard(
+            flight, dataFiles.aircraftNATO, dataFiles.aircraftWP,
+            dataFiles.noteRules, dataFiles.weapons, dataFiles.nameMapping, false
+          );
+          allCardsHTML += cardHTML;
+        }
+        
+        // Create complete HTML document
+        const htmlContent = printGen.generateDesignerSheetHTML(allCardsHTML);
+        
+        // Open print window
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+          alert('Please allow pop-ups to generate flight sheets');
+          return;
+        }
+        
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+        printWindow.focus();
+        
+      } catch (error) {
+        console.error('Error generating flight sheets:', error);
+        alert('Error generating flight sheets. Check console for details.');
+      }
     }
 
-    function exportDesign() {
+    async function exportDesign() {
       if (!flightQueue.length) { alert('Queue is empty. Nothing to export.'); return; }
-      const html = buildPrintableHtml();
-      const blob = new Blob([html], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'baltic-flight-queue.html';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      
+      try {
+        // Convert queue to flight results format
+        const results = flightQueue.map(f => {
+          const a = aircraftDatabase[f.aircraftKey];
+          if (!a) return null;
+          
+          const faction = ['USSR', 'POL'].includes(a.nation) ? 'WP' : 'NATO';
+          
+          return {
+            aircraftType: f.aircraftKey,
+            nationCode: a.nation || f.nation,
+            tasking: 'Manual',
+            faction: faction,
+            flightSize: f.size,
+            numFlights: 1
+          };
+        }).filter(Boolean);
+        
+        if (!results.length) {
+          alert('No valid flights in queue.');
+          return;
+        }
+        
+        // Use PrintGenerator to create flight sheets
+        const balticConfig = window.ModuleConfig ? window.ModuleConfig.getModuleConfig('baltic-approaches') : null;
+        const printGen = new PrintGenerator(balticConfig);
+        
+        // Load data files
+        const dataFiles = await printGen.loadDataFiles();
+        
+        // Process and sort flights
+        const processedFlights = printGen.processFlights(results);
+        const { natoRegular, natoCSAR, wpRegular, wpCSAR } = printGen.sortFlights(processedFlights);
+        
+        // Generate flight cards
+        let allCardsHTML = '';
+        const hasWPFlights = (wpRegular.length > 0 || wpCSAR.length > 0);
+        
+        // Generate NATO flights
+        for (let i = 0; i < natoRegular.length; i++) {
+          const flight = natoRegular[i];
+          const isLastNATOFlight = hasWPFlights && (i === natoRegular.length - 1);
+          const cardHTML = await printGen.generateDesignerFlightCard(
+            flight, dataFiles.aircraftNATO, dataFiles.aircraftWP,
+            dataFiles.noteRules, dataFiles.weapons, dataFiles.nameMapping, isLastNATOFlight
+          );
+          allCardsHTML += cardHTML;
+        }
+        
+        // Generate WP flights
+        for (const flight of wpRegular) {
+          const cardHTML = await printGen.generateDesignerFlightCard(
+            flight, dataFiles.aircraftNATO, dataFiles.aircraftWP,
+            dataFiles.noteRules, dataFiles.weapons, dataFiles.nameMapping, false
+          );
+          allCardsHTML += cardHTML;
+        }
+        
+        // Create complete HTML document
+        const htmlContent = printGen.generateDesignerSheetHTML(allCardsHTML);
+        
+        // Download as HTML file
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'baltic-flight-sheets.html';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        
+      } catch (error) {
+        console.error('Error exporting flight sheets:', error);
+        alert('Error exporting flight sheets. Check console for details.');
+      }
     }
 
     // Initialize after loading DBs
