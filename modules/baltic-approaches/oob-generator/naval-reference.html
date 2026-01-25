@@ -763,16 +763,67 @@
             
             const allRows = document.querySelectorAll('#nato-tbody tr, #wp-tbody tr');
             
+            // Define NATO and WP nations
+            const natoNations = ['US', 'UK', 'FRG', 'DK', 'NE', 'SE'];
+            const wpNations = ['USSR', 'POL', 'GDR'];
+            
+            let hasVisibleNATO = false;
+            let hasVisibleWP = false;
+            
             allRows.forEach(row => {
                 const matchesNation = nationFilter === 'all' || row.dataset.nation === nationFilter;
                 const matchesSearch = searchText === '' || row.dataset.name.includes(searchText);
                 
                 if (matchesNation && matchesSearch) {
                     row.classList.remove('hidden');
+                    // Track which sections have visible rows
+                    if (row.closest('#nato-tbody')) {
+                        hasVisibleNATO = true;
+                    } else {
+                        hasVisibleWP = true;
+                    }
                 } else {
                     row.classList.add('hidden');
                 }
             });
+            
+            // Hide/show section headers based on nation filter
+            const natoSection = document.querySelector('h2:has(+ .table-container #nato-table)');
+            const natoTable = document.querySelector('.table-container:has(#nato-table)');
+            const wpSection = document.querySelector('h2.wp-heading');
+            const wpTable = document.querySelector('.table-container:has(#wp-table)');
+            
+            if (nationFilter === 'all') {
+                // Show both sections if they have visible rows
+                if (natoSection && natoTable) {
+                    natoSection.style.display = hasVisibleNATO ? 'block' : 'none';
+                    natoTable.style.display = hasVisibleNATO ? 'block' : 'none';
+                }
+                if (wpSection && wpTable) {
+                    wpSection.style.display = hasVisibleWP ? 'block' : 'none';
+                    wpTable.style.display = hasVisibleWP ? 'block' : 'none';
+                }
+            } else if (wpNations.includes(nationFilter)) {
+                // Hide NATO section when WP nation selected
+                if (natoSection && natoTable) {
+                    natoSection.style.display = 'none';
+                    natoTable.style.display = 'none';
+                }
+                if (wpSection && wpTable) {
+                    wpSection.style.display = hasVisibleWP ? 'block' : 'none';
+                    wpTable.style.display = hasVisibleWP ? 'block' : 'none';
+                }
+            } else if (natoNations.includes(nationFilter)) {
+                // Hide WP section when NATO nation selected
+                if (natoSection && natoTable) {
+                    natoSection.style.display = hasVisibleNATO ? 'block' : 'none';
+                    natoTable.style.display = hasVisibleNATO ? 'block' : 'none';
+                }
+                if (wpSection && wpTable) {
+                    wpSection.style.display = 'none';
+                    wpTable.style.display = 'none';
+                }
+            }
         }
     </script>
     
