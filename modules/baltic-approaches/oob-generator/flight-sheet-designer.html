@@ -823,14 +823,12 @@
       };
       flightQueue.push(item);
       updateQueueUI();
-      renderPreview();
     }
 
     function removeFromQueue(id) {
       const idx = flightQueue.findIndex(f => f.id === id);
       if (idx >= 0) flightQueue.splice(idx, 1);
       updateQueueUI();
-      renderPreview();
     }
 
     function clearQueue() {
@@ -869,115 +867,7 @@
       }
     }
 
-    function renderPreview() {
-      const grid = document.getElementById('flightGrid');
-      grid.innerHTML = '';
-      if (!flightQueue.length) {
-        clearPreview();
-        return;
-      }
-      for (const f of flightQueue) {
-          const a = aircraftDatabase[f.aircraftKey] || { name: f.aircraftKey, ordnance: [], fuel: 0, crew: 1 };
-          const card = document.createElement('div');
-          card.className = 'flight-card';
-
-          const header = document.createElement('div');
-          header.className = 'flight-info-section';
-          header.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;\"><div><strong>${a.name || f.aircraftKey}</strong><div style="font-size:10px;color:#444">${a.model || ''} — ${f.nation || a.nation || ''}</div></div><div style="font-weight:bold;">${f.size}-ship</div></div>`;
-          card.appendChild(header);
-
-          const aircraftGrid = document.createElement('div');
-          aircraftGrid.className = 'aircraft-grid';
-          for (let i = 1; i <= f.size; i++) {
-            const box = document.createElement('div');
-            box.className = 'aircraft-box';
-
-            const top = document.createElement('div');
-            top.className = 'aircraft-header';
-            const num = document.createElement('div');
-            num.className = 'aircraft-number';
-            num.textContent = String(i);
-
-            const nameDiv = document.createElement('div');
-            nameDiv.style.flex = '1';
-            nameDiv.innerHTML = `<div style="font-weight:bold;font-size:10px">${a.name || f.aircraftKey}</div><div style="font-size:8px;color:#666">${a.model || ''}</div>`;
-
-            const crewDiv = document.createElement('div');
-            crewDiv.className = 'crew-info';
-            crewDiv.innerHTML = `<div class="crew-icon">👨‍✈️</div><div class="crew-count">${a.crew || 1}</div>`;
-
-            top.appendChild(num);
-            top.appendChild(nameDiv);
-            top.appendChild(crewDiv);
-            box.appendChild(top);
-
-            const ordArea = document.createElement('div');
-            ordArea.className = 'ordnance-area-small';
-            const ordLabel = document.createElement('div');
-            ordLabel.className = 'ordnance-label-small';
-            ordLabel.textContent = 'Ordnance';
-            const ordText = document.createElement('div');
-            ordText.className = 'ordnance-text';
-            ordText.textContent = getOrdnanceText(a);
-            ordArea.appendChild(ordLabel);
-            ordArea.appendChild(ordText);
-            box.appendChild(ordArea);
-
-            const fuelBox = document.createElement('div');
-            fuelBox.className = 'fuel-box';
-            const fuelLabel = document.createElement('div');
-            fuelLabel.className = 'field-label';
-            fuelLabel.textContent = 'Fuel';
-            const circles = document.createElement('div');
-            circles.className = 'fuel-circles-row';
-            const fuel = Math.max(0, Math.min(10, a.fuel || 0));
-            const displayCount = Math.max(1, fuel);
-            for (let c = 0; c < displayCount; c++) {
-              const fc = document.createElement('div');
-              fc.className = 'fuel-circle';
-              circles.appendChild(fc);
-            }
-            fuelBox.appendChild(fuelLabel);
-            fuelBox.appendChild(circles);
-            box.appendChild(fuelBox);
-
-            aircraftGrid.appendChild(box);
-          }
-          card.appendChild(aircraftGrid);
-
-          // Weapons display
-          const wRow = document.createElement('div');
-          wRow.className = 'flight-weapons-row';
-          const weaponsDiv = document.createElement('div');
-          weaponsDiv.className = 'weapons-display';
-          if (a.weapons) {
-            if (a.weapons.gun) {
-              const wi = document.createElement('div');
-              wi.className = 'weapon-item';
-              wi.innerHTML = `<span class="weapon-label">Gun:</span><span class="weapon-value">${a.weapons.gun}${a.weapons.gunDepletion ? ' (' + a.weapons.gunDepletion + ')' : ''}</span>`;
-              weaponsDiv.appendChild(wi);
-            }
-            if (a.weapons.irm) {
-              const wi = document.createElement('div');
-              wi.className = 'weapon-item';
-              wi.innerHTML = `<span class="weapon-label">IRM:</span><span class="weapon-value">${a.weapons.irm}${a.weapons.irmDepletion ? ' x' + a.weapons.irmDepletion : ''}</span>`;
-              weaponsDiv.appendChild(wi);
-            }
-            if (a.weapons.rhm) {
-              const wi = document.createElement('div');
-              wi.className = 'weapon-item';
-              wi.innerHTML = `<span class="weapon-label">RHM:</span><span class="weapon-value">${a.weapons.rhm}${a.weapons.rhmDepletion ? ' x' + a.weapons.rhmDepletion : ''}</span>`;
-              weaponsDiv.appendChild(wi);
-            }
-          }
-          wRow.appendChild(weaponsDiv);
-          card.appendChild(wRow);
-
-          grid.appendChild(card);
-        }
-    }
-
-    function clearPreview() {
+    function 1clearPreview() {
       const grid = document.getElementById('flightGrid');
       grid.innerHTML = '<p style="color: #999; text-align: center; padding: 40px; grid-column: 1 / -1;">Select a nation, aircraft, and flight size to create a sample flight card</p>';
     }
