@@ -1168,12 +1168,423 @@
       }
     }
 
+    // Convert JSON aircraft data to display format
+    function convertAircraftData(jsonData, altitudeBand = 'H') {
+      if (!jsonData) return null;
+      
+      // Helper function to extract speed for a specific altitude band
+      function extractSpeedForBand(speedString, index) {
+        if (!speedString || speedString === 'N/A') return 'N/A';
+        const values = speedString.split('/');
+        return values[index] || 'N/A';
+      }
+      
+      // Build weapon display strings
+      let gunDisplay = '';
+      if (jsonData.weapons.gun && jsonData.weapons.gunAmmo) {
+        const gunData = weaponsDatabase.guns[jsonData.weapons.gun];
+        const rating = gunData ? `+${gunData.stdRtg}` : '+3';
+        gunDisplay = `${rating} {${jsonData.weapons.gunAmmo}}`;
+      }
+      
+      let irmDisplay = '';
+      if (jsonData.weapons.irm && jsonData.weapons.irmAmmo) {
+        const missileData = weaponsDatabase.missiles[jsonData.weapons.irm];
+        const stdRtg = missileData ? `+${missileData.stdRtg}` : '+3';
+        const bvrRtg = missileData && missileData.bvrRtg !== null 
+          ? `/${missileData.bvrRtg > 0 ? '+' : ''}${missileData.bvrRtg}` 
+          : '/NA';
+        irmDisplay = `${stdRtg}${bvrRtg} {${jsonData.weapons.irmAmmo}}`;
+      }
+      
+      let rhmDisplay = '';
+      if (jsonData.weapons.rhm && jsonData.weapons.rhmAmmo) {
+        const missileData = weaponsDatabase.missiles[jsonData.weapons.rhm];
+        const stdRtg = missileData ? `+${missileData.stdRtg}` : '+3';
+        const bvrRtg = missileData && missileData.bvrRtg !== null 
+          ? `/${missileData.bvrRtg > 0 ? '+' : ''}${missileData.bvrRtg}` 
+          : '/NA';
+        rhmDisplay = `${stdRtg}${bvrRtg} {${jsonData.weapons.rhmAmmo}}`;
+      }
+      
+      // Build radar display
+      let radarDisplay = null;
+      let radarModifier = null;
+      if (jsonData.radar && jsonData.radar.name) {
+        radarDisplay = jsonData.radar.name;
+        if (jsonData.radar.type) radarDisplay += ` ${jsonData.radar.type}`;
+        if (jsonData.radar.range) radarDisplay += ` [${jsonData.radar.range}]`;
+        if (jsonData.radar.modifier) radarModifier = jsonData.radar.modifier;
+      }
+      
+      // RWR and Jam are separate fields - filter out dash-only values
+      const rwrDisplay = (jsonData.rwr && jsonData.rwr !== '-' && jsonData.rwr !== '-/-') ? jsonData.rwr : null;
+      const jamDisplay = (jsonData.jam && jsonData.jam !== '-' && jsonData.jam !== '-/-') ? jsonData.jam : null;
+      
+      // Build ordnance string
+      const ordnanceStr = jsonData.ordnance && jsonData.ordnance.length > 0
+        ? jsonData.ordnance.map(o => o.quantity ? `${o.type}(${o.quantity})` : o.type).join(', ')
+        : '';
+      
+      // Build capabilities string
+      const capabilitiesStr = jsonData.capabilities && jsonData.capabilities.length > 0
+        ? jsonData.capabilities.join(', ')
+        : '';
+      
+      // Extract speeds for display
+      const speeds = {};
+      if (jsonData.speeds && jsonData.speeds.clean) {
+        const altitudeBands = ['VH', 'H', 'M', 'L/D'];
+        const indices = { 'VH': 3, 'H': 2, 'M': 1, 'L/D': 0 };
+        
+        altitudeBands.forEach(band => {
+          const idx = indices[band];
+          speeds[band] = {
+            combat: extractSpeedForBand(jsonData.speeds.clean.combat, idx),
+            dash: extractSpeedForBand(jsonData.speeds.clean.dash, idx),
+            maneuver: extractSpeedForBand(jsonData.speeds.clean.maneuver, idx)
+          };
+        });
+      }
+      
+      let speedsLaden = null;
+      if (jsonData.speeds && jsonData.speeds.laden) {
+        speedsLaden = {};
+        const altitudeBands = ['VH', 'H', 'M', 'L/D'];
+        const indices = { 'VH': 3, 'H': 2, 'M': 1, 'L/D': 0 };
+        
+        altitudeBands.forEach(band => {
+          const idx = indices[band];
+          speedsLaden[band] = {
+            combat: extractSpeedForBand(jsonData.speeds.laden.combat, idx),
+            dash: extractSpeedForBand(jsonData.speeds.laden.dash, idx),
+            maneuver: extractSpeedForBand(jsonData.speeds.laden.maneuver, idx)
+          };
+        });
+      }
+      
+      return {
+        model: jsonData.model,
+        nation: jsonData.nation,
+        crew: jsonData.crew,
+        rwy: jsonData.rwy,
+        fuel: jsonData.fuel,
+        notes: jsonData.notes,
+        gun: gunDisplay,
+        irm: irmDisplay,
+        rhm: rhmDisplay,
+        rwr: rwrDisplay,
+        jam: jamDisplay,
+        ordnance: ordnanceStr,
+        aam: jsonData.aam,
+        bomb: jsonData.bomb,
+        sight: jsonData.sight,
+        capabilities: capabilitiesStr,
+        speeds: speeds,
+        speedsClean: speeds,
+        speedsLaden: speedsLaden,
+        hasCleanLaden: speedsLaden !== null,
+        radar: radarDisplay,
+        radarModifier: radarModifier
+      };
+    }
+
+    // Generate test flight based on dropdown selections
+    async function generateTestFlight() {
+      const aircraftKey = document.getElementById('aircraftSelector').value;
+      const flightSize = document.getElementById('flightSizeSelector').value;
+      
+      if (!aircraftKey) {
+        clearPreview();
+        return; // No aircraft selected
+      }
+      
+      const aircraft = aircraftDatabase[aircraftKey];
+      if (!aircraft) {
+        console.error('Aircraft not found:', aircraftKey);
+        clearPreview();
+        return;
+      }
+      
+      // Create a test flight object
+      const testFlight = {
+        id: Date.now(),
+        table: 'Test',
+        faction: 'NATO',
+        tableName: 'Test Flight',
+        result: `${aircraft.nation}: 1 x {${flightSize}} ${aircraft.name}, CAP`,
+        debugText: '[Test Flight]',
+        timestamp: Date.now(),
+        aircraft: aircraftKey,
+        crew: aircraft.crew,
+        fuel: aircraft.fuel
+      };
+      
+      // Clear and display the test flight
+      const grid = document.getElementById('flightGrid');
+      grid.innerHTML = '';
+      grid.appendChild(createFlightCard(testFlight));
+    }
+
+    function createFlightCard(flight) {
+      const card = document.createElement('div');
+      card.className = 'flight-card';
+      
+      // Parse the result to extract flight information
+      const resultLines = flight.result.split('<br>');
+      const firstLine = resultLines[0];
+      
+      // Extract nation and aircraft from the first line
+      const match = firstLine.match(/^([^:]+):\s*(\d+)\s*x\s*{(\d+)}\s*([^,]+),\s*(.+)$/);
+      
+      let nation = 'Unknown';
+      let flightCount = '1';
+      let flightSize = '2';
+      let aircraft = 'Unknown';
+      let tasking = 'CAP';
+      
+      if (match) {
+        nation = match[1].trim();
+        flightCount = match[2];
+        flightSize = match[3];
+        aircraft = match[4].trim();
+        tasking = match[5].trim();
+      }
+      
+      // Select aircraft data from database
+      let aircraftData = null;
+      let aircraftKey = flight.aircraft;
+      
+      if (!aircraftKey || !aircraftDatabase[aircraftKey]) {
+        // Try exact match first, then partial match
+        aircraftKey = Object.keys(aircraftDatabase).find(key => 
+          key === aircraft || aircraftDatabase[key].name === aircraft
+        );
+        
+        // If no exact match, try partial match
+        if (!aircraftKey) {
+          const sortedKeys = Object.keys(aircraftDatabase).sort((a, b) => b.length - a.length);
+          aircraftKey = sortedKeys.find(key => 
+            aircraft.includes(key) || aircraftDatabase[key].name.includes(aircraft)
+          );
+        }
+      }
+      
+      if (aircraftKey) {
+        aircraftData = convertAircraftData(aircraftDatabase[aircraftKey]);
+      }
+      
+      // Fallback data if not found
+      if (!aircraftData) {
+        aircraftData = {
+          model: aircraft,
+          nation: nation,
+          crew: flight.crew || 1,
+          fuel: flight.fuel || 6,
+          notes: '',
+          speeds: {
+            'VH': { combat: 'N/A', dash: 'N/A', maneuver: 'N/A' },
+            'H': { combat: '5', dash: '8', maneuver: '9' },
+            'M': { combat: '4', dash: '6', maneuver: '9' },
+            'L/D': { combat: '4', dash: '5', maneuver: '8' }
+          }
+        };
+      }
+      
+      card.innerHTML = `
+        <!-- Flight-level information -->
+        <div class="flight-info-section">
+          <div class="flight-header">
+            <div class="roundel-box-header">
+              <img src="../../../shared/assets/roundels/icons/${
+                aircraftData.nation === 'USA' ? 'usa.svg' : 
+                aircraftData.nation === 'UK' ? 'uk.svg' : 
+                aircraftData.nation === 'FRG' ? 'frg.svg' :
+                aircraftData.nation === 'DK' ? 'denmark.svg' :
+                aircraftData.nation === 'SE' ? 'sweden.svg' :
+                aircraftData.nation === 'Soviet' || aircraftData.nation === 'USSR' ? 'ussr.svg' :
+                aircraftData.nation === 'POL' ? 'poland.svg' :
+                'usa.svg'
+              }" alt="${aircraftData.nation || 'USA'} Roundel">
+            </div>
+            <div class="field">
+              <div class="field-label">Aircraft</div>
+              <div class="field-value">${aircraftData.model || aircraft}</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Callsign</div>
+              <div class="field-value"></div>
+            </div>
+            <div class="field">
+              <div class="field-label">Counter</div>
+              <div class="field-value"></div>
+            </div>
+            <div class="field">
+              <div class="field-label">Aggr.</div>
+              <div class="field-value"></div>
+            </div>
+          </div>
+          
+          <div class="tasking-fuel-row">
+            <div class="field">
+              <div class="field-label">Tasking</div>
+              <div class="field-value"></div>
+            </div>
+            <div class="fuel-box">
+              <div class="fuel-label-value">
+                <span class="field-label">Fuel</span>
+                <span class="fuel-value">${aircraftData.fuel || flight.fuel || 18}</span>
+              </div>
+              <div class="fuel-circles-container">
+                ${typeof (aircraftData.fuel || flight.fuel) === 'number' ? `
+                <div class="fuel-circles-row">
+                  ${Array(Math.ceil((aircraftData.fuel || flight.fuel || 18) / 2)).fill(0).map(() => 
+                    `<div class="fuel-circle"></div>`
+                  ).join('')}
+                </div>
+                <div class="fuel-circles-row">
+                  ${Array(Math.floor((aircraftData.fuel || flight.fuel || 18) / 2)).fill(0).map(() => 
+                    `<div class="fuel-circle"></div>`
+                  ).join('')}
+                </div>
+                ` : ''}
+              </div>
+            </div>
+            <div class="field">
+              <div class="field-label">Notes</div>
+              <div class="field-value">${aircraftData.notes || ''}</div>
+            </div>
+          </div>
+          
+          <div class="flight-weapons-row">
+            <div class="weapons-display">
+              ${aircraftData.gun ? `<div class="weapon-item">
+                <span class="weapon-label">Gun:</span>
+                <span>${aircraftData.gun}</span>
+              </div>` : ''}
+              ${aircraftData.irm ? `<div class="weapon-item">
+                <span class="weapon-label">IRM:</span>
+                <span>${aircraftData.irm}</span>
+              </div>` : ''}
+              ${aircraftData.rhm ? `<div class="weapon-item">
+                <span class="weapon-label">RHM:</span>
+                <span>${aircraftData.rhm}</span>
+              </div>` : ''}
+            </div>
+            ${aircraftData.crew || aircraftData.rwy ? `<div style="display: flex; gap: 10px; font-size: 7pt;">
+              ${aircraftData.crew ? `<div><strong>Crew:</strong> ${aircraftData.crew}</div>` : ''}
+              ${aircraftData.rwy ? `<div><strong>Rwy:</strong> ${aircraftData.rwy}</div>` : ''}
+            </div>` : ''}
+          </div>
+          
+          ${aircraftData.ordnance || aircraftData.aam || aircraftData.bomb || (aircraftData.sight && aircraftData.sight !== '-') ? `<div style="padding: 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 4px;">
+            ${aircraftData.aam ? `<strong>AAM:</strong> ${aircraftData.aam}` : ''}${(aircraftData.aam && aircraftData.ordnance) ? ' | ' : ''}${aircraftData.ordnance ? `<strong>Ordnance:</strong> ${aircraftData.ordnance}` : ''}${((aircraftData.aam || aircraftData.ordnance) && aircraftData.bomb) ? ' | ' : ''}${aircraftData.bomb ? `<strong>Bomb:</strong> ${aircraftData.bomb}` : ''}${((aircraftData.aam || aircraftData.ordnance || aircraftData.bomb) && aircraftData.sight && aircraftData.sight !== '-') ? ' | ' : ''}${aircraftData.sight && aircraftData.sight !== '-' ? `<strong>Sight:</strong> ${aircraftData.sight}` : ''}
+          </div>` : ''}
+          
+          ${aircraftData.radar || aircraftData.rwr || aircraftData.jam ? `<div style="padding: 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 4px;">
+            ${aircraftData.radar ? `<strong>Radar:</strong> ${aircraftData.radar} ${aircraftData.radarModifier || ''}` : ''}
+            ${aircraftData.radar && aircraftData.rwr ? ' | ' : ''}
+            ${aircraftData.rwr ? `<strong>RWR:</strong> ${aircraftData.rwr}` : ''}
+            ${(aircraftData.radar || aircraftData.rwr) && aircraftData.jam ? ' | ' : ''}
+            ${aircraftData.jam ? `<strong>Jam:</strong> ${aircraftData.jam}` : ''}
+          </div>` : ''}
+          
+          ${aircraftData.capabilities ? `<div style="padding: 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 4px;">
+            <strong>Capabilities:</strong> ${aircraftData.capabilities}
+          </div>` : ''}
+          
+          ${aircraftData.hasCleanLaden ? `
+          <table class="speed-table">
+            <tr>
+              <th rowspan="2">Alt</th>
+              <th colspan="3">Clean</th>
+              <th colspan="3">Laden</th>
+            </tr>
+            <tr>
+              <th>C</th>
+              <th>D</th>
+              <th>M</th>
+              <th>C</th>
+              <th>D</th>
+              <th>M</th>
+            </tr>
+            ${Object.keys(aircraftData.speedsClean).map(alt => `
+              <tr>
+                <td><strong>${alt}</strong></td>
+                <td>${aircraftData.speedsClean[alt].combat}</td>
+                <td>${aircraftData.speedsClean[alt].dash}</td>
+                <td>${aircraftData.speedsClean[alt].maneuver}</td>
+                <td>${aircraftData.speedsLaden[alt].combat}</td>
+                <td>${aircraftData.speedsLaden[alt].dash}</td>
+                <td>${aircraftData.speedsLaden[alt].maneuver}</td>
+              </tr>
+            `).join('')}
+          </table>
+          ` : `
+          <table class="speed-table">
+            <tr>
+              <th>Alt</th>
+              <th>C</th>
+              <th>D</th>
+              <th>M</th>
+            </tr>
+            ${Object.entries(aircraftData.speeds).map(([alt, speeds]) => `
+              <tr>
+                <td><strong>${alt}</strong></td>
+                <td>${speeds.combat}</td>
+                <td>${speeds.dash}</td>
+                <td>${speeds.maneuver}</td>
+              </tr>
+            `).join('')}
+          </table>
+          `}
+        </div>
+        
+        <!-- Individual aircraft boxes -->
+        <div class="aircraft-grid">
+          ${Array(parseInt(flightSize)).fill(0).map((_, i) => `
+            <div class="aircraft-box">
+              <div class="aircraft-header">
+                <div class="aircraft-number">${i + 1}</div>
+                <div class="damage-boxes">
+                  <div class="damage-column">
+                    <div class="damage-row">
+                      <div class="damage-label">Damaged</div>
+                      <div class="damage-checkbox"></div>
+                    </div>
+                    <div class="damage-row">
+                      <div class="damage-label">Crippled</div>
+                      <div class="damage-checkbox"></div>
+                    </div>
+                    <div class="damage-row">
+                      <div class="damage-label">Destroyed</div>
+                      <div class="damage-checkbox"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ordnance-area-small">
+                <div class="ordnance-label-small">Ordnance</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      
+      return card;
+    }
+
     // Initialize after loading DBs
     loadDatabases().then(ok => {
       if (ok) {
         populateAircraftSelector();
-        document.getElementById('nationSelector').addEventListener('change', () => updateAircraftSelectorOnNation());
-        document.getElementById('aircraftSelector').addEventListener('change', () => {/* keep for future preview triggers */});
+        // Add event listeners to dropdowns for automatic generation
+        document.getElementById('nationSelector').addEventListener('change', () => {
+          populateAircraftSelector();
+          generateTestFlight();
+        });
+        document.getElementById('aircraftSelector').addEventListener('change', generateTestFlight);
+        document.getElementById('flightSizeSelector').addEventListener('change', generateTestFlight);
       }
     });
   </script>
