@@ -1438,9 +1438,9 @@
       `;
     }
     
-    function exportDesign() {
+    async function exportDesign() {
       const previewFrame = document.getElementById('previewFrame');
-      const htmlContent = `<!DOCTYPE html>
+      let htmlContent = `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -1453,6 +1453,32 @@ ${document.querySelector('style').textContent}
 ${previewFrame.innerHTML}
 </body>
 </html>`;
+      
+      // Convert roundel image paths to base64 data URLs
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, 'text/html');
+      const images = doc.querySelectorAll('img[src*="roundels/"]');
+      
+      for (const img of images) {
+        const src = img.getAttribute('src');
+        const filename = src.split('/').pop();
+        const imagePath = `../../../shared/assets/roundels/${filename}`;
+        
+        try {
+          const response = await fetch(imagePath);
+          const blob = await response.blob();
+          const base64 = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(blob);
+          });
+          img.setAttribute('src', base64);
+        } catch (err) {
+          console.warn('Could not embed image:', filename, err);
+        }
+      }
+      
+      htmlContent = doc.documentElement.outerHTML;
       
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
@@ -1537,14 +1563,11 @@ ${previewFrame.innerHTML}
       `).join('');
     }
     
-    function printQueue() {
+    async function printQueue() {
       if (flightQueue.length === 0) {
         alert('No flights in queue. Add some flights first!');
         return;
       }
-      
-      // Generate HTML for all queued flights
-      const printWindow = window.open('', '_blank');
       
       // Create flight cards HTML
       let allFlightsHTML = '';
@@ -1569,7 +1592,7 @@ ${previewFrame.innerHTML}
         }
       }
       
-      const htmlContent = `<!DOCTYPE html>
+      let htmlContent = `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -1598,6 +1621,34 @@ ${document.querySelector('style').textContent}
 </body>
 </html>`;
       
+      // Convert roundel image paths to base64 data URLs
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, 'text/html');
+      const images = doc.querySelectorAll('img[src*="roundels/"]');
+      
+      for (const img of images) {
+        const src = img.getAttribute('src');
+        const filename = src.split('/').pop();
+        const imagePath = `../../../shared/assets/roundels/${filename}`;
+        
+        try {
+          const response = await fetch(imagePath);
+          const blob = await response.blob();
+          const base64 = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(blob);
+          });
+          img.setAttribute('src', base64);
+        } catch (err) {
+          console.warn('Could not embed image:', filename, err);
+        }
+      }
+      
+      htmlContent = doc.documentElement.outerHTML;
+      
+      // Generate HTML for all queued flights
+      const printWindow = window.open('', '_blank');
       printWindow.document.write(htmlContent);
       printWindow.document.close();
     }

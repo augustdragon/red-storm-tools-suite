@@ -1063,7 +1063,33 @@
         }
         
         // Create complete HTML document
-        const htmlContent = printGen.generateDesignerSheetHTML(allCardsHTML);
+        let htmlContent = printGen.generateDesignerSheetHTML(allCardsHTML);
+        
+        // Convert roundel image paths to base64 data URLs
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        const images = doc.querySelectorAll('img[src*="roundels/"]');
+        
+        for (const img of images) {
+          const src = img.getAttribute('src');
+          const filename = src.split('/').pop();
+          const imagePath = `../../../shared/assets/roundels/${filename}`;
+          
+          try {
+            const response = await fetch(imagePath);
+            const blob = await response.blob();
+            const base64 = await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.readAsDataURL(blob);
+            });
+            img.setAttribute('src', base64);
+          } catch (err) {
+            console.warn('Could not embed image:', filename, err);
+          }
+        }
+        
+        htmlContent = doc.documentElement.outerHTML;
         
         // Download as HTML file
         const blob = new Blob([htmlContent], { type: 'text/html' });

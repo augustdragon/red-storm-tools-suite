@@ -10,8 +10,8 @@
     "Tgt": "A",
     "EW": "A",
     "EWR": "Head Net [15/8/8]",
-    "SAM": "SA-N-1b (8)",
-    "Shots": null,
+    "SAM": "SA-N-1b",
+    "Shots": 8,
     "LOAL": "L",
     "Acq": 10,
     "Atk": 6,
@@ -29,7 +29,7 @@
     "capabilities": {
       "SSM": "3M44",
       "Ammo": 8,
-      "Helo": null
+      "Helo": "Helo"
     },
     "Notes": "A"
   },
@@ -69,9 +69,9 @@
     "Size": "L",
     "Tgt": "A",
     "EW": "B",
-    "EWR": "Top Trough [20/10/8]",
-    "SAM": "SA-N-7a (24)",
-    "Shots": null,
+    "EWR": "Top Steer [20/10/8]",
+    "SAM": "SA-N-7a",
+    "Shots": 24,
     "LOAL": "L",
     "Acq": 12,
     "Atk": 8,
@@ -84,12 +84,12 @@
     "V": "NA",
     "AAA": {
       "AAA1": "Radar AAA (H)",
-      "AAA2": "Close Defense (2)"
+      "AAA2": "Close Defense {2}"
     },
     "capabilities": {
       "SSM": "3M80",
       "Ammo": 8,
-      "Helo": null
+      "Helo": "Helo"
     },
     "Notes": "A, C"
   },
@@ -100,8 +100,8 @@
     "Tgt": "A",
     "EW": "B",
     "EWR": "Head Net [15/8/8]",
-    "SAM": "SA-N-1b (16)",
-    "Shots": null,
+    "SAM": "SA-N-1b",
+    "Shots": 16,
     "LOAL": "L",
     "Acq": 10,
     "Atk": 6,
@@ -114,12 +114,12 @@
     "V": "NA",
     "AAA": {
       "AAA1": "Radar AAA (M)",
-      "AAA2": "Close Defense (2)"
+      "AAA2": "Close Defense {2}"
     },
     "capabilities": {
       "SSM": "P-15M",
       "Ammo": 4,
-      "Helo": null
+      "Helo": "Helo"
     },
     "Notes": "A"
   },
@@ -130,8 +130,8 @@
     "Tgt": "B",
     "EW": "A",
     "EWR": "Head Net [15/8/8]",
-    "SAM": "SA-N-1b (16)",
-    "Shots": null,
+    "SAM": "SA-N-1b",
+    "Shots": 16,
     "LOAL": "L",
     "Acq": 10,
     "Atk": 6,
@@ -147,9 +147,9 @@
       "AAA2": null
     },
     "capabilities": {
-      "SSM": "Helo",
+      "SSM": null,
       "Ammo": null,
-      "Helo": null
+      "Helo": "Helo"
     },
     "Notes": "A"
   },
@@ -160,8 +160,8 @@
     "Tgt": "B",
     "EW": "A",
     "EWR": "Head Net [15/8/8]",
-    "SAM": "SA-N-1b (16)",
-    "Shots": null,
+    "SAM": "SA-N-1b",
+    "Shots": 16,
     "LOAL": "L",
     "Acq": 10,
     "Atk": 6,
@@ -177,9 +177,9 @@
       "AAA2": "Light AAA"
     },
     "capabilities": {
-      "SSM": "Helo",
+      "SSM": null,
       "Ammo": null,
-      "Helo": null
+      "Helo": "Helo"
     },
     "Notes": "A"
   },
@@ -250,8 +250,8 @@
     "Tgt": "B",
     "EW": "B",
     "EWR": "Head Net [15/8/8]",
-    "SAM": "SA-N-4b (20)",
-    "Shots": null,
+    "SAM": "SA-N-4b",
+    "Shots": 20,
     "LOAL": "L",
     "Acq": 7,
     "Atk": 3,
@@ -280,8 +280,8 @@
     "Tgt": "B",
     "EW": "B",
     "EWR": "Strut Curve [12/6/6]",
-    "SAM": "SA-N-4b (10)",
-    "Shots": null,
+    "SAM": "SA-N-4b",
+    "Shots": 10,
     "LOAL": "L",
     "Acq": 7,
     "Atk": 3,
@@ -294,7 +294,7 @@
     "V": "NA",
     "AAA": {
       "AAA1": "Radar AAA (M)",
-      "AAA2": "Close Defense (8)"
+      "AAA2": "Close Defense {6}"
     },
     "capabilities": {
       "SSM": null,
@@ -310,8 +310,8 @@
     "Tgt": "B",
     "EW": "B",
     "EWR": "Pop Group [8/4/4]",
-    "SAM": "SA-N-4b (10)",
-    "Shots": null,
+    "SAM": "SA-N-4b",
+    "Shots": 10,
     "LOAL": "L",
     "Acq": 7,
     "Atk": 3,
@@ -340,8 +340,8 @@
     "Tgt": "A",
     "EW": "B",
     "EWR": "Pop Group [8/4/4]",
-    "SAM": "SA-N-4b (10)",
-    "Shots": null,
+    "SAM": "SA-N-4b",
+    "Shots": 10,
     "LOAL": "L",
     "Acq": 7,
     "Atk": 3,
@@ -370,8 +370,8 @@
     "Tgt": "A",
     "EW": "C",
     "EWR": "Pop Group [8/4/4]",
-    "SAM": "SA-N-4b (10)",
-    "Shots": null,
+    "SAM": "SA-N-4b",
+    "Shots": 10,
     "LOAL": "L",
     "Acq": 7,
     "Atk": 3,
@@ -384,7 +384,7 @@
     "V": "NA",
     "AAA": {
       "AAA1": "Radar AAA (M)",
-      "AAA2": "Close Defense (8)"
+      "AAA2": "Close Defense {6}"
     },
     "capabilities": {
       "SSM": "P-120",
@@ -444,7 +444,7 @@
     "V": null,
     "AAA": {
       "AAA1": "Radar AAA (M)",
-      "AAA2": "Close Defense (8)"
+      "AAA2": "Close Defense {6}"
     },
     "capabilities": {
       "SSM": null,
@@ -474,7 +474,7 @@
     "V": null,
     "AAA": {
       "AAA1": "Radar AAA (M)",
-      "AAA2": "Close Defense (8)"
+      "AAA2": "Close Defense {6}"
     },
     "capabilities": {
       "SSM": null,
@@ -489,7 +489,7 @@
     "Size": "S",
     "Tgt": "D",
     "EW": "A",
-    "EWR": "Cross Bird [8/3/3]",
+    "EWR": "Cross Bird [6/3/3]",
     "SAM": null,
     "Shots": null,
     "LOAL": null,
@@ -534,7 +534,7 @@
     "V": null,
     "AAA": {
       "AAA1": "Radar AAA (M)",
-      "AAA2": "Close Defense (6)"
+      "AAA2": "Close Defense {6}"
     },
     "capabilities": {
       "SSM": "P-15M",
@@ -564,7 +564,7 @@
     "V": null,
     "AAA": {
       "AAA1": "Radar AAA (M)",
-      "AAA2": "Close Defense (8)"
+      "AAA2": "Close Defense {6}"
     },
     "capabilities": {
       "SSM": "P-15M",
@@ -594,7 +594,7 @@
     "V": null,
     "AAA": {
       "AAA1": "Radar AAA (M)",
-      "AAA2": "Close Defense (8)"
+      "AAA2": "Close Defense {6}"
     },
     "capabilities": {
       "SSM": "3M80",
@@ -623,8 +623,8 @@
     "H": null,
     "V": null,
     "AAA": {
-      "AAA1": "Close Defense (8)",
-      "AAA2": "Light AAA"
+      "AAA1": "Light AAA",
+      "AAA2": null
     },
     "capabilities": {
       "SSM": "P-15U",
