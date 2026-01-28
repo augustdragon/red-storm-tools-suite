@@ -349,21 +349,23 @@ body {
   background-color: #5a6a5a;
   color: #f4f4f4;
   font-size: 16px;
-  min-width: 80px;
+  width: 100px;
   text-align: center;
 }
 
 /* Restore browser number field controls for roll counters */
 input[type="number"] {
-  appearance: auto;
-  -moz-appearance: auto;
-  -webkit-appearance: auto;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: auto;
+  -webkit-appearance: inner-spin-button;
+  opacity: 1;
   height: auto;
+  margin: 0;
 }
 
 .action-buttons {

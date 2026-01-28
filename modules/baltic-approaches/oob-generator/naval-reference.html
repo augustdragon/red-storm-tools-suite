@@ -567,6 +567,24 @@
             // Filter out metadata fields
             const ships = Object.keys(data).filter(key => !key.startsWith('_'));
             
+            // Sort by nation first, then by ship name
+            ships.sort((a, b) => {
+                const nationA = data[a].Nation.split(',')[0].trim();
+                const nationB = data[b].Nation.split(',')[0].trim();
+                
+                // Put "All" at the end
+                if (nationA === 'All' && nationB !== 'All') return 1;
+                if (nationB === 'All' && nationA !== 'All') return -1;
+                
+                // Sort by nation alphabetically
+                if (nationA !== nationB) {
+                    return nationA.localeCompare(nationB);
+                }
+                
+                // If same nation, sort by ship name
+                return a.localeCompare(b);
+            });
+            
             ships.forEach(shipName => {
                 const ship = data[shipName];
                 const row = document.createElement('tr');
