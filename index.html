@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Red Storm Tools Suite - Module Selection</title>
+    <title>Red Storm Tools Suite - Site Moved</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
         body {
@@ -18,6 +18,9 @@
             background-repeat: no-repeat;
             min-height: 100vh;
             color: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         body::before {
@@ -31,270 +34,92 @@
             z-index: -1;
         }
         
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        
-        .header {
+        .message-container {
             text-align: center;
-            margin-bottom: 50px;
-            padding: 20px;
-            background-color: rgba(26, 42, 26, 0.9);
-            border-radius: 8px;
-            border-bottom: 2px solid #4a5a4a;
+            padding: 60px 40px;
+            background-color: rgba(26, 42, 26, 0.95);
+            border-radius: 12px;
+            border: 2px solid #4a5a4a;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            max-width: 600px;
+            margin: 20px;
         }
         
-        .header h1 {
-            font-size: 3.5em;
-            margin: 0;
+        .message-container h1 {
+            font-size: 3em;
+            margin: 0 0 20px 0;
             color: #ffffff;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
-        .header p {
-            font-size: 1.3em;
-            margin: 15px 0;
-            opacity: 0.9;
-        }
-        
-        .module-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-            margin: 40px 0;
-        }
-        
-        .shared-tools-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-            margin: 40px 0;
-        }
-        
-        .module-card {
-            background-color: rgba(58, 74, 58, 0.9);
-            border-radius: 8px;
-            padding: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid #4a5a4a;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .module-card:hover {
-            transform: translateY(-5px);
-            background-color: rgba(69, 85, 69, 0.9);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-            border-color: #5a6a5a;
-        }
-        
-        .module-card h2 {
-            font-size: 2em;
-            margin: 0 0 10px 0;
-            color: #f4f4f4;
-        }
-        
-        .module-card .subtitle {
-            font-size: 1.1em;
-            color: #c4d4c4;
-            margin: 0 0 15px 0;
-            font-style: italic;
-            opacity: 0.9;
-        }
-        
-        .module-card p {
-            color: #d4e4d4;
+        .message-container p {
+            font-size: 1.4em;
+            margin: 20px 0 40px 0;
             line-height: 1.6;
-            margin-bottom: 15px;
-            opacity: 0.9;
+            color: #d4e4d4;
         }
         
-        .module-features {
-            list-style: none;
-            padding: 0;
-            margin: 15px 0;
-            flex-grow: 1;
-        }
-        
-        .module-features li {
-            padding: 6px 0;
-            color: #c4d4c4;
-            border-bottom: 1px solid rgba(74, 90, 74, 0.5);
-            font-size: 0.95em;
-        }
-        
-        .module-features li::before {
-            content: '✓ ';
-            color: #8a9a8a;
-            font-weight: bold;
-        }
-        
-        .enter-button {
+        .new-site-link {
             display: inline-block;
-            padding: 15px 30px;
+            padding: 20px 40px;
             background-color: #5a6a5a;
             color: white;
             text-decoration: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1.3em;
             transition: all 0.3s ease;
             border: 2px solid #4a5a4a;
-            margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         
-        .enter-button:hover {
+        .new-site-link:hover {
             background-color: #6a7a6a;
             transform: translateY(-2px);
             border-color: #7a8a7a;
-        }
-        
-        .footer {
-            text-align: center;
-            margin-top: 60px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(74, 90, 74, 0.5);
-            opacity: 0.8;
-        }
-        
-        .footer a {
-            color: #8a9a8a;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .footer a:hover {
-            color: #b4c4b4;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
         
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5em;
+            .message-container {
+                padding: 40px 30px;
+                margin: 20px;
             }
             
-            .module-grid,
-            .shared-tools-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
+            .message-container h1 {
+                font-size: 2em;
             }
             
-            .module-card {
-                padding: 20px;
+            .message-container p {
+                font-size: 1.1em;
+            }
+            
+            .new-site-link {
+                padding: 15px 30px;
+                font-size: 1.1em;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Red Storm Tools Suite</h1>
-            <p>Select Your Game Module</p>
-        </div>
+    <div class="message-container">
+        <h1>Site Has Moved</h1>
+        <p>The Red Storm Tools Suite has moved to a new location. Please update your bookmarks!</p>
+        <a href="https://prototypeandpray.com/redstormtools/" class="new-site-link">Visit New Site</a>
         
-        <div class="module-grid">
-            <!-- Red Storm Module -->
-            <div class="module-card" onclick="window.location.href='modules/red-storm/index.html'">
-                <div>
-                    <h2>Red Storm</h2>
-                    <p class="subtitle">The Air War Over Central Germany, 1987</p>
-                </div>
-                
-                <div style="flex-grow: 1;"></div>
-                
-                <a href="modules/red-storm/index.html" class="enter-button">Enter Module →</a>
-            </div>
-            
-            <!-- Baltic Approaches Module -->
-            <div class="module-card" onclick="window.location.href='modules/baltic-approaches/index.html'">
-                <div>
-                    <h2>Baltic Approaches</h2>
-                    <p class="subtitle">The Air War Over the Baltic, 1987</p>
-                </div>
-                
-                <div style="flex-grow: 1;"></div>
-                
-                <a href="modules/baltic-approaches/index.html" class="enter-button">Enter Module →</a>
-            </div>
-        </div>
-        
-        <!-- Shared Tools Section -->
-        <div class="header" style="margin-top: 60px;">
-            <h2 style="margin: 0; font-size: 2em;">Shared Tools</h2>
-            <p style="margin: 10px 0 0 0;">References and tools for use with all modules</p>
-        </div>
-        
-        <div class="shared-tools-grid">
-            <div class="module-card" onclick="window.location.href='shared/chit-pull/index.html'">
-                <div>
-                    <h2>Chit Pull Generator</h2>
-                    <p>Draw and track initiative chits digitally.</p>
-                </div>
-                
-                <div style="flex-grow: 1;"></div>
-                
-                <a href="shared/chit-pull/index.html" class="enter-button">Open Tool →</a>
-            </div>
-            
-            <div class="module-card" onclick="window.location.href='shared/docs/user-guide.html'">
-                <div>
-                    <h2>User Guide</h2>
-                    <p>Comprehensive documentation for all tools and features in the Red Storm Tools Suite.</p>
-                </div>
-                
-                <div style="flex-grow: 1;"></div>
-                
-                <a href="shared/docs/user-guide.html" class="enter-button">View Guide →</a>
-            </div>
-            
-            <div class="module-card" onclick="window.location.href='shared/aircraft-data-reference.html'">
-                <div>
-                    <h2>Aircraft Data Reference</h2>
-                    <p>View and filter all aircraft data from Red Storm and Baltic Approaches modules.</p>
-                </div>
-                
-                <div style="flex-grow: 1;"></div>
-                
-                <a href="shared/aircraft-data-reference.html" class="enter-button">Open Reference →</a>
-            </div>
-            
-            <div class="module-card" onclick="window.location.href='shared/aircraft-notes-all.html'">
-                <div>
-                    <h2>Aircraft Notes Reference</h2>
-                    <p>Comprehensive reference of aircraft notes from both modules with search and filtering.</p>
-                </div>
-                
-                <div style="flex-grow: 1;"></div>
-                
-                <a href="shared/aircraft-notes-all.html" class="enter-button">Open Reference →</a>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>Red Storm Tools Suite v2.0 - Multi-Module Architecture</p>
-            <p style="margin-top: 10px; font-size: 0.9em;">
-                <a href="https://github.com/augustdragon/red-storm-tools-suite">GitHub Repository</a>
+        <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(74, 90, 74, 0.5);">
+            <p style="font-size: 0.9em; color: #8a9a8a; margin-bottom: 25px; line-height: 1.6; text-align: center;">
+                Red Storm and all related game materials are © GMT Games. This is an unofficial fan-made tool suite not affiliated with or endorsed by the copyright holder.
             </p>
+            <p style="font-size: 1em; color: #c4d4c4; margin-bottom: 15px;">Support this project:</p>
+            <form action="https://www.paypal.com/donate" method="post" target="_top" style="margin-top: 15px;">
+                <input type="hidden" name="business" value="ZXPFSDHKU5HKC" />
+                <input type="hidden" name="no_recurring" value="0" />
+                <input type="hidden" name="currency_code" value="USD" />
+                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+            </form>
         </div>
     </div>
-    
-    <script src="shared/js/module-config.js"></script>
-    <script>
-        function selectModule(moduleId) {
-            // Save selected module to localStorage
-            if (window.ModuleConfig) {
-                window.ModuleConfig.setCurrentModule(moduleId);
-            }
-        }
-        
-        // Load last selected module on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            const currentModule = window.ModuleConfig ? window.ModuleConfig.getCurrentModule() : 'red-storm';
-            console.log('Current module:', currentModule);
-        });
-    </script>
 </body>
 </html>
