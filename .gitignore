@@ -158,6 +158,9 @@ docker-compose*.yaml
 # Orphaned/obsolete files
 production-index.html
 
+# Scans (reference images, not needed in repo)
+docs/scans/
+
 # Temporary files
 *.tmp
 *.bak

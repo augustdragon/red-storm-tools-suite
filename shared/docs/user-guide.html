@@ -208,6 +208,7 @@
             <li><a href="#aircraft-data">Aircraft Data Reference</a></li>
             <li><a href="#aircraft-notes">Aircraft Notes Reference</a></li>
             <li><a href="#naval-reference">Naval Reference</a></li>
+            <li><a href="#naval-log-sheet">Naval Log Sheet</a></li>
         </ul>
     </div>
 
@@ -222,6 +223,7 @@
             <li><strong>Manual Flight Generator:</strong> Create custom flight sheets</li>
             <li><strong>Aircraft Data Reference:</strong> Comprehensive database of all aircraft statistics and capabilities</li>
             <li><strong>Aircraft Notes Reference:</strong> Quick lookup for special aircraft capabilities and notes</li>
+            <li><strong>Naval Log Sheet:</strong> Generate printable ship tracking log sheets for Baltic Approaches naval scenarios</li>
         </ul>
 
     </div>
@@ -572,6 +574,55 @@
         <p>Click the "Additional Naval Data" button at the top of the Naval Reference page to access supplementary information about naval weapons systems, missile specifications, and other details relevant to naval gameplay.</p>
 
         
+    </div>
+
+    <div class="tool-section" id="naval-log-sheet">
+        <h2>Naval Log Sheet (Baltic Approaches)</h2>
+        <p>Generate printable ship tracking log sheets for Baltic Approaches naval scenarios. Select ship classes from NATO and Warsaw Pact forces, and the tool auto-populates all game stats into a layout matching the official game log sheet.</p>
+
+        <h3>Getting Started</h3>
+        <ol>
+            <li>Select a <strong>ship class</strong> from the dropdown (grouped by NATO and Warsaw Pact)</li>
+            <li>For Warsaw Pact ships shared among multiple nations (e.g., Osa I, Tarantul I), select the <strong>nationality</strong> from the dropdown that appears</li>
+            <li>Enter an optional <strong>Task Force number</strong></li>
+            <li>Click <strong>Add Ship</strong> to add the ship to the queue</li>
+            <li>Repeat for additional ships</li>
+            <li>Click <strong>Print</strong> when ready to generate a printable log sheet</li>
+        </ol>
+
+        <h3>Ship Block Layout</h3>
+        <p>Each ship block on the log sheet contains the following columns:</p>
+        <ul>
+            <li><strong>TF#:</strong> Task force assignment number</li>
+            <li><strong>Class:</strong> Ship class name, type abbreviation, and nationality</li>
+            <li><strong>Damage Points:</strong> Grid of checkboxes for tracking damage, plus subsystem boxes (EWR, SSM, SAM 1, AAA1, SAM 2, AAA2) for crossing off as they are destroyed</li>
+            <li><strong>Stats:</strong> Size, Target class, EW, and EWR values</li>
+            <li><strong>SAM:</strong> SAM system type, ammo (Shots), LOAL capability, acquisition/attack/min/long ranges, and altitude modifiers</li>
+            <li><strong>SSM:</strong> SSM system name and ammo count</li>
+            <li><strong>AAA:</strong> Anti-aircraft artillery systems and values</li>
+            <li><strong>Notes:</strong> Note codes with descriptions from the game rules</li>
+        </ul>
+
+        <h3>Multi-Nation Ships</h3>
+        <p>Some Warsaw Pact ship classes are shared among multiple nations. When you select one of these classes, a nationality dropdown activates so you can choose the correct nation:</p>
+        <ul>
+            <li><strong>Tarantul I (FFL):</strong> Poland, GDR</li>
+            <li><strong>Osa I (PCM):</strong> USSR, Poland, GDR</li>
+            <li><strong>Polnocny B (LST):</strong> USSR, Poland</li>
+            <li><strong>Minesweepers (MS):</strong> USSR, Poland, GDR</li>
+            <li><strong>Cargo (MV):</strong> USSR, Poland, GDR</li>
+        </ul>
+
+        <h3>Print and Export</h3>
+        <ul>
+            <li><strong>Print:</strong> Opens a new window with a clean, print-ready layout in landscape orientation. Ships are sorted by faction (NATO first, then WP) with page breaks between factions</li>
+            <li><strong>Export HTML:</strong> Downloads a standalone HTML file with all ship data and images embedded, which can be saved and printed later</li>
+            <li><strong>Clear All:</strong> Removes all ships from the queue</li>
+        </ul>
+
+        <div class="note">
+            <strong>Note:</strong> The damage subsystem boxes (EWR, SSM, SAM, AAA) are intended to be crossed off during gameplay as systems are destroyed. The actual weapon and sensor details are displayed in the dedicated columns to the right.
+        </div>
     </div>
 
     <div class="tool-section">

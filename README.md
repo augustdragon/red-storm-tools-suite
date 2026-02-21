@@ -4,7 +4,7 @@ A comprehensive web-based tool suite for the Red Storm and Baltic Approaches boa
 
 ## Live Site
 
-**Visit:** [https://augustdragon.github.io/red-storm-tools-suite/](https://augustdragon.github.io/red-storm-tools-suite/)
+**Visit:** https://prototypeandpray.com/redstormtools/index.html
 
 ## Available Modules
 
@@ -16,15 +16,15 @@ A comprehensive web-based tool suite for the Red Storm and Baltic Approaches boa
 ### Baltic Approaches Expansion
 - Order of Battle Generator
 - Aircraft Notes Reference
-- Naval Reference (implemented) — interactive naval reference with SSM tooltips, searchable/filterable ship tables, and dark-mode styling
-- Manual Flight Generator (planned)
+- Naval Reference
+- Manual Flight Generator 
+- Naval Log Sheet
   
 ### Shared Tools
 - Initiative Chit Pull Generator
 - User Guide
 - Aircraft Data Reference
 - Aircraft Notes Reference
-
 
 
 ## Features
@@ -47,18 +47,7 @@ A comprehensive web-based tool suite for the Red Storm and Baltic Approaches boa
 - **Chit Pull Generator**: Digital chit draws for initiative
 - **User Guide**: Design and usage notes for this tools suite
 - **Aircraft Notes**: Detailed reference for all aircraft notes and special rules
-
-### Mobile version (in development)
-
-## Initiative Chit Pull Features
-
-### Core Functionality
-- **Accurate Chit Pools**: Exact Red Storm game probabilities
-  - Small Chits: [0,0,1,1,1,2,2,2,2,3]
-  - Large Chits: [1,2,2,2,3,3,4,4,4,5]
-- **Random Draw with Replacement**: Simulates real game mechanics
-- **Visual Chit Display**: Shows drawn value and type (SM/LG)
-- **Tracks chit pull history**
+- **Naval Log Sheets**: Select ships to prepopulate data on printable log sheets
 
 ## Technical Details
 
