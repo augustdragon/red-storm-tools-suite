@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naval Log Sheet - Baltic Approaches</title>
+  <link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+  <link rel="stylesheet" href="../../../shared/css/red-storm.css">
+  <style>
+    html {
+      overflow-y: scroll;
+    }
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #4a5d6d;
+    }
+
+    .header {
+      background-color: #2a3a4a;
+      border-bottom: 2px solid #5a6a7a;
+      text-align: center;
+      border-radius: 8px;
+      max-width: none;
+      margin-bottom: 20px;
+      padding: 20px;
+    }
+
+    .header h1 {
+      font-size: 36px;
+      margin-bottom: 8px;
+      color: #f4f4f4;
+    }
+
+    .header p {
+      font-size: 16px;
+      opacity: 0.9;
+      color: #f4f4f4;
+      margin: 0;
+    }
+
+    .designer-container {
+      width: 1200px;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #3a4a5a;
+      border-radius: 8px;
+    }
+
+    .controls-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      background-color: #4a5a6a;
+      color: #f4f4f4;
+      border: 1px solid #6a7a8a;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .controls button:hover {
+      background-color: #5a6a7a;
+    }
+
+    .controls button.add-to-queue {
+      background-color: #4a6a7a;
+    }
+
+    .controls button.add-to-queue:hover {
+      background-color: #5a7a8a;
+    }
+
+    .controls button.print-queue {
+      background-color: #5a5a7a;
+    }
+
+    .controls button.print-queue:hover {
+      background-color: #6a6a8a;
+    }
+
+    .controls select {
+      padding: 10px 15px;
+      background-color: #2a3a4a;
+      color: #f4f4f4;
+      border: 2px solid #4a5a6a;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      min-width: 200px;
+    }
+
+    .controls select:hover {
+      background-color: #3a4a5a;
+    }
+
+    .controls input[type="text"] {
+      padding: 10px 15px;
+      background-color: #2a3a4a;
+      color: #f4f4f4;
+      border: 2px solid #4a5a6a;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 100px;
+    }
+
+    .controls label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #d4e4f4;
+      font-size: 14px;
+    }
+
+    #shipClassSelector {
+      width: 400px;
+    }
+
+    #nationalitySelector {
+      min-width: 120px;
+    }
+
+    #nationalitySelector:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .queue-panel {
+      background-color: #2a3a4a;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .queue-header {
+      color: #d4e4f4;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .queue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .queue-item {
+      background-color: #3a4a5a;
+      padding: 10px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #d4e4f4;
+      font-size: 13px;
+    }
+
+    .queue-item-info {
+      flex: 1;
+    }
+
+    .queue-item button {
+      padding: 5px 12px;
+      background-color: #7a4a4a;
+      color: #f4f4f4;
+      border: 1px solid #8a5a5a;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .queue-item button:hover {
+      background-color: #8a5a5a;
+    }
+
+    .queue-empty {
+      color: #999;
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
+    }
+
+    /* WYSIWYG Preview Frame */
+    .preview-frame {
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      font-family: Arial, sans-serif;
+      overflow-x: auto;
+      min-width: 860px;
+    }
+
+    /* Page title row */
+    .page-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 2px solid black;
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+    }
+    .page-title-left { font-size: 14pt; font-weight: bold; color: black; }
+    .page-title-right { font-size: 14pt; font-weight: bold; color: black; }
+
+    /* Ship block - 8 column grid matching reference image */
+    .ship-block {
+      display: grid;
+      grid-template-columns: 50px 130px 180px 110px 1fr 1fr 1fr 1fr;
+      border: 1.5px solid black;
+      margin-bottom: 4px;
+      page-break-inside: avoid;
+      min-height: 100px;
+      font-size: 8pt;
+      color: black;
+    }
+
+    .ship-block > div {
+      border-right: 1px solid black;
+      padding: 3px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+      word-wrap: break-word;
+    }
+
+    .ship-block > div:last-child {
+      border-right: none;
+    }
+
+    /* Column 1: TF# */
+    .col-tf {
+      justify-content: flex-start;
+      align-items: center;
+    }
+    .col-tf .col-section-header {
+      text-align: center;
+      width: 100%;
+    }
+    .col-tf .tf-value {
+      font-weight: bold;
+      font-size: 7pt;
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    /* Column 2: Class */
+    .col-class {
+      align-items: center;
+    }
+    .col-class .class-name {
+      font-weight: bold;
+      font-size: 7.5pt;
+      text-align: center;
+      word-wrap: break-word;
+    }
+    .col-class .class-nation {
+      font-size: 7pt;
+      text-align: center;
+      color: #444;
+      margin-top: 8px;
+    }
+
+    /* Column 3: Damage Points */
+    .col-damage { }
+    .damage-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1px;
+      margin-bottom: 3px;
+    }
+    .damage-box {
+      width: 11px;
+      height: 11px;
+      border: 1px solid #666;
+      background: white;
+      flex-shrink: 0;
+    }
+    .damage-sub-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      font-size: 6pt;
+    }
+    .damage-sub-field {
+      border: 1px solid #999;
+      padding: 1px 2px;
+      background: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 14px;
+    }
+    .damage-sub-label {
+      font-weight: bold;
+    }
+
+    /* Column 4: Stats */
+    .col-stats {
+      font-size: 7pt;
+      gap: 2px;
+    }
+    .stat-line {
+      margin-bottom: 1px;
+    }
+    .stat-label {
+      font-weight: bold;
+    }
+
+    /* Faction section headers and page breaks */
+    .faction-header {
+      font-size: 11pt;
+      font-weight: bold;
+      color: black;
+      border-bottom: 1px solid #999;
+      padding: 4px 0 2px;
+      margin: 8px 0 4px;
+    }
+    .page-break-after-nato {
+      page-break-after: always !important;
+      break-after: page !important;
+    }
+
+    /* Columns 5-8 shared header/body styles */
+    .col-section-header {
+      font-weight: bold;
+      font-size: 7pt;
+      border-bottom: 1px solid #999;
+      margin-bottom: 2px;
+      padding-bottom: 1px;
+    }
+    .col-section-body {
+      font-size: 6.5pt;
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    /* Print overrides */
+    @page {
+      size: letter landscape;
+      margin: 0.5in;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .designer-container {
+        max-width: none;
+      }
+      .header, .controls, .queue-panel, .oob-back-nav {
+        display: none;
+      }
+      .preview-frame {
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+      }
+      .ship-block {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="designer-container">
+    <div class="header">
+      <h1>Naval Log Sheet Generator</h1>
+      <p>Generate and print naval log sheets for Baltic Approaches</p>
+    </div>
+
+    <div class="oob-back-nav oob-back-nav--ba">
+      <a href="../../../index.html" class="oob-back-link">&larr; Back to Module Selection</a>
+      <a href="../index.html" class="oob-back-link">&#8634; Back to Baltic Approaches Hub</a>
+    </div>
+
+    <div class="controls">
+      <div class="controls-row">
+        <label>
+          Ship Class:
+          <select id="shipClassSelector">
+            <option value="">-- Select Ship Class --</option>
+          </select>
+        </label>
+        <label>
+          Nationality:
+          <select id="nationalitySelector" disabled>
+            <option value="">--</option>
+          </select>
+        </label>
+        <label>
+          TF#:
+          <input type="text" id="tfNumber" placeholder="TF#" maxlength="10">
+        </label>
+      </div>
+      <div class="controls-row">
+        <button class="add-to-queue" onclick="addShipToQueue()">+ Add Ship</button>
+        <button class="print-queue" id="printBtn" style="display:none;" onclick="printNavalLog()">Print Naval Log</button>
+        <button id="clearBtn" style="display:none;" onclick="clearAll()">Clear All</button>
+      </div>
+    </div>
+
+    <div class="queue-panel">
+      <div class="queue-header">
+        <span>Ship Queue (<span id="queueCount">0</span>)</span>
+        <button onclick="clearAll()" style="padding: 5px 12px; background-color: #7a4a4a; color: #f4f4f4; border: 1px solid #8a5a5a; border-radius: 3px; cursor: pointer; font-size: 12px;">Clear All</button>
+      </div>
+      <div class="queue-list" id="queueList">
+        <div class="queue-empty">No ships in queue. Select a ship class above and click "Add Ship".</div>
+      </div>
+    </div>
+
+    <div class="preview-frame" id="previewFrame">
+      <div id="previewContent">
+        <p style="color: #999; text-align: center; padding: 40px;">
+          Select a ship class and TF# to add ships to the naval log
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 60px; padding: 30px 20px; border-top: 1px solid #5a6a7a; opacity: 0.8; background-color: #2a3a4a;">
+    <p style="margin: 10px 0; color: #f4f4f4;">Baltic Approaches Tools Suite | Version 1.0.0</p>
+    <p style="font-size: 0.85em; margin-top: 10px; opacity: 0.7; color: #f4f4f4;">
+      Baltic Approaches and all related game materials are &copy; GMT Games. This is an unofficial fan-made tool suite not affiliated with or endorsed by the copyright holder.
+    </p>
+  </div>
+
+  <script>
+    // ==========================================
+    // Global state
+    // ==========================================
+    let navalDataNATO = {};
+    let navalDataWP = {};
+    let ssmDataNATO = {};
+    let ssmDataWP = {};
+    let navalNoteRules = {};
+    let shipQueue = [];
+    let queueIdCounter = 1;
+
+    // ==========================================
+    // Data loading
+    // ==========================================
+    async function loadDatabases() {
+      try {
+        const [natoRes, wpRes, ssmNatoRes, ssmWpRes, notesRes] = await Promise.all([
+          fetch('data/naval-data-nato.json'),
+          fetch('data/naval-data-wp.json'),
+          fetch('data/ssm-data-nato.json'),
+          fetch('data/ssm-data-wp.json'),
+          fetch('data/naval-note-rules.json')
+        ]);
+
+        navalDataNATO = await natoRes.json();
+        navalDataWP = await wpRes.json();
+        ssmDataNATO = await ssmNatoRes.json();
+        ssmDataWP = await ssmWpRes.json();
+        navalNoteRules = await notesRes.json();
+
+        // Remove metadata keys
+        [navalDataNATO, navalDataWP, ssmDataNATO, ssmDataWP].forEach(db => {
+          Object.keys(db).filter(k => k.startsWith('_')).forEach(k => delete db[k]);
+        });
+
+        console.log('Naval databases loaded:',
+          Object.keys(navalDataNATO).length, 'NATO ships,',
+          Object.keys(navalDataWP).length, 'WP ships');
+        return true;
+      } catch (error) {
+        console.error('Error loading databases:', error);
+        alert('Error loading naval database.');
+        return false;
+      }
+    }
+
+    // ==========================================
+    // Dropdown population
+    // ==========================================
+    function populateShipSelector() {
+      const sel = document.getElementById('shipClassSelector');
+      sel.innerHTML = '<option value="">-- Select Ship Class --</option>';
+
+      // NATO optgroup
+      const natoGroup = document.createElement('optgroup');
+      natoGroup.label = 'NATO';
+      const natoKeys = Object.keys(navalDataNATO).sort();
+      for (const key of natoKeys) {
+        const ship = navalDataNATO[key];
+        const opt = document.createElement('option');
+        opt.value = 'NATO:' + key;
+        opt.textContent = key + ' — ' + ship.Nation;
+        natoGroup.appendChild(opt);
+      }
+      sel.appendChild(natoGroup);
+
+      // WP optgroup
+      const wpGroup = document.createElement('optgroup');
+      wpGroup.label = 'Warsaw Pact';
+      const wpKeys = Object.keys(navalDataWP).sort();
+      for (const key of wpKeys) {
+        const ship = navalDataWP[key];
+        const opt = document.createElement('option');
+        opt.value = 'WP:' + key;
+        opt.textContent = key + ' — ' + ship.Nation;
+        wpGroup.appendChild(opt);
+      }
+      sel.appendChild(wpGroup);
+    }
+
+    // ==========================================
+    // Nationality dropdown
+    // ==========================================
+    function updateNationalitySelector() {
+      const natSel = document.getElementById('nationalitySelector');
+      const selectorVal = document.getElementById('shipClassSelector').value;
+
+      if (!selectorVal) {
+        natSel.innerHTML = '<option value="">--</option>';
+        natSel.disabled = true;
+        return;
+      }
+
+      const colonIdx = selectorVal.indexOf(':');
+      const faction = selectorVal.substring(0, colonIdx);
+      const shipName = selectorVal.substring(colonIdx + 1);
+      const db = faction === 'NATO' ? navalDataNATO : navalDataWP;
+      const shipData = db[shipName];
+      if (!shipData) return;
+
+      const nationStr = shipData.Nation || '';
+      const nations = nationStr === 'All'
+        ? ['All']
+        : nationStr.split(',').map(n => n.trim()).filter(Boolean);
+
+      natSel.innerHTML = '';
+
+      if (nations.length <= 1) {
+        // Single nation — show it, keep disabled
+        const opt = document.createElement('option');
+        opt.value = nations[0] || '';
+        opt.textContent = nations[0] || '--';
+        natSel.appendChild(opt);
+        natSel.disabled = true;
+      } else {
+        // Multiple nations — enable selector
+        for (const nation of nations) {
+          const opt = document.createElement('option');
+          opt.value = nation;
+          opt.textContent = nation;
+          natSel.appendChild(opt);
+        }
+        natSel.disabled = false;
+      }
+    }
+
+    // ==========================================
+    // Queue management
+    // ==========================================
+    function addShipToQueue() {
+      const selectorVal = document.getElementById('shipClassSelector').value;
+      const tfNum = document.getElementById('tfNumber').value.trim();
+      if (!selectorVal) { alert('Please select a ship class.'); return; }
+
+      const colonIdx = selectorVal.indexOf(':');
+      const faction = selectorVal.substring(0, colonIdx);
+      const shipName = selectorVal.substring(colonIdx + 1);
+      const db = faction === 'NATO' ? navalDataNATO : navalDataWP;
+      const shipData = db[shipName];
+      if (!shipData) { alert('Ship data not found.'); return; }
+
+      const selectedNation = document.getElementById('nationalitySelector').value || shipData.Nation;
+
+      shipQueue.push({
+        id: queueIdCounter++,
+        faction,
+        shipName,
+        tfNumber: tfNum,
+        selectedNation,
+        data: shipData
+      });
+
+      document.getElementById('printBtn').style.display = '';
+      document.getElementById('clearBtn').style.display = '';
+
+      updateQueueUI();
+      renderPreview();
+    }
+
+    function removeFromQueue(id) {
+      shipQueue = shipQueue.filter(s => s.id !== id);
+      if (shipQueue.length === 0) {
+        document.getElementById('printBtn').style.display = 'none';
+        document.getElementById('clearBtn').style.display = 'none';
+      }
+      updateQueueUI();
+      renderPreview();
+    }
+
+    function clearAll() {
+      if (shipQueue.length === 0) return;
+      if (!confirm('Clear all ships from the queue?')) return;
+      shipQueue = [];
+      document.getElementById('printBtn').style.display = 'none';
+      document.getElementById('clearBtn').style.display = 'none';
+      updateQueueUI();
+      renderPreview();
+    }
+
+    function updateQueueUI() {
+      const list = document.getElementById('queueList');
+      const count = document.getElementById('queueCount');
+      list.innerHTML = '';
+
+      if (!shipQueue.length) {
+        const empty = document.createElement('div');
+        empty.className = 'queue-empty';
+        empty.textContent = 'No ships in queue. Select a ship class above and click "Add Ship".';
+        list.appendChild(empty);
+        count.textContent = '0';
+        return;
+      }
+
+      count.textContent = String(shipQueue.length);
+      for (const entry of shipQueue) {
+        const item = document.createElement('div');
+        item.className = 'queue-item';
+        const info = document.createElement('div');
+        info.className = 'queue-item-info';
+        info.textContent = `${entry.shipName} — ${entry.selectedNation}${entry.tfNumber ? ' — TF# ' + entry.tfNumber : ''}`;
+        const btn = document.createElement('button');
+        btn.textContent = 'Remove';
+        btn.onclick = () => removeFromQueue(entry.id);
+        item.appendChild(info);
+        item.appendChild(btn);
+        list.appendChild(item);
+      }
+    }
+
+    // ==========================================
+    // Helpers
+    // ==========================================
+    function getSSMData(ssmName, faction) {
+      if (!ssmName || ssmName === 'Minelaying') return null;
+      const db = faction === 'NATO' ? ssmDataNATO : ssmDataWP;
+      if (db[ssmName]) return db[ssmName];
+      // Partial match for WP names like "3M44" matching "3M44 (SS-N-3D)"
+      for (const key in db) {
+        if (key.toLowerCase().includes(ssmName.toLowerCase()) ||
+            ssmName.toLowerCase().includes(key.split(' ')[0].toLowerCase())) {
+          return db[key];
+        }
+      }
+      return null;
+    }
+
+    // ==========================================
+    // Ship block HTML generation
+    // ==========================================
+    function generateShipBlockHTML(entry) {
+      const d = entry.data;
+      const faction = entry.faction;
+
+      // --- Column 1: TF# ---
+      const tfHTML = `<div class="col-tf">
+        <div class="col-section-header">TF#</div>
+        <div class="tf-value">${entry.tfNumber || ''}</div>
+      </div>`;
+
+      // --- Column 2: Class ---
+      const displayNation = entry.selectedNation || d.Nation;
+      const classHTML = `<div class="col-class">
+        <div class="class-name">${entry.shipName}</div>
+        <div class="class-nation">${displayNation}</div>
+      </div>`;
+
+      // --- Column 3: Damage Points ---
+      let damageBoxes = '';
+      const dmg = d.Dmg || 0;
+      for (let i = 0; i < dmg; i++) {
+        damageBoxes += '<div class="damage-box"></div>';
+      }
+
+      const damageHTML = `<div class="col-damage">
+        <div class="col-section-header">Damage Points</div>
+        <div class="damage-grid">${damageBoxes}</div>
+        <div class="damage-sub-fields">
+          <div class="damage-sub-field"><span class="damage-sub-label">EWR</span></div>
+          <div class="damage-sub-field"><span class="damage-sub-label">SSM</span></div>
+          <div class="damage-sub-field"><span class="damage-sub-label">SAM 1</span></div>
+          <div class="damage-sub-field"><span class="damage-sub-label">AAA1</span></div>
+          <div class="damage-sub-field"><span class="damage-sub-label">SAM 2</span></div>
+          <div class="damage-sub-field"><span class="damage-sub-label">AAA2</span></div>
+        </div>
+      </div>`;
+
+      // --- Column 4: Stats ---
+      const statsHTML = `<div class="col-stats">
+        <div class="col-section-header">Stats</div>
+        <div class="stat-line"><span class="stat-label">Size:</span> ${d.Size || ''}</div>
+        <div class="stat-line"><span class="stat-label">Target:</span> ${d.Tgt || ''}</div>
+        <div class="stat-line"><span class="stat-label">EW:</span> ${d.EW || ''}</div>
+        <div class="stat-line"><span class="stat-label">EWR:</span> ${d.EWR || ''}</div>
+      </div>`;
+
+      // --- Column 5: SAM ---
+      let samContent = '';
+      if (d.SAM) {
+        const samTypes = Array.isArray(d.SAM) ? d.SAM : [d.SAM];
+        samContent += samTypes.join(', ');
+        if (d.Shots !== null) samContent += `<br>Shots: ${d.Shots}`;
+        if (d.LOAL) samContent += ` | LOAL: ${d.LOAL}`;
+        samContent += `<br>Acq: ${d.Acq !== null ? d.Acq : '-'} | Atk: ${d.Atk !== null ? d.Atk : '-'}`;
+        samContent += `<br>Min: ${d.Min !== null ? d.Min : '-'} | Long: ${d.Long || '-'}`;
+        const mods = ['D','L','M','H','V']
+          .map(k => `${k}:${d[k] !== null && d[k] !== undefined ? d[k] : '-'}`)
+          .join(' ');
+        samContent += `<br>${mods}`;
+      }
+      const samHTML = `<div class="col-sam">
+        <div class="col-section-header">SAM</div>
+        <div class="col-section-body">${samContent}</div>
+      </div>`;
+
+      // --- Column 6: SSM ---
+      let ssmContent = '';
+      if (d.capabilities && d.capabilities.SSM) {
+        ssmContent = d.capabilities.SSM;
+        if (d.capabilities.Ammo) ssmContent += ` x${d.capabilities.Ammo}`;
+        const ssmDetails = getSSMData(d.capabilities.SSM, faction);
+        if (ssmDetails) {
+          ssmContent += `<br>Rng: ${ssmDetails.Rng} | Spd: ${ssmDetails.Spd}`;
+          ssmContent += `<br>Alt: ${ssmDetails.Alt} | Dmg: ${ssmDetails.DmgMod}`;
+        }
+      }
+      if (d.capabilities && d.capabilities.Helo) {
+        ssmContent += (ssmContent ? '<br>' : '') + 'Helo: Yes';
+      }
+      const ssmHTML = `<div class="col-ssm">
+        <div class="col-section-header">SSM</div>
+        <div class="col-section-body">${ssmContent}</div>
+      </div>`;
+
+      // --- Column 7: AAA ---
+      let aaaContent = '';
+      if (d.AAA) {
+        if (d.AAA.AAA1) aaaContent += d.AAA.AAA1;
+        if (d.AAA.AAA2) aaaContent += (aaaContent ? '<br>' : '') + d.AAA.AAA2;
+      }
+      const aaaHTML = `<div class="col-aaa">
+        <div class="col-section-header">AAA</div>
+        <div class="col-section-body">${aaaContent}</div>
+      </div>`;
+
+      // --- Column 8: Notes ---
+      let notesContent = '';
+      if (d.Notes) {
+        const factionKey = faction;
+        const factionNotes = navalNoteRules[factionKey] || {};
+        const letters = d.Notes.split(',').map(n => n.trim());
+        notesContent = letters.map(letter => {
+          const rule = factionNotes[letter];
+          return rule ? `<strong>${letter}</strong>: ${rule.description}` : letter;
+        }).join('<br>');
+      }
+      const notesHTML = `<div class="col-notes">
+        <div class="col-section-header">Notes</div>
+        <div class="col-section-body">${notesContent}</div>
+      </div>`;
+
+      return `<div class="ship-block">${tfHTML}${classHTML}${damageHTML}${statsHTML}${samHTML}${ssmHTML}${aaaHTML}${notesHTML}</div>`;
+    }
+
+    // ==========================================
+    // Preview rendering
+    // ==========================================
+    function sortShipsByFaction(queue) {
+      const natoShips = queue.filter(e => e.faction === 'NATO');
+      const wpShips = queue.filter(e => e.faction === 'WP');
+      return { natoShips, wpShips };
+    }
+
+    function generateFactionBlocksHTML(ships, factionLabel, addPageBreak) {
+      if (ships.length === 0) return '';
+      let html = `<div class="faction-header">${factionLabel}</div>`;
+      for (const entry of ships) {
+        html += generateShipBlockHTML(entry);
+      }
+      if (addPageBreak) {
+        html += '<div class="page-break-after-nato"></div>';
+      }
+      return html;
+    }
+
+    function renderPreview() {
+      const container = document.getElementById('previewContent');
+      if (shipQueue.length === 0) {
+        container.innerHTML = '<p style="color:#999; text-align:center; padding:40px;">Select a ship class and TF# to add ships to the naval log</p>';
+        return;
+      }
+
+      const { natoShips, wpShips } = sortShipsByFaction(shipQueue);
+
+      let html = `<div class="page-title-row">
+        <div class="page-title-left">Red Storm: Baltic Approaches</div>
+        <div class="page-title-right">Naval Log Sheet</div>
+      </div>`;
+
+      html += generateFactionBlocksHTML(natoShips, 'NATO', wpShips.length > 0);
+
+      if (wpShips.length > 0) {
+        // In preview, show a second title row for the WP page
+        if (natoShips.length > 0) {
+          html += `<div class="page-title-row" style="margin-top: 12px;">
+            <div class="page-title-left">Red Storm: Baltic Approaches</div>
+            <div class="page-title-right">Naval Log Sheet</div>
+          </div>`;
+        }
+        html += generateFactionBlocksHTML(wpShips, 'Warsaw Pact', false);
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ==========================================
+    // Shared CSS for print/export documents
+    // ==========================================
+    function getShipBlockCSS() {
+      return `
+        *, *::before, *::after { box-sizing: border-box; }
+        * { margin: 0; padding: 0; }
+        html, body { background: #fff; color: #000; font-family: Arial, sans-serif; }
+        body { padding: 10px; }
+        @page { size: letter landscape; margin: 0.5in; }
+
+        .page-title-row {
+          display: flex; justify-content: space-between; align-items: baseline;
+          border-bottom: 2px solid black; padding-bottom: 4px; margin-bottom: 8px;
+        }
+        .page-title-left { font-size: 14pt; font-weight: bold; color: black; }
+        .page-title-right { font-size: 14pt; font-weight: bold; color: black; }
+
+        .ship-block {
+          display: grid;
+          grid-template-columns: 50px 130px 180px 110px 1fr 1fr 1fr 1fr;
+          border: 1.5px solid black;
+          margin-bottom: 4px;
+          page-break-inside: avoid;
+          min-height: 100px;
+          font-size: 8pt;
+          color: black;
+        }
+        .ship-block > div {
+          border-right: 1px solid black;
+          padding: 3px;
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+          overflow: hidden;
+          word-wrap: break-word;
+        }
+        .ship-block > div:last-child { border-right: none; }
+
+        .col-tf { justify-content: flex-start; align-items: center; }
+        .col-tf .col-section-header { text-align: center; width: 100%; }
+        .col-tf .tf-value { font-weight: bold; font-size: 7pt; text-align: center; margin-top: 4px; }
+
+        .col-class { align-items: center; }
+        .col-class .class-name { font-weight: bold; font-size: 7.5pt; text-align: center; word-wrap: break-word; }
+        .col-class .class-nation { font-size: 7pt; text-align: center; color: #444; margin-top: 8px; }
+
+        .col-damage { }
+        .damage-grid { display: flex; flex-wrap: wrap; gap: 1px; margin-bottom: 3px; }
+        .damage-box { width: 11px; height: 11px; border: 1px solid #666; background: white; flex-shrink: 0; }
+        .damage-sub-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; font-size: 6pt; }
+        .damage-sub-field { border: 1px solid #999; padding: 1px 2px; background: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 14px; }
+        .damage-sub-label { font-weight: bold; }
+
+        .col-stats { font-size: 7pt; gap: 2px; }
+        .stat-line { margin-bottom: 1px; }
+        .stat-label { font-weight: bold; }
+
+        .col-section-header { font-weight: bold; font-size: 7pt; border-bottom: 1px solid #999; margin-bottom: 2px; padding-bottom: 1px; }
+        .col-section-body { font-size: 6.5pt; flex: 1; line-height: 1.4; }
+
+        .faction-header { font-size: 11pt; font-weight: bold; color: black; border-bottom: 1px solid #999; padding: 4px 0 2px; margin: 8px 0 4px; }
+        .page-break-after-nato { page-break-after: always !important; break-after: page !important; }
+
+        @media print {
+          body { padding: 0; }
+          .no-print { display: none !important; }
+          .ship-block { page-break-inside: avoid; }
+          .page-break-after-nato { page-break-after: always !important; break-after: page !important; }
+        }
+      `;
+    }
+
+    // ==========================================
+    // Print
+    // ==========================================
+    function buildPrintBody() {
+      const { natoShips, wpShips } = sortShipsByFaction(shipQueue);
+
+      let body = `<div class="page-title-row">
+    <div class="page-title-left">Red Storm: Baltic Approaches</div>
+    <div class="page-title-right">Naval Log Sheet</div>
+  </div>`;
+
+      body += generateFactionBlocksHTML(natoShips, 'NATO', wpShips.length > 0);
+
+      if (wpShips.length > 0) {
+        body += `<div class="page-title-row">
+    <div class="page-title-left">Red Storm: Baltic Approaches</div>
+    <div class="page-title-right">Naval Log Sheet</div>
+  </div>`;
+        body += generateFactionBlocksHTML(wpShips, 'Warsaw Pact', false);
+      }
+
+      return body;
+    }
+
+    function printNavalLog() {
+      if (!shipQueue.length) { alert('No ships to print.'); return; }
+
+      const blocksHTML = buildPrintBody();
+
+      const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Naval Log Sheet - Baltic Approaches</title>
+  <style>${getShipBlockCSS()}</style>
+</head>
+<body>
+  ${blocksHTML}
+  <div class="no-print" style="text-align:center; margin-top:30px; padding:20px; color:#666; font-size:12px;">
+    <p>Red Storm Tools Suite — Naval Log Sheet</p>
+    <p>Generated: ${new Date().toLocaleString()}</p>
+    <button onclick="window.print()" style="margin-top:10px; padding:8px 20px; font-size:14px; cursor:pointer;">Print Naval Log</button>
+  </div>
+</body>
+</html>`;
+
+      const printWindow = window.open('', '_blank');
+      if (!printWindow) { alert('Please allow pop-ups to print the naval log.'); return; }
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      printWindow.focus();
+    }
+
+    // ==========================================
+    // Initialization
+    // ==========================================
+    loadDatabases().then(ok => {
+      if (ok) {
+        populateShipSelector();
+        // Wire up nationality dropdown when ship class changes
+        document.getElementById('shipClassSelector').addEventListener('change', updateNationalitySelector);
+      }
+    });
+  </script>
+</body>
+</html>
