@@ -514,6 +514,20 @@
     }
 
     /**
+     * Extract the display name from an aircraft entry value.
+     * Table data aircraft values may be plain strings (legacy) or
+     * objects with { name, aircraftId } (current format).
+     * @param {string|object} aircraft - Aircraft value from table data
+     * @returns {string} Display name string
+     */
+    function aircraftDisplayName(aircraft) {
+      if (typeof aircraft === 'object' && aircraft !== null && aircraft.name) {
+        return aircraft.name;
+      }
+      return aircraft;
+    }
+
+    /**
      * Helper function to render nations and aircraft data
      * Used by both date-filtered and full table displays
      */
@@ -534,7 +548,7 @@
           
           if (hasSingleAircraft) {
             // Simple format: nation and aircraft type in single lighter box
-            const aircraftType = aircraftEntries[0][1];
+            const aircraftType = aircraftDisplayName(aircraftEntries[0][1]);
             html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
             html += `<span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}`;
             html += `</div>`;
@@ -542,18 +556,18 @@
             // Multi-aircraft format: nation header with aircraft rolls
             html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
             html += `<div style="font-weight: 600; margin-bottom: 4px;">${nationRange} ${nationData.name}:</div>`;
-            
+
             // Sort aircraft by roll range
             const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
               const aStart = parseInt(a[0].split('-')[0]) || parseInt(a[0]);
               const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
               return aStart - bStart;
             });
-            
+
             for (const [range, type] of sortedAircraft) {
-              html += `<div style="margin-left: 10px; color: #ccc;">${range}: ${type}</div>`;
+              html += `<div style="margin-left: 10px; color: #ccc;">${range}: ${aircraftDisplayName(type)}</div>`;
             }
-            
+
             html += `</div>`;
           }
         }
@@ -688,7 +702,7 @@
             
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
               html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 14px;">`;
-              html += `${aircraftRange}: ${aircraftType}`;
+              html += `${aircraftRange}: ${aircraftDisplayName(aircraftType)}`;
               html += `</div>`;
             }
           }
@@ -767,9 +781,9 @@
               for (const [range, type] of sortedAircraft) {
                 if (hasSingleAircraft) {
                   // Don't show the "1-10:" prefix for single aircraft types
-                  html += `<div class="aircraft-item">${type}</div>`;
+                  html += `<div class="aircraft-item">${aircraftDisplayName(type)}</div>`;
                 } else {
-                  html += `<div class="aircraft-item">${range}: ${type}</div>`;
+                  html += `<div class="aircraft-item">${range}: ${aircraftDisplayName(type)}</div>`;
                 }
               }
               
@@ -875,12 +889,12 @@
               
               // Check if single aircraft type (no roll needed)
               if (sortedAircraft.length === 1 && sortedAircraft[0][0] === '1-10') {
-                html += `${sortedAircraft[0][1]}, ${flight.type}`;
+                html += `${aircraftDisplayName(sortedAircraft[0][1])}, ${flight.type}`;
               } else {
                 // Multiple aircraft options with ranges
                 html += `${flight.type}`;
                 html += `<br><span style="margin-left: 15px; font-size: 15px; color: #ffebee;">Aircraft: `;
-                html += sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
+                html += sortedAircraft.map(([range, type]) => `${range}: ${aircraftDisplayName(type)}`).join(', ');
                 html += `</span>`;
               }
             } else {
@@ -956,20 +970,24 @@
             html += `<div class="tasking-header">${range}: ${natData.nationality} Raid</div>`;
             
             // Group flights by type
+            // D3 aircraft entries are objects with { name, aircraftId } rather than plain strings
             const flightsByType = {};
             for (const flight of natData.flights) {
-              const key = `${flight.type}|${flight.aircraft}|${flight.flightSize}`;
+              const aircraftName = (typeof flight.aircraft === 'object' && flight.aircraft !== null)
+                ? flight.aircraft.name
+                : flight.aircraft;
+              const key = `${flight.type}|${aircraftName}|${flight.flightSize}`;
               if (!flightsByType[key]) {
                 flightsByType[key] = {
                   type: flight.type,
-                  aircraft: flight.aircraft,
+                  aircraft: aircraftName,
                   flightSize: flight.flightSize,
                   count: 0
                 };
               }
               flightsByType[key].count += flight.flightCount;
             }
-            
+
             // Render grouped flights
             html += `<div class="aircraft-list">`;
             for (const grouped of Object.values(flightsByType)) {
@@ -1027,7 +1045,7 @@
           const hasSingleAircraft = aircraftEntries.length === 1 && aircraftEntries[0][0] === '1-10';
           
           if (hasSingleAircraft) {
-            const aircraftType = aircraftEntries[0][1];
+            const aircraftType = aircraftDisplayName(aircraftEntries[0][1]);
             html += `<div style="margin-bottom: 4px; font-size: 14px;"><span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}</div>`;
           } else {
             const sortedAircraft = Object.entries(nationData.aircraft).sort((a, b) => {
@@ -1035,28 +1053,28 @@
               const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
               return aStart - bStart;
             });
-            
+
             html += `<div style="margin-bottom: 8px; font-size: 14px;">`;
             html += `<div style="font-weight: 600; margin-bottom: 4px;">${nationRange} ${nationData.name}:</div>`;
             for (const [range, type] of sortedAircraft) {
-              html += `<div style="margin-left: 15px; color: #ccc;">${range}: ${type}</div>`;
+              html += `<div style="margin-left: 15px; color: #ccc;">${range}: ${aircraftDisplayName(type)}</div>`;
             }
             html += `</div>`;
           }
         }
-        
+
         html += `</div>`; // Close aircraft box
       }
       // Render aircraft if present directly (I2 style with aircraft at tasking level)
       else if (taskingData.aircraft) {
         const aircraftEntries = Object.entries(taskingData.aircraft);
         const hasSingleAircraft = aircraftEntries.length === 1 && aircraftEntries[0][0] === '1-10';
-        
+
         // Wrap aircraft entries in a highlighted box
         html += `<div style="background-color: rgba(255,255,255,0.15); padding: 8px 12px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid rgba(255,255,255,0.3);">`;
-        
+
         if (hasSingleAircraft) {
-          const aircraftType = aircraftEntries[0][1];
+          const aircraftType = aircraftDisplayName(aircraftEntries[0][1]);
           html += `<div style="margin-bottom: 4px; font-size: 14px; font-weight: 600;">Aircraft: ${aircraftType}</div>`;
         } else {
           const sortedAircraft = Object.entries(taskingData.aircraft).sort((a, b) => {
@@ -1064,11 +1082,11 @@
             const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
             return aStart - bStart;
           });
-          
+
           html += `<div style="font-size: 14px;">`;
           html += `<div style="font-weight: 600; margin-bottom: 4px;">Aircraft:</div>`;
           for (const [range, type] of sortedAircraft) {
-            html += `<div style="margin-left: 15px; color: #ccc;">${range}: ${type}</div>`;
+            html += `<div style="margin-left: 15px; color: #ccc;">${range}: ${aircraftDisplayName(type)}</div>`;
           }
           html += `</div>`;
         }
@@ -1128,18 +1146,18 @@
                   let aircraftDisplay = '';
                   if (sortedAircraft.length > 1 && !sortedAircraft[0][0].includes('-')) {
                     // Land/sea variants (shouldn't happen after filtering, but handle it)
-                    aircraftDisplay = sortedAircraft.map(([key, val]) => `${val} (${key})`).join('; ');
+                    aircraftDisplay = sortedAircraft.map(([key, val]) => `${aircraftDisplayName(val)} (${key})`).join('; ');
                   } else if (sortedAircraft.length === 1 && sortedAircraft[0][0] === '1-10') {
                     // Single aircraft type (no roll needed)
-                    aircraftDisplay = sortedAircraft[0][1];
+                    aircraftDisplay = aircraftDisplayName(sortedAircraft[0][1]);
                   } else {
                     // Die roll ranges
-                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
+                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${aircraftDisplayName(type)}`).join(', ');
                   }
                   html += `<br><span style="font-size: 13px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
                 }
               }
-              
+
               html += `</div>`;
             }
           } else {
@@ -1150,15 +1168,15 @@
           const nationalityOrder = ['FRG', 'DK', 'SE'];
           for (const natCode of nationalityOrder) {
             if (!table.nationalities[natCode]) continue;
-            
+
             const natData = table.nationalities[natCode];
             html += `<div style="margin-bottom: 20px;">`;
             html += `<div style="font-style: italic; font-weight: bold; margin-bottom: 12px; color: #ddd; font-size: 14px;">${natData.name}</div>`;
-            
+
             for (const flight of natData.flights) {
               html += `<div style="background-color: rgba(255,255,255,0.15); padding: 6px 10px; margin: 5px 15px; border-radius: 4px; border-left: 3px solid rgba(255,255,255,0.3); font-weight: 600; font-size: 14px;">`;
               html += `${flight.flightCount} x {${flight.flightSize}} [${flight.type}], ${flight.type}`;
-              
+
               if (flight.description) {
                 html += `<br><span style="font-size: 13px; color: #bbb;">${flight.description}</span>`;
               } else if (flight.aircraft) {
@@ -1169,14 +1187,14 @@
                     const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
                     return aStart - bStart;
                   });
-                  
+
                   let aircraftDisplay = '';
                   if (sortedAircraft.length > 1 && !sortedAircraft[0][0].includes('-')) {
                     // Land/sea variants
-                    aircraftDisplay = sortedAircraft.map(([key, val]) => `${val} (${key})`).join('; ');
+                    aircraftDisplay = sortedAircraft.map(([key, val]) => `${aircraftDisplayName(val)} (${key})`).join('; ');
                   } else {
                     // Die roll ranges
-                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
+                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${aircraftDisplayName(type)}`).join(', ');
                   }
                   html += `<br><span style="font-size: 13px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
                 }
@@ -1217,9 +1235,9 @@
         for (const [nationRange, nationData] of sortedNations) {
           const aircraftEntries = Object.entries(nationData.aircraft);
           const hasSingleAircraft = aircraftEntries.length === 1 && aircraftEntries[0][0] === '1-10';
-          
+
           if (hasSingleAircraft) {
-            const aircraftType = aircraftEntries[0][1];
+            const aircraftType = aircraftDisplayName(aircraftEntries[0][1]);
             html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
             html += `<span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}`;
             html += `</div>`;
@@ -1229,11 +1247,11 @@
               const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
               return aStart - bStart;
             });
-            
+
             html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
             html += `<div style="font-weight: 600; margin-bottom: 4px;">${nationRange} ${nationData.name}:</div>`;
             for (const [range, type] of sortedAircraft) {
-              html += `<div style="margin-left: 10px; color: #ccc;">${range}: ${type}</div>`;
+              html += `<div style="margin-left: 10px; color: #ccc;">${range}: ${aircraftDisplayName(type)}</div>`;
             }
             html += `</div>`;
           }
@@ -1262,10 +1280,10 @@
                   let aircraftDisplay = '';
                   if (sortedAircraft.length === 1 && sortedAircraft[0][0] === '1-10') {
                     // Single aircraft type (no roll needed)
-                    aircraftDisplay = sortedAircraft[0][1];
+                    aircraftDisplay = aircraftDisplayName(sortedAircraft[0][1]);
                   } else {
                     // Die roll ranges
-                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
+                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${aircraftDisplayName(type)}`).join(', ');
                   }
                   html += `<br><span style="font-size: 13px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
                 }
@@ -1298,10 +1316,10 @@
                   let aircraftDisplay = '';
                   if (sortedAircraft.length === 1 && sortedAircraft[0][0] === '1-10') {
                     // Single aircraft type (no roll needed)
-                    aircraftDisplay = sortedAircraft[0][1];
+                    aircraftDisplay = aircraftDisplayName(sortedAircraft[0][1]);
                   } else {
                     // Die roll ranges
-                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${type}`).join(', ');
+                    aircraftDisplay = sortedAircraft.map(([range, type]) => `${range}: ${aircraftDisplayName(type)}`).join(', ');
                   }
                   html += `<br><span style="font-size: 13px; color: #bbb;">Aircraft: ${aircraftDisplay}</span>`;
                 }
@@ -1352,9 +1370,9 @@
             for (const [nationRange, nationData] of sortedNations) {
               const aircraftEntries = Object.entries(nationData.aircraft);
               const hasSingleAircraft = aircraftEntries.length === 1 && aircraftEntries[0][0] === '1-10';
-              
+
               if (hasSingleAircraft) {
-                const aircraftType = aircraftEntries[0][1];
+                const aircraftType = aircraftDisplayName(aircraftEntries[0][1]);
                 html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
                 html += `<span style="font-weight: 600;">${nationRange} ${nationData.name}:</span> ${aircraftType}`;
                 html += `</div>`;
@@ -1364,11 +1382,11 @@
                   const bStart = parseInt(b[0].split('-')[0]) || parseInt(b[0]);
                   return aStart - bStart;
                 });
-                
+
                 html += `<div style="background-color: rgba(255,255,255,0.08); padding: 6px 10px; margin: 5px 30px; border-radius: 4px; font-size: 14px;">`;
                 html += `<div style="font-weight: 600; margin-bottom: 4px;">${nationRange} ${nationData.name}:</div>`;
                 for (const [range, type] of sortedAircraft) {
-                  html += `<div style="margin-left: 10px; color: #ccc;">${range}: ${type}</div>`;
+                  html += `<div style="margin-left: 10px; color: #ccc;">${range}: ${aircraftDisplayName(type)}</div>`;
                 }
                 html += `</div>`;
               }

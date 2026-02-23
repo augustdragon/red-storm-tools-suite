@@ -257,8 +257,10 @@ class BaseTableProcessor {
   }
 
   /**
-   * Normalize aircraft entry from table data
-   * 
+   * Normalize aircraft entry from table data.
+   * Strips HTML tags (e.g., superscript footnote markers like <sup>2</sup>)
+   * from aircraft names so they match database keys during print lookup.
+   *
    * @param {object|string} aircraftEntry - Aircraft entry from table data
    * @returns {object} { name, aircraftId }
    */
@@ -267,7 +269,12 @@ class BaseTableProcessor {
       return { name: aircraftEntry, aircraftId: null };
     }
 
-    const name = aircraftEntry.name || aircraftEntry.aircraft || aircraftEntry.display || aircraftEntry.model || '';
+    let name = aircraftEntry.name || aircraftEntry.aircraft || aircraftEntry.display || aircraftEntry.model || '';
+    // Strip any HTML tags from the name (e.g., <sup>2</sup> footnote markers)
+    // so the aircraft type matches database keys during print generation
+    if (typeof name === 'string') {
+      name = name.replace(/<[^>]*>/g, '').trim();
+    }
     return {
       name,
       aircraftId: aircraftEntry.aircraftId || null

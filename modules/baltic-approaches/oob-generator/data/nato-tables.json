@@ -307,7 +307,7 @@
                 "aircraft": {
                   "1-10": {
                     "name": "F-35XD Draken<sup>2</sup>",
-                    "aircraftId": null
+                    "aircraftId": "DK-F-35XD-DRAKEN-1"
                   }
                 }
               },
@@ -347,7 +347,7 @@
                 "aircraft": {
                   "1-10": {
                     "name": "F-35XD Draken<sup>2</sup>",
-                    "aircraftId": null
+                    "aircraftId": "DK-F-35XD-DRAKEN-1"
                   }
                 }
               },
@@ -356,7 +356,7 @@
                 "aircraft": {
                   "1-10": {
                     "name": "Jaguar GR1A<sup>2</sup>",
-                    "aircraftId": null
+                    "aircraftId": "UK-JAGUAR-GR-1A-1"
                   }
                 }
               },
@@ -400,7 +400,7 @@
                 "aircraft": {
                   "1-10": {
                     "name": "Jaguar GR1A<sup>2</sup>",
-                    "aircraftId": null
+                    "aircraftId": "UK-JAGUAR-GR-1A-1"
                   }
                 }
               },
