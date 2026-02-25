@@ -139,7 +139,7 @@ class NATOTableD extends BaseTableProcessor {
     const combinedDebug = results.map(r => r.debugText).filter(Boolean).join(' ');
     
     return {
-      taskingResults: results,
+      taskings: results,
       text: combinedText,
       debugText: combinedDebug
     };

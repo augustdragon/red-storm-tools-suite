@@ -139,7 +139,8 @@ class BaseTableProcessor {
           aircraftRoll,
           aircraftRollDebug: aircraftRollResult.debugEntry,
           aircraftType: resolvedAircraft.name,
-          aircraftId: resolvedAircraft.aircraftId
+          aircraftId: resolvedAircraft.aircraftId,
+          variants: aircraft.variants || null
         };
       }
     }
@@ -153,54 +154,38 @@ class BaseTableProcessor {
   }
 
   /**
-   * Handle aircraft sub-rolls for superscript references
-   * 
-   * @param {string} aircraftType - Aircraft type that may have superscript
-   * @param {string} rollLabel - Label for debug output
-   * @returns {object} { finalAircraftType, subRollDebug }
-   */
-  handleSubRoll(aircraftType, rollLabel = 'Sub-roll') {
-    return this.handleSubRollWithId(aircraftType, null, rollLabel);
-  }
-
-  /**
-   * Handle aircraft sub-rolls for superscript references while preserving ID context
-   * 
-   * @param {string} aircraftType - Aircraft type that may have superscript
-   * @param {string|null} aircraftId - Aircraft ID (if already resolved)
+   * Resolve a sub-roll for aircraft entries that have a "variants" field.
+   * The variants field is a range-keyed object (like aircraft ranges) that
+   * maps d10 results to specific aircraft names and IDs.
+   *
+   * This is the data-driven replacement for hardcoded sub-roll logic.
+   * Any aircraft entry in the JSON can define variants to trigger a sub-roll:
+   *   "variants": { "1-5": { "name": "MiG-23MF", "aircraftId": "..." }, "6-10": { ... } }
+   *
+   * @param {object} variants - Range-keyed variant data from the aircraft entry
    * @param {string} rollLabel - Label for debug output
    * @returns {object} { finalAircraftType, finalAircraftId, subRollDebug }
    */
-  handleSubRollWithId(aircraftType, aircraftId = null, rollLabel = 'Sub-roll') {
-    if (!aircraftType || (!aircraftType.includes('Aı') && !aircraftType.includes('A1'))) {
-      return { finalAircraftType: aircraftType, finalAircraftId: aircraftId, subRollDebug: null };
+  resolveVariants(variants, rollLabel = 'Sub-roll') {
+    if (!variants || typeof variants !== 'object') {
+      return { finalAircraftType: null, finalAircraftId: null, subRollDebug: null };
     }
-    
-    const subRollResult = makeDebugRoll(10, rollLabel);
-    let finalAircraftType = aircraftType;
-    let finalAircraftId = aircraftId;
-    
-    // Handle common sub-roll patterns
-    if (aircraftType.includes('F-4Aı')) {
-      finalAircraftType = subRollResult.roll <= 5 ? 'F-4D' : 'F-4E';
-      finalAircraftId = null;
-    } else if (aircraftType.includes('MiG-23Aı')) {
-      if (subRollResult.roll <= 4) finalAircraftType = 'MiG-23M';
-      else if (subRollResult.roll <= 8) finalAircraftType = 'MiG-23MF';
-      else finalAircraftType = 'MiG-23ML';
-      finalAircraftId = null;
-    } else if (aircraftType.includes('MiG-23MF/MLA1')) {
-      finalAircraftType = subRollResult.roll <= 5 ? 'MiG-23MF' : 'MiG-23ML';
-      finalAircraftId = null;
-    }
-    
-    return {
-      finalAircraftType,
-      finalAircraftId,
-      subRollDebug: subRollResult.debugEntry
-    };
-  }
 
+    const subRollResult = makeDebugRoll(10, rollLabel);
+    for (const [range, variant] of Object.entries(variants)) {
+      const [min, max] = parseRange(range);
+      if (subRollResult.roll >= min && subRollResult.roll <= max) {
+        return {
+          finalAircraftType: variant.name,
+          finalAircraftId: variant.aircraftId || null,
+          subRollDebug: subRollResult.debugEntry
+        };
+      }
+    }
+
+    // Fallback if no range matched (shouldn't happen with valid data)
+    return { finalAircraftType: null, finalAircraftId: null, subRollDebug: subRollResult.debugEntry };
+  }
 
   /**
    * Build debug text from processing steps

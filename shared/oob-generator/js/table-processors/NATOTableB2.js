@@ -101,3 +101,7 @@ class NATOTableB2 extends BaseTableProcessor {
     };
   }
 }
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = NATOTableB2;
+}

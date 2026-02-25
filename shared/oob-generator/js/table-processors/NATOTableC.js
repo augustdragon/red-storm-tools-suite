@@ -116,14 +116,17 @@ class NATOTableC extends BaseTableProcessor {
       };
     }
     
-    // Handle sub-rolls for aircraft variants
-    const subRollResult = this.handleSubRollWithId(
-      aircraftResult.aircraftType,
-      aircraftResult.aircraftId,
-      `${tasking} Sub-roll`
-    );
-    const finalAircraftType = subRollResult.finalAircraftType;
-    const finalAircraftId = subRollResult.finalAircraftId;
+    // Handle sub-rolls for aircraft variants (data-driven via "variants" field)
+    let finalAircraftType = aircraftResult.aircraftType;
+    let finalAircraftId = aircraftResult.aircraftId;
+    let subRollResult = { subRollDebug: null };
+
+    if (aircraftResult.variants) {
+      const variantResult = this.resolveVariants(aircraftResult.variants, `${tasking} Sub-roll`);
+      finalAircraftType = variantResult.finalAircraftType || finalAircraftType;
+      finalAircraftId = variantResult.finalAircraftId;
+      subRollResult = { subRollDebug: variantResult.subRollDebug };
+    }
     
     const flightSize = this.flightSizes[tasking];
     const flightCount = this.flightCounts[tasking];
@@ -265,7 +268,7 @@ class NATOTableC extends BaseTableProcessor {
     const combinedDebug = results.map(r => r.debugText).filter(Boolean).join(' ');
     
     return {
-      taskingResults: results,
+      taskings: results,
       text: combinedText,
       debugText: combinedDebug
     };

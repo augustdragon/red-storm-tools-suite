@@ -105,25 +105,16 @@ class WPTableI extends BaseTableProcessor {
       };
     }
     
-    // Handle sub-rolls for aircraft variants
+    // Handle sub-rolls for aircraft variants (data-driven via "variants" field)
     let finalAircraftType = aircraftResult.aircraftType;
     let finalAircraftId = aircraftResult.aircraftId;
     let subRollDebug = null;
-    
-    if (aircraftResult.aircraftType.includes('²') || aircraftResult.aircraftType.includes('¹')) {
-      const subRollResult = makeDebugRoll(10, `${taskingName} Sub-roll`);
-      
-      if (aircraftResult.aircraftType.includes('MiG-23²')) {
-        if (subRollResult.roll <= 4) finalAircraftType = 'MiG-23M';
-        else if (subRollResult.roll <= 8) finalAircraftType = 'MiG-23MF';
-        else finalAircraftType = 'MiG-23ML';
-        finalAircraftId = null;
-      } else if (aircraftResult.aircraftType.includes('MiG-23MF/ML¹')) {
-        finalAircraftType = subRollResult.roll <= 5 ? 'MiG-23MF' : 'MiG-23ML';
-      finalAircraftId = null;
-      }
-      
-      subRollDebug = subRollResult.debugEntry;
+
+    if (aircraftResult.variants) {
+      const variantResult = this.resolveVariants(aircraftResult.variants, `${taskingName} Sub-roll`);
+      finalAircraftType = variantResult.finalAircraftType || finalAircraftType;
+      finalAircraftId = variantResult.finalAircraftId;
+      subRollDebug = variantResult.subRollDebug;
     }
     
     let resultText = '';
@@ -215,7 +206,7 @@ class WPTableI extends BaseTableProcessor {
     const combinedDebug = `[Nationality: ${this.stripBrackets(nationalityRollResult.debugEntry)} → ${selectedNationality}] ${taskingDebug}`;
     
     return {
-      taskingResults: results,
+      taskings: results,
       text: combinedText,
       debugText: combinedDebug
     };

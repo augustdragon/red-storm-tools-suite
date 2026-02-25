@@ -54,21 +54,16 @@ class WPTableH extends BaseTableProcessor {
       });
     }
     
-    // Handle sub-rolls for aircraft variants
+    // Handle sub-rolls for aircraft variants (data-driven via "variants" field)
     let finalAircraftType = aircraftResult.aircraftType;
     let finalAircraftId = aircraftResult.aircraftId;
     let additionalSubRollDebug = null;
-    
-    if (aircraftResult.aircraftType.includes('¹')) {
-      const subRollDebugResult = makeDebugRoll(10, 'Sub-roll');
-      const subRoll = subRollDebugResult.roll;
-      
-      if (aircraftResult.aircraftType.includes('MiG-25PD/Su-27S¹')) {
-        finalAircraftType = subRoll <= 5 ? 'MiG-25PD' : 'Su-27S';
-        finalAircraftId = null;
-      }
-      
-      additionalSubRollDebug = subRollDebugResult.debugEntry;
+
+    if (aircraftResult.variants) {
+      const variantResult = this.resolveVariants(aircraftResult.variants, 'Sub-roll');
+      finalAircraftType = variantResult.finalAircraftType || finalAircraftType;
+      finalAircraftId = variantResult.finalAircraftId;
+      additionalSubRollDebug = variantResult.subRollDebug;
     }
     
     // Format result text (4 flights x 2 aircraft)

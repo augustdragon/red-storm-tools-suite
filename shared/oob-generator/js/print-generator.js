@@ -817,23 +817,26 @@ class PrintGenerator {
     };
     
     const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
-    
+
+    // Use configurable base path for roundel images (allows shared designer to override)
+    const roundelBase = this.moduleConfig?.print?.roundelBasePath || '../../../shared/assets/roundels';
+
     console.log('[ROUNDEL] Nation code:', nationCode);
     console.log('[ROUNDEL] Aircraft nation:', aircraftData.nation);
     console.log('[ROUNDEL] Selected roundel:', roundelImage);
     console.log('[ROUNDEL] Roundel map keys:', Object.keys(roundelMap));
-    
+
     // Add page break style if this is the last NATO flight
     const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always !important;" class="page-break-after-nato"' : '';
     console.log(`[PAGE BREAK] Regular card - applyPageBreak: ${applyPageBreak}, aircraft: ${aircraftType}`);
-    
+
     let html = `
   <div class="flight-card"${pageBreakStyle}>
     <!-- Flight-level information -->
     <div class="flight-info-section">
       <div class="flight-header">
         <div class="roundel-box-header">
-          <img src="../../../shared/assets/roundels/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
+          <img src="${roundelBase}/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
         </div>
         <div class="field">
           <div class="field-label">Aircraft</div>
@@ -1088,15 +1091,18 @@ class PrintGenerator {
     };
     
     const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
-    
+
+    // Use configurable base path for roundel images (allows shared designer to override)
+    const roundelBase = this.moduleConfig?.print?.roundelBasePath || '../../../shared/assets/roundels';
+
     // Don't apply page break to individual compact cards - the container handles it
     const pageBreakStyle = '';
-    
+
     let html = `
   <div class="compact-csar-card"${pageBreakStyle}>
     <div class="compact-csar-header">
       <div class="roundel-box-compact">
-        <img src="../../../shared/assets/roundels/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
+        <img src="${roundelBase}/${roundelImage}" alt="${nationCode || aircraftData.nation || 'Unknown'} Roundel">
       </div>
       <div class="field">
         <div class="field-label">Aircraft</div>
@@ -1335,79 +1341,79 @@ class PrintGenerator {
   }
 
   /**
-   * Process flight results for print generation
-   * @param {Array} results - Raw flight results
-   * @returns {Array} Processed flights
+   * Process flight results for print generation.
+   *
+   * Uses ResultSchema.normalize() to convert any processor result shape
+   * (single-flight, multi-tasking, flights-array, combat-rescue) into
+   * a canonical { flights: [...] } structure. Falls through to legacy
+   * processing if ResultSchema is not loaded or validation fails.
+   *
+   * @param {Array} results - Raw flight results from processors
+   * @returns {Array} Flat array of individual processed flights
    */
   processFlights(results) {
     const processedFlights = [];
-    
-    console.log(`[PROCESS FLIGHTS] Processing ${results.length} result(s)`);
-    
+
     for (const flight of results) {
-      console.log(`[PROCESS FLIGHTS] Flight object:`, flight);
-      console.log(`[PROCESS FLIGHTS] Flight.taskings:`, flight.taskings);
-      console.log(`[PROCESS FLIGHTS] Flight.flights:`, flight.flights);
-      console.log(`[PROCESS FLIGHTS] Flight.result:`, flight.result);
-      console.log(`[PROCESS FLIGHTS] Flight.result.taskings:`, flight.result?.taskings);
-      console.log(`[PROCESS FLIGHTS] Flight.result.flights:`, flight.result?.flights);
-      
-      // Check if this result has a flights array (from tables like D3, J3, etc.)
-      const flightsArray = flight.flights || (flight.result && typeof flight.result === 'object' && flight.result.flights);
-      
-      // Check if this result has a taskings array (from tables like I2, D2, etc.)
-      // Check both flight.taskings and flight.result.taskings for compatibility
-      const taskingsArray = flight.taskings || (flight.result && typeof flight.result === 'object' && flight.result.taskings);
-      
-      console.log(`[PROCESS FLIGHTS] flightsArray:`, flightsArray);
-      console.log(`[PROCESS FLIGHTS] taskingsArray:`, taskingsArray);
-      
+      // ---- New path: use ResultSchema adapter if available ----
+      if (typeof ResultSchema !== 'undefined') {
+        const normalized = ResultSchema.normalize(flight, flight.faction, flight.table || flight.sourceTable);
+        const errors = ResultSchema.validate(normalized, normalized.table || 'unknown');
+
+        if (errors.length === 0) {
+          for (const f of normalized.flights) {
+            processedFlights.push({
+              ...f,
+              faction: normalized.faction,
+              table: normalized.table,
+              raidType: normalized.raidType,
+            });
+          }
+          continue;
+        }
+        // Fall through to legacy processing if validation failed
+      }
+
+      // ---- Legacy path (kept as fallback) ----
+      // Handles cases where ResultSchema is not loaded or produced
+      // validation errors. This block is the original processFlights logic.
+
+      const flightsArray = flight.flights
+        || (flight.result && typeof flight.result === 'object' && flight.result.flights);
+
+      const taskingsArray = flight.taskings
+        || (flight.result && typeof flight.result === 'object' && flight.result.taskings);
+
       if (flightsArray && Array.isArray(flightsArray)) {
-        console.log(`[PROCESS FLIGHTS] Found flights array with ${flightsArray.length} items, flattening...`);
-        // Flatten flights array into individual flight entries
         for (const individualFlight of flightsArray) {
-          console.log(`[PROCESS FLIGHTS] Processing individual flight:`, individualFlight);
-          console.log(`[PROCESS FLIGHTS] Individual flight nationality:`, individualFlight.nationality);
-          console.log(`[PROCESS FLIGHTS] Parent flight nationality:`, flight.nationality);
-          const processedFlight = {
+          processedFlights.push({
             ...flight,
-            ...individualFlight, // Spread flight properties (text, tasking, nationality, aircraftType, etc.)
+            ...individualFlight,
             flights: null,
             taskings: null,
-            result: individualFlight.text || individualFlight.result || flight.text || flight.result, // Use flight text as the result, fallback to parent
+            result: individualFlight.text || individualFlight.result || flight.text || flight.result,
             faction: flight.faction || individualFlight.faction || 'NATO'
-          };
-          console.log(`[PROCESS FLIGHTS] Created processed flight with nationality:`, processedFlight.nationality);
-          console.log(`[PROCESS FLIGHTS] Full processed flight:`, processedFlight);
-          processedFlights.push(processedFlight);
+          });
         }
       } else if (taskingsArray && Array.isArray(taskingsArray)) {
-        console.log(`[PROCESS FLIGHTS] Found taskings array with ${taskingsArray.length} items, flattening...`);
-        // Flatten taskings array into individual flight entries
         for (const tasking of taskingsArray) {
-          console.log(`[PROCESS FLIGHTS] Processing tasking:`, tasking);
-          const processedFlight = {
+          processedFlights.push({
             ...flight,
-            ...tasking, // Spread tasking properties (text, tasking, nationality, aircraftType, etc.)
+            ...tasking,
             flights: null,
             taskings: null,
-            result: tasking.text, // Use tasking text as the result
+            result: tasking.text,
             faction: flight.faction || tasking.faction || 'NATO'
-          };
-          console.log(`[PROCESS FLIGHTS] Created processed flight:`, processedFlight);
-          processedFlights.push(processedFlight);
+          });
         }
       } else {
-        console.log(`[PROCESS FLIGHTS] No taskings/flights array found, using flight as-is`);
-        // Regular flight without taskings array
         processedFlights.push({
           ...flight,
           faction: flight.faction || 'NATO'
         });
       }
     }
-    
-    console.log(`[PROCESS FLIGHTS] Returning ${processedFlights.length} processed flight(s)`);
+
     return processedFlights;
   }
 

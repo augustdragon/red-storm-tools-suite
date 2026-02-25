@@ -630,6 +630,25 @@
         "aam": null,
         "module": "RS"
     },
+    "H-53": {
+        "name": "H-53",
+        "id": "US-H-53-1",
+        "model": "H-53",
+        "nation": "US",
+        "crew": 0,
+        "rwy": 0,
+        "fuel": 0,
+        "notes": null,
+        "weapons": {},
+        "speeds": {},
+        "ordnance": [],
+        "capabilities": [
+            "CSAR"
+        ],
+        "aam": null,
+        "module": "RS",
+        "hideFromReference": true
+    },
     "RF-4B": {
         "name": "RF-4B Phantom II",
         "id": "US-RF-4B-1",

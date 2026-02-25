@@ -747,10 +747,6 @@
                 "6-9": {
                   "name": "F-4F",
                   "aircraftId": "FRG-F-4F-1"
-                },
-                "8-9": {
-                  "name": "Alpha Jet",
-                  "aircraftId": "FRG-ALPHA-JET-A-1"
                 }
               }
             }
@@ -807,7 +803,11 @@
                 },
                 "8-10": {
                   "name": "F-4\u00b2",
-                  "aircraftId": null
+                  "aircraftId": null,
+                  "variants": {
+                    "1-5": { "name": "F-4D", "aircraftId": "US-F-4D-1" },
+                    "6-10": { "name": "F-4E", "aircraftId": "US-F-4E-1" }
+                  }
                 }
               }
             },
@@ -904,7 +904,11 @@
                 },
                 "8-10": {
                   "name": "F-4\u00b2",
-                  "aircraftId": null
+                  "aircraftId": null,
+                  "variants": {
+                    "1-5": { "name": "F-4D", "aircraftId": "US-F-4D-1" },
+                    "6-10": { "name": "F-4E", "aircraftId": "US-F-4E-1" }
+                  }
                 }
               }
             },
@@ -1336,6 +1340,19 @@
                 "aircraftId": "US-EF-111A-1"
               }
             }
+          },
+          "10": {
+            "name": "UK/FRG",
+            "aircraft": {
+              "1-5": {
+                "name": "Falcon 20F",
+                "aircraftId": "UK-FALCON-20F-1"
+              },
+              "6-10": {
+                "name": "HFB 320 Hansa Jet",
+                "aircraftId": "FRG-HFB-320-1"
+              }
+            }
           }
         }
       },
@@ -1346,20 +1363,16 @@
         "description": "Tactical Reconnaissance",
         "ordnanceNote": "Recon flights may only carry air-to-air missiles and guns, if capable. No other ordnance allowed.",
         "nations": {
-          "1-6": {
+          "1-3": {
             "name": "US",
             "aircraft": {
-              "1-5": {
+              "1-10": {
                 "name": "RF-4C",
                 "aircraftId": "US-RF-4C-1"
-              },
-              "6-10": {
-                "name": "F-16C(R)",
-                "aircraftId": "US-F-16C-1"
               }
             }
           },
-          "7-8": {
+          "4-5": {
             "name": "UK",
             "aircraft": {
               "1-7": {
@@ -1367,17 +1380,30 @@
                 "aircraftId": "UK-JAGUAR-GR-1A-1"
               },
               "8-10": {
-                "name": "Torn GR1A",
+                "name": "Tornado GR1A",
                 "aircraftId": "UK-TORNADO-GR-1A-1"
               }
             }
           },
-          "9-10": {
+          "6-9": {
             "name": "FRG",
             "aircraft": {
               "1-10": {
                 "name": "RF-4E",
                 "aircraftId": "FRG-RF-4E-1"
+              }
+            }
+          },
+          "10": {
+            "name": "BE/NE",
+            "aircraft": {
+              "1-5": {
+                "name": "Mirage 5BR",
+                "aircraftId": "BE-MIRAGE-5BR-1"
+              },
+              "6-10": {
+                "name": "F-16A(NE)",
+                "aircraftId": "BE-F-16A-BE-CA-NE-1"
               }
             }
           }

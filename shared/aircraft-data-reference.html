@@ -337,9 +337,13 @@
         </table>
     </div>
 
+    <!-- DataService: abstraction layer for JSON file / API data loading (MySQL POC) -->
+    <script src="js/data-service.js"></script>
+
     <script>
         // Note: To use this file, serve it via a local web server (e.g., python -m http.server)
         // This version reads from the shared data directory
+        // DataService provides transparent API/JSON fallback (see shared/js/data-service.js)
         
         // Use the same notes data structure as aircraft-notes-all.html
         const allNotesData = {
@@ -359,12 +363,14 @@
         let surfaceRadarData = {};
         
         function loadData() {
-            // Load from shared data directory including aircraft notes from JSON file and surface radar data
+            // Load from DataService (tries API first in 'auto' mode, falls back to JSON)
+            // Aircraft data uses DataService for API/JSON abstraction.
+            // Notes and radar data still load directly from JSON (not yet migrated to API).
             Promise.all([
-                fetch('data/aircraft-nato.json').then(r => r.json()).catch(() => null),
-                fetch('data/aircraft-wp.json').then(r => r.json()).catch(() => null),
-                fetch('data/aircraft-note-rules.json').then(r => r.json()).catch(() => null),
-                fetch('data/surface-search-radars.json').then(r => r.json()).catch(() => null)
+                DataService.getAircraftNATO().catch(() => null),
+                DataService.getAircraftWP().catch(() => null),
+                DataService.getNoteRules().catch(() => null),
+                DataService.getRadars().catch(() => null)
             ]).then(([natoData, wpData, notesJson, surfRadar]) => {
                 // Load notes from the shared JSON file and organize by nation
                 if (notesJson) {

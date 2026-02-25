@@ -1,0 +1,17 @@
+{
+  "name": "red-storm-tools-suite",
+  "version": "1.0.0",
+  "description": "Red Storm / Baltic Approaches board game digital tools — test harness",
+  "private": true,
+  "scripts": {
+    "test": "jest --verbose",
+    "test:quick": "jest --verbose --testPathPattern=coverage",
+    "test:distribution": "jest --verbose --testPathPattern=distribution",
+    "test:e2e": "jest --verbose --testPathPattern=e2e",
+    "test:rng": "jest --verbose --testPathPattern=rng",
+    "test:coverage": "jest --verbose --coverage"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

@@ -55,22 +55,16 @@ class WPTableJ extends BaseTableProcessor {
       };
     }
     
-    // Handle sub-rolls for aircraft variants
+    // Handle sub-rolls for aircraft variants (data-driven via "variants" field)
     let finalAircraftType = aircraftResult.aircraftType;
     let finalAircraftId = aircraftResult.aircraftId;
     let subRollDebug = null;
-    
-    if (aircraftResult.aircraftType.includes('²')) {
-      const subRollResult = makeDebugRoll(10, `${taskingName} Sub-roll`);
-      
-      if (aircraftResult.aircraftType.includes('MiG-23²')) {
-        if (subRollResult.roll <= 4) finalAircraftType = 'MiG-23M';
-        else if (subRollResult.roll <= 8) finalAircraftType = 'MiG-23MF';
-        else finalAircraftType = 'MiG-23ML';
-        finalAircraftId = null;
-      }
-      
-      subRollDebug = subRollResult.debugEntry;
+
+    if (aircraftResult.variants) {
+      const variantResult = this.resolveVariants(aircraftResult.variants, `${taskingName} Sub-roll`);
+      finalAircraftType = variantResult.finalAircraftType || finalAircraftType;
+      finalAircraftId = variantResult.finalAircraftId;
+      subRollDebug = variantResult.subRollDebug;
     }
     
     // Format result (no ordnance for Table J)
@@ -103,28 +97,28 @@ class WPTableJ extends BaseTableProcessor {
    * @returns {object} Combined result from all taskings
    */
   process(params) {
-    const taskingResults = [];
+    const results = [];
     const debugParts = [];
-    
+
     // Process all taskings
     const allTaskings = Object.keys(this.tableData.taskings);
-    
+
     for (const taskingName of allTaskings) {
       const taskingData = this.tableData.taskings[taskingName];
       const taskingResult = this.processTasking(taskingName, taskingData);
-      
-      // Format: "{count} x {size} {aircraft}, {tasking}" (no nation prefix since it's always USSR)
-      taskingResults.push(taskingResult.text);
+
+      results.push(taskingResult);
       debugParts.push(`${taskingName}: ${taskingResult.debugText}`);
     }
-    
+
     // Combine all results with line breaks (like Table D)
-    const combinedText = taskingResults.join('<br>');
+    const combinedText = results.map(r => r.text).join('<br>');
     const combinedDebug = debugParts.length > 0 ? `[${debugParts.join(' | ')}]` : '';
-    
+
     return {
       nationRoll: null,
       aircraftRoll: null,
+      taskings: results,
       text: combinedText,
       debugText: combinedDebug
     };

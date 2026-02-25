@@ -486,8 +486,8 @@
       "aircraftId": null
     },
     "Mi-8": {
-      "name": "Mi-8 Hip",
-      "aircraftId": null
+      "name": "Mi-8",
+      "aircraftId": "USSR-MI-8-1"
     },
     "MiG-21M": {
       "name": "MiG-21M",
