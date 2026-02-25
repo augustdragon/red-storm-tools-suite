@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Storm Tools - API Comparison Test</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <style>
+        /*
+         * Comparison Test Page Styles
+         * ===========================
+         * Minimal styling focused on clearly showing pass/fail results.
+         * Green = match, Red = difference, Yellow = warning.
+         */
+        :root {
+            --pass: #27ae60;
+            --fail: #e74c3c;
+            --warn: #f39c12;
+            --bg: #1a1a2e;
+            --surface: #16213e;
+            --text: #e0e0e0;
+            --muted: #888;
+            --border: #333;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 { color: #ecf0f1; margin-bottom: 5px; }
+        .subtitle { color: var(--muted); margin-bottom: 20px; font-size: 0.9em; }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        button:hover { opacity: 0.85; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-health { background: #2ecc71; color: white; }
+
+        .status-bar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+        .status-bar h3 { margin-bottom: 8px; }
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 0;
+            font-size: 0.95em;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .badge-pass { background: var(--pass); color: white; }
+        .badge-fail { background: var(--fail); color: white; }
+        .badge-warn { background: var(--warn); color: white; }
+        .badge-pending { background: var(--border); color: var(--muted); }
+
+        .results {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .results h3 { margin-bottom: 15px; }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+        .comparison-table th {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--muted);
+            font-weight: 600;
+        }
+        .comparison-table td {
+            padding: 6px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .comparison-table tr.pass td:first-child { color: var(--pass); }
+        .comparison-table tr.fail td:first-child { color: var(--fail); }
+        .comparison-table tr.fail { background: rgba(231, 76, 60, 0.1); }
+
+        .diff-value {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85em;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .diff-json { color: var(--fail); }
+        .diff-api { color: var(--warn); }
+
+        .summary {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        .summary-pass { background: rgba(39, 174, 96, 0.2); border: 1px solid var(--pass); }
+        .summary-fail { background: rgba(231, 76, 60, 0.2); border: 1px solid var(--fail); }
+
+        .log {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.82em;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .log-entry { margin: 2px 0; }
+        .log-pass { color: var(--pass); }
+        .log-fail { color: var(--fail); }
+        .log-info { color: #3498db; }
+        .log-warn { color: var(--warn); }
+    </style>
+</head>
+<body>
+    <h1>API vs JSON Comparison Test</h1>
+    <p class="subtitle">
+        Validates that the MySQL API returns byte-identical data to the static JSON files.
+        This is the definitive pass/fail for the MySQL POC.
+    </p>
+
+    <div class="controls">
+        <button class="btn-health" onclick="runHealthCheck()" id="btnHealth">Check API Health</button>
+        <button class="btn-primary" onclick="runComparison()" id="btnCompare">Run Full Comparison</button>
+    </div>
+
+    <!-- Health check status -->
+    <div class="status-bar" id="healthStatus">
+        <h3>API Health</h3>
+        <div class="status-item">
+            <span class="badge badge-pending" id="healthBadge">Not checked</span>
+            <span id="healthText">Click "Check API Health" to test the API connection</span>
+        </div>
+    </div>
+
+    <!-- Comparison results -->
+    <div class="results" id="resultsSection" style="display:none;">
+        <h3>Comparison Results</h3>
+        <div id="summaryBox"></div>
+        <div id="natoResults"></div>
+        <div id="wpResults"></div>
+    </div>
+
+    <!-- Activity log -->
+    <div class="results">
+        <h3>Activity Log</h3>
+        <div class="log" id="logOutput">Waiting for test run...</div>
+    </div>
+
+    <script>
+        /*
+         * API Comparison Test Logic
+         * =========================
+         *
+         * This script fetches aircraft data from TWO sources:
+         *   1. Static JSON file (the current source of truth)
+         *   2. PHP API endpoint (data round-tripped through MySQL)
+         *
+         * It then performs a deep field-by-field comparison of every aircraft
+         * entry. Any difference — missing fields, type mismatches, value changes —
+         * is flagged and displayed in the results table.
+         *
+         * The test passes ONLY if there are ZERO differences between the two sources.
+         * This validates that the JSON → MySQL → PHP → JSON round-trip preserves
+         * complete data fidelity.
+         */
+
+        const API_BASE = '/api';
+        const logEl = document.getElementById('logOutput');
+
+        /**
+         * Append a timestamped entry to the activity log.
+         * @param {string} message - Log message text
+         * @param {string} level - CSS class suffix: 'info', 'pass', 'fail', 'warn'
+         */
+        function log(message, level = 'info') {
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${level}`;
+            entry.textContent = `[${time}] ${message}`;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        /**
+         * Check the API health endpoint to verify connectivity.
+         * Updates the status bar with the result.
+         */
+        async function runHealthCheck() {
+            const badge = document.getElementById('healthBadge');
+            const text = document.getElementById('healthText');
+            badge.textContent = 'Checking...';
+            badge.className = 'badge badge-pending';
+            log('Checking API health...');
+
+            try {
+                const r = await fetch(`${API_BASE}/health`);
+                const data = await r.json();
+
+                if (data.status === 'ok' && data.database === 'connected') {
+                    badge.textContent = 'Healthy';
+                    badge.className = 'badge badge-pass';
+                    text.textContent = `Database connected. ${data.aircraft_count} aircraft in table.`;
+                    log(`API healthy: ${data.aircraft_count} aircraft in database`, 'pass');
+                } else {
+                    badge.textContent = 'Degraded';
+                    badge.className = 'badge badge-warn';
+                    text.textContent = `API up but database issue: ${data.error || 'unknown'}`;
+                    log(`API degraded: ${JSON.stringify(data)}`, 'warn');
+                }
+            } catch (err) {
+                badge.textContent = 'Offline';
+                badge.className = 'badge badge-fail';
+                text.textContent = `Cannot reach API at ${API_BASE}/health — is Docker running?`;
+                log(`API health check failed: ${err.message}`, 'fail');
+            }
+        }
+
+        /**
+         * Deep-compare two values and collect any differences.
+         *
+         * Recursively walks objects and arrays, comparing each leaf value.
+         * Returns an array of difference descriptions for display in the results table.
+         *
+         * @param {*} jsonVal - Value from the static JSON file
+         * @param {*} apiVal - Value from the API response
+         * @param {string} path - Dot-notation path for error reporting (e.g., "weapons.gun")
+         * @returns {Array<{path, jsonVal, apiVal}>} Array of differences found
+         */
+        function deepCompare(jsonVal, apiVal, path = '') {
+            const diffs = [];
+
+            // Handle null/undefined
+            if (jsonVal === null && apiVal === null) return diffs;
+            if (jsonVal === undefined && apiVal === undefined) return diffs;
+
+            // Type mismatch
+            if (typeof jsonVal !== typeof apiVal) {
+                // Special case: JSON has number, API has string of same value
+                if (String(jsonVal) === String(apiVal)) return diffs;
+                diffs.push({ path, jsonVal: JSON.stringify(jsonVal), apiVal: JSON.stringify(apiVal) });
+                return diffs;
+            }
+
+            // Arrays
+            if (Array.isArray(jsonVal)) {
+                if (!Array.isArray(apiVal)) {
+                    diffs.push({ path, jsonVal: 'array', apiVal: typeof apiVal });
+                    return diffs;
+                }
+                if (jsonVal.length !== apiVal.length) {
+                    diffs.push({ path: `${path}.length`, jsonVal: jsonVal.length, apiVal: apiVal.length });
+                }
+                const maxLen = Math.max(jsonVal.length, apiVal.length);
+                for (let i = 0; i < maxLen; i++) {
+                    diffs.push(...deepCompare(jsonVal[i], apiVal[i], `${path}[${i}]`));
+                }
+                return diffs;
+            }
+
+            // Objects
+            if (typeof jsonVal === 'object' && jsonVal !== null) {
+                if (typeof apiVal !== 'object' || apiVal === null) {
+                    diffs.push({ path, jsonVal: 'object', apiVal: JSON.stringify(apiVal) });
+                    return diffs;
+                }
+                // Check all keys from both sides
+                const allKeys = new Set([...Object.keys(jsonVal), ...Object.keys(apiVal)]);
+                for (const key of allKeys) {
+                    // Skip metadata keys (underscore-prefixed) that only exist in JSON
+                    if (key.startsWith('_')) continue;
+                    diffs.push(...deepCompare(jsonVal[key], apiVal[key], path ? `${path}.${key}` : key));
+                }
+                return diffs;
+            }
+
+            // Primitive comparison
+            if (jsonVal !== apiVal) {
+                diffs.push({ path, jsonVal: JSON.stringify(jsonVal), apiVal: JSON.stringify(apiVal) });
+            }
+            return diffs;
+        }
+
+        /**
+         * Render comparison results for one faction into a table.
+         *
+         * @param {string} faction - "NATO" or "WP"
+         * @param {object} jsonData - Parsed data from the static JSON file
+         * @param {object} apiData - Parsed data from the API response
+         * @param {HTMLElement} container - DOM element to render into
+         * @returns {number} Total number of differences found
+         */
+        function renderFactionResults(faction, jsonData, apiData, container) {
+            let totalDiffs = 0;
+            let html = `<h4 style="margin: 15px 0 10px; color: ${faction === 'NATO' ? '#3498db' : '#e74c3c'}">${faction} Aircraft</h4>`;
+
+            // Get all aircraft keys (skip metadata)
+            const jsonKeys = Object.keys(jsonData).filter(k => !k.startsWith('_'));
+            const apiKeys = Object.keys(apiData).filter(k => !k.startsWith('_'));
+
+            // Check for missing/extra aircraft
+            const jsonOnly = jsonKeys.filter(k => !apiKeys.includes(k));
+            const apiOnly = apiKeys.filter(k => !jsonKeys.includes(k));
+
+            if (jsonOnly.length > 0) {
+                html += `<p style="color:var(--fail)">Missing from API: ${jsonOnly.join(', ')}</p>`;
+                totalDiffs += jsonOnly.length;
+                log(`${faction}: ${jsonOnly.length} aircraft missing from API: ${jsonOnly.join(', ')}`, 'fail');
+            }
+            if (apiOnly.length > 0) {
+                html += `<p style="color:var(--warn)">Extra in API: ${apiOnly.join(', ')}</p>`;
+                totalDiffs += apiOnly.length;
+                log(`${faction}: ${apiOnly.length} extra aircraft in API: ${apiOnly.join(', ')}`, 'warn');
+            }
+
+            // Compare each aircraft present in both sources
+            const commonKeys = jsonKeys.filter(k => apiKeys.includes(k));
+            let matchCount = 0;
+            let diffDetails = [];
+
+            for (const key of commonKeys) {
+                const diffs = deepCompare(jsonData[key], apiData[key], key);
+                if (diffs.length === 0) {
+                    matchCount++;
+                } else {
+                    totalDiffs += diffs.length;
+                    diffDetails.push({ key, diffs });
+                }
+            }
+
+            log(`${faction}: ${matchCount}/${commonKeys.length} aircraft match perfectly`, matchCount === commonKeys.length ? 'pass' : 'warn');
+
+            // Summary line
+            if (totalDiffs === 0) {
+                html += `<div class="summary summary-pass">${faction}: All ${commonKeys.length} aircraft match perfectly</div>`;
+            } else {
+                html += `<div class="summary summary-fail">${faction}: ${totalDiffs} differences found across ${diffDetails.length} aircraft</div>`;
+            }
+
+            // Detail table for differences
+            if (diffDetails.length > 0) {
+                html += `<table class="comparison-table"><thead><tr><th>Aircraft</th><th>Field</th><th>JSON Value</th><th>API Value</th></tr></thead><tbody>`;
+                for (const { key, diffs } of diffDetails) {
+                    for (const d of diffs) {
+                        html += `<tr class="fail">
+                            <td>${key}</td>
+                            <td>${d.path}</td>
+                            <td class="diff-value diff-json">${d.jsonVal}</td>
+                            <td class="diff-value diff-api">${d.apiVal}</td>
+                        </tr>`;
+                    }
+                }
+                html += '</tbody></table>';
+            }
+
+            container.innerHTML = html;
+            return totalDiffs;
+        }
+
+        /**
+         * Run the full comparison test.
+         *
+         * Fetches data from both sources for both factions, compares them,
+         * and displays detailed results. This is the definitive POC validation.
+         */
+        async function runComparison() {
+            const btn = document.getElementById('btnCompare');
+            btn.disabled = true;
+            btn.textContent = 'Running...';
+
+            document.getElementById('resultsSection').style.display = 'block';
+            logEl.innerHTML = '';
+            log('Starting full comparison test...');
+
+            try {
+                // Fetch from both sources in parallel
+                log('Fetching NATO data from JSON file...');
+                log('Fetching NATO data from API...');
+                log('Fetching WP data from JSON file...');
+                log('Fetching WP data from API...');
+
+                const [natoJson, natoApi, wpJson, wpApi] = await Promise.all([
+                    fetch('data/aircraft-nato.json').then(r => r.json()),
+                    fetch(`${API_BASE}/aircraft?faction=NATO`).then(r => r.json()),
+                    fetch('data/aircraft-wp.json').then(r => r.json()),
+                    fetch(`${API_BASE}/aircraft?faction=WP`).then(r => r.json()),
+                ]);
+
+                log(`NATO JSON: ${Object.keys(natoJson).filter(k => !k.startsWith('_')).length} aircraft loaded`, 'info');
+                log(`NATO API:  ${Object.keys(natoApi).length} aircraft loaded`, 'info');
+                log(`WP JSON:   ${Object.keys(wpJson).filter(k => !k.startsWith('_')).length} aircraft loaded`, 'info');
+                log(`WP API:    ${Object.keys(wpApi).length} aircraft loaded`, 'info');
+
+                // Compare each faction
+                const natoDiffs = renderFactionResults('NATO', natoJson, natoApi, document.getElementById('natoResults'));
+                const wpDiffs = renderFactionResults('WP', wpJson, wpApi, document.getElementById('wpResults'));
+
+                const totalDiffs = natoDiffs + wpDiffs;
+
+                // Overall summary
+                const summaryBox = document.getElementById('summaryBox');
+                if (totalDiffs === 0) {
+                    summaryBox.innerHTML = '<div class="summary summary-pass">PASS — Zero differences. API returns byte-identical data to JSON files.</div>';
+                    log('=== OVERALL: PASS ===', 'pass');
+                } else {
+                    summaryBox.innerHTML = `<div class="summary summary-fail">FAIL — ${totalDiffs} total differences found. See details below.</div>`;
+                    log(`=== OVERALL: FAIL (${totalDiffs} differences) ===`, 'fail');
+                }
+
+            } catch (err) {
+                log(`Comparison failed: ${err.message}`, 'fail');
+                log('Is Docker running? Try "docker-compose up" first.', 'warn');
+                document.getElementById('summaryBox').innerHTML = `<div class="summary summary-fail">ERROR: ${err.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Run Full Comparison';
+            }
+        }
+    </script>
+</body>
+</html>

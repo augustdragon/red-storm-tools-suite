@@ -1,0 +1,74 @@
+##
+# Docker Compose configuration for Red Storm Tools Suite - MySQL POC
+#
+# This sets up a local development environment with:
+#   - MySQL 5.7 database (for aircraft data storage)
+#   - PHP 8.1 + Apache (serves the app and API endpoints)
+#   - phpMyAdmin (visual database browser at http://localhost:8081)
+#
+# Quick start:
+#   docker-compose up -d
+#
+# Access points:
+#   App:        http://localhost:8080/shared/aircraft-data-reference.html
+#   API:        http://localhost:8080/api/aircraft?faction=NATO
+#   phpMyAdmin: http://localhost:8081 (user: redstorm_user / pass: redstorm_pass)
+#
+# The PHP container mounts the rs-tools-hosted directory as the web root,
+# so all existing HTML/JS/CSS files are served directly. The API endpoints
+# live in the api/ subdirectory.
+##
+
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: redstorm-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: redstorm_dev
+      MYSQL_DATABASE: redstorm_tools
+      MYSQL_USER: redstorm_user
+      MYSQL_PASSWORD: redstorm_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: redstorm-php
+    ports:
+      - "8080:80"
+    volumes:
+      - ./rs-tools-hosted:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_NAME: redstorm_tools
+      DB_USER: redstorm_user
+      DB_PASS: redstorm_pass
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: redstorm-phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: redstorm_dev
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:

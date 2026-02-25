@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual Flight Sheet Generator</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="css/red-storm.css">
+  <script src="js/module-config.js"></script>
+  <script src="oob-generator/js/print-generator.js"></script>
+  <style>
+    /**
+     * Unified Flight Sheet Designer Styles
+     *
+     * Uses a neutral dark slate palette that doesn't belong to either
+     * the Red Storm (green) or Baltic Approaches (blue-gray) theme.
+     * Layout and component patterns match the existing BA designer
+     * so users see a consistent experience.
+     */
+
+    /* Override body for designer-specific styling */
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #3a3a4a;
+    }
+
+    .header {
+      background-color: #2a2a3a;
+      border-bottom: 2px solid #5a5a6a;
+      text-align: center;
+      border-radius: 8px;
+      max-width: none;
+      margin-bottom: 20px;
+      padding: 20px;
+    }
+
+    .header h1 {
+      font-size: 36px;
+      margin-bottom: 8px;
+      color: #f4f4f4;
+    }
+
+    .header p {
+      font-size: 16px;
+      opacity: 0.9;
+      color: #f4f4f4;
+      margin: 0;
+    }
+
+    .designer-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      box-sizing: border-box;
+      /* Override flex shrink-wrapping from red-storm.css body{display:flex} */
+      align-self: center;
+    }
+
+    /* Controls panel — three rows of filters and action buttons */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #4a4a5a;
+      border-radius: 8px;
+    }
+
+    .controls-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      background-color: #5a5a6a;
+      color: #f4f4f4;
+      border: 1px solid #6a6a7a;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .controls button:hover {
+      background-color: #6a6a7a;
+    }
+
+    .controls button.add-to-queue {
+      background-color: #4a6a5a;
+    }
+
+    .controls button.add-to-queue:hover {
+      background-color: #5a7a6a;
+    }
+
+    .controls button.print-queue {
+      background-color: #5a5a7a;
+    }
+
+    .controls button.print-queue:hover {
+      background-color: #6a6a8a;
+    }
+
+    .controls select {
+      padding: 10px 15px;
+      background-color: #2a2a3a;
+      color: #f4f4f4;
+      border: 2px solid #5a5a6a;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      min-width: 200px;
+    }
+
+    #moduleFilter {
+      width: 220px;
+    }
+
+    #nationSelector {
+      width: 280px;
+    }
+
+    #aircraftSelector {
+      width: 420px;
+    }
+
+    #flightSizeSelector {
+      width: 150px;
+    }
+
+    .controls select:hover {
+      background-color: #3a3a4a;
+    }
+
+    .controls label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #d4d4e4;
+      font-size: 14px;
+    }
+
+    /* Preview area — white background for print-like appearance */
+    .preview-frame {
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      font-family: Arial, sans-serif;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Queue panel — shows flights waiting to be printed */
+    .queue-panel {
+      background-color: #2a2a3a;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .queue-header {
+      color: #d4d4e4;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .queue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .queue-item {
+      background-color: #3a3a4a;
+      padding: 10px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #d4d4e4;
+      font-size: 13px;
+    }
+
+    .queue-item-info {
+      flex: 1;
+    }
+
+    .queue-item .module-tag {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-right: 6px;
+    }
+
+    .queue-item .module-tag.rs {
+      background-color: #3d5a3d;
+      color: #b0d0b0;
+    }
+
+    .queue-item .module-tag.ba {
+      background-color: #3a4a5a;
+      color: #a0c0d0;
+    }
+
+    .queue-item button {
+      padding: 5px 12px;
+      background-color: #7a4a4a;
+      color: #f4f4f4;
+      border: 1px solid #8a5a5a;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .queue-item button:hover {
+      background-color: #8a5a5a;
+    }
+
+    .queue-item-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .queue-preview-btn {
+      padding: 5px 12px;
+      background-color: #4a5a6a;
+      color: #f4f4f4;
+      border: 1px solid #6a7a8a;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .queue-preview-btn:hover {
+      background-color: #5a6a7a;
+    }
+
+    .queue-empty {
+      color: #999;
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
+    }
+
+    /* Print preview styles — used in the inline preview card */
+    @page {
+      size: letter;
+      margin: 0.5in;
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 14pt;
+      font-weight: bold;
+      margin-bottom: 12px;
+      border-bottom: 2px solid black;
+      padding-bottom: 3px;
+      color: black;
+    }
+
+    .flight-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+      min-height: 200px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .flight-grid > p {
+      grid-column: 1 / -1;
+    }
+
+    .flight-card {
+      border: 2px solid black;
+      padding: 6px;
+      page-break-inside: avoid;
+      background: white;
+      color: black;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    .flight-info-section {
+      border-bottom: 2px solid black;
+      padding-bottom: 4px;
+      margin-bottom: 4px;
+    }
+
+    .flight-header {
+      display: grid;
+      grid-template-columns: 50px 1fr 1.2fr 50px 0.8fr;
+      gap: 4px;
+      margin-bottom: 4px;
+      align-items: stretch;
+    }
+
+    /* Prevent flex/grid children from expanding beyond their allocated space */
+    .flight-header > div {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .roundel-box-header {
+      border: none;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      min-height: 18px;
+      max-height: 28px;
+    }
+
+    .roundel-box-header img {
+      max-width: 100%;
+      height: 28px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .flight-weapons-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      padding: 3px;
+      background: #f5f5f5;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .weapons-display {
+      display: flex;
+      gap: 15px;
+      font-size: 7pt;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .weapon-item {
+      display: flex;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .weapon-item .weapon-label {
+      font-weight: bold;
+    }
+
+    .aircraft-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 3px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .aircraft-box {
+      border: 1px solid #666;
+      padding: 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 120px;
+      min-width: 0;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .aircraft-header {
+      display: flex;
+      flex-direction: row;
+      gap: 3px;
+      margin-bottom: 3px;
+      width: 100%;
+    }
+
+    .aircraft-number {
+      border: 1px solid #666;
+      width: 16px;
+      height: 16px;
+      background: white;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7pt;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .damage-boxes {
+      display: flex;
+      flex-direction: row;
+      gap: 2px;
+    }
+
+    .damage-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .damage-row {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+
+    .damage-label {
+      border: 1px solid #666;
+      padding: 1px 3px;
+      height: 16px;
+      font-size: 6pt;
+      background: white;
+      display: flex;
+      align-items: center;
+      min-width: 50px;
+      box-sizing: border-box;
+    }
+
+    .damage-checkbox {
+      border: 1px solid #666;
+      width: 16px;
+      height: 16px;
+      background: white;
+      box-sizing: border-box;
+    }
+
+    .ordnance-area-small {
+      border: none;
+      border-top: 1px solid #666;
+      padding: 4px 0;
+      padding-top: 6px;
+      min-height: 60px;
+      width: 100%;
+      background: white;
+      flex: 1;
+    }
+
+    .ordnance-label-small {
+      font-size: 7pt;
+      color: #999;
+      font-style: italic;
+    }
+
+    .fuel-box {
+      border: 1px solid #666;
+      padding: 2px 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .fuel-circles-row {
+      display: flex;
+      gap: 2px;
+    }
+
+    .fuel-circle {
+      width: 10px;
+      height: 10px;
+      border: 1px solid #666;
+      border-radius: 50%;
+      background: white;
+    }
+
+    .field {
+      border: 1px solid #666;
+      padding: 2px 4px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    .field-label {
+      font-size: 7pt;
+      color: #999;
+      font-style: italic;
+    }
+
+    .field-value {
+      font-weight: bold;
+      font-size: 7pt;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tasking-fuel-row {
+      display: grid;
+      grid-template-columns: 0.7fr 0.9fr 0.8fr;
+      gap: 4px;
+      margin-bottom: 5px;
+      align-items: stretch;
+      height: 45px;
+    }
+
+    .tasking-fuel-row > div {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .tasking-fuel-row .field {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .fuel-box {
+      border: 1px solid #666;
+      padding: 2px 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 100%;
+    }
+
+    .fuel-label-value {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      font-size: 7pt;
+      white-space: nowrap;
+    }
+
+    .fuel-label-value .field-label {
+      margin: 0;
+    }
+
+    .fuel-label-value .fuel-value {
+      font-weight: bold;
+      font-size: 7pt;
+    }
+
+    .fuel-circles-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .fuel-circles-row {
+      display: flex;
+      gap: 2px;
+    }
+
+    .aircraft-section {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+
+    .aircraft-card {
+      border: 1px solid #333;
+      padding: 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 3px;
+      position: relative;
+    }
+
+    .aircraft-top-row {
+      display: flex;
+      gap: 3px;
+      position: relative;
+    }
+
+    .damage-status-container {
+      position: absolute;
+      right: 3px;
+      top: 3px;
+      border: 1px solid #666;
+    }
+
+    .damage-table {
+      border-collapse: collapse;
+      font-size: 6pt;
+      font-weight: bold;
+    }
+
+    .damage-table td {
+      border: 1px solid #666;
+      padding: 0px 3px;
+      text-align: center;
+    }
+
+    .damage-table .damage-label {
+      padding: 0px 3px;
+      text-align: right;
+      width: 30px;
+    }
+
+    .damage-table .damage-cell {
+      width: 18px;
+      height: 14px;
+      background: white;
+    }
+
+    .aircraft-stats {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 7pt;
+      padding-left: 3px;
+      padding-right: 60px;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 4px;
+    }
+
+    .stat-item {
+      display: flex;
+      gap: 2px;
+    }
+
+    .stat-label {
+      font-weight: bold;
+    }
+
+    .rwr-jam-column {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-left: auto;
+    }
+
+    .speed-table {
+      border: 1px solid #666;
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 6pt;
+      margin-top: 2px;
+    }
+
+    .speed-table th,
+    .speed-table td {
+      border: 1px solid #666;
+      padding: 1px 2px;
+      text-align: center;
+    }
+
+    .speed-table th {
+      background: #e0e0e0;
+      font-weight: bold;
+    }
+
+    .radar-info {
+      font-size: 6pt;
+      line-height: 1.3;
+      margin-top: 2px;
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .radar-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .radar-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      align-items: flex-end;
+    }
+
+    .weapons-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-left: 10px;
+    }
+
+    .weapon-line {
+      font-size: 6pt;
+      display: flex;
+      justify-content: flex-end;
+      gap: 2px;
+    }
+
+    .weapon-label {
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .weapon-value {
+      font-weight: normal;
+    }
+
+    .crew-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0px;
+      font-size: 6pt;
+      position: absolute;
+      right: 3px;
+      top: 85px;
+    }
+
+    .crew-icon {
+      font-size: 16pt;
+      filter: grayscale(100%) brightness(0%);
+    }
+
+    .crew-count {
+      border: 1px solid #666;
+      padding: 1px 4px;
+      font-size: 7pt;
+      font-weight: bold;
+      background: white;
+      min-width: 10px;
+      text-align: center;
+    }
+
+    .speed-table {
+      margin-top: 20px;
+    }
+
+    .ordnance-area {
+      border: 1px solid #999;
+      padding: 3px;
+      min-height: 30px;
+      background: #fafafa;
+    }
+
+    .ordnance-label {
+      font-size: 6pt;
+      color: #666;
+      margin-bottom: 2px;
+    }
+
+    .ordnance-text {
+      font-size: 7pt;
+      font-weight: bold;
+    }
+
+    /* Back link styling */
+    .back-link {
+      display: inline-block;
+      margin-bottom: 15px;
+      color: #b0b0c0;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      color: #d0d0e0;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .designer-container {
+        max-width: none;
+      }
+
+      .header, .controls {
+        display: none;
+      }
+
+      .back-link {
+        display: none;
+      }
+
+      .preview-frame {
+        padding: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="designer-container">
+
+    <div class="header">
+      <h1>Manual Flight Sheet Generator</h1>
+      <p>Create custom flight sheets from Red Storm and Baltic Approaches aircraft</p>
+    </div>
+    <a href="../index.html" class="back-link">&larr; Back to Red Storm Tools Suite</a>
+
+    <!--
+      Controls section with three rows:
+      Row 1: Module filter + Nation filter (cascading — module change repopulates nations)
+      Row 2: Aircraft dropdown (filtered by module+nation) + Flight Size
+      Row 3: Action buttons (Add to Queue, Print All, Export, Clear)
+    -->
+    <div class="controls">
+      <div class="controls-row">
+        <label>
+          Module:
+          <select id="moduleFilter">
+            <option value="">All Modules</option>
+            <option value="RS">Red Storm</option>
+            <option value="BA">Baltic Approaches</option>
+          </select>
+        </label>
+        <label>
+          Nation:
+          <select id="nationSelector">
+            <option value="">-- All Nations --</option>
+          </select>
+        </label>
+      </div>
+      <div class="controls-row">
+        <label>
+          Aircraft:
+          <select id="aircraftSelector">
+            <option value="">-- Select Aircraft --</option>
+          </select>
+        </label>
+        <label>
+          Flight Size:
+          <select id="flightSizeSelector">
+            <option value="1">1-ship</option>
+            <option value="2">2-ship</option>
+            <option value="4">4-ship</option>
+          </select>
+        </label>
+      </div>
+      <div class="controls-row">
+        <button class="add-to-queue" onclick="addToQueue()">Add to Queue</button>
+        <button class="print-queue" onclick="printQueue()">Print All Flights</button>
+        <button onclick="exportDesign()">Export HTML</button>
+        <button onclick="clearPreview()">Clear Preview</button>
+      </div>
+    </div>
+
+    <!-- Queue panel — lists flights waiting to be printed or exported -->
+    <div class="queue-panel">
+      <div class="queue-header">
+        <span>Queue (<span id="queueCount">0</span>)</span>
+        <button onclick="clearQueue()" style="padding: 5px 12px; background-color: #7a4a4a; color: #f4f4f4; border: 1px solid #8a5a5a; border-radius: 3px; cursor: pointer; font-size: 12px;">Clear All</button>
+      </div>
+      <div class="queue-list" id="queueList">
+        <div class="queue-empty">No flights in queue. Configure a flight above and click "Add to Queue".</div>
+      </div>
+    </div>
+
+    <!-- Live preview of the currently selected aircraft -->
+    <div class="preview-frame" id="previewFrame">
+      <div class="page-title">Flight Sheet Preview</div>
+      <div class="flight-grid" id="flightGrid">
+        <p style="color: #999; text-align: center; padding: 40px; grid-column: 1 / -1;">
+          Select a module, nation, aircraft, and flight size to create a sample flight card
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Unified Flight Sheet Designer
+     *
+     * Loads the merged aircraft databases from shared/data/ which contain
+     * all aircraft from both Red Storm and Baltic Approaches, each tagged
+     * with a "module" field ("RS" or "BA"). This lets users filter by module,
+     * nation, and individual aircraft to build custom flight sheets that
+     * span both game modules.
+     *
+     * Architecture:
+     * - Data loading: Fetches aircraft-nato.json, aircraft-wp.json, weapons.json,
+     *   and aircraft-note-rules.json from data/ (relative to shared/).
+     * - Cascading filters: Module -> Nation -> Aircraft. Changing a higher-level
+     *   filter repopulates all lower-level dropdowns.
+     * - Queue system: Users add configured flights to a queue, then print or
+     *   export the entire queue at once via PrintGenerator.
+     * - PrintGenerator integration: Builds a synthetic unified config at runtime
+     *   that merges roundel maps from both modules and sets the correct relative
+     *   roundelBasePath for the shared/ directory.
+     */
+
+    // =========================================================================
+    // Global data stores
+    // =========================================================================
+    let aircraftDatabase = {};
+    let weaponsDatabase = {};
+    let noteRulesDatabase = {};
+    let flightQueue = [];
+    let queueIdCounter = 1;
+    /** Stores the most recently previewed flight object so the preview
+     *  persists when dropdowns cascade-reset (e.g. module/nation change). */
+    let lastPreviewedFlight = null;
+
+    // =========================================================================
+    // Database loading
+    // =========================================================================
+
+    /**
+     * Load all JSON databases from the shared data directory.
+     * These files contain aircraft from BOTH modules, merged together.
+     * Each aircraft record has a "module" field ("RS" or "BA") that
+     * the filter system uses to separate them.
+     */
+    async function loadDatabases() {
+      try {
+        const [aircraftNatoResponse, aircraftWpResponse, weaponsResponse, noteRulesResponse] = await Promise.all([
+          fetch('data/aircraft-nato.json'),
+          fetch('data/aircraft-wp.json'),
+          fetch('data/weapons.json'),
+          fetch('data/aircraft-note-rules.json')
+        ]);
+
+        const aircraftNato = await aircraftNatoResponse.json();
+        const aircraftWp = await aircraftWpResponse.json();
+        weaponsDatabase = await weaponsResponse.json();
+        noteRulesDatabase = await noteRulesResponse.json();
+
+        // Merge NATO and WP databases into one unified lookup
+        aircraftDatabase = { ...aircraftNato, ...aircraftWp };
+
+        // Remove metadata fields that aren't aircraft records
+        delete aircraftDatabase._comment;
+        delete aircraftDatabase._version;
+        delete aircraftDatabase._created;
+        delete aircraftDatabase._description;
+
+        console.log('Databases loaded:', Object.keys(aircraftDatabase).length, 'aircraft');
+        console.log('Note rules loaded for:', Object.keys(noteRulesDatabase).join(', '));
+        return true;
+      } catch (error) {
+        console.error('Error loading databases:', error);
+        alert('Error loading aircraft database. Check that data files exist.');
+        return false;
+      }
+    }
+
+    // =========================================================================
+    // Cascading filter logic
+    // =========================================================================
+
+    /**
+     * Build the nation dropdown based on the current module filter.
+     * Scans the loaded aircraft database for unique nation values that
+     * match the selected module, then creates option elements for each.
+     *
+     * This approach dynamically discovers nations from the data rather
+     * than hardcoding them, so it automatically adapts if aircraft are
+     * added to the JSON files in the future.
+     */
+    function populateNationSelector() {
+      const sel = document.getElementById('nationSelector');
+      const moduleFilter = document.getElementById('moduleFilter').value;
+
+      // Collect unique nations from aircraft that match the module filter
+      const nationSet = new Set();
+      for (const key of Object.keys(aircraftDatabase)) {
+        if (key.startsWith('_')) continue;
+        const a = aircraftDatabase[key];
+        if (!a || !a.nation) continue;
+        // Apply module filter if set
+        if (moduleFilter && a.module !== moduleFilter) continue;
+        nationSet.add(a.nation);
+      }
+
+      // Sort nations alphabetically for consistent ordering
+      const nations = Array.from(nationSet).sort();
+
+      // Build a display-name map for known nation codes
+      const nationNames = {
+        'US': 'United States',
+        'USA': 'United States',
+        'UK': 'United Kingdom',
+        'FRG': 'West Germany',
+        'BEL': 'Belgium',
+        'CAN': 'Canada',
+        'HOL': 'Netherlands',
+        'NE': 'Netherlands',
+        'DK': 'Denmark',
+        'SE': 'Sweden',
+        'USSR': 'Soviet Union',
+        'GDR': 'East Germany',
+        'POL': 'Poland'
+      };
+
+      sel.innerHTML = '<option value="">-- All Nations --</option>';
+      for (const nation of nations) {
+        const opt = document.createElement('option');
+        opt.value = nation;
+        opt.textContent = nationNames[nation] || nation;
+        sel.appendChild(opt);
+      }
+    }
+
+    /**
+     * Build the aircraft dropdown based on the current module + nation filters.
+     * Each aircraft option shows a [RS] or [BA] tag so users can tell which
+     * module it belongs to, even when viewing "All Modules".
+     */
+    function populateAircraftSelector() {
+      const sel = document.getElementById('aircraftSelector');
+      sel.innerHTML = '<option value="">-- Select Aircraft --</option>';
+
+      const moduleFilter = document.getElementById('moduleFilter').value;
+      const nationFilter = document.getElementById('nationSelector').value;
+
+      const entries = Object.keys(aircraftDatabase).filter(k => {
+        if (k.startsWith('_')) return false;
+        const a = aircraftDatabase[k];
+        if (!a) return false;
+        // Module filter
+        if (moduleFilter && a.module !== moduleFilter) return false;
+        // Nation filter
+        if (nationFilter) {
+          const nationMatch = String(a.nation || '').toLowerCase() === nationFilter.toLowerCase();
+          if (!nationMatch) return false;
+        }
+        return true;
+      }).map(k => ({
+        key: k,
+        name: aircraftDatabase[k].name || k,
+        nation: aircraftDatabase[k].nation || '',
+        module: aircraftDatabase[k].module || ''
+      }));
+
+      // Sort alphabetically by display name
+      entries.sort((a, b) => a.name.localeCompare(b.name));
+
+      for (const e of entries) {
+        const opt = document.createElement('option');
+        opt.value = e.key;
+        // Show module tag so users know which game the aircraft is from
+        const moduleTag = e.module === 'RS' ? '[RS]' : e.module === 'BA' ? '[BA]' : '';
+        opt.textContent = `${moduleTag} ${e.name} (${e.nation || e.key})`;
+        sel.appendChild(opt);
+      }
+    }
+
+    /**
+     * Handler for module filter changes.
+     * Cascades: repopulate nations, then repopulate aircraft, then update preview.
+     */
+    function onModuleChange() {
+      populateNationSelector();
+      populateAircraftSelector();
+      generateTestFlight();
+    }
+
+    /**
+     * Handler for nation filter changes.
+     * Cascades: repopulate aircraft, then update preview.
+     */
+    function onNationChange() {
+      populateAircraftSelector();
+      generateTestFlight();
+    }
+
+    // =========================================================================
+    // Queue management
+    // =========================================================================
+
+    /**
+     * Add the currently selected aircraft + flight size to the print queue.
+     * Captures the module tag for display in the queue list.
+     */
+    function addToQueue() {
+      const aircraftKey = document.getElementById('aircraftSelector').value;
+      const size = parseInt(document.getElementById('flightSizeSelector').value, 10) || 1;
+      if (!aircraftKey) { alert('Please select an aircraft first.'); return; }
+
+      const aircraft = aircraftDatabase[aircraftKey];
+      const nation = (document.getElementById('nationSelector').value) || (aircraft && aircraft.nation) || '';
+      const item = {
+        id: queueIdCounter++,
+        aircraftKey,
+        size,
+        nation,
+        module: aircraft ? aircraft.module : ''
+      };
+      flightQueue.push(item);
+      updateQueueUI();
+    }
+
+    /** Remove a specific flight from the queue by its ID. */
+    function removeFromQueue(id) {
+      const idx = flightQueue.findIndex(f => f.id === id);
+      if (idx >= 0) flightQueue.splice(idx, 1);
+      updateQueueUI();
+    }
+
+    /** Clear all flights from the queue (with confirmation). */
+    function clearQueue() {
+      if (!confirm('Clear all flights from the queue?')) return;
+      flightQueue = [];
+      updateQueueUI();
+      clearPreview();
+    }
+
+    /** Redraw the queue list UI to reflect the current queue state. */
+    function updateQueueUI() {
+      const list = document.getElementById('queueList');
+      const count = document.getElementById('queueCount');
+      list.innerHTML = '';
+
+      if (!flightQueue.length) {
+        const empty = document.createElement('div');
+        empty.className = 'queue-empty';
+        empty.textContent = 'No flights in queue. Configure a flight above and click "Add to Queue".';
+        list.appendChild(empty);
+        count.textContent = '0';
+        return;
+      }
+
+      count.textContent = String(flightQueue.length);
+      for (const f of flightQueue) {
+        const item = document.createElement('div');
+        item.className = 'queue-item';
+        const info = document.createElement('div');
+        info.className = 'queue-item-info';
+        const aircraft = aircraftDatabase[f.aircraftKey] || { name: f.aircraftKey };
+
+        // Module tag (colored badge)
+        const moduleTag = f.module === 'RS' ? '<span class="module-tag rs">RS</span>'
+                        : f.module === 'BA' ? '<span class="module-tag ba">BA</span>'
+                        : '';
+        info.innerHTML = `${moduleTag}${aircraft.name || f.aircraftKey} &mdash; ${f.nation || aircraft.nation || ''} &mdash; ${f.size}-ship`;
+
+        // Button group: Preview + Remove side-by-side
+        const btnGroup = document.createElement('div');
+        btnGroup.className = 'queue-item-buttons';
+
+        const previewBtn = document.createElement('button');
+        previewBtn.className = 'queue-preview-btn';
+        previewBtn.textContent = 'Preview';
+        previewBtn.onclick = () => previewQueueItem(f.id);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Remove';
+        removeBtn.onclick = () => removeFromQueue(f.id);
+
+        btnGroup.appendChild(previewBtn);
+        btnGroup.appendChild(removeBtn);
+
+        item.appendChild(info);
+        item.appendChild(btnGroup);
+        list.appendChild(item);
+      }
+    }
+
+    /** Reset the preview area to its default empty state. */
+    function clearPreview() {
+      lastPreviewedFlight = null;
+      const grid = document.getElementById('flightGrid');
+      grid.innerHTML = '<p style="color: #999; text-align: center; padding: 40px; grid-column: 1 / -1;">Select a module, nation, aircraft, and flight size to create a sample flight card</p>';
+    }
+
+    /**
+     * Preview a flight that is already in the queue.
+     * Looks up the queue item by ID, builds a flight object from its
+     * stored data, and renders it in the preview area — same pattern
+     * as generateTestFlight() but sourced from the queue instead of
+     * the current dropdown selections.
+     *
+     * @param {number} id - The queue item's unique ID
+     */
+    function previewQueueItem(id) {
+      const f = flightQueue.find(item => item.id === id);
+      if (!f) return;
+
+      const aircraft = aircraftDatabase[f.aircraftKey];
+      if (!aircraft) return;
+
+      const flight = {
+        id: f.id,
+        table: 'Queue',
+        faction: 'NATO',
+        tableName: 'Queued Flight',
+        result: `${aircraft.nation}: 1 x {${f.size}} ${aircraft.name}, CAP`,
+        debugText: '[Queued Flight]',
+        timestamp: Date.now(),
+        aircraft: f.aircraftKey,
+        crew: aircraft.crew,
+        fuel: aircraft.fuel
+      };
+
+      lastPreviewedFlight = flight;
+
+      const grid = document.getElementById('flightGrid');
+      grid.innerHTML = '';
+      grid.appendChild(createFlightCard(flight));
+
+      requestAnimationFrame(() => debugWidths());
+    }
+
+    // =========================================================================
+    // Inline preview card generation
+    // =========================================================================
+
+    /**
+     * Build a merged roundel map that covers all nation codes from both
+     * Red Storm and Baltic Approaches. This is used by both the inline
+     * preview and the PrintGenerator integration.
+     */
+    function getMergedRoundelMap() {
+      const rsConfig = window.ModuleConfig ? window.ModuleConfig.getModuleConfig('red-storm') : null;
+      const baConfig = window.ModuleConfig ? window.ModuleConfig.getModuleConfig('baltic-approaches') : null;
+      const rsRoundels = rsConfig?.print?.roundels || {};
+      const baRoundels = baConfig?.print?.roundels || {};
+      return { ...rsRoundels, ...baRoundels };
+    }
+
+    /**
+     * Convert raw JSON aircraft data into a display-friendly format for
+     * the inline preview card. This mirrors the BA designer's convertAircraftData
+     * but uses the shared field name "gunDepletion" (as stored in the unified JSON).
+     *
+     * @param {object} jsonData - Raw aircraft record from the merged database
+     * @returns {object} Formatted aircraft data for card rendering
+     */
+    function convertAircraftData(jsonData) {
+      if (!jsonData) return null;
+
+      // Helper: extract a single altitude band's speed from a slash-separated string
+      function extractSpeedForBand(speedString, index) {
+        if (!speedString || speedString === 'N/A') return 'N/A';
+        const values = speedString.split('/');
+        return values[index] || 'N/A';
+      }
+
+      // Build weapon display strings with ratings from weapons database
+      let gunDisplay = '';
+      if (jsonData.weapons && jsonData.weapons.gun && (jsonData.weapons.gunAmmo || jsonData.weapons.gunDepletion)) {
+        const gunData = weaponsDatabase.guns ? weaponsDatabase.guns[jsonData.weapons.gun] : null;
+        const rating = gunData ? `+${gunData.stdRtg}` : '+3';
+        const depletion = jsonData.weapons.gunDepletion || jsonData.weapons.gunAmmo || '';
+        gunDisplay = `${rating} {${depletion}}`;
+      }
+
+      let irmDisplay = '';
+      if (jsonData.weapons && jsonData.weapons.irm && (jsonData.weapons.irmAmmo || jsonData.weapons.irmDepletion)) {
+        const missileData = weaponsDatabase.missiles ? weaponsDatabase.missiles[jsonData.weapons.irm] : null;
+        const stdRtg = missileData ? `+${missileData.stdRtg}` : '+3';
+        const bvrRtg = missileData && missileData.bvrRtg !== null
+          ? `/${missileData.bvrRtg > 0 ? '+' : ''}${missileData.bvrRtg}`
+          : '/NA';
+        const depletion = jsonData.weapons.irmDepletion || jsonData.weapons.irmAmmo || '';
+        irmDisplay = `${stdRtg}${bvrRtg} {${depletion}}`;
+      }
+
+      let rhmDisplay = '';
+      if (jsonData.weapons && jsonData.weapons.rhm && (jsonData.weapons.rhmAmmo || jsonData.weapons.rhmDepletion)) {
+        const missileData = weaponsDatabase.missiles ? weaponsDatabase.missiles[jsonData.weapons.rhm] : null;
+        const stdRtg = missileData ? `+${missileData.stdRtg}` : '+3';
+        const bvrRtg = missileData && missileData.bvrRtg !== null
+          ? `/${missileData.bvrRtg > 0 ? '+' : ''}${missileData.bvrRtg}`
+          : '/NA';
+        const depletion = jsonData.weapons.rhmDepletion || jsonData.weapons.rhmAmmo || '';
+        rhmDisplay = `${stdRtg}${bvrRtg} {${depletion}}`;
+      }
+
+      // Radar display
+      let radarDisplay = null;
+      let radarModifier = null;
+      if (jsonData.radar && jsonData.radar.name) {
+        radarDisplay = jsonData.radar.name;
+        if (jsonData.radar.type) radarDisplay += ` ${jsonData.radar.type}`;
+        if (jsonData.radar.range) radarDisplay += ` [${jsonData.radar.range}]`;
+        if (jsonData.radar.modifier) radarModifier = jsonData.radar.modifier;
+      }
+
+      // RWR and Jam — filter out dash-only placeholder values
+      const rwrDisplay = (jsonData.rwr && jsonData.rwr !== '-' && jsonData.rwr !== '-/-') ? jsonData.rwr : null;
+      const jamDisplay = (jsonData.jam && jsonData.jam !== '-' && jsonData.jam !== '-/-') ? jsonData.jam : null;
+
+      // Ordnance string
+      const ordnanceStr = jsonData.ordnance && jsonData.ordnance.length > 0
+        ? jsonData.ordnance.map(o => o.quantity ? `${o.type}(${o.quantity})` : o.type).join(', ')
+        : '';
+
+      // Capabilities string
+      const capabilitiesStr = jsonData.capabilities && jsonData.capabilities.length > 0
+        ? jsonData.capabilities.join(', ')
+        : '';
+
+      // Extract speeds for all altitude bands
+      const speeds = {};
+      if (jsonData.speeds && jsonData.speeds.clean) {
+        const altitudeBands = ['VH', 'H', 'M', 'L/D'];
+        const indices = { 'VH': 3, 'H': 2, 'M': 1, 'L/D': 0 };
+
+        altitudeBands.forEach(band => {
+          const idx = indices[band];
+          speeds[band] = {
+            combat: extractSpeedForBand(jsonData.speeds.clean.combat, idx),
+            dash: extractSpeedForBand(jsonData.speeds.clean.dash, idx),
+            maneuver: extractSpeedForBand(jsonData.speeds.clean.maneuver, idx)
+          };
+        });
+      }
+
+      let speedsLaden = null;
+      if (jsonData.speeds && jsonData.speeds.laden) {
+        speedsLaden = {};
+        const altitudeBands = ['VH', 'H', 'M', 'L/D'];
+        const indices = { 'VH': 3, 'H': 2, 'M': 1, 'L/D': 0 };
+
+        altitudeBands.forEach(band => {
+          const idx = indices[band];
+          speedsLaden[band] = {
+            combat: extractSpeedForBand(jsonData.speeds.laden.combat, idx),
+            dash: extractSpeedForBand(jsonData.speeds.laden.dash, idx),
+            maneuver: extractSpeedForBand(jsonData.speeds.laden.maneuver, idx)
+          };
+        });
+      }
+
+      return {
+        model: jsonData.model || jsonData.name,
+        nation: jsonData.nation,
+        crew: jsonData.crew,
+        rwy: jsonData.rwy || jsonData.runway,
+        fuel: jsonData.fuel,
+        notes: jsonData.notes,
+        gun: gunDisplay,
+        irm: irmDisplay,
+        rhm: rhmDisplay,
+        rwr: rwrDisplay,
+        jam: jamDisplay,
+        ordnance: ordnanceStr,
+        aam: jsonData.aam,
+        bomb: jsonData.bomb,
+        sight: jsonData.sight,
+        capabilities: capabilitiesStr,
+        speeds: speeds,
+        speedsClean: speeds,
+        speedsLaden: speedsLaden,
+        hasCleanLaden: speedsLaden !== null,
+        radar: radarDisplay,
+        radarModifier: radarModifier
+      };
+    }
+
+    /**
+     * Generate a preview flight card in the preview frame based on
+     * the currently selected aircraft and flight size dropdowns.
+     */
+    async function generateTestFlight() {
+      const aircraftKey = document.getElementById('aircraftSelector').value;
+      const flightSize = document.getElementById('flightSizeSelector').value;
+
+      // If no aircraft is selected (e.g. after a module/nation cascade reset),
+      // leave the current preview in place so the user keeps visual context
+      // of whatever they last previewed or queued.
+      if (!aircraftKey) return;
+
+      const aircraft = aircraftDatabase[aircraftKey];
+      if (!aircraft) {
+        console.error('Aircraft not found:', aircraftKey);
+        return;
+      }
+
+      // Build a synthetic flight object for the preview card renderer
+      const testFlight = {
+        id: Date.now(),
+        table: 'Test',
+        faction: 'NATO',
+        tableName: 'Test Flight',
+        result: `${aircraft.nation}: 1 x {${flightSize}} ${aircraft.name}, CAP`,
+        debugText: '[Test Flight]',
+        timestamp: Date.now(),
+        aircraft: aircraftKey,
+        crew: aircraft.crew,
+        fuel: aircraft.fuel
+      };
+
+      lastPreviewedFlight = testFlight;
+
+      const grid = document.getElementById('flightGrid');
+      grid.innerHTML = '';
+      grid.appendChild(createFlightCard(testFlight));
+
+      // Run width diagnostics after the card renders
+      requestAnimationFrame(() => debugWidths());
+    }
+
+    /**
+     * Create an inline preview card DOM element for a flight.
+     * This renders directly in the page (not via PrintGenerator) so
+     * users get instant visual feedback as they configure flights.
+     *
+     * @param {object} flight - Flight object with result string and aircraft key
+     * @returns {HTMLElement} The flight card DOM element
+     */
+    function createFlightCard(flight) {
+      const card = document.createElement('div');
+      card.className = 'flight-card';
+
+      // Parse the result string to extract flight parameters
+      const resultLines = flight.result.split('<br>');
+      const firstLine = resultLines[0];
+      const match = firstLine.match(/^([^:]+):\s*(\d+)\s*x\s*{(\d+)}\s*([^,]+),\s*(.+)$/);
+
+      let nation = 'Unknown';
+      let flightCount = '1';
+      let flightSize = '2';
+      let aircraft = 'Unknown';
+      let tasking = 'CAP';
+
+      if (match) {
+        nation = match[1].trim();
+        flightCount = match[2];
+        flightSize = match[3];
+        aircraft = match[4].trim();
+        tasking = match[5].trim();
+      }
+
+      // Look up the aircraft in the database
+      let aircraftData = null;
+      let aircraftKey = flight.aircraft;
+
+      if (!aircraftKey || !aircraftDatabase[aircraftKey]) {
+        aircraftKey = Object.keys(aircraftDatabase).find(key =>
+          key === aircraft || aircraftDatabase[key].name === aircraft
+        );
+        if (!aircraftKey) {
+          const sortedKeys = Object.keys(aircraftDatabase).sort((a, b) => b.length - a.length);
+          aircraftKey = sortedKeys.find(key =>
+            aircraft.includes(key) || aircraftDatabase[key].name.includes(aircraft)
+          );
+        }
+      }
+
+      if (aircraftKey) {
+        aircraftData = convertAircraftData(aircraftDatabase[aircraftKey]);
+      }
+
+      // Fallback data if aircraft not found in database
+      if (!aircraftData) {
+        aircraftData = {
+          model: aircraft,
+          nation: nation,
+          crew: flight.crew || 1,
+          fuel: flight.fuel || 6,
+          notes: '',
+          speeds: {
+            'VH': { combat: 'N/A', dash: 'N/A', maneuver: 'N/A' },
+            'H': { combat: '5', dash: '8', maneuver: '9' },
+            'M': { combat: '4', dash: '6', maneuver: '9' },
+            'L/D': { combat: '4', dash: '5', maneuver: '8' }
+          }
+        };
+      }
+
+      // Determine roundel image path for the inline preview
+      const roundelMap = getMergedRoundelMap();
+      const roundelImage = roundelMap[aircraftData.nation] || 'USAF.jpg';
+      // Relative from shared/ to shared/assets/roundels/
+      const roundelPath = `assets/roundels/${roundelImage}`;
+
+      card.innerHTML = `
+        <!-- Flight-level information -->
+        <div class="flight-info-section">
+          <div class="flight-header">
+            <div class="roundel-box-header">
+              <img src="${roundelPath}" alt="${aircraftData.nation || 'Unknown'} Roundel">
+            </div>
+            <div class="field">
+              <div class="field-label">Aircraft</div>
+              <div class="field-value">${aircraftData.model || aircraft}</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Callsign</div>
+              <div class="field-value"></div>
+            </div>
+            <div class="field">
+              <div class="field-label">Counter</div>
+              <div class="field-value"></div>
+            </div>
+            <div class="field">
+              <div class="field-label">Aggr.</div>
+              <div class="field-value"></div>
+            </div>
+          </div>
+
+          <div class="tasking-fuel-row">
+            <div class="field">
+              <div class="field-label">Tasking</div>
+              <div class="field-value"></div>
+            </div>
+            <div class="fuel-box">
+              <div class="fuel-label-value">
+                <span class="field-label">Fuel</span>
+                <span class="fuel-value">${aircraftData.fuel || flight.fuel || 18}</span>
+              </div>
+              <div class="fuel-circles-container">
+                ${typeof (aircraftData.fuel || flight.fuel) === 'number' ? `
+                <div class="fuel-circles-row">
+                  ${Array(Math.ceil((aircraftData.fuel || flight.fuel || 18) / 2)).fill(0).map(() =>
+                    `<div class="fuel-circle"></div>`
+                  ).join('')}
+                </div>
+                <div class="fuel-circles-row">
+                  ${Array(Math.floor((aircraftData.fuel || flight.fuel || 18) / 2)).fill(0).map(() =>
+                    `<div class="fuel-circle"></div>`
+                  ).join('')}
+                </div>
+                ` : ''}
+              </div>
+            </div>
+            <div class="field">
+              <div class="field-label">Notes</div>
+              <div class="field-value">${aircraftData.notes || ''}</div>
+            </div>
+          </div>
+
+          <div class="flight-weapons-row">
+            <div class="weapons-display">
+              ${aircraftData.gun ? `<div class="weapon-item">
+                <span class="weapon-label">Gun:</span>
+                <span>${aircraftData.gun}</span>
+              </div>` : ''}
+              ${aircraftData.irm ? `<div class="weapon-item">
+                <span class="weapon-label">IRM:</span>
+                <span>${aircraftData.irm}</span>
+              </div>` : ''}
+              ${aircraftData.rhm ? `<div class="weapon-item">
+                <span class="weapon-label">RHM:</span>
+                <span>${aircraftData.rhm}</span>
+              </div>` : ''}
+            </div>
+            ${aircraftData.crew || aircraftData.rwy ? `<div style="display: flex; gap: 10px; font-size: 7pt;">
+              ${aircraftData.crew ? `<div><strong>Crew:</strong> ${aircraftData.crew}</div>` : ''}
+              ${aircraftData.rwy ? `<div><strong>Rwy:</strong> ${aircraftData.rwy}</div>` : ''}
+            </div>` : ''}
+          </div>
+
+          ${aircraftData.ordnance || aircraftData.aam || aircraftData.bomb || (aircraftData.sight && aircraftData.sight !== '-') ? `<div style="padding: 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 4px;">
+            ${aircraftData.aam ? `<strong>AAM:</strong> ${aircraftData.aam}` : ''}${(aircraftData.aam && aircraftData.ordnance) ? ' | ' : ''}${aircraftData.ordnance ? `<strong>Ordnance:</strong> ${aircraftData.ordnance}` : ''}${((aircraftData.aam || aircraftData.ordnance) && aircraftData.bomb) ? ' | ' : ''}${aircraftData.bomb ? `<strong>Bomb:</strong> ${aircraftData.bomb}` : ''}${((aircraftData.aam || aircraftData.ordnance || aircraftData.bomb) && aircraftData.sight && aircraftData.sight !== '-') ? ' | ' : ''}${aircraftData.sight && aircraftData.sight !== '-' ? `<strong>Sight:</strong> ${aircraftData.sight}` : ''}
+          </div>` : ''}
+
+          ${aircraftData.radar || aircraftData.rwr || aircraftData.jam ? `<div style="padding: 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 4px;">
+            ${aircraftData.radar ? `<strong>Radar:</strong> ${aircraftData.radar} ${aircraftData.radarModifier || ''}` : ''}
+            ${aircraftData.radar && aircraftData.rwr ? ' | ' : ''}
+            ${aircraftData.rwr ? `<strong>RWR:</strong> ${aircraftData.rwr}` : ''}
+            ${(aircraftData.radar || aircraftData.rwr) && aircraftData.jam ? ' | ' : ''}
+            ${aircraftData.jam ? `<strong>Jam:</strong> ${aircraftData.jam}` : ''}
+          </div>` : ''}
+
+          ${aircraftData.capabilities ? `<div style="padding: 3px; background: #f5f5f5; font-size: 7pt; margin-bottom: 4px;">
+            <strong>Capabilities:</strong> ${aircraftData.capabilities}
+          </div>` : ''}
+
+          ${aircraftData.hasCleanLaden ? `
+          <table class="speed-table">
+            <tr>
+              <th rowspan="2">Alt</th>
+              <th colspan="3">Clean</th>
+              <th colspan="3">Laden</th>
+            </tr>
+            <tr>
+              <th>C</th>
+              <th>D</th>
+              <th>M</th>
+              <th>C</th>
+              <th>D</th>
+              <th>M</th>
+            </tr>
+            ${Object.keys(aircraftData.speedsClean).map(alt => `
+              <tr>
+                <td><strong>${alt}</strong></td>
+                <td>${aircraftData.speedsClean[alt].combat}</td>
+                <td>${aircraftData.speedsClean[alt].dash}</td>
+                <td>${aircraftData.speedsClean[alt].maneuver}</td>
+                <td>${aircraftData.speedsLaden[alt].combat}</td>
+                <td>${aircraftData.speedsLaden[alt].dash}</td>
+                <td>${aircraftData.speedsLaden[alt].maneuver}</td>
+              </tr>
+            `).join('')}
+          </table>
+          ` : `
+          <table class="speed-table">
+            <tr>
+              <th>Alt</th>
+              <th>C</th>
+              <th>D</th>
+              <th>M</th>
+            </tr>
+            ${Object.entries(aircraftData.speeds).map(([alt, speeds]) => `
+              <tr>
+                <td><strong>${alt}</strong></td>
+                <td>${speeds.combat}</td>
+                <td>${speeds.dash}</td>
+                <td>${speeds.maneuver}</td>
+              </tr>
+            `).join('')}
+          </table>
+          `}
+        </div>
+
+        <!-- Individual aircraft boxes -->
+        <div class="aircraft-grid">
+          ${Array(parseInt(flightSize)).fill(0).map((_, i) => `
+            <div class="aircraft-box">
+              <div class="aircraft-header">
+                <div class="aircraft-number">${i + 1}</div>
+                <div class="damage-boxes">
+                  <div class="damage-column">
+                    <div class="damage-row">
+                      <div class="damage-label">Damaged</div>
+                      <div class="damage-checkbox"></div>
+                    </div>
+                    <div class="damage-row">
+                      <div class="damage-label">Crippled</div>
+                      <div class="damage-checkbox"></div>
+                    </div>
+                    <div class="damage-row">
+                      <div class="damage-label">Destroyed</div>
+                      <div class="damage-checkbox"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ordnance-area-small">
+                <div class="ordnance-label-small">Ordnance</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      return card;
+    }
+
+    // =========================================================================
+    // PrintGenerator integration for Print / Export
+    // =========================================================================
+
+    /**
+     * Build a synthetic unified PrintGenerator config at runtime.
+     *
+     * This merges roundel maps from both modules and sets the correct
+     * relative data paths for fetching from the shared/ directory.
+     * The key difference from the module-specific configs is:
+     *   - roundelBasePath: 'assets/roundels' (relative to shared/)
+     *   - data paths: 'data/...' (relative to shared/)
+     *   - roundels: merged from both RS and BA configs
+     *
+     * @returns {object} A moduleConfig object compatible with PrintGenerator
+     */
+    function buildUnifiedPrintConfig() {
+      const rsConfig = window.ModuleConfig ? window.ModuleConfig.getModuleConfig('red-storm') : null;
+      const baConfig = window.ModuleConfig ? window.ModuleConfig.getModuleConfig('baltic-approaches') : null;
+
+      // Merge roundels from both modules (BA takes precedence for shared codes)
+      const rsRoundels = rsConfig?.print?.roundels || {};
+      const baRoundels = baConfig?.print?.roundels || {};
+      const mergedRoundels = { ...rsRoundels, ...baRoundels };
+
+      // Use RS data structure as the base (both modules share the same structure)
+      const dataStructure = rsConfig?.print?.dataStructure || baConfig?.print?.dataStructure;
+      const conversion = rsConfig?.print?.conversion || baConfig?.print?.conversion;
+
+      return {
+        id: 'unified',
+        name: 'Unified',
+        // Data paths relative to shared/
+        data: {
+          aircraftNATO: 'data/aircraft-nato.json',
+          aircraftWP: 'data/aircraft-wp.json',
+          weapons: 'data/weapons.json',
+          noteRules: 'data/aircraft-note-rules.json',
+          nameMapping: 'data/aircraft-name-mapping.json'
+        },
+        print: {
+          // Use absolute URL so roundels resolve correctly in about:blank print windows
+          roundelBasePath: window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1) + 'assets/roundels',
+          roundels: mergedRoundels,
+          dataStructure: dataStructure,
+          conversion: conversion
+        }
+      };
+    }
+
+    /**
+     * Determine the WP nation codes for faction detection.
+     * Combines WP nations from both modules.
+     */
+    function getWPNationCodes() {
+      const rsConfig = window.ModuleConfig ? window.ModuleConfig.getModuleConfig('red-storm') : null;
+      const baConfig = window.ModuleConfig ? window.ModuleConfig.getModuleConfig('baltic-approaches') : null;
+
+      const wpCodes = new Set();
+      if (rsConfig?.nations?.wp) rsConfig.nations.wp.forEach(n => wpCodes.add(n.code));
+      if (baConfig?.nations?.wp) baConfig.nations.wp.forEach(n => wpCodes.add(n.code));
+      // Add common WP codes as fallback
+      ['USSR', 'GDR', 'POL'].forEach(c => wpCodes.add(c));
+      return wpCodes;
+    }
+
+    /**
+     * Print all flights in the queue using PrintGenerator.
+     * Opens a new browser window with properly formatted flight cards
+     * that are ready for the user's printer.
+     */
+    async function printQueue() {
+      if (!flightQueue.length) { alert('Queue is empty.'); return; }
+
+      try {
+        const wpNations = getWPNationCodes();
+
+        // Convert queue items into the flight-result format PrintGenerator expects
+        const results = flightQueue.map(f => {
+          const a = aircraftDatabase[f.aircraftKey];
+          if (!a) return null;
+          const faction = wpNations.has(a.nation) ? 'WP' : 'NATO';
+          return {
+            aircraftType: f.aircraftKey,
+            nationCode: a.nation || f.nation,
+            tasking: '',
+            faction: faction,
+            flightSize: f.size,
+            numFlights: 1
+          };
+        }).filter(Boolean);
+
+        if (!results.length) {
+          alert('No valid flights in queue.');
+          return;
+        }
+
+        // Create PrintGenerator with unified config
+        const unifiedConfig = buildUnifiedPrintConfig();
+        const printGen = new PrintGenerator(unifiedConfig);
+
+        // Load data files from shared/data/
+        const dataFiles = await printGen.loadDataFiles();
+
+        // Process and sort flights into NATO/WP groups
+        const processedFlights = printGen.processFlights(results);
+        const { natoRegular, natoCSAR, wpRegular, wpCSAR } = printGen.sortFlights(processedFlights);
+
+        // Generate HTML for all flight cards
+        let allCardsHTML = '';
+        const hasWPFlights = (wpRegular.length > 0 || wpCSAR.length > 0);
+
+        for (let i = 0; i < natoRegular.length; i++) {
+          const flight = natoRegular[i];
+          const isLastNATOFlight = hasWPFlights && (i === natoRegular.length - 1);
+          const cardHTML = await printGen.generateDesignerFlightCard(
+            flight, dataFiles.aircraftNATO, dataFiles.aircraftWP,
+            dataFiles.noteRules, dataFiles.weapons, dataFiles.nameMapping, isLastNATOFlight
+          );
+          allCardsHTML += cardHTML;
+        }
+
+        for (const flight of wpRegular) {
+          const cardHTML = await printGen.generateDesignerFlightCard(
+            flight, dataFiles.aircraftNATO, dataFiles.aircraftWP,
+            dataFiles.noteRules, dataFiles.weapons, dataFiles.nameMapping, false
+          );
+          allCardsHTML += cardHTML;
+        }
+
+        // Wrap in a complete HTML document and open in a new window
+        const htmlContent = printGen.generateDesignerSheetHTML(allCardsHTML);
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+          alert('Please allow pop-ups to generate flight sheets');
+          return;
+        }
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+        printWindow.focus();
+
+      } catch (error) {
+        console.error('Error generating flight sheets:', error);
+        alert('Error generating flight sheets. Check console for details.');
+      }
+    }
+
+    /**
+     * Export the queued flights as a standalone HTML file download.
+     * Converts roundel image references to base64 data URLs so the
+     * exported file is fully self-contained and works offline.
+     */
+    async function exportDesign() {
+      if (!flightQueue.length) { alert('Queue is empty. Nothing to export.'); return; }
+
+      try {
+        const wpNations = getWPNationCodes();
+
+        const results = flightQueue.map(f => {
+          const a = aircraftDatabase[f.aircraftKey];
+          if (!a) return null;
+          const faction = wpNations.has(a.nation) ? 'WP' : 'NATO';
+          return {
+            aircraftType: f.aircraftKey,
+            nationCode: a.nation || f.nation,
+            tasking: '',
+            faction: faction,
+            flightSize: f.size,
+            numFlights: 1
+          };
+        }).filter(Boolean);
+
+        if (!results.length) {
+          alert('No valid flights in queue.');
+          return;
+        }
+
+        const unifiedConfig = buildUnifiedPrintConfig();
+        const printGen = new PrintGenerator(unifiedConfig);
+        const dataFiles = await printGen.loadDataFiles();
+
+        const processedFlights = printGen.processFlights(results);
+        const { natoRegular, natoCSAR, wpRegular, wpCSAR } = printGen.sortFlights(processedFlights);
+
+        let allCardsHTML = '';
+        const hasWPFlights = (wpRegular.length > 0 || wpCSAR.length > 0);
+
+        for (let i = 0; i < natoRegular.length; i++) {
+          const flight = natoRegular[i];
+          const isLastNATOFlight = hasWPFlights && (i === natoRegular.length - 1);
+          const cardHTML = await printGen.generateDesignerFlightCard(
+            flight, dataFiles.aircraftNATO, dataFiles.aircraftWP,
+            dataFiles.noteRules, dataFiles.weapons, dataFiles.nameMapping, isLastNATOFlight
+          );
+          allCardsHTML += cardHTML;
+        }
+
+        for (const flight of wpRegular) {
+          const cardHTML = await printGen.generateDesignerFlightCard(
+            flight, dataFiles.aircraftNATO, dataFiles.aircraftWP,
+            dataFiles.noteRules, dataFiles.weapons, dataFiles.nameMapping, false
+          );
+          allCardsHTML += cardHTML;
+        }
+
+        let htmlContent = printGen.generateDesignerSheetHTML(allCardsHTML);
+
+        // Convert roundel image paths to base64 data URLs for self-contained export
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        const images = doc.querySelectorAll('img[src*="roundels/"]');
+
+        for (const img of images) {
+          const src = img.getAttribute('src');
+          const filename = src.split('/').pop();
+          // Fetch from our local path (relative to shared/)
+          const imagePath = `assets/roundels/${filename}`;
+
+          try {
+            const response = await fetch(imagePath);
+            const blob = await response.blob();
+            const base64 = await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.readAsDataURL(blob);
+            });
+            img.setAttribute('src', base64);
+          } catch (err) {
+            console.warn('Could not embed image:', filename, err);
+          }
+        }
+
+        htmlContent = doc.documentElement.outerHTML;
+
+        // Trigger download
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'flight-sheets.html';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+
+      } catch (error) {
+        console.error('Error exporting flight sheets:', error);
+        alert('Error exporting flight sheets. Check console for details.');
+      }
+    }
+
+    // =========================================================================
+    // Initialization
+    // =========================================================================
+
+    /**
+     * Bootstrap the designer: load databases, populate dropdowns,
+     * and wire up event listeners for the cascading filter system.
+     */
+    // =========================================================================
+    // Width diagnostics (temporary — remove after layout is stable)
+    // =========================================================================
+
+    /**
+     * Log computed widths of all key layout elements in the preview card.
+     * Call from the browser console with: debugWidths()
+     * Automatically runs after each preview card is generated.
+     */
+    function debugWidths() {
+      console.group('%c[WIDTH DIAGNOSTICS]', 'color: #ff9900; font-weight: bold');
+
+      // Container hierarchy
+      const container = document.querySelector('.designer-container');
+      const previewFrame = document.getElementById('previewFrame');
+      const flightGrid = document.getElementById('flightGrid');
+      const flightCard = document.querySelector('.flight-card');
+
+      console.log('Window inner width:', window.innerWidth);
+      if (container) console.log('.designer-container:', container.offsetWidth, '(computed:', getComputedStyle(container).width + ')');
+      if (previewFrame) console.log('.preview-frame:', previewFrame.offsetWidth, '(computed:', getComputedStyle(previewFrame).width + ')');
+      if (flightGrid) console.log('.flight-grid:', flightGrid.offsetWidth, '(computed:', getComputedStyle(flightGrid).width + ')');
+      if (flightCard) console.log('.flight-card:', flightCard.offsetWidth, '(computed:', getComputedStyle(flightCard).width + ')');
+
+      // Flight header grid columns
+      const flightHeader = document.querySelector('.flight-header');
+      if (flightHeader) {
+        console.group('.flight-header (grid-template-columns: ' + getComputedStyle(flightHeader).gridTemplateColumns + ')');
+        const headerChildren = flightHeader.children;
+        for (let i = 0; i < headerChildren.length; i++) {
+          const child = headerChildren[i];
+          const classes = child.className || `child[${i}]`;
+          console.log(`  ${classes}: offsetWidth=${child.offsetWidth}, scrollWidth=${child.scrollWidth}, overflow=${child.scrollWidth > child.offsetWidth ? 'YES' : 'no'}`);
+        }
+        console.groupEnd();
+      }
+
+      // Tasking/fuel row
+      const taskingRow = document.querySelector('.tasking-fuel-row');
+      if (taskingRow) {
+        console.group('.tasking-fuel-row (grid-template-columns: ' + getComputedStyle(taskingRow).gridTemplateColumns + ')');
+        const taskChildren = taskingRow.children;
+        for (let i = 0; i < taskChildren.length; i++) {
+          const child = taskChildren[i];
+          const classes = child.className || `child[${i}]`;
+          console.log(`  ${classes}: offsetWidth=${child.offsetWidth}, scrollWidth=${child.scrollWidth}, overflow=${child.scrollWidth > child.offsetWidth ? 'YES' : 'no'}`);
+        }
+        console.groupEnd();
+      }
+
+      // Weapons row
+      const weaponsRow = document.querySelector('.flight-weapons-row');
+      if (weaponsRow) {
+        console.group('.flight-weapons-row');
+        console.log('  row:', weaponsRow.offsetWidth);
+        const weaponsDisplay = weaponsRow.querySelector('.weapons-display');
+        if (weaponsDisplay) console.log('  .weapons-display:', weaponsDisplay.offsetWidth, 'scrollWidth:', weaponsDisplay.scrollWidth);
+        const items = weaponsRow.querySelectorAll('.weapon-item');
+        items.forEach((item, i) => {
+          console.log(`  .weapon-item[${i}]:`, item.offsetWidth, 'text:', item.textContent.trim());
+        });
+        console.groupEnd();
+      }
+
+      // Aircraft grid boxes
+      const aircraftGrid = document.querySelector('.aircraft-grid');
+      if (aircraftGrid) {
+        console.group('.aircraft-grid (grid-template-columns: ' + getComputedStyle(aircraftGrid).gridTemplateColumns + ')');
+        const boxes = aircraftGrid.querySelectorAll('.aircraft-box');
+        boxes.forEach((box, i) => {
+          console.log(`  .aircraft-box[${i}]: offsetWidth=${box.offsetWidth}, scrollWidth=${box.scrollWidth}, overflow=${box.scrollWidth > box.offsetWidth ? 'YES' : 'no'}`);
+        });
+        console.groupEnd();
+      }
+
+      // Speed table
+      const speedTable = document.querySelector('.speed-table');
+      if (speedTable) {
+        console.log('.speed-table:', speedTable.offsetWidth, '(parent:', speedTable.parentElement.offsetWidth + ')');
+      }
+
+      // Check for any elements overflowing their parents
+      console.group('Overflow check (elements wider than parent)');
+      const allElements = document.querySelectorAll('.flight-card *');
+      let overflowCount = 0;
+      allElements.forEach(el => {
+        if (el.scrollWidth > el.offsetWidth + 1) {  // +1 for rounding tolerance
+          overflowCount++;
+          console.warn(`  OVERFLOW: <${el.tagName}.${el.className}> offsetWidth=${el.offsetWidth} scrollWidth=${el.scrollWidth} content="${el.textContent.substring(0, 40)}..."`);
+        }
+      });
+      if (overflowCount === 0) console.log('  No overflows detected');
+      console.groupEnd();
+
+      console.groupEnd();
+    }
+
+    // Expose to console for manual invocation
+    window.debugWidths = debugWidths;
+
+    loadDatabases().then(ok => {
+      if (ok) {
+        populateNationSelector();
+        populateAircraftSelector();
+
+        // Wire up cascading filter event listeners
+        document.getElementById('moduleFilter').addEventListener('change', onModuleChange);
+        document.getElementById('nationSelector').addEventListener('change', onNationChange);
+        document.getElementById('aircraftSelector').addEventListener('change', generateTestFlight);
+        document.getElementById('flightSizeSelector').addEventListener('change', generateTestFlight);
+
+        // Run width diagnostics on page load (no flight card yet, but captures container widths)
+        requestAnimationFrame(() => debugWidths());
+      }
+    });
+  </script>
+
+  <!-- Footer -->
+  <div style="text-align: center; margin-top: 60px; padding: 30px 20px; border-top: 1px solid #5a5a6a; opacity: 0.8; background-color: #2a2a3a;">
+    <p style="margin: 10px 0; color: #f4f4f4;">Red Storm Tools Suite | Unified Flight Sheet Generator</p>
+    <p style="font-size: 0.85em; margin-top: 10px; opacity: 0.7; color: #f4f4f4;">
+      Red Storm, Baltic Approaches, and all related game materials are &copy; GMT Games. This is an unofficial fan-made tool suite not affiliated with or endorsed by the copyright holder.
+    </p>
+    <a href="https://github.com/augustdragon/red-storm-tools-suite" style="display: inline-block; margin-top: 20px; color: #c0c0d0; text-decoration: none; padding: 10px 20px; border: 1px solid #5a5a6a; border-radius: 6px;" target="_blank">
+      View on GitHub
+    </a>
+  </div>
+</body>
+</html>

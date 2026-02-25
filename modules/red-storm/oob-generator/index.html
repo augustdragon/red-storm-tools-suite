@@ -433,6 +433,20 @@
       }
     }
 
+    /**
+     * Extract display name from aircraft table data entries.
+     * Table data aircraft values may be plain strings (legacy) or
+     * objects with { name, aircraftId } (current format).
+     * @param {string|object} aircraft - Aircraft value from table data
+     * @returns {string} Display name string
+     */
+    function aircraftDisplayName(aircraft) {
+      if (typeof aircraft === 'object' && aircraft !== null && aircraft.name) {
+        return aircraft.name;
+      }
+      return aircraft;
+    }
+
     function viewTableStructure(tableId, atafZone, scenarioDate) {
       const dataSource = getTableDataSource();
       const table = dataSource[tableId];
@@ -504,9 +518,7 @@
           });
           
           for (const [aircraftRange, aircraftType] of sortedAircraft) {
-            // Use aircraft names exactly as defined in source data
-            const displayType = aircraftType;
-            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${displayType}</div>`;
+            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftDisplayName(aircraftType)}</div>`;
           }
           
           tableHTML += `</div></div>`;
@@ -554,7 +566,7 @@
           });
           
           for (const [aircraftRange, aircraftType] of sortedAircraft) {
-            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftDisplayName(aircraftType)}</div>`;
           }
           
           tableHTML += `</div></div>`;
@@ -599,10 +611,10 @@
             const nationSubRollNotes = [];
             
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
-              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftDisplayName(aircraftType)}</div>`;
               
               // Check for superscripted aircraft and add sub-roll explanations
-              if (aircraftType.includes('F-4²')) {
+              if (aircraftDisplayName(aircraftType).includes('F-4²')) {
                 nationSubRollNotes.push('² Roll again: 1-5 F-4D; 6-10 F-4E');
               }
             }
@@ -664,7 +676,7 @@
             });
             
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
-              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftDisplayName(aircraftType)}</div>`;
             }
             
             tableHTML += `</div></div>`;
@@ -714,7 +726,7 @@
             });
             
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
-              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftDisplayName(aircraftType)}</div>`;
             }
             
             tableHTML += `</div></div>`;
@@ -763,7 +775,7 @@
             });
             
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
-              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftDisplayName(aircraftType)}</div>`;
             }
             
             tableHTML += `</div></div>`;
@@ -810,10 +822,10 @@
           const nationSubRollNotes = [];
           
           for (const [aircraftRange, aircraftType] of sortedAircraft) {
-            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+            tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftDisplayName(aircraftType)}</div>`;
             
             // Check for superscripted aircraft and add sub-roll explanations
-            if (aircraftType.includes('MiG-25PD/Su-27S¹')) {
+            if (aircraftDisplayName(aircraftType).includes('MiG-25PD/Su-27S¹')) {
               nationSubRollNotes.push('¹ Roll again: 1-5 MiG-25PD; 6-10 Su-27S');
             }
           }
@@ -861,12 +873,12 @@
             let subRollNotes = [];
             
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
-              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftDisplayName(aircraftType)}</div>`;
               
               // Check for superscripted aircraft and add sub-roll explanations
-              if (aircraftType.includes('MiG-23²')) {
+              if (aircraftDisplayName(aircraftType).includes('MiG-23²')) {
                 subRollNotes.push('² Roll again: 1-4 MiG-23M; 5-8 MiG-23MF; 9-10 MiG-23ML');
-              } else if (aircraftType.includes('MiG-23MF/ML¹')) {
+              } else if (aircraftDisplayName(aircraftType).includes('MiG-23MF/ML¹')) {
                 subRollNotes.push('¹ Roll again: 1-5 MiG-23MF; 6-10 MiG-23ML');
               }
             }
@@ -984,7 +996,7 @@
             });
             
             for (const [aircraftRange, aircraftType] of sortedAircraft) {
-              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+              tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftDisplayName(aircraftType)}</div>`;
             }
             
             tableHTML += `</div></div>`;
@@ -1031,7 +1043,7 @@
               });
               
               for (const [aircraftRange, aircraftType] of sortedAircraft) {
-                tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+                tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftDisplayName(aircraftType)}</div>`;
               }
               
               tableHTML += `</div></div>`;
@@ -1057,7 +1069,7 @@
               });
               
               for (const [aircraftRange, aircraftType] of sortedAircraft) {
-                tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftType}</div>`;
+                tableHTML += `<div class="aircraft-item">${aircraftRange}: ${aircraftDisplayName(aircraftType)}</div>`;
               }
               
               tableHTML += `</div></div>`;

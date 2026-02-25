@@ -1,0 +1,18 @@
+# API URL Rewriting
+# =================
+#
+# Routes all requests under /api/ to index.php, which acts as the front
+# controller / router for the API. Apache's mod_rewrite (enabled in the
+# Dockerfile) processes these rules.
+#
+# Examples:
+#   GET /api/health           → index.php (routed to endpoints/health.php)
+#   GET /api/aircraft?faction=NATO → index.php (routed to endpoints/aircraft.php)
+#
+# The RewriteCond ensures we don't rewrite requests for actual files
+# (like this .htaccess itself), only virtual API paths.
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]

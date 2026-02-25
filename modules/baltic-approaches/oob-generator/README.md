@@ -32,3 +32,5 @@ Extending data
 Developer notes
 - Tooltip behavior: hover on desktop, tap to reveal on touch devices. If a ship's `capabilities.SSM` cannot be matched to an SSM entry, the plain SSM name is shown.
 - Styling: faction-specific headers use NATO/ WP colors; the sub-target damage table uses a neutral gray scheme to be visible in both themes.
+
+If you'd like, I can add an API-style schema file (JSON Schema) or automated tests to validate new data entries.

@@ -19,6 +19,10 @@ api/config.php
 # It can be regenerated anytime with: node db/migrate/json-to-sql.js
 db/init/002-seed-aircraft.sql
 
+# ---- Copyrighted Game Scans ----
+# Board game reference scans — copyrighted material, do not distribute.
+docs/scans/
+
 # ---- Test Output ----
 coverage/
 
