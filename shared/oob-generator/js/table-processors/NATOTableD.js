@@ -92,19 +92,31 @@ class NATOTableD extends BaseTableProcessor {
     const flightCount = this.flightCounts[tasking];
     let resultText = '';
     
-    // Handle special split aircraft types for SEAD
-    let resolvedAircraftId = aircraftResult.aircraftId;
-    if (tasking === 'SEAD' && nationResult.nationName === 'US' && aircraftResult.aircraftType === 'F-4G/F-4E') {
-      resultText = `2 x {${flightSize}} ${nationResult.nationName} F-4G, ${tasking}<br>2 x {${flightSize}} ${nationResult.nationName} F-4E, ${tasking}`;
-      resolvedAircraftId = null;
-    } else if (tasking === 'SEAD' && nationResult.nationName === 'US' && aircraftResult.aircraftType === 'F-4G/F-16C') {
-      resultText = `2 x {${flightSize}} ${nationResult.nationName} F-4G, ${tasking}<br>2 x {${flightSize}} ${nationResult.nationName} F-16C, ${tasking}`;
-      resolvedAircraftId = null;
-    } else {
-      // Standard result
-      resultText = `${flightCount} x {${flightSize}} ${nationResult.nationName} ${aircraftResult.aircraftType}, ${tasking}`;
+    // Handle special split aircraft types for SEAD — return an array of
+    // separate entries so each aircraft type can be resolved individually
+    // during print generation.
+    if (tasking === 'SEAD' && nationResult.nationName === 'US' &&
+        (aircraftResult.aircraftType === 'F-4G/F-4E' || aircraftResult.aircraftType === 'F-4G/F-16C')) {
+      const [aircraft1, aircraft2] = aircraftResult.aircraftType.split('/');
+      const baseDebug = `[${tasking}: ${this.stripBrackets(nationResult.nationRollDebug)} | ${this.stripBrackets(aircraftResult.aircraftRollDebug)}]`;
+      return [aircraft1, aircraft2].map(aircraft => ({
+        tasking,
+        nationRoll: nationResult.nationRoll,
+        aircraftRoll: aircraftResult.aircraftRoll,
+        nationName: nationResult.nationName,
+        nationality: nationResult.nationName,
+        aircraftType: aircraft,
+        aircraftId: null,
+        flightSize: flightSize,
+        flightCount: flightCount / 2,
+        text: `${flightCount / 2} x {${flightSize}} ${nationResult.nationName} ${aircraft}, ${tasking}`,
+        debugText: baseDebug
+      }));
     }
-    
+
+    // Standard result
+    resultText = `${flightCount} x {${flightSize}} ${nationResult.nationName} ${aircraftResult.aircraftType}, ${tasking}`;
+
     return {
       tasking,
       nationRoll: nationResult.nationRoll,
@@ -112,7 +124,7 @@ class NATOTableD extends BaseTableProcessor {
       nationName: nationResult.nationName,
       nationality: nationResult.nationName,
       aircraftType: aircraftResult.aircraftType,
-      aircraftId: resolvedAircraftId,
+      aircraftId: aircraftResult.aircraftId,
       flightSize: flightSize,
       flightCount: flightCount,
       text: resultText,
@@ -128,10 +140,15 @@ class NATOTableD extends BaseTableProcessor {
    */
   process(params) {
     const results = [];
-    
+
     for (const tasking of this.taskings) {
       const taskingResult = this.processTasking(tasking);
-      results.push(taskingResult);
+      // Split SEAD returns an array of entries; flatten into results
+      if (Array.isArray(taskingResult)) {
+        results.push(...taskingResult);
+      } else {
+        results.push(taskingResult);
+      }
     }
     
     // Combine all results

@@ -212,38 +212,37 @@ class NATOTableC extends BaseTableProcessor {
    * @returns {object} Split SEAD result
    */
   processSplitSEAD(nationName, aircraft1, aircraft2, flightSize, nationResult, aircraftResult) {
-    const flights = [];
-    const ordnanceDebug = [];
-    
-    // 2 flights of first aircraft type
-    for (let i = 1; i <= 2; i++) {
-      const ordnanceRollResult = makeDebugRoll(10, `SEAD ${aircraft1} Flight ${i} Ordnance`);
-      const ordnance = this.getOrdnanceAvailability(ordnanceRollResult.roll, aircraft1, 'SEAD');
-      ordnanceDebug.push(`${aircraft1} Flight ${i} Ordnance: ${ordnanceRollResult.roll}`);
-      flights.push(`1 x {${flightSize}} ${nationName} ${aircraft1}, SEAD (${ordnance})`);
+    // Returns an array of two separate tasking entries — one per aircraft type —
+    // so each can be individually looked up in the aircraft database during printing.
+    const taskingEntries = [];
+
+    for (const aircraft of [aircraft1, aircraft2]) {
+      const flightLines = [];
+      const ordnanceDebug = [];
+
+      for (let i = 1; i <= 2; i++) {
+        const ordnanceRollResult = makeDebugRoll(10, `SEAD ${aircraft} Flight ${i} Ordnance`);
+        const ordnance = this.getOrdnanceAvailability(ordnanceRollResult.roll, aircraft, 'SEAD');
+        ordnanceDebug.push(`${aircraft} Flight ${i} Ordnance: ${ordnanceRollResult.roll}`);
+        flightLines.push(`1 x {${flightSize}} ${nationName} ${aircraft}, SEAD (${ordnance})`);
+      }
+
+      taskingEntries.push({
+        tasking: 'SEAD',
+        nationRoll: nationResult.nationRoll,
+        aircraftRoll: aircraftResult.aircraftRoll,
+        nationName: nationResult.nationName,
+        nationality: nationResult.nationName,
+        aircraftType: aircraft,
+        aircraftId: null,
+        flightSize: flightSize,
+        flightCount: 2,
+        text: flightLines.join('<br>'),
+        debugText: `[SEAD ${aircraft}: ${this.stripBrackets(nationResult.nationRollDebug)} | ${this.stripBrackets(aircraftResult.aircraftRollDebug)} | ${ordnanceDebug.join(' | ')}]`
+      });
     }
-    
-    // 2 flights of second aircraft type
-    for (let i = 1; i <= 2; i++) {
-      const ordnanceRollResult = makeDebugRoll(10, `SEAD ${aircraft2} Flight ${i} Ordnance`);
-      const ordnance = this.getOrdnanceAvailability(ordnanceRollResult.roll, aircraft2, 'SEAD');
-      ordnanceDebug.push(`${aircraft2} Flight ${i} Ordnance: ${ordnanceRollResult.roll}`);
-      flights.push(`1 x {${flightSize}} ${nationName} ${aircraft2}, SEAD (${ordnance})`);
-    }
-    
-    return {
-      tasking: 'SEAD',
-      nationRoll: nationResult.nationRoll,
-      aircraftRoll: aircraftResult.aircraftRoll,
-      nationName: nationResult.nationName,
-      nationality: nationResult.nationName,
-      aircraftType: `${aircraft1}/${aircraft2}`,
-      aircraftId: null,
-      flightSize: flightSize,
-      flightCount: 4,
-      text: flights.join('<br>'),
-      debugText: `[SEAD: ${this.stripBrackets(nationResult.nationRollDebug)} | ${this.stripBrackets(aircraftResult.aircraftRollDebug)} | ${ordnanceDebug.join(' | ')}]`
-    };
+
+    return taskingEntries;
   }
 
   /**
@@ -257,10 +256,15 @@ class NATOTableC extends BaseTableProcessor {
     const { scenarioDate } = params;
     
     const results = [];
-    
+
     for (const tasking of this.taskings) {
       const taskingResult = this.processTasking(tasking, scenarioDate);
-      results.push(taskingResult);
+      // processSplitSEAD returns an array of entries; flatten into results
+      if (Array.isArray(taskingResult)) {
+        results.push(...taskingResult);
+      } else {
+        results.push(taskingResult);
+      }
     }
     
     // Combine all results
