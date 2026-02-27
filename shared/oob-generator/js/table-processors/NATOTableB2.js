@@ -72,14 +72,19 @@ class NATOTableB2 extends BaseTableProcessor {
       };
     }
 
+    // Resolve composite nationalities (e.g., "UK/NE" → "NE" for NF-5A)
+    const resolvedNation = this.resolveCompositeNation(
+      nationResult.nationName, aircraftResult.aircraftType, aircraftResult.aircraftId
+    );
+
     // Generate result text
     const flightSize = this.tableData.flightSize || 2;
-    const resultText = `1 x ${flightSize} [CAP], CAP (${nationResult.nationName}: ${aircraftResult.aircraftType})`;
+    const resultText = `1 x ${flightSize} [CAP], CAP (${resolvedNation}: ${aircraftResult.aircraftType})`;
 
     const structuredResult = this.formatResult({
       text: resultText,
-      nationName: nationResult.nationName,
-      nationality: nationResult.nationName,
+      nationName: resolvedNation,
+      nationality: resolvedNation,
       aircraftType: aircraftResult.aircraftType,
       aircraftId: aircraftResult.aircraftId,
       flightSize: flightSize,

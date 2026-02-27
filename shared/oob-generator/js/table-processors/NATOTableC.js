@@ -144,14 +144,16 @@ class NATOTableC extends BaseTableProcessor {
     
     // CAP flights: No ordnance, grouped
     if (tasking === 'CAP') {
-      resultText = `${flightCount} x {${flightSize}} ${nationResult.nationName} ${finalAircraftType}, ${tasking}`;
-      
+      // Resolve composite nationalities (e.g., "NE/CAN" → "CAN" for CF-18A)
+      const resolvedNation = this.resolveCompositeNation(nationResult.nationName, finalAircraftType, finalAircraftId);
+      resultText = `${flightCount} x {${flightSize}} ${resolvedNation} ${finalAircraftType}, ${tasking}`;
+
       return {
         tasking,
         nationRoll: nationResult.nationRoll,
         aircraftRoll: aircraftResult.aircraftRoll,
-        nationName: nationResult.nationName,
-        nationality: nationResult.nationName,
+        nationName: resolvedNation,
+        nationality: resolvedNation,
         aircraftType: finalAircraftType,
         aircraftId: finalAircraftId,
         flightSize: flightSize,
@@ -172,19 +174,22 @@ class NATOTableC extends BaseTableProcessor {
     const individualEntries = [];
     const ordnanceDebug = [];
 
+    // Resolve composite nationalities (e.g., "NE/CAN" → "CAN" for CF-18A)
+    const resolvedNation = this.resolveCompositeNation(nationResult.nationName, finalAircraftType, finalAircraftId);
+
     for (let i = 1; i <= flightCount; i++) {
       const ordnanceRollResult = makeDebugRoll(10, `${tasking} Flight ${i} Ordnance`);
       const ordnance = this.getOrdnanceAvailability(ordnanceRollResult.roll, finalAircraftType, tasking);
 
       ordnanceDebug.push(`Flight ${i} Ordnance: ${ordnanceRollResult.roll}`);
-      const flightText = `1 x {${flightSize}} ${nationResult.nationName} ${finalAircraftType}, ${tasking} (${ordnance})`;
+      const flightText = `1 x {${flightSize}} ${resolvedNation} ${finalAircraftType}, ${tasking} (${ordnance})`;
 
       individualEntries.push({
         tasking,
         nationRoll: nationResult.nationRoll,
         aircraftRoll: aircraftResult.aircraftRoll,
-        nationName: nationResult.nationName,
-        nationality: nationResult.nationName,
+        nationName: resolvedNation,
+        nationality: resolvedNation,
         aircraftType: finalAircraftType,
         aircraftId: finalAircraftId,
         flightSize: flightSize,

@@ -50,15 +50,20 @@ class NATOTableA2 extends BaseTableProcessor {
         };
       }
 
+      // Resolve composite nationalities (e.g., "UK/NE" → "NE" for NF-5A)
+      const resolvedNation = this.resolveCompositeNation(
+        nationResult.nationName, aircraftResult.aircraftType, aircraftResult.aircraftId
+      );
+
       // Generate result text
-      const resultText = `1 x 2 [QRA], CAP (${nationResult.nationName}: ${aircraftResult.aircraftType})`;
+      const resultText = `1 x 2 [QRA], CAP (${resolvedNation}: ${aircraftResult.aircraftType})`;
 
       return {
         text: resultText,
         result: resultText,
         table: this.tableId,
         faction: 'NATO',
-        nationality: nationResult.nationName,
+        nationality: resolvedNation,
         aircraftType: aircraftResult.aircraftType,
         aircraftId: aircraftResult.aircraftId,
         flightSize: 2,
@@ -114,15 +119,20 @@ class NATOTableA2 extends BaseTableProcessor {
       };
     }
 
+    // Resolve composite nationalities (e.g., "UK/NE" → "NE" for NF-5A)
+    const resolvedNation = this.resolveCompositeNation(
+      nationResult.nationName, aircraftResult.aircraftType, aircraftResult.aircraftId
+    );
+
     // Generate result text
-    const resultText = `1 x 2 [QRA], CAP (${nationResult.nationName}: ${aircraftResult.aircraftType})`;
+    const resultText = `1 x 2 [QRA], CAP (${resolvedNation}: ${aircraftResult.aircraftType})`;
 
     return {
       text: resultText,
       result: resultText,
       table: this.tableId,
       faction: 'NATO',
-      nationality: nationResult.nationName,
+      nationality: resolvedNation,
       aircraftType: aircraftResult.aircraftType,
       aircraftId: aircraftResult.aircraftId,
       flightSize: 2,

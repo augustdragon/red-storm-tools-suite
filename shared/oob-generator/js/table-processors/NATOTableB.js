@@ -68,9 +68,14 @@ class NATOTableB extends BaseTableProcessor {
       });
     }
 
+    // Resolve composite nationalities (e.g., "NE/CAN" → "CAN" for CF-18A)
+    const resolvedNation = this.resolveCompositeNation(
+      nationResult.nationName, aircraftResult.aircraftType, aircraftResult.aircraftId
+    );
+
     // Format result text (always 2-ship flight)
-    const resultText = `${nationResult.nationName}: 1 x {2} ${aircraftResult.aircraftType}, CAP`;
-    
+    const resultText = `${resolvedNation}: 1 x {2} ${aircraftResult.aircraftType}, CAP`;
+
     // Build debug text
     const debugText = this.buildDebugText({
       nationRollDebug: nationResult.nationRollDebug,
@@ -80,8 +85,8 @@ class NATOTableB extends BaseTableProcessor {
     return this.formatResult({
       nationRoll: nationResult.nationRoll,
       aircraftRoll: aircraftResult.aircraftRoll,
-      nationName: nationResult.nationName,
-      nationality: nationResult.nationName,
+      nationName: resolvedNation,
+      nationality: resolvedNation,
       aircraftType: aircraftResult.aircraftType,
       aircraftId: aircraftResult.aircraftId,
       flightSize: 2,

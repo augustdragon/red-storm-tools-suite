@@ -188,6 +188,54 @@ class BaseTableProcessor {
   }
 
   /**
+   * Resolve a composite nationality like "NE/CAN" or "BE/NE" to the specific
+   * nation that matches the rolled aircraft.
+   *
+   * OOB tables sometimes group multiple nations into a single roll range
+   * (e.g., "NE/CAN" covers Netherlands and Canada). The aircraft roll then
+   * determines which nation's aircraft is used. This method infers the actual
+   * nation from the aircraft name or ID so the display and flight cards show
+   * the correct individual nationality instead of the composite group.
+   *
+   * Resolution order:
+   *   1. Parenthetical suffix in aircraft name: "F-16A(NE)" → "NE"
+   *   2. Aircraft ID prefix: "CAN-CF-18A-1" → "CAN"
+   *   3. Fall through to original composite name if no match
+   *
+   * @param {string} nationName - The nation name (may be composite like "NE/CAN")
+   * @param {string} aircraftType - The rolled aircraft type name
+   * @param {string|null} aircraftId - The aircraft database ID
+   * @returns {string} Resolved single-nation name, or the original if unresolvable
+   */
+  resolveCompositeNation(nationName, aircraftType, aircraftId) {
+    if (!nationName || !nationName.includes('/')) {
+      return nationName;
+    }
+
+    const parts = nationName.split('/');
+
+    // Strategy 1: Check for parenthetical suffix like "(NE)" or "(BE)"
+    if (aircraftType) {
+      const parenMatch = aircraftType.match(/\(([^)]+)\)$/);
+      if (parenMatch) {
+        const suffix = parenMatch[1].toUpperCase();
+        const match = parts.find(p => p.toUpperCase() === suffix);
+        if (match) return match;
+      }
+    }
+
+    // Strategy 2: Check if aircraft ID prefix matches a nation part
+    if (aircraftId) {
+      const idPrefix = aircraftId.split('-')[0].toUpperCase();
+      const match = parts.find(p => p.toUpperCase() === idPrefix);
+      if (match) return match;
+    }
+
+    // No match found — return the original composite name
+    return nationName;
+  }
+
+  /**
    * Build debug text from processing steps
    * 
    * @param {object} steps - Object containing debug entries from each step

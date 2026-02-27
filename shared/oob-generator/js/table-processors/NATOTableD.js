@@ -114,15 +114,20 @@ class NATOTableD extends BaseTableProcessor {
       }));
     }
 
+    // Resolve composite nationalities (e.g., "NE/CAN" → "CAN" for CF-18A)
+    const resolvedNation = this.resolveCompositeNation(
+      nationResult.nationName, aircraftResult.aircraftType, aircraftResult.aircraftId
+    );
+
     // Standard result
-    resultText = `${flightCount} x {${flightSize}} ${nationResult.nationName} ${aircraftResult.aircraftType}, ${tasking}`;
+    resultText = `${flightCount} x {${flightSize}} ${resolvedNation} ${aircraftResult.aircraftType}, ${tasking}`;
 
     return {
       tasking,
       nationRoll: nationResult.nationRoll,
       aircraftRoll: aircraftResult.aircraftRoll,
-      nationName: nationResult.nationName,
-      nationality: nationResult.nationName,
+      nationName: resolvedNation,
+      nationality: resolvedNation,
       aircraftType: aircraftResult.aircraftType,
       aircraftId: aircraftResult.aircraftId,
       flightSize: flightSize,
