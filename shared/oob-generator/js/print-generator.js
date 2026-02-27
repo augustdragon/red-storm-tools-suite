@@ -713,7 +713,7 @@ class PrintGenerator {
     
     return {
       model: getNestedValue(jsonData, basicFields.name) || getNestedValue(jsonData, basicFields.model) || jsonData.name,
-      nation: nationCode || getNestedValue(jsonData, basicFields.nation) || jsonData.nation,
+      nation: getNestedValue(jsonData, basicFields.nation) || jsonData.nation || nationCode,
       crew: getNestedValue(jsonData, basicFields.crew) || jsonData.crew,
       rwy: getNestedValue(jsonData, basicFields.runway) || jsonData.runway || jsonData.rwy,
       fuel: getNestedValue(jsonData, basicFields.fuel) || jsonData.fuel,
@@ -816,13 +816,17 @@ class PrintGenerator {
       'GDR': 'GDR.jpg'
     };
     
-    const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
+    // For composite nationalities like "NE/CAN" or "BE/NE", the aircraft's own
+    // nation from the database is more accurate for roundel selection than the
+    // table's nationality group code.
+    const rawNation = rawAircraftData?.nation;
+    const roundelImage = roundelMap[nationCode] || roundelMap[rawNation] || roundelMap[aircraftData.nation] || 'USAF.jpg';
 
     // Use configurable base path for roundel images (allows shared designer to override)
     const roundelBase = this.moduleConfig?.print?.roundelBasePath || '../../../shared/assets/roundels';
 
     console.log('[ROUNDEL] Nation code:', nationCode);
-    console.log('[ROUNDEL] Aircraft nation:', aircraftData.nation);
+    console.log('[ROUNDEL] Raw aircraft nation:', rawNation);
     console.log('[ROUNDEL] Selected roundel:', roundelImage);
     console.log('[ROUNDEL] Roundel map keys:', Object.keys(roundelMap));
 
