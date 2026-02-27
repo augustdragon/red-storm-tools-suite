@@ -818,17 +818,16 @@ class PrintGenerator {
     
     // For composite nationalities like "NE/CAN" or "BE/NE", the aircraft's own
     // nation from the database is more accurate for roundel selection than the
-    // table's nationality group code.
-    const rawNation = rawAircraftData?.nation;
-    const roundelImage = roundelMap[nationCode] || roundelMap[rawNation] || roundelMap[aircraftData.nation] || 'USAF.jpg';
+    // table's nationality group code. aircraftData.nation is set by
+    // convertAircraftData() which prioritizes the JSON nation over the table code.
+    const roundelImage = roundelMap[nationCode] || roundelMap[aircraftData.nation] || 'USAF.jpg';
 
     // Use configurable base path for roundel images (allows shared designer to override)
     const roundelBase = this.moduleConfig?.print?.roundelBasePath || '../../../shared/assets/roundels';
 
     console.log('[ROUNDEL] Nation code:', nationCode);
-    console.log('[ROUNDEL] Raw aircraft nation:', rawNation);
+    console.log('[ROUNDEL] Aircraft nation:', aircraftData.nation);
     console.log('[ROUNDEL] Selected roundel:', roundelImage);
-    console.log('[ROUNDEL] Roundel map keys:', Object.keys(roundelMap));
 
     // Add page break style if this is the last NATO flight
     const pageBreakStyle = applyPageBreak ? ' style="page-break-after: always !important;" class="page-break-after-nato"' : '';

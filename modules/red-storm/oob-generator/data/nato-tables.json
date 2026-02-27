@@ -548,7 +548,7 @@
               "name": "NE/CAN",
               "aircraft": {
                 "1-5": {
-                  "name": "F-16A",
+                  "name": "F-16A(NE)",
                   "aircraftId": "US-F-16A-1"
                 },
                 "6-10": {
@@ -614,7 +614,7 @@
               "name": "NE/CAN",
               "aircraft": {
                 "1-5": {
-                  "name": "F-16A",
+                  "name": "F-16A(NE)",
                   "aircraftId": "US-F-16A-1"
                 },
                 "6-10": {
@@ -703,7 +703,7 @@
               "name": "NE/CAN",
               "aircraft": {
                 "1-5": {
-                  "name": "F-16A",
+                  "name": "F-16A(NE)",
                   "aircraftId": "US-F-16A-1"
                 },
                 "6-10": {
@@ -773,7 +773,7 @@
               "name": "NE/CAN",
               "aircraft": {
                 "1-4": {
-                  "name": "F-16A",
+                  "name": "F-16A(NE)",
                   "aircraftId": "US-F-16A-1"
                 },
                 "5-10": {
@@ -874,7 +874,7 @@
               "name": "NE/CAN",
               "aircraft": {
                 "1-4": {
-                  "name": "F-16A",
+                  "name": "F-16A(NE)",
                   "aircraftId": "US-F-16A-1"
                 },
                 "5-10": {
@@ -1271,7 +1271,7 @@
                 "aircraftId": "BE-MIRAGE-5BA-1"
               },
               "5-7": {
-                "name": "F-16A",
+                "name": "F-16A(NE)",
                 "aircraftId": "US-F-16A-1"
               },
               "8-10": {
