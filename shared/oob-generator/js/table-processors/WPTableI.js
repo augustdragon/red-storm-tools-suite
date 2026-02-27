@@ -126,8 +126,10 @@ class WPTableI extends BaseTableProcessor {
       resultText = `${taskingData.flightCount} x {${taskingData.flightSize}} ${nationality} ${finalAircraftType}, ${taskingName}`;
     } else if (taskingName === 'SEAD' || taskingName === 'Bombing') {
       // SEAD and Bombing: Individual ordnance rolls per flight
-      const individualFlights = [];
-      
+      // Each flight gets its own entry with a structured ordnance field
+      // so the print generator can display ordnance on each flight card
+      const individualEntries = [];
+
       for (let i = 1; i <= taskingData.flightCount; i++) {
         const ordnanceRollResult = makeDebugRoll(10, `${taskingName} Flight ${i} Ordnance`);
         const ordnance = this.getOrdnanceAvailability(
@@ -136,27 +138,50 @@ class WPTableI extends BaseTableProcessor {
           finalAircraftType,
           taskingName
         );
-        
+
         ordnanceDebug.push(`Flight ${i} Ordnance: ${ordnanceRollResult.roll}`);
-        individualFlights.push(`1 x {${taskingData.flightSize}} ${nationality} ${finalAircraftType}, ${taskingName} (${ordnance})`);
+        const flightText = `1 x {${taskingData.flightSize}} ${nationality} ${finalAircraftType}, ${taskingName} (${ordnance})`;
+
+        individualEntries.push({
+          tasking: taskingName,
+          nationality: nationality,
+          aircraftType: finalAircraftType,
+          aircraftId: finalAircraftId,
+          flightSize: taskingData.flightSize,
+          flightCount: 1,
+          ordnance: ordnance,
+          text: flightText,
+          debugText: ''
+        });
       }
-      
-      resultText = individualFlights.join('<br>');
+
+      // Build debug text and attach to first entry only
+      let taskingDebugText = `[${taskingName}: ${this.stripBrackets(aircraftResult.aircraftRollDebug)} → ${finalAircraftType}`;
+      if (subRollDebug) {
+        taskingDebugText += ` | ${this.stripBrackets(subRollDebug)} → ${finalAircraftType}`;
+      }
+      if (ordnanceDebug.length > 0) {
+        taskingDebugText += ` | ${ordnanceDebug.join(' | ')}`;
+      }
+      taskingDebugText += ']';
+
+      if (individualEntries.length > 0) {
+        individualEntries[0].debugText = taskingDebugText;
+      }
+
+      // Return array of individual entries
+      return individualEntries;
     }
-    
-    // Build debug text for this tasking
+
+    // Build debug text for this tasking (Close Escort path)
     let taskingDebugText = `[${taskingName}: ${this.stripBrackets(aircraftResult.aircraftRollDebug)} → ${finalAircraftType}`;
-    
+
     if (subRollDebug) {
       taskingDebugText += ` | ${this.stripBrackets(subRollDebug)} → ${finalAircraftType}`;
     }
-    
-    if (ordnanceDebug.length > 0) {
-      taskingDebugText += ` | ${ordnanceDebug.join(' | ')}`;
-    }
-    
+
     taskingDebugText += ']';
-    
+
     return {
       tasking: taskingName,
       nationality: nationality,
@@ -197,7 +222,12 @@ class WPTableI extends BaseTableProcessor {
     // Process each tasking (Close Escort, SEAD, Bombing)
     for (const [taskingName, taskingData] of Object.entries(nationalityData.taskings)) {
       const taskingResult = this.processTasking(taskingName, taskingData, selectedNationality);
-      results.push(taskingResult);
+      // SEAD/Bombing return arrays of individual entries; flatten into results
+      if (Array.isArray(taskingResult)) {
+        results.push(...taskingResult);
+      } else {
+        results.push(taskingResult);
+      }
     }
     
     // Combine all results

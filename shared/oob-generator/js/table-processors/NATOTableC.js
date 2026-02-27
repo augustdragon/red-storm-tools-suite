@@ -167,37 +167,46 @@ class NATOTableC extends BaseTableProcessor {
     }
     
     // SEAD and Bombing: Individual ordnance rolls per flight
-    const individualFlights = [];
+    // Each flight gets its own entry with a structured ordnance field
+    // so the print generator can display ordnance on each flight card
+    const individualEntries = [];
     const ordnanceDebug = [];
-    
+
     for (let i = 1; i <= flightCount; i++) {
       const ordnanceRollResult = makeDebugRoll(10, `${tasking} Flight ${i} Ordnance`);
       const ordnance = this.getOrdnanceAvailability(ordnanceRollResult.roll, finalAircraftType, tasking);
-      
+
       ordnanceDebug.push(`Flight ${i} Ordnance: ${ordnanceRollResult.roll}`);
-      individualFlights.push(`1 x {${flightSize}} ${nationResult.nationName} ${finalAircraftType}, ${tasking} (${ordnance})`);
+      const flightText = `1 x {${flightSize}} ${nationResult.nationName} ${finalAircraftType}, ${tasking} (${ordnance})`;
+
+      individualEntries.push({
+        tasking,
+        nationRoll: nationResult.nationRoll,
+        aircraftRoll: aircraftResult.aircraftRoll,
+        nationName: nationResult.nationName,
+        nationality: nationResult.nationName,
+        aircraftType: finalAircraftType,
+        aircraftId: finalAircraftId,
+        flightSize: flightSize,
+        flightCount: 1,
+        ordnance: ordnance,
+        text: flightText,
+        debugText: ''
+      });
     }
-    
-    resultText = individualFlights.join('<br>');
-    
+
     if (subRollResult.subRollDebug) {
       additionalDebug.push(` | ${this.stripBrackets(subRollResult.subRollDebug)} → ${finalAircraftType}`);
     }
     additionalDebug.push(` | ${ordnanceDebug.join(' | ')}`);
-    
-    return {
-      tasking,
-      nationRoll: nationResult.nationRoll,
-      aircraftRoll: aircraftResult.aircraftRoll,
-      nationName: nationResult.nationName,
-      nationality: nationResult.nationName,
-      aircraftType: finalAircraftType,
-      aircraftId: finalAircraftId,
-      flightSize: flightSize,
-      flightCount: flightCount,
-      text: resultText,
-      debugText: `[${tasking}: ${this.stripBrackets(nationResult.nationRollDebug)} | ${this.stripBrackets(aircraftResult.aircraftRollDebug)}${additionalDebug.join('')}]`
-    };
+
+    // Set debug text on first entry only (avoids duplication in combined debug output)
+    if (individualEntries.length > 0) {
+      individualEntries[0].debugText = `[${tasking}: ${this.stripBrackets(nationResult.nationRollDebug)} | ${this.stripBrackets(aircraftResult.aircraftRollDebug)}${additionalDebug.join('')}]`;
+    }
+
+    // Return array of individual entries (process() already handles arrays from processSplitSEAD)
+    return individualEntries;
   }
 
   /**
@@ -217,29 +226,35 @@ class NATOTableC extends BaseTableProcessor {
     const taskingEntries = [];
 
     for (const aircraft of [aircraft1, aircraft2]) {
-      const flightLines = [];
       const ordnanceDebug = [];
 
       for (let i = 1; i <= 2; i++) {
         const ordnanceRollResult = makeDebugRoll(10, `SEAD ${aircraft} Flight ${i} Ordnance`);
         const ordnance = this.getOrdnanceAvailability(ordnanceRollResult.roll, aircraft, 'SEAD');
         ordnanceDebug.push(`${aircraft} Flight ${i} Ordnance: ${ordnanceRollResult.roll}`);
-        flightLines.push(`1 x {${flightSize}} ${nationName} ${aircraft}, SEAD (${ordnance})`);
+        const flightText = `1 x {${flightSize}} ${nationName} ${aircraft}, SEAD (${ordnance})`;
+
+        taskingEntries.push({
+          tasking: 'SEAD',
+          nationRoll: nationResult.nationRoll,
+          aircraftRoll: aircraftResult.aircraftRoll,
+          nationName: nationResult.nationName,
+          nationality: nationResult.nationName,
+          aircraftType: aircraft,
+          aircraftId: null,
+          flightSize: flightSize,
+          flightCount: 1,
+          ordnance: ordnance,
+          text: flightText,
+          debugText: ''
+        });
       }
 
-      taskingEntries.push({
-        tasking: 'SEAD',
-        nationRoll: nationResult.nationRoll,
-        aircraftRoll: aircraftResult.aircraftRoll,
-        nationName: nationResult.nationName,
-        nationality: nationResult.nationName,
-        aircraftType: aircraft,
-        aircraftId: null,
-        flightSize: flightSize,
-        flightCount: 2,
-        text: flightLines.join('<br>'),
-        debugText: `[SEAD ${aircraft}: ${this.stripBrackets(nationResult.nationRollDebug)} | ${this.stripBrackets(aircraftResult.aircraftRollDebug)} | ${ordnanceDebug.join(' | ')}]`
-      });
+      // Set debug text on first entry for this aircraft
+      const firstEntryIdx = taskingEntries.length - 2;
+      if (firstEntryIdx >= 0) {
+        taskingEntries[firstEntryIdx].debugText = `[SEAD ${aircraft}: ${this.stripBrackets(nationResult.nationRollDebug)} | ${this.stripBrackets(aircraftResult.aircraftRollDebug)} | ${ordnanceDebug.join(' | ')}]`;
+      }
     }
 
     return taskingEntries;

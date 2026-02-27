@@ -827,6 +827,8 @@
             // Check for superscripted aircraft and add sub-roll explanations
             if (aircraftDisplayName(aircraftType).includes('MiG-25PD/Su-27S¹')) {
               nationSubRollNotes.push('¹ Roll again: 1-5 MiG-25PD; 6-10 Su-27S');
+            } else if (aircraftDisplayName(aircraftType).includes('MiG-23MF/ML¹')) {
+              nationSubRollNotes.push('¹ Roll again: 1-5 MiG-23MF; 6-10 MiG-23ML');
             }
           }
           
